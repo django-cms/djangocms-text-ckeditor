@@ -10,7 +10,7 @@ from cms.utils import cms_static_url
 class TextEditorWidget(Textarea):
     class Media:
         js = [static_url(path) for path in (
-            'ckeditor/ckeditor.js'),
+            'ckeditor/ckeditor.js')] + [
             cms_static_url(path) for path in(
             'js/libs/jquery.ui.core.js',
             'js/placeholder_editor_registry.js',

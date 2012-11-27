@@ -1,5 +1,4 @@
 from django.conf import settings
-from cms.utils import cms_static_url
 
 # Uses TinyMCE as editor (no inline plugins). Requires django-tinymce app. 
 # If false, then WYMEditor is used. 

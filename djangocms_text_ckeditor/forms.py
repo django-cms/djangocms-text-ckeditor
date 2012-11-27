@@ -1,10 +1,11 @@
-from cms.plugins.text.models import Text
+
 from django import forms
 from django.forms.models import ModelForm
+from djangocms_text_ckeditor.models import TextCKEditor
 
 class TextForm(ModelForm):
     body = forms.CharField()
 
     class Meta:
-        model = Text
+        model = TextCKEditor
         exclude = ('page', 'position', 'placeholder', 'language', 'plugin_type')

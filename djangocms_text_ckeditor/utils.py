@@ -1,7 +1,7 @@
 import re
 from django.template.defaultfilters import force_escape
 import django
-from django.conf import settings
+
 from cms.models import CMSPlugin
 from cms.plugins.utils import downcast_plugins
 from distutils.version import LooseVersion
@@ -103,6 +103,7 @@ if LooseVersion(django.get_version()) < LooseVersion('1.3'):
 
 class ConfiguredStorage(LazyObject):
     def _setup(self):
+        from django.conf import settings
         self._wrapped = get_storage_class(getattr(settings, 'STATICFILES_STORAGE', default_storage))()
 
 configured_storage = ConfiguredStorage()

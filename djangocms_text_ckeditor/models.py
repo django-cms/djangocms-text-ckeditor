@@ -1,20 +1,15 @@
-from cms.models import CMSPlugin
-from cms.plugins.text.utils import (plugin_admin_html_to_tags,
-    plugin_tags_to_admin_html, plugin_tags_to_id_list, replace_plugin_tags)
-from cms.utils.html import clean_html
 from django.db import models
+from cms.models import CMSPlugin
 from django.utils.html import strip_tags
 from django.utils.text import truncate_words
 from django.utils.translation import ugettext_lazy as _
+from djangocms_text_ckeditor.utils import plugin_admin_html_to_tags, \
+    plugin_tags_to_admin_html, plugin_tags_to_id_list, replace_plugin_tags
+from djangocms_text_ckeditor.html import clean_html
 
-_old_tree_cache = {}
-
-class AbstractText(CMSPlugin):
+class TextCKEditor(CMSPlugin):
     """Abstract Text Plugin Class"""
     body = models.TextField(_("body"))
-
-    class Meta:
-        abstract = True
 
     def _set_body_admin(self, text):
         self.body = plugin_admin_html_to_tags(text)
@@ -56,7 +51,3 @@ class AbstractText(CMSPlugin):
         self.body = replace_plugin_tags(old_instance.get_plugin_instance()[0].body, replace_ids)
         self.save()
 
-class Text(AbstractText):
-    """
-    Actual Text Class
-    """

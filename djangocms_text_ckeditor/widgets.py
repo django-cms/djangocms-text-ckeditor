@@ -6,15 +6,17 @@ from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
 from djangocms_text_ckeditor.utils import static_url
 from cms.utils import cms_static_url
+from django.utils import simplejson
 
 class TextEditorWidget(Textarea):
     class Media:
         js = [static_url(path) for path in (
-            'ckeditor/ckeditor.js')] + [
+            'ckeditor/ckeditor.js',
+            )] + [
             cms_static_url(path) for path in(
             'js/libs/jquery.ui.core.js',
             'js/placeholder_editor_registry.js',
-        )],
+        )]
         css = {
             'all': [cms_static_url(path) for path in (
                         'css/jquery/cupertino/jquery-ui.css',
@@ -41,8 +43,8 @@ class TextEditorWidget(Textarea):
         context = {
             'name': name,
             'language': language,
+            'settings': language.join(simplejson.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
-            'skin': mark_safe(text_settings.SKIN),
             'installed_plugins': self.installed_plugins,
         }
         return mark_safe(render_to_string(

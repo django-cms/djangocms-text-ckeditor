@@ -1,8 +1,13 @@
 from django.conf import settings
 
-# Uses TinyMCE as editor (no inline plugins). Requires django-tinymce app. 
-# If false, then WYMEditor is used. 
-USE_TINYMCE = getattr(settings, 'CMS_USE_TINYMCE', "tinymce" in settings.INSTALLED_APPS)
+#See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all settings
 
-SKIN = getattr(settings, 'CKEDITOR_SKIN', 'kama')
+CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
+    'language': '{{ language }}',
+    'toolbar': 'Basic',
+    'skin': 'kama',
+    'toolbarCanCollapse': False,
+})
+
+
 

@@ -114,4 +114,4 @@ def static_url(path):
     '''
     if not path:
         return ''
-    return configured_storage.url(os.path.join('djangocms_text_ckeditor', path))
+    return configured_storage.url(os.path.join('', path))

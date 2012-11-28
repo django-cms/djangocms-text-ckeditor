@@ -8,51 +8,51 @@ msgstr ""
 "Project-Id-Version: django-cms\n"
 "Report-Msgid-Bugs-To: https://github.com/divio/django-cms/issues\n"
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
-"PO-Revision-Date: 2012-11-27 16:02+0000\n"
-"Last-Translator: Patrick Lauber <patrick.lauber@divio.ch>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2012-11-27 15:37+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hindi (http://www.transifex.com/projects/p/django-cms/language/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
+"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cms_plugins.py:13
 msgid "Text"
-msgstr "Text"
+msgstr "पाठ"
 
 #: models.py:12
 msgid "body"
-msgstr "Body"
+msgstr "शरीर"
 
 #: templates/cms/plugins/widgets/ckeditor.html:28
 msgid "Please select a plugin type."
-msgstr "Bitte ein Plugin auswählen"
+msgstr "कृपया एक प्लगइन प्रकार का चयन करें."
 
 #: templates/cms/plugins/widgets/ckeditor.html:34
 msgid "Text editor does not support inserting objects."
-msgstr "Text Editor unterstützt nicht das einfügen von Objekten."
+msgstr "पाठ संपादक वस्तुओं डालने का समर्थन नहीं करता."
 
 #: templates/cms/plugins/widgets/ckeditor.html:46
 msgid "Text editor does not support editing objects."
-msgstr "Text Editor unterstützt nicht das editieren von Objekten."
+msgstr "पाठ संपादक संपादन वस्तुओं का समर्थन नहीं करता."
 
 #: templates/cms/plugins/widgets/ckeditor.html:51
 msgid "No object selected."
-msgstr "Kein Objekt selektiert."
+msgstr "कोई चयनित वस्तु."
 
 #: templates/cms/plugins/widgets/ckeditor.html:55
 msgid "Not a plugin object"
-msgstr "Kein Plugin Objekt"
+msgstr "नहीं एक प्लगइन वस्तु"
 
 #: templates/cms/plugins/widgets/ckeditor.html:67
 msgid "Available Plugins"
-msgstr "Verfügbare Plugins"
+msgstr "उपलब्ध प्लगइन्स"
 
 #: templates/cms/plugins/widgets/ckeditor.html:70
 msgid "Insert plugin"
-msgstr "Plugin einfügen"
+msgstr "डालें प्लगइन"
 
 #: templates/cms/plugins/widgets/ckeditor.html:71
 msgid "Edit selected plugin"
-msgstr "Selektiertes Plugin editieren"
+msgstr "संपादित करें प्लगइन का चयन"

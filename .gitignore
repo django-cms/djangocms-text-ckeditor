@@ -6,3 +6,5 @@
 .settings
 build
 env*
+dist
+djangocms_text_ckeditor.egg-info

@@ -17,22 +17,25 @@ Usage
 -----
 
 
-You can add a new setting to your settings.py called `COLUMN_WIDTH_CHOICES`
+You can add a new setting to your settings.py called `CKEDITOR_SETTINGS`
 
 the default is::
 
-	COLUMN_WIDTH_CHOICES = (
-	    ('1', _("normal")),
-	    ('2', _("2x")),
-	    ('3', _("3x")),
-	    ('4', _("4x"))
-	)
+	CKEDITOR_SETTINGS = {
+	    'language': '{{ language }}',
+	    'toolbar': 'Basic',
+	    'skin': 'kama',
+	    'toolbarCanCollapse': False,
+	}
 
-but you can change that to fit your CSS grid framework or other purposes.
+It is a dict that hold all CKEditor settings. For an  overview of all the available settings have a look here:
+
+http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all settings
+
 
 Translations
 ------------
 
 If you want to help translate the plugin please do it on transifex:
 
-https://www.transifex.com/projects/p/django-cms/resource/djangocms-column/
+https://www.transifex.com/projects/p/django-cms/resource/djangocms-text-ckeditor/

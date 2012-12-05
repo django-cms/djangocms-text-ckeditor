@@ -4,7 +4,7 @@ from django.conf import settings
 
 CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
     'language': '{{ language }}',
-    'toolbar': 'Basic',
+    'toolbar': 'Full',
     'skin': 'kama',
     'toolbarCanCollapse': False,
 })

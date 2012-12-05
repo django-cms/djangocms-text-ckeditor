@@ -13,7 +13,6 @@ def create_picture_plugin(image_type, file_ending, image, parent_plugin, width, 
     pic.plugin_type = 'PicturePlugin'
     if width or height:
         image.rezise(width=width, height=height)
-
     name = ""
     while len(name) < 10:
         name += random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -22,7 +21,6 @@ def create_picture_plugin(image_type, file_ending, image, parent_plugin, width, 
     if not os.path.exists(os.path.dirname(full_path)):
         os.makedirs(os.path.dirname(full_path))
     pic.image = path
-
     f = open(full_path, "wb")
     image.save(f, image_type)
     pic.save()

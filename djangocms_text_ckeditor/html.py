@@ -6,6 +6,7 @@ import base64
 import StringIO
 from PIL import Image
 from settings import TEXT_SAVE_IMAGE_FUNCTION
+from djangocms_text_ckeditor.utils import plugin_to_tag
 
 DEFAULT_PARSER = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
                                      tree=treebuilders.getTreeBuilder("dom"))
@@ -34,27 +35,17 @@ def extract_images(data, plugin):
     extracts base64 encoded images from drag and drop actions in browser and saves
     those images as plugins
     """
-#    parser = html5lib.HTMLParser(tree=html5lib.treebuilders.getTreeBuilder("dom"))
-#    tree = parser.parse(data)
-#    tree.normalize()
-#    for img in tree.getElementsByTagName("img"):
-    matches = RE_IMG.search(data)
-    if matches:
-        dr = matches.groupdict()
+    def _replace_img(m):
+        dr = m.groupdict()
         mime_type = dr['mime_type']
-        encoding = dr['encoding']
         image_data = dr['data']
         if mime_type.find(";"):
             mime_type = mime_type.split(";")[0]
-
         try:
             image_data = base64.b64decode(image_data)
         except:
             image_data = base64.urlsafe_b64decode(image_data)
-
-
         image_type = mime_type.split("/")[1]
-        convert = False
         if image_type == "jpg" or image_type == "jpeg":
             file_ending = "jpg"
             image_type = "JPEG"
@@ -70,14 +61,8 @@ def extract_images(data, plugin):
         f = StringIO.StringIO(image_data)
         image = Image.open(f)
         image_plugin = img_data_to_plugin(image_type, file_ending, image, plugin)
-        print image_plugin
-
-        html = '<img id="plugin_obj_%d" />' % image_plugin.pk
-
-        data = data.replace(matches.group(), html)
-    print data
-    return data
-
+        return plugin_to_tag(image_plugin)
+    return RE_IMG.sub(_replace_img, data)
 
 def img_data_to_plugin(image_type, file_ending, image, parent_plugin, width=None, height=None):
     func_name = TEXT_SAVE_IMAGE_FUNCTION.split(".")[-1]

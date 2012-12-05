@@ -4,6 +4,7 @@ from django.conf import settings
 
 CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
     'language': '{{ language }}',
+<<<<<<< HEAD
     'toolbar': 'Full',
     'skin': 'kama',
     'toolbarCanCollapse': False,
@@ -13,3 +14,8 @@ TEXT_SAVE_IMAGE_FUNCTION = getattr(settings, 'TEXT_SAVE_IMAGE_FUNCTION', 'django
 
 
 
+=======
+    'toolbar': 'CMS',
+    'skin': 'moono'
+})
+>>>>>>> 72af14e04d86d32376b122dd1c1062ffdf98fdd2

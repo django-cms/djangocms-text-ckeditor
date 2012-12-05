@@ -1,14 +1,14 @@
 
 from django import forms
 from django.forms.models import ModelForm
-from djangocms_text_ckeditor.models import TextCKEditor
+from djangocms_text_ckeditor.models import Text
 
 
 class TextForm(ModelForm):
     body = forms.CharField()
 
     class Meta:
-        model = TextCKEditor
+        model = Text
         exclude = (
             'page',
             'position',

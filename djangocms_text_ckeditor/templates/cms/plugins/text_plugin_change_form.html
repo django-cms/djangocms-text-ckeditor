@@ -1,19 +1,12 @@
 {% extends "admin/cms/page/plugin_change_form.html" %}
-{% load adminmedia %}
 
-{% block fieldsets %}
-{% for fieldset in adminform %}
-	{% include "admin/includes/fieldset.html" %}
-{% endfor %}
-<script type="text/javascript">
-(function namespacing(jQuery) {
-	jQuery(document).ready(function ($) {
-		// initialize security patch
-		window.CMS.API.Security.csrf();
-	});
-})(window.CMS.$)
-</script>
-<style>
-    div.body label {display:none}
-</style>
-{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/cms.ckeditor.css" />
+{% endblock extrastyle %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/cms.ckeditor.js"></script>
+{% endblock extrahead %}

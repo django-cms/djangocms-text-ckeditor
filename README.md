@@ -16,16 +16,14 @@ This plugin requires `django CMS` 2.3 or higher to be properly installed.
 Usage
 -----
 
-
 You can add a new setting to your settings.py called `CKEDITOR_SETTINGS`
 
 the default is::
 
 	CKEDITOR_SETTINGS = {
 	    'language': '{{ language }}',
-	    'toolbar': 'Basic',
-	    'skin': 'kama',
-	    'toolbarCanCollapse': False,
+	    'toolbar': 'CMS',
+	    'skin': 'moono'
 	}
 
 It is a dict that hold all CKEditor settings. For an  overview of all the available settings have a look here:

@@ -1,0 +1,10 @@
+@charset "utf-8";
+/*
+ * @copyright:	https://github.com/divio/djangocms-text-ckeditor
+ */
+
+/* hide label inside formset */
+.form-row label { display:none; }
+
+/* show cmsplugin label */
+.cke_button__cmsplugins .cke_button_label { padding-left:5px; padding-right:5px;  display:inline; }

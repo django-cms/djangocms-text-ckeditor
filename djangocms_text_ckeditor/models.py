@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from djangocms_text_ckeditor.utils import plugin_tags_to_id_list, replace_plugin_tags
 from djangocms_text_ckeditor.html import clean_html, extract_images
 
+
 class Text(CMSPlugin):
     """Abstract Text Plugin Class"""
     body = models.TextField(_("body"))

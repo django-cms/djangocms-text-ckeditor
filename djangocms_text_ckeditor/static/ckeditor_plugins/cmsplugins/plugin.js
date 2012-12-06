@@ -77,11 +77,12 @@ jQuery(document).ready(function ($) {
 			this.editor.fire('saveSnapshot');
 
 			// setup dialog
+			// TODO settings not applied correctly
 			CKEDITOR.dialog.add('cmsplugins', function(editor) {
 				return {
 					'title': item.attr('text'),
-					'minWidth': 600,
-					'minHeight': 300,
+					'minWidth': 500,
+					'minHeight': 250,
 					'contents':[{
 						'id': 'general',
 						'label': 'iframe',

@@ -1,4 +1,3 @@
-var CMS = window.CMS || {};
 /*##################################################|*/
 /* #CMS.CKEDITOR# */
 jQuery(document).ready(function ($) {
@@ -29,7 +28,9 @@ jQuery(document).ready(function ($) {
 			],
 			// cms default settings, will be overwritten by CKEDITOR_SETTINGS
 			'cmsLang': {
-				'toolbar': 'CMS plugins'
+				'toolbar': 'CMS Plugins',
+				'title': 'CMS Plugins',
+				'aria': 'cms plugins'
 			},
 			'cmsPlugins': [
 				{ group: 'Standard Plugins', items: [

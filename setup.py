@@ -5,7 +5,7 @@ from djangocms_text_ckeditor import __version__
 
 
 INSTALL_REQUIRES = [
-
+    'html5lib',
 ]
 
 CLASSIFIERS = [

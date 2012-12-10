@@ -1,2 +1,3 @@
 transifex-client
 django-cms>=2.3
+html5lib

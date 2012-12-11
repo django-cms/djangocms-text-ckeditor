@@ -16,11 +16,12 @@ class Text(CMSPlugin):
     def __unicode__(self):
         return u"%s" % (truncate_words(strip_tags(self.body), 3)[:30] + "...")
 
-    def clean(self):
+    def save(self, *args, **kwargs):
         body = self.body
         body = extract_images(body, self)
         body = clean_html(body, full=False)
         self.body = body
+        super(Text, self).save(*args, **kwargs)
 
     def clean_plugins(self):
         ids = plugin_tags_to_id_list(self.body)

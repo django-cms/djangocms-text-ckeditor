@@ -3,6 +3,10 @@ djangocms-text-ckeditor
 
 Text Plugin for django-cms with CK-Editor
 
+.. WARNING::
+   ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
+
+
 Installation
 ------------
 
@@ -11,6 +15,14 @@ This plugin requires `django CMS` 2.3 or higher to be properly installed.
 * In your projects `virtualenv`_, run ``pip install djangocms-text-ckeditor``.
 * Add ``'djangocms_text_ckeditor'`` to your ``INSTALLED_APPS`` setting.
 * Run ``manage.py migrate djangocms_text_ckeditor``.
+
+
+Upgrading from ``cms.plugins.text``
+-----------------------------------
+
+* Remove ``cms.plugins.text`` from ``INSTALLED_APPS``
+* Add ``djangocms_text_ckeditor`` to ``INSTALLED_APPS``
+* Run ``python manage.py migrate djangocms_text_ckeditor 0001 --fake``
 
 
 Usage

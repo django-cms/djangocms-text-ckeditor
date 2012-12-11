@@ -20,7 +20,6 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     If full is False, only the contents inside <body> will be returned (without
     the <body> tags).
     """
-    data = extract_images(data)
     if full:
         dom_tree = parser.parse(data)
     else:
@@ -77,7 +76,7 @@ def extract_images(data, plugin):
             image = new_image
         filename = u"%s.%s" % (uuid.uuid4(), file_ending)
         # transform image into a cms plugin
-        image_plugin = img_data_to_plugin(filename, image, plugin, width, height)
+        image_plugin = img_data_to_plugin(filename, image, parent_plugin=plugin, width=width, height=height)
         # render the new html for the plugin
         new_img_html = plugin_to_tag(image_plugin)
         # replace the original image node with the newly created cms plugin html

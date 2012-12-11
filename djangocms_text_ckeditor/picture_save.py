@@ -3,7 +3,7 @@ from django.conf import settings
 import os
 import random
 
-def create_picture_plugin(filename, image, parent_plugin, **kwargs):
+def create_picture_plugin(filename, file, parent_plugin, **kwargs):
     from cms.plugins.picture.models import Picture
     pic = Picture()
     pic.placeholder = parent_plugin.placeholder
@@ -17,6 +17,7 @@ def create_picture_plugin(filename, image, parent_plugin, **kwargs):
         os.makedirs(os.path.dirname(full_path))
     pic.image = path
     f = open(full_path, "wb")
-    image.write(f)
+    f.write(file)
+    f.close()
     pic.save()
     return pic

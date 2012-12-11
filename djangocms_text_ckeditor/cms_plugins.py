@@ -1,15 +1,15 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
-from cms.plugins.text.forms import TextForm
 from django.forms.fields import CharField
 from django.utils.translation import ugettext_lazy as _
 from djangocms_text_ckeditor.widgets import TextEditorWidget
-from djangocms_text_ckeditor.models import TextCKEditor
+from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import plugin_tags_to_user_html
+from djangocms_text_ckeditor.forms import TextForm
 
 
 class TextPlugin(CMSPluginBase):
-    model = TextCKEditor
+    model = Text
     name = _("Text")
     form = TextForm
     render_template = "cms/plugins/text.html"

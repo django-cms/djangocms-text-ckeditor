@@ -9,32 +9,15 @@ from django.utils.functional import LazyObject
 from django.core.files.storage import get_storage_class
 import os
 
-OBJ_TAG_RE = re.compile(u"\{\{ plugin_object (\d+) \}\}")
 OBJ_ADMIN_RE_PATTERN = ur'<img [^>]*\bid="plugin_obj_(\d+)"[^>]*/?>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
 
-def plugin_tags_to_admin_html(text):
-    """
-    Convert plugin object 'tags' into the form used to represent
-    them in the admin text editor.
-    """
-    plugin_map = _plugin_dict(text, regex=OBJ_TAG_RE)
-    def _tag_to_admin(m):
-        plugin_id = int(m.groups()[0])
-        try:
-            obj = plugin_map[plugin_id]
-        except KeyError:
-            # Object must have been deleted.  It cannot be rendered to
-            # end user, or edited, so just remove it from the HTML
-            # altogether
-            return u''
-        return u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % \
-               dict(id=plugin_id,
+def plugin_to_tag(obj):
+    return u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % \
+               dict(id=obj.id,
                     icon_src=force_escape(obj.get_instance_icon_src()),
                     icon_alt=force_escape(obj.get_instance_icon_alt()),
                     )
-    return OBJ_TAG_RE.sub(_tag_to_admin, text)
-
 
 def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
     ids = regex.findall(text)
@@ -58,14 +41,6 @@ def plugin_tags_to_user_html(text, context, placeholder):
             return u''
         return obj.render_plugin(context, placeholder)
     return OBJ_ADMIN_RE.sub(_render_tag, text)
-
-
-def plugin_admin_html_to_tags(text):
-    """
-    Convert the HTML used in admin editor to represent plugin objects
-    into the 'tag' form used in the database
-    """
-    return OBJ_ADMIN_RE.sub(lambda m: u"{{ plugin_object %s }}" % m.groups()[0], text)
 
 def replace_plugin_tags(text, id_dict):
     def _replace_tag(m):

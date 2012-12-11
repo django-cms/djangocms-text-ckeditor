@@ -1,0 +1,13 @@
+@charset "utf-8";
+/*
+ * @copyright:	https://github.com/divio/djangocms-text-ckeditor
+ */
+
+/* hide label inside formset */
+.form-row label { display:none; }
+
+/* insure dialog has relative positioning for absolute positioned content */
+.cke_dialog_contents_body { position:relative; }
+
+/* show cmsplugin label */
+.cke_button__cmsplugins .cke_button_label { padding-left:5px; padding-right:5px;  display:inline; }

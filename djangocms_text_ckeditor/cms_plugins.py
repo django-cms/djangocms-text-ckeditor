@@ -40,7 +40,7 @@ class TextPlugin(CMSPluginBase):
             self.placeholder,
             self.page
         )
-        pk = getattr(obj, 'pk', None)
+        pk = self.cms_plugin_instance.pk
         form = self.get_form_class(request, plugins, pk)
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)

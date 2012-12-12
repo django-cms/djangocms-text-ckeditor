@@ -17,7 +17,7 @@ def create_picture_plugin(filename, file, parent_plugin, **kwargs):
         os.makedirs(os.path.dirname(full_path))
     pic.image = path
     f = open(full_path, "wb")
-    f.write(file)
+    f.write(file.read())
     f.close()
     pic.save()
     return pic

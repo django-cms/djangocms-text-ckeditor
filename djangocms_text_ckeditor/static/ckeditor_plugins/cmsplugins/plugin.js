@@ -12,70 +12,92 @@ jQuery(document).ready(function ($) {
 			this.plugins = CMS.CKEditor.options.cmsPlugins;
 			this.page_id = CMS.CKEditor.options.cmsPage;
 			this.editor = editor;
+			this.setupDialog();
 
 			// add the button
 			this.editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
 				'toolbar': 'cms,0',
 				'label': this.lang.toolbar,
-				'title': this.lang.title,
+				'title': this.lang.toolbar,
 				'className' : 'cke_panelbutton__cmsplugins',
 				'modes': { wysiwyg:1 },
 				'editorFocus': 1,
 
 				'panel': {
 					'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
-					'attributes': { role: 'cmsplugins', 'aria-label': this.lang.title }
+					'attributes': { role: 'cmsplugins', 'aria-label': this.lang.aria }
 				},
 
 				// this is called when creating the dropdown list
 				'onBlock': function (panel, block) {
-					block.element.setHtml(that.editor.plugins.cmsplugins.renderPlugins());
+					block.element.setHtml(that.editor.plugins.cmsplugins.setupDropdown());
 
 					var anchors = $(block.element.$).find('.cke_panel_listItem a');
 						anchors.bind('click', function (e) {
 							e.preventDefault();
 
-							that.openPlugin($(this), panel);
+							that.addPlugin($(this), panel);
 						});
 				}
 			});
 
-			this.editor.addCommand('cmspluginsEdit', {
-				exec: function () {
-					var el = editor.getSelection().getSelectedElement();
+			// handle edit event via context menu
+			if(this.editor.contextMenu) {
+				this.setupContextMenu();
+				this.editor.addCommand('cmspluginsEdit', {
+					exec: function () {
+						that.editPlugin(that.editor.getSelection().getSelectedElement());
+					}
+				});
+			}
 
-					var obj = {
-						'id': el.getAttribute('id').replace('plugin_obj_', ''),
-						'alt': el.getAttribute('alt')
+			// hande event via doubleclick
+			// handle edit event on double click
+			this.editor.on('doubleclick', function(event) {
+				var element = that.editor.getSelection().getSelectedElement();
+
+				if(element && $(element.$).attr('id').split('_')[0] === 'plugin' && !element.isReadOnly()) {
+					event.data.dialog = '';
+					that.editPlugin(element);
+				}
+			});
+		},
+
+		setupDialog: function () {
+			var that = this;
+			var definition = function () { return {
+				'title': '',
+				'minWidth': 600,
+				'minHeight': 250,
+				'contents': [{
+					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
+				}],
+				'onOk': function () {
+					var iframe = $(CKEDITOR.dialog.getCurrent().parts.contents.$).find('iframe').contents();
+						iframe.find('form').submit();
+
+					// catch the reload event and reattach
+					var reload = window.parent.CMS.API.Helpers.reloadBrowser;
+					window.parent.CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
+						CKEDITOR.dialog.getCurrent().hide();
+						that.insertPlugin({
+							'id': id,
+							'icon': icon,
+							'alt': alt
+						});
+
+						window.parent.CMS.API.Helpers.reloadBrowser = reload;
+						return false;
 					};
-
-					console.log(obj);
+					return false;
 				}
-			});
+			}};
 
-			// add correct context menu handling
-			if(this.editor.contextMenu) this.contextMenu();
+			// set default definition and open dialog
+			CKEDITOR.dialog.add('cmspluginsDialog', definition);
 		},
 
-		contextMenu: function () {
-			this.editor.addMenuGroup('cmspluginsGroup');
-			this.editor.addMenuItem('cmspluginsItem', {
-				label: this.lang.edit,
-				icon: '../ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
-				command: 'cmspluginsEdit',
-				group: 'cmspluginsGroup'
-			});
-
-			this.editor.removeMenuItem('image');
-
-			this.editor.contextMenu.addListener(function(element) {
-				if($(element.$).attr('id').split('_')[0] == 'plugin') {
-					return { cmspluginsItem: CKEDITOR.TRISTATE_OFF };
-				}
-			});
-		},
-
-		renderPlugins: function () {
+		setupDropdown: function () {
 			var tpl = '<div class="cke_panel_block">';
 
 			// loop through the groups
@@ -96,9 +118,41 @@ jQuery(document).ready(function ($) {
 			return tpl;
 		},
 
-		scanPlugins: function () {},
+		setupContextMenu: function () {
+			this.editor.addMenuGroup('cmspluginsGroup');
+			this.editor.addMenuItem('cmspluginsItem', {
+				label: this.lang.edit,
+				icon: '../ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
+				command: 'cmspluginsEdit',
+				group: 'cmspluginsGroup'
+			});
 
-		openPlugin: function (item, panel) {
+			this.editor.removeMenuItem('image');
+
+			this.editor.contextMenu.addListener(function(element) {
+				if($(element.$).attr('id').split('_')[0] === 'plugin') {
+					return { cmspluginsItem: CKEDITOR.TRISTATE_OFF };
+				}
+			});
+		},
+
+		editPlugin: function (el) {
+			var id = el.getAttribute('id').replace('plugin_obj_', '');
+
+			this.editor.openDialog('cmspluginsDialog');
+
+			// now tweak in dynamic stuff
+			var dialog = CKEDITOR.dialog.getCurrent();
+			$(dialog.parts.title.$).text(this.lang.edit);
+			$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
+				.bind('load', function () {
+					$(this).contents().find('.plugin-submit-row').hide().end()
+						.find('#container').css('min-width', 0);
+				});
+				dialog.data = { 'id': el.getAttribute('id') };
+		},
+
+		addPlugin: function (item, panel) {
 			var that = this;
 
 			// hide the panel
@@ -119,7 +173,7 @@ jQuery(document).ready(function ($) {
 				'success': function (plugin_id) {
 					if(plugin_id === 'error') return false;
 
-					that.openDialog(item, plugin_id);
+					that.addPluginDialog(item, plugin_id);
 				},
 				'error': function () {
 					alert('There was an error creating the plugin.');
@@ -127,61 +181,23 @@ jQuery(document).ready(function ($) {
 			});
 		},
 
-		openDialog: function (item, id) {
-			var that = this;
-
-			var definition = function () { return {
-				'title': '',
-				'minWidth': 600,
-				'minHeight': 250,
-				'contents': [{
-					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
-				}],
-				'onOk': function () {
-					var self = this;
-					var iframe = $(dialog.parts.contents.$).find('iframe').contents();
-						iframe.find('form').submit();
-
-						// catch the reload event and reattach
-						var reload = window.parent.CMS.API.Helpers.reloadBrowser;
-						window.parent.CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
-							CKEDITOR.dialog.getCurrent().hide();
-							that.insertPlugin({
-								'id': id,
-								'type': self.data.name,
-								'icon': icon,
-								'alt': alt
-							});
-
-							window.parent.CMS.API.Helpers.reloadBrowser = reload;
-							return false;
-						};
-					return false;
-				}
-			}};
-
-			// set default definition and open dialog
-			CKEDITOR.dialog.add('cmspluginsDialog', definition);
+		addPluginDialog: function (item, id) {
+			// open the dialog
 			this.editor.openDialog('cmspluginsDialog');
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
-				$(dialog.parts.title.$).text(this.lang.title + ' - ' + item.attr('text'));
+				$(dialog.parts.title.$).text(this.lang.add);
 				$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1')
 					.bind('load', function () {
 						$(this).contents().find('.plugin-submit-row').hide().end()
 							.find('#container').css('min-width', 0);
 					});
 				// set new data
-				dialog.data = {
-					'id': id,
-					'name': item.attr('text')
-				};
+				dialog.data = { 'id': id };
 		},
 
 		insertPlugin: function (data) {
-			// <img src="/static/cms/images/plugins/link.png" alt="Link - asdfasdf" id="plugin_obj_15" title="Link - asdfasdf" />
-			console.log(data);
 			var element = new CKEDITOR.dom.element('img', this.editor.document);
 				element.setAttributes({
 					'id': 'plugin_obj_' + data.id,
@@ -189,7 +205,6 @@ jQuery(document).ready(function ($) {
 					'alt': data.alt,
 					'title': data.alt
 				});
-				element.appendHtml('[' + data.type + ' /]');
 
 			this.editor.insertElement(element);
 		}

@@ -7,9 +7,9 @@ jQuery(document).ready(function ($) {
 		'page': '{{ plugin_pk }}',
 		'lang': {
 			'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-			'title': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-			'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-			'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}'
+			'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
+			'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
+			'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
 		},
 		'plugins': [
 			{% regroup installed_plugins by module as module_list %}

@@ -13,7 +13,7 @@ Installation
 This plugin requires `django CMS` 2.3 or higher to be properly installed.
 
 * In your projects `virtualenv`_, run ``pip install djangocms-text-ckeditor``.
-* Add ``'djangocms_text_ckeditor'`` to your ``INSTALLED_APPS`` setting.
+* Add ``'djangocms_text_ckeditor'`` to your ``INSTALLED_APPS`` setting before the ``cms`` entry.
 * Run ``manage.py migrate djangocms_text_ckeditor``.
 
 

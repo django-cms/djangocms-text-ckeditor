@@ -77,8 +77,8 @@ jQuery(document).ready(function ($) {
 						iframe.find('form').submit();
 
 					// catch the reload event and reattach
-					var reload = window.parent.CMS.API.Helpers.reloadBrowser;
-					window.parent.CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
+					var reload = CMS.API.Helpers.reloadBrowser;
+					CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
 						CKEDITOR.dialog.getCurrent().hide();
 						that.insertPlugin({
 							'id': id,
@@ -86,7 +86,7 @@ jQuery(document).ready(function ($) {
 							'alt': alt
 						});
 
-						window.parent.CMS.API.Helpers.reloadBrowser = reload;
+						CMS.API.Helpers.reloadBrowser = reload;
 						return false;
 					};
 					return false;

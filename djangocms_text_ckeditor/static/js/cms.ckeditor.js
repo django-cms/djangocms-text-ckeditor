@@ -16,8 +16,8 @@ jQuery(document).ready(function ($) {
 			'toolbar_CMS': [
 				['Undo', 'Redo'],
 				['cmsplugins', '-', 'ShowBlocks'],
-				['Format', 'Font', 'FontSize'],
-				['TextColor', 'BGColor', '-', 'PasteFromWord'],
+				['Format', 'FontSize'],
+				['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
 				['Maximize', ''],
 				'/',
 				['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
@@ -26,33 +26,20 @@ jQuery(document).ready(function ($) {
 				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
 				['Source']
 			],
-			// cms default settings, will be overwritten by CKEDITOR_SETTINGS
-			'cmsLang': {
-				'toolbar': 'CMS Plugins',
-				'title': 'CMS Plugins',
-				'aria': 'cms plugins'
-			},
-			'cmsPlugins': [
-				{ group: 'Standard Plugins', items: [
-					{ 'title': 'Picture', 'urls': { 'edit': '/admin/cms/page/1/edit-plugin/140/edit-plugin/169/?_popup=1' } },
-					{ 'title': 'File', 'urls': { 'edit': '/admin/cms/page/1/edit-plugin/140/edit-plugin/169/?_popup=1' } },
-					{ 'title': 'Video', 'urls': { 'edit': '/admin/cms/page/1/edit-plugin/140/edit-plugin/169/?_popup=1' } },
-					{ 'title': 'Link', 'urls': { 'edit': '/admin/cms/page/1/edit-plugin/140/edit-plugin/169/?_popup=1' } },
-					{ 'title': 'Snippet', 'urls': { 'edit': '/admin/cms/page/1/edit-plugin/140/edit-plugin/169/?_popup=1' } }
-				]}
-			],
-			'cmsStaticUrl': '/static/',
-			// this part should not be altered
 			'toolbarCanCollapse': false,
 			'extraPlugins': 'cmsplugins'
 		},
 
-		init: function (container, options) {
+		init: function (container, options, settings) {
 			this.container = $(container);
+			this.settings = settings;
 			this.options = $.extend(true, {}, this.options, options);
+			this.options.cmsPage = this.settings.page;
+			this.options.cmsPlugins = this.settings.plugins;
+			this.options.cmsLang = this.settings.lang;
 
 			// add additional plugins (autoloads plugins.js)
-			CKEDITOR.plugins.addExternal('cmsplugins', this.options.cmsStaticUrl + 'ckeditor_plugins/cmsplugins/');
+			CKEDITOR.plugins.addExternal('cmsplugins', this.settings.static_url + 'ckeditor_plugins/cmsplugins/');
 
 			// render cckeditor
 			CKEDITOR.replace(container, this.options);

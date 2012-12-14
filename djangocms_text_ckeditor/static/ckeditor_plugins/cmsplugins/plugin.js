@@ -10,6 +10,7 @@ jQuery(document).ready(function ($) {
 
 			this.lang = CMS.CKEditor.options.cmsLang;
 			this.plugins = CMS.CKEditor.options.cmsPlugins;
+			this.page_id = CMS.CKEditor.options.cmsPage;
 			this.editor = editor;
 
 			// add the button
@@ -22,7 +23,7 @@ jQuery(document).ready(function ($) {
 				'editorFocus': 1,
 
 				'panel': {
-					'css': [ CKEDITOR.skin.getPath( 'editor' ) ].concat(that.editor.config.contentsCss ),
+					'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
 					'attributes': { role: 'cmsplugins', 'aria-label': this.lang.title }
 				},
 
@@ -36,12 +37,42 @@ jQuery(document).ready(function ($) {
 
 							that.openPlugin($(this), panel);
 						});
-				},
-
-				'onOpen': function () {}
+				}
 			});
 
+			this.editor.addCommand('cmspluginsEdit', {
+				exec: function () {
+					var el = editor.getSelection().getSelectedElement();
 
+					var obj = {
+						'id': el.getAttribute('id').replace('plugin_obj_', ''),
+						'alt': el.getAttribute('alt')
+					};
+
+					console.log(obj);
+				}
+			});
+
+			// add correct context menu handling
+			if(this.editor.contextMenu) this.contextMenu();
+		},
+
+		contextMenu: function () {
+			this.editor.addMenuGroup('cmspluginsGroup');
+			this.editor.addMenuItem('cmspluginsItem', {
+				label: this.lang.edit,
+				icon: '../ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
+				command: 'cmspluginsEdit',
+				group: 'cmspluginsGroup'
+			});
+
+			this.editor.removeMenuItem('image');
+
+			this.editor.contextMenu.addListener(function(element) {
+				if($(element.$).attr('id').split('_')[0] == 'plugin') {
+					return { cmspluginsItem: CKEDITOR.TRISTATE_OFF };
+				}
+			});
 		},
 
 		renderPlugins: function () {
@@ -50,11 +81,12 @@ jQuery(document).ready(function ($) {
 			// loop through the groups
 			$.each(this.plugins, function (i, group) {
 				// add template
-				tpl += '<h1 class="cke_panel_grouptitle">' + group.group + '</h1>'
+				tpl += '<h1 class="cke_panel_grouptitle">' + group.group + '</h1>';
 				tpl += '<ul role="presentation" class="cke_panel_list">';
 				// loop through the plugins
+				// TODO the url is static, will change for 3.0
 				$.each(group.items, function (ii, item) {
-					tpl += '<li class="cke_panel_listItem"><a href="' + item.urls.edit + '" title="Normal">' + item.title + '</a></li>';
+					tpl += '<li class="cke_panel_listItem"><a href="#" rel="' + item.type + '">' + item.title + '</a></li>';
 				});
 				tpl += '</ul>';
 			});
@@ -76,36 +108,88 @@ jQuery(document).ready(function ($) {
 			this.editor.focus();
 			this.editor.fire('saveSnapshot');
 
-			// setup dialog
-			// TODO settings not applied correctly
-			CKEDITOR.dialog.add('cmsplugins', function(editor) {
-				return {
-					'title': item.attr('text'),
-					'minWidth': 500,
-					'minHeight': 250,
-					'contents':[{
-						'id': 'general',
-						'label': 'iframe',
-						'elements': [{ type: 'html', html: '<iframe src="' + item.attr('href') + '" style="position:absolute; left:0; top:0; width:100%; height:100%;" frameborder="0" />' }]
-					}],
-					'onOk': function () {
-						that.insertPlugin(1337, item.attr('text'), false);
-					}
-				};
+			// lets do some ajax
+			$.ajax({
+				'type': 'POST',
+				'url': 'add-plugin/',
+				'data': {
+					parent_id: that.page_id,
+					plugin_type: item.attr('rel')
+				},
+				'success': function (plugin_id) {
+					if(plugin_id === 'error') return false;
+
+					that.openDialog(item, plugin_id);
+				},
+				'error': function () {
+					alert('There was an error creating the plugin.');
+				}
 			});
-			//open dialog
-			this.editor.openDialog('cmsplugins');
 		},
 
-		insertPlugin: function (id, type, wrap) {
-			var element = new CKEDITOR.dom.element('span', this.editor.document);
+		openDialog: function (item, id) {
+			var that = this;
+
+			var definition = function () { return {
+				'title': '',
+				'minWidth': 600,
+				'minHeight': 250,
+				'contents': [{
+					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
+				}],
+				'onOk': function () {
+					var self = this;
+					var iframe = $(dialog.parts.contents.$).find('iframe').contents();
+						iframe.find('form').submit();
+
+						// catch the reload event and reattach
+						var reload = window.parent.CMS.API.Helpers.reloadBrowser;
+						window.parent.CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
+							CKEDITOR.dialog.getCurrent().hide();
+							that.insertPlugin({
+								'id': id,
+								'type': self.data.name,
+								'icon': icon,
+								'alt': alt
+							});
+
+							window.parent.CMS.API.Helpers.reloadBrowser = reload;
+							return false;
+						};
+					return false;
+				}
+			}};
+
+			// set default definition and open dialog
+			CKEDITOR.dialog.add('cmspluginsDialog', definition);
+			this.editor.openDialog('cmspluginsDialog');
+
+			// now tweak in dynamic stuff
+			var dialog = CKEDITOR.dialog.getCurrent();
+				$(dialog.parts.title.$).text(this.lang.title + ' - ' + item.attr('text'));
+				$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1')
+					.bind('load', function () {
+						$(this).contents().find('.plugin-submit-row').hide().end()
+							.find('#container').css('min-width', 0);
+					});
+				// set new data
+				dialog.data = {
+					'id': id,
+					'name': item.attr('text')
+				};
+		},
+
+		insertPlugin: function (data) {
+			// <img src="/static/cms/images/plugins/link.png" alt="Link - asdfasdf" id="plugin_obj_15" title="Link - asdfasdf" />
+			console.log(data);
+			var element = new CKEDITOR.dom.element('img', this.editor.document);
 				element.setAttributes({
-					'contentEditable': 'false',
-					'data-cke-cms-placeholder': 1,
-					'class': 'cke_cms_placeholder',
-					'style': 'font-size:12px; line-height:12px; font-family:"Courier New", courir, monospace; color:#fff; margin:0 1px; position:relative; top:-2px; background:#4ea8ee;'
+					'id': 'plugin_obj_' + data.id,
+					'src': data.icon,
+					'alt': data.alt,
+					'title': data.alt
 				});
-				element.appendHtml('[' + type + ' /]');
+				element.appendHtml('[' + data.type + ' /]');
 
 			this.editor.insertElement(element);
 		}

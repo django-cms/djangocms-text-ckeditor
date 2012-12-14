@@ -33,7 +33,7 @@ class TextEditorWidget(Textarea):
             'settings': language.join(simplejson.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
-            'plugin_pk':self.pk,
+            'plugin_pk': self.pk,
         }
         return mark_safe(render_to_string(
             'cms/plugins/widgets/ckeditor.html', context))

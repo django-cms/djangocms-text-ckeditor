@@ -2,6 +2,25 @@
 <script type="text/javascript">
 jQuery(document).ready(function ($) {
 	// initialize ckeditor
-	CMS.CKEditor.init('id_{{ name }}', {{ settings|safe }});
+	CMS.CKEditor.init('id_{{ name }}', {{ settings|safe }}, {
+		'static_url': '{{ STATIC_URL }}',
+		'page': '{{ plugin_pk }}',
+		'lang': {
+			'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
+			'title': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
+			'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
+			'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}'
+		},
+		'plugins': [
+			{% regroup installed_plugins by module as module_list %}
+			{% for module in module_list %}
+				{ group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
+					{% for plugin in module.list %}
+						{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.las %},{% endif %}
+					{% endfor %}
+				]}{% if not forloop.las %},{% endif %}
+			{% endfor %}
+		]
+	});
 });
 </script>

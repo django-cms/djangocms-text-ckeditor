@@ -1,12 +1,1 @@
 {% extends "admin/cms/page/plugin_change_form.html" %}
-
-{% block extrastyle %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/cms.ckeditor.css" />
-{% endblock extrastyle %}
-
-{% block extrahead %}
-{{ block.super }}
-<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/cms.ckeditor.js"></script>
-{% endblock extrahead %}

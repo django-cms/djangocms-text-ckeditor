@@ -1,3 +1,4 @@
+from django.conf import settings
 import settings as text_settings
 from django.conf import settings
 from django.forms import Textarea
@@ -35,9 +36,15 @@ class TextEditorWidget(Textarea):
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
         }
-        return mark_safe(render_to_string(
-            'cms/plugins/widgets/ckeditor.html', context))
+        return mark_safe(render_to_string('cms/plugins/widgets/ckeditor.html', context))
 
     def render(self, name, value, attrs=None):
         return self.render_textarea(name, value, attrs) + \
             self.render_additions(name, value, attrs)
+
+    class Media:
+        css = {
+            'all': ('%scss/cms.ckeditor.css' % settings.STATIC_URL,)
+        }
+        js = ('%sckeditor/ckeditor.js' % settings.STATIC_URL,
+              '%sjs/cms.ckeditor.js' % settings.STATIC_URL,)

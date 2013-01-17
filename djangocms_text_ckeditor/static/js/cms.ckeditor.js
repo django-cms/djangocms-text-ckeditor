@@ -1,3 +1,6 @@
+// ensure namespace is defined
+var CMS = window.CMS || {};
+
 /*##################################################|*/
 /* #CMS.CKEDITOR# */
 jQuery(document).ready(function ($) {

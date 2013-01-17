@@ -42,6 +42,8 @@ It is a dict that hold all CKEditor settings. For an  overview of all the availa
 
 http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all settings
 
+If you want to use the ckeditor in your own models there is a HTMLField in djangocms_text_ckeditor.fields.
+
 Drag & Drop Images
 ------------------
 

@@ -12,6 +12,10 @@ jQuery(document).ready(function ($) {
 			this.plugins = CMS.CKEditor.options.cmsPlugins;
 			this.page_id = CMS.CKEditor.options.cmsPage;
 			this.editor = editor;
+
+			// don't do anything if there are no plugins defined
+			if (this.plugins.length === 0) return;
+
 			this.setupDialog();
 
 			// add the button

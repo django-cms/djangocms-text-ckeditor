@@ -32,7 +32,7 @@ You can add a new setting to your settings.py called `CKEDITOR_SETTINGS`
 
 the default is::
 
-	CKEDITOR_SETTINGS = {
+    CKEDITOR_SETTINGS = {
 	    'language': '{{ language }}',
 	    'toolbar': 'CMS',
 	    'skin': 'moono'
@@ -67,3 +67,26 @@ Translations
 If you want to help translate the plugin please do it on transifex:
 
 https://www.transifex.com/projects/p/django-cms/resource/djangocms-text-ckeditor/
+
+
+Usage as a model field
+----------------------
+
+If you want to use the widget on your own model fields, you can! Just import the provided ``HTMLField`` like so:
+
+::
+
+
+    from djangocms_text_ckeditor.fields import HTMLField
+
+If you are using South migrations, you might need to add an inspection rule:
+
+::
+
+    try:
+        from south.modelsinspector import add_introspection_rules
+        add_introspection_rules([], ['^djangocms_text_ckeditor\.fields\.HTMLField'])
+    except ImportError:
+        pass
+
+

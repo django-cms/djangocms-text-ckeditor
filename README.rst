@@ -74,8 +74,14 @@ If you want to use the widget on your own model fields, you can! Just import the
 
 ::
 
-
     from djangocms_text_ckeditor.fields import HTMLField
+
+And use it in your models, just like a TextField:
+
+::
+
+    class MyModel(models.Model):
+        myfield = HTMLField(blank=True)
 
 If you are using South migrations, you might need to add an inspection rule:
 

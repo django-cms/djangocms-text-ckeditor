@@ -1,26 +1,38 @@
 {% load i18n %}
 <script type="text/javascript">
 jQuery(document).ready(function ($) {
-	// initialize ckeditor
-	CMS.CKEditor.init('id_{{ name }}', {{ settings|safe }}, {
-		'static_url': '{{ STATIC_URL }}',
-		'page': '{{ plugin_pk }}',
-		'lang': {
-			'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-			'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
-			'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
-			'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
-		},
-		'plugins': [
-			{% regroup installed_plugins by module as module_list %}
-			{% for module in module_list %}
-				{ group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
-					{% for plugin in module.list %}
-						{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.las %},{% endif %}
-					{% endfor %}
-				]}{% if not forloop.las %},{% endif %}
-			{% endfor %}
-		]
-	});
+	// get the container id
+	var container = 'id_{{ name }}';
+	var prefixPos = container.indexOf('-__prefix__');
+    if (prefixPos != - 1) {
+        // in case the textarea is in an inline, we need to perform some replacements
+        var name = container.substring(0, prefixPos);
+        var replacement = $('#' + name + "-TOTAL_FORMS").val();
+        container = container.replace('__prefix__', replacement);
+    }
+
+    // initialize ckeditor only if the container exists
+	if ($('#'+container).length > 0) {
+		CMS.CKEditor.init(container, {{ settings|safe }}, {
+			'static_url': '{{ STATIC_URL }}',
+			'page': '{{ plugin_pk }}',
+			'lang': {
+				'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
+				'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
+				'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
+				'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
+			},
+			'plugins': [
+				{% regroup installed_plugins by module as module_list %}
+				{% for module in module_list %}
+					{ group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
+						{% for plugin in module.list %}
+							{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.las %},{% endif %}
+						{% endfor %}
+					]}{% if not forloop.las %},{% endif %}
+				{% endfor %}
+			]
+		});
+    }
 });
 </script>

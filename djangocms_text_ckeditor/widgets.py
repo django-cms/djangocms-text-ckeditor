@@ -16,9 +16,6 @@ class TextEditorWidget(Textarea):
 
         installed_plugins is a list of plugins to display that are text_enabled
         """
-        self.attrs = {'class': 'ckeditor'}
-        if attrs:
-            self.attrs.update(attrs)
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk

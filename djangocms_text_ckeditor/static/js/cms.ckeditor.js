@@ -1,5 +1,6 @@
 // ensure namespace is defined
 var CMS = window.CMS || {};
+var jQuery = window.jQuery || django.jQuery;
 
 /*##################################################|*/
 /* #CMS.CKEDITOR# */

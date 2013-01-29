@@ -1,5 +1,8 @@
 {% load i18n %}
 <script type="text/javascript">
+// ensure namespace is defined
+var jQuery = window.jQuery || django.jQuery;
+
 jQuery(document).ready(function ($) {
 	// get the container id
 	var container = 'id_{{ name }}';

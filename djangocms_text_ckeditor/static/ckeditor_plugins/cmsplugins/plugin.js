@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
 			var definition = function () { return {
 				'title': '',
 				'minWidth': 600,
-				'minHeight': 250,
+				'minHeight': 150,
 				'contents': [{
 					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
 				}],

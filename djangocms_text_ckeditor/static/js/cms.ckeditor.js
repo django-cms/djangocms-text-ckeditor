@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
 			'toolbar_CMS': [
 				['Undo', 'Redo'],
 				['cmsplugins', '-', 'ShowBlocks'],
-				['Format', 'FontSize'],
+				['Format', 'Styles'],
 				['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
 				['Maximize', ''],
 				'/',

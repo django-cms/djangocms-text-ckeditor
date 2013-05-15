@@ -38,6 +38,7 @@ def extract_images(data, plugin):
     tree_builder = html5lib.treebuilders.getTreeBuilder('dom')
     parser = html5lib.html5parser.HTMLParser(tree = tree_builder)
     dom = parser.parse(data)
+    found = False
     for img in dom.getElementsByTagName('img'):
         src = img.getAttribute('src')
         if not src.startswith('data:'):
@@ -81,7 +82,11 @@ def extract_images(data, plugin):
         new_img_html = plugin_to_tag(image_plugin)
         # replace the original image node with the newly created cms plugin html
         img.parentNode.replaceChild(parser.parseFragment(new_img_html).childNodes[0], img)
-    return u''.join([y.toxml() for y in dom.getElementsByTagName('body')[0].childNodes])
+        found = True
+    if found:
+        return u''.join([y.toxml() for y in dom.getElementsByTagName('body')[0].childNodes])
+    else:
+        return data
 
 
 def img_data_to_plugin(filename, image, parent_plugin, width=None, height=None):

@@ -1,3 +1,4 @@
+from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.forms.fields import CharField
@@ -55,6 +56,9 @@ class TextPlugin(CMSPluginBase):
             'placeholder': placeholder,
             'object': instance
         })
+        # Support for Django CMS 2.x
+        if cms_version.startswith('2'):
+            context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
         return context
 
     def save_model(self, request, obj, form, change):

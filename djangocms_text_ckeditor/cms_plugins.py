@@ -1,3 +1,4 @@
+from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.forms.fields import CharField
@@ -44,6 +45,15 @@ class TextPlugin(CMSPluginBase):
         form = self.get_form_class(request, plugins, pk)
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
+
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        """
+        We override the change form template path
+        to provide backwards compatibility with CMS 2.x
+        """
+        if cms_version.startswith('2'):
+            context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
+        return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)
 
     def render(self, context, instance, placeholder):
         context.update({

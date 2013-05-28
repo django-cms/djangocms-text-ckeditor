@@ -46,6 +46,15 @@ class TextPlugin(CMSPluginBase):
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
 
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        """
+        We override the change form template path
+        to provide backwards compatibility with CMS 2.x
+        """
+        if cms_version.startswith('2'):
+            context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
+        return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)
+
     def render(self, context, instance, placeholder):
         context.update({
             'body': plugin_tags_to_user_html(
@@ -56,9 +65,6 @@ class TextPlugin(CMSPluginBase):
             'placeholder': placeholder,
             'object': instance
         })
-        # Support for Django CMS 2.x
-        if cms_version.startswith('2'):
-            context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
         return context
 
     def save_model(self, request, obj, form, change):

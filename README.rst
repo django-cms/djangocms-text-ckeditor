@@ -60,6 +60,8 @@ There is a setting called:
 you can overwrite this setting in your settings.py and point it to a function that handles image saves.
 Have a look at the function `create_picture_plugin` for details.
 
+To completely disable the feature, set `TEXT_SAVE_IMAGE_FUNCTION = None`.
+
 
 Translations
 ------------

@@ -9,7 +9,7 @@ import html5lib
 import re
 import base64
 from PIL import Image
-from settings import TEXT_SAVE_IMAGE_FUNCTION
+from .settings import TEXT_SAVE_IMAGE_FUNCTION
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
 DEFAULT_PARSER = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,

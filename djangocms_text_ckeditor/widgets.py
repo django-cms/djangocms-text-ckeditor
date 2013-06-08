@@ -1,5 +1,5 @@
 from django.conf import settings
-import settings as text_settings
+import djangocms_text_ckeditor.settings as text_settings
 from django.conf import settings
 from django.forms import Textarea
 from django.template.loader import render_to_string

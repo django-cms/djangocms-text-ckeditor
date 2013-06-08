@@ -9,7 +9,7 @@ from django.utils.functional import LazyObject
 from django.core.files.storage import get_storage_class
 import os
 
-OBJ_ADMIN_RE_PATTERN = ur'<img [^>]*\bid="plugin_obj_(\d+)"[^>]*/?>'
+OBJ_ADMIN_RE_PATTERN = r'<img [^>]*\bid="plugin_obj_(\d+)"[^>]*/?>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
 
 def plugin_to_tag(obj):

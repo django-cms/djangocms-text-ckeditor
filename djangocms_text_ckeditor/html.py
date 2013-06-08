@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 try:
-    from io import StringIO
+    from io import BytesIO as StringIO
 except:
     from StringIO import StringIO
 import uuid

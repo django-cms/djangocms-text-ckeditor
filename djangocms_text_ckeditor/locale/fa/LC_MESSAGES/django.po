@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# bikeshedder <michael.jung@terreon.de>, 2013
+# cafeclick <cafeclick@rocketmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-cms\n"
@@ -11,49 +11,49 @@ msgstr ""
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
 "PO-Revision-Date: 2013-04-29 09:32+0000\n"
 "Last-Translator: Patrick Lauber <patrick.lauber@divio.ch>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/django-cms/language/de/)\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/django-cms/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: cms_plugins.py:13
 msgid "Text"
-msgstr "Text"
+msgstr "متن"
 
 #: models.py:12
 msgid "body"
-msgstr "Body"
+msgstr "بدنه"
 
 #: templates/cms/plugins/widgets/ckeditor.html:28
 msgid "Please select a plugin type."
-msgstr "Bitte ein Plugin auswählen"
+msgstr "لطفا نوع پلاگین را انتخاب کنید."
 
 #: templates/cms/plugins/widgets/ckeditor.html:34
 msgid "Text editor does not support inserting objects."
-msgstr "Der Texteditor unterstützt das Einfügen von Objekten nicht."
+msgstr "ویرایشگر متنی، درج اشیاء را پشتیبانی نمی‌کند."
 
 #: templates/cms/plugins/widgets/ckeditor.html:46
 msgid "Text editor does not support editing objects."
-msgstr "Der Texteditor unterstützt das Bearbeiten von Objekten nicht."
+msgstr "ویرایشگر متنی، ویرایش اشیاء را پشتیبانی نمی‌کند."
 
 #: templates/cms/plugins/widgets/ckeditor.html:51
 msgid "No object selected."
-msgstr "Kein Objekt ausgewählt."
+msgstr "هیچ شیئی انتخاب نشده‌ است."
 
 #: templates/cms/plugins/widgets/ckeditor.html:55
 msgid "Not a plugin object"
-msgstr "Kein Plugin-Objekt"
+msgstr "از نوع پلاگین نیست"
 
 #: templates/cms/plugins/widgets/ckeditor.html:67
 msgid "Available Plugins"
-msgstr "Verfügbare Plugins"
+msgstr "پلاگین های موجود"
 
 #: templates/cms/plugins/widgets/ckeditor.html:70
 msgid "Insert plugin"
-msgstr "Plugin einfügen"
+msgstr "درج پلاگین"
 
 #: templates/cms/plugins/widgets/ckeditor.html:71
 msgid "Edit selected plugin"
-msgstr "Ausgewähltes Plugin bearbeiten"
+msgstr "ویرایش پلاگین انتخاب شده"

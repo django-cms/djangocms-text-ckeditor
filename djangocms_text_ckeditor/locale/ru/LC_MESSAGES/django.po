@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# bikeshedder <michael.jung@terreon.de>, 2013
+# slam <little_pea@list.ru>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-cms\n"
@@ -11,49 +11,49 @@ msgstr ""
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
 "PO-Revision-Date: 2013-04-29 09:32+0000\n"
 "Last-Translator: Patrick Lauber <patrick.lauber@divio.ch>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/django-cms/language/de/)\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/django-cms/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: cms_plugins.py:13
 msgid "Text"
-msgstr "Text"
+msgstr "Текст"
 
 #: models.py:12
 msgid "body"
-msgstr "Body"
+msgstr "тело"
 
 #: templates/cms/plugins/widgets/ckeditor.html:28
 msgid "Please select a plugin type."
-msgstr "Bitte ein Plugin auswählen"
+msgstr "Пожалуйста выберите тип плагина."
 
 #: templates/cms/plugins/widgets/ckeditor.html:34
 msgid "Text editor does not support inserting objects."
-msgstr "Der Texteditor unterstützt das Einfügen von Objekten nicht."
+msgstr "Текстовый редактор не поддерживает вставку объектов."
 
 #: templates/cms/plugins/widgets/ckeditor.html:46
 msgid "Text editor does not support editing objects."
-msgstr "Der Texteditor unterstützt das Bearbeiten von Objekten nicht."
+msgstr "Текстовый редактор не поддерживает изменение объектов."
 
 #: templates/cms/plugins/widgets/ckeditor.html:51
 msgid "No object selected."
-msgstr "Kein Objekt ausgewählt."
+msgstr "Объект не выбран."
 
 #: templates/cms/plugins/widgets/ckeditor.html:55
 msgid "Not a plugin object"
-msgstr "Kein Plugin-Objekt"
+msgstr "Объект не является плагином."
 
 #: templates/cms/plugins/widgets/ckeditor.html:67
 msgid "Available Plugins"
-msgstr "Verfügbare Plugins"
+msgstr "Доступные плагины."
 
 #: templates/cms/plugins/widgets/ckeditor.html:70
 msgid "Insert plugin"
-msgstr "Plugin einfügen"
+msgstr "Вставить плагин"
 
 #: templates/cms/plugins/widgets/ckeditor.html:71
 msgid "Edit selected plugin"
-msgstr "Ausgewähltes Plugin bearbeiten"
+msgstr "Изменить выбранный плагин."

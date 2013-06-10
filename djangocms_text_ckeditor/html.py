@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
+try:
+    from io import BytesIO as StringIO
+except:
+    from StringIO import StringIO
 import uuid
 from html5lib import sanitizer, serializer, treebuilders, treewalkers
 import html5lib
 import re
 import base64
-import StringIO
 from PIL import Image
-from settings import TEXT_SAVE_IMAGE_FUNCTION
+from .settings import TEXT_SAVE_IMAGE_FUNCTION
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
 DEFAULT_PARSER = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
@@ -59,7 +62,7 @@ def extract_images(data, plugin):
         except:
             image_data = base64.urlsafe_b64decode(image_data)
         image_type = mime_type.split("/")[1]
-        image = StringIO.StringIO(image_data)
+        image = StringIO(image_data)
         # genarate filename and normalize image format
         if image_type == "jpg" or image_type == "jpeg":
             file_ending = "jpg"
@@ -70,7 +73,7 @@ def extract_images(data, plugin):
         else:
             # any not "web-safe" image format we try to convert to jpg
             im = Image.open(image)
-            new_image = StringIO.StringIO()
+            new_image = StringIO()
             file_ending = "jpg"
             im.save(new_image, "JPEG")
             new_image.seek(0)

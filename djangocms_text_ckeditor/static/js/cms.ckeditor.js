@@ -31,7 +31,7 @@ jQuery(document).ready(function ($) {
 				['Source']
 			],
 			'toolbarCanCollapse': false,
-			'extraPlugins': 'cmsplugins'
+			'extraPlugins': 'cmsplugins,codemirror'
 		},
 
 		init: function (container, options, settings) {
@@ -44,6 +44,7 @@ jQuery(document).ready(function ($) {
 
 			// add additional plugins (autoloads plugins.js)
 			CKEDITOR.plugins.addExternal('cmsplugins', this.settings.static_url + 'ckeditor_plugins/cmsplugins/');
+			CKEDITOR.plugins.addExternal('codemirror', this.settings.static_url + 'ckeditor_plugins/codemirror/');
 
 			// render cckeditor
 			CKEDITOR.replace(container, this.options);

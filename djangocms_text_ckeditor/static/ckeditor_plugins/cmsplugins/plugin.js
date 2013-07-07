@@ -174,10 +174,11 @@ jQuery(document).ready(function ($) {
 					parent_id: that.page_id,
 					plugin_type: item.attr('rel')
 				},
-				'success': function (plugin_id) {
-					if(plugin_id === 'error') return false;
-
-					that.addPluginDialog(item, plugin_id);
+				'success': function (data) {
+					if(data === 'error') return false;
+                    // TODO: this is ugly fix -- find a better way:
+                    var plugin_id = data.url.split('/').reverse()[1];
+                    that.addPluginDialog(item, plugin_id);
 				},
 				'error': function () {
 					alert('There was an error creating the plugin.');

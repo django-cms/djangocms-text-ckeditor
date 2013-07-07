@@ -32,6 +32,7 @@ class TextEditorWidget(Textarea):
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
+            'csrf_cookie_name': settings.CSRF_COOKIE_NAME,
         }
         return mark_safe(render_to_string('cms/plugins/widgets/ckeditor.html', context))
 

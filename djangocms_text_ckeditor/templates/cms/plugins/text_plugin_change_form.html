@@ -1,1 +1,22 @@
 {% extends change_form_template|default:"admin/cms/page/plugin/change_form.html" %}
+{% load admin_static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "css/cms.ckeditor.css" %}" />
+{% endblock extrastyle %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "cms/js/plugins/cms.base.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor.js" %}"></script>
+<script type="text/javascript" src="{% static "js/cms.ckeditor.js" %}"></script>
+<script type="text/javascript">
+(function($) {
+// CMS.$ will be passed for $
+$(document).ready(function () {
+	CMS.API.Helpers.csrf('{{ csrf_token }}');
+});
+})(CMS.$);
+</script>
+{% endblock %}

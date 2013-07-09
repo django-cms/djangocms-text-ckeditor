@@ -1,9 +1,9 @@
 {% load i18n %}
 <script type="text/javascript">
-// ensure namespace is defined
-var jQuery = window.jQuery || django.jQuery;
+(function($) {
+// CMS.$ will be passed for $
+$(document).ready(function () {
 
-jQuery(document).ready(function ($) {
 	// get the container id
 	var container = 'id_{{ name }}';
 	var prefixPos = container.indexOf('-__prefix__');
@@ -15,10 +15,13 @@ jQuery(document).ready(function ($) {
     }
 
     // initialize ckeditor only if the container exists
-	if ($('#'+container).length > 0) {
+	if($('#'+container).length > 0) {
 		CMS.CKEditor.init(container, {{ settings|safe }}, {
 			'static_url': '{{ STATIC_URL }}',
-			'page': '{{ plugin_pk }}',
+			'add_plugin_url': '{{ placeholder.get_add_url }}',
+			'placeholder_id': {{ placeholder.pk }},
+			'plugin_id': {{ plugin_pk }},
+			'plugin_language': '{{ plugin.language }}',
 			'lang': {
 				'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
 				'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
@@ -37,5 +40,7 @@ jQuery(document).ready(function ($) {
 			]
 		});
     }
+
 });
+})(CMS.$);
 </script>

@@ -1,13 +1,11 @@
-// ensure namespace is defined
-var CMS = window.CMS || {};
-var jQuery = window.jQuery || django.jQuery;
-
 /*##################################################|*/
 /* #CMS.CKEDITOR# */
-jQuery(document).ready(function ($) {
+(function($) {
+// CMS.$ will be passed for $
+$(document).ready(function () {
 	/*!
-	 * CKEditor
-	 * @version: 1.0.0
+	 * CNS.CKEditor
+	 * @version: 1.1.0
 	 * @description: Adds cms specific plugins to CKEditor
 	 */
 	CMS.CKEditor = {
@@ -36,14 +34,14 @@ jQuery(document).ready(function ($) {
 
 		init: function (container, options, settings) {
 			this.container = $(container);
-			this.settings = settings;
-			this.options = $.extend(true, {}, this.options, options);
-			this.options.cmsPage = this.settings.page;
-			this.options.cmsPlugins = this.settings.plugins;
-			this.options.cmsLang = this.settings.lang;
+
+			// add additional settings to options
+			this.options = $.extend(true, {
+				'settings': settings
+			}, this.options, options);
 
 			// add additional plugins (autoloads plugins.js)
-			CKEDITOR.plugins.addExternal('cmsplugins', this.settings.static_url + 'ckeditor_plugins/cmsplugins/');
+			CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'ckeditor_plugins/cmsplugins/');
 
 			// render cckeditor
 			CKEDITOR.replace(container, this.options);
@@ -66,4 +64,6 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
+
 });
+})(CMS.$);

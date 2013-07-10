@@ -168,7 +168,7 @@ $(document).ready(function () {
 			var data = {
 				'placeholder_id': this.options.placeholder_id,
 				'plugin_type': item.attr('rel'),
-				'plugin_id': this.options.plugin_id,
+				'parent_id': this.options.plugin_id,
 				'plugin_language': 'en'
 			};
 			console.log(item.attr('rel'));

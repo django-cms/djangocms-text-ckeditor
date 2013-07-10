@@ -171,7 +171,6 @@ $(document).ready(function () {
 				'plugin_id': this.options.plugin_id,
 				'plugin_language': 'en'
 			};
-			console.log(item.attr('rel'));
 
 			// lets do some ajax
 			$.ajax({

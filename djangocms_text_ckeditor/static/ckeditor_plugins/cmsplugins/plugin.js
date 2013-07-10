@@ -13,6 +13,7 @@ $(document).ready(function () {
 
 			this.options = CMS.CKEditor.options.settings;
 			this.editor = editor;
+			this.data = null;
 
 			// don't do anything if there are no plugins defined
 			if(this.options.plugins.length === 0) return;
@@ -73,7 +74,7 @@ $(document).ready(function () {
 			var definition = function () { return {
 				'title': '',
 				'minWidth': 600,
-				'minHeight': 150,
+				'minHeight': 200,
 				'contents': [{
 					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
 				}],
@@ -83,13 +84,11 @@ $(document).ready(function () {
 
 					// catch the reload event and reattach
 					var reload = CMS.API.Helpers.reloadBrowser;
-					CMS.API.Helpers.reloadBrowser = function(id, icon, alt) {
+
+					CMS.API.Helpers.reloadBrowser = function() {
 						CKEDITOR.dialog.getCurrent().hide();
-						that.insertPlugin({
-							'id': id,
-							'icon': icon,
-							'alt': alt
-						});
+
+						that.insertPlugin(that.data);
 
 						CMS.API.Helpers.reloadBrowser = reload;
 						return false;
@@ -150,10 +149,9 @@ $(document).ready(function () {
 			$(dialog.parts.title.$).text(this.options.lang.edit);
 			$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
 				.bind('load', function () {
-					$(this).contents().find('.plugin-submit-row').hide().end()
-						.find('#container').css('min-width', 0);
+					$(this).contents().find('.submit-row').hide().end()
+						.find('#container').css('min-width', 0).css('padding', 0);
 				});
-				dialog.data = { 'data': el.getAttribute('data') };
 		},
 
 		addPlugin: function (item, panel) {
@@ -171,20 +169,31 @@ $(document).ready(function () {
 				'placeholder_id': this.options.placeholder_id,
 				'plugin_type': item.attr('rel'),
 				'plugin_id': this.options.plugin_id,
-				'plugin_language': this.options.plugin_language
+				'plugin_language': 'en'
 			};
+			console.log(item.attr('rel'));
 
 			// lets do some ajax
 			$.ajax({
 				'type': 'POST',
 				'url': this.options.add_plugin_url,
 				'data': data,
-				'success': function (plugin_id) {
-					if(plugin_id === 'error') return false;
+				'success': function (data) {
+					// cancel if error is returned
+					if(data === 'error') return false;
 
-					that.addPluginDialog(item, plugin_id);
+					// attach static icon to the object
+					data.alt = item.attr('rel');
+					data.id = parseInt(data.url.split('/')[data.url.split('/').length - 2]);
+					data.icon = that.options.static_url + 'ckeditor_plugins/cmsplugins/icons/' + item.attr('rel') + '.png';
+
+					// set new data, will be used for reload browser birdge
+					that.data = data;
+
+					// trigger dialog
+					that.addPluginDialog(item, data);
 				},
-				'error': function () {
+				'error': function (error) {
 					alert('There was an error creating the plugin.');
 				}
 			});
@@ -199,11 +208,9 @@ $(document).ready(function () {
 				$(dialog.parts.title.$).text(this.options.lang.add);
 				$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
 					.bind('load', function () {
-						$(this).contents().find('.plugin-submit-row').hide().end()
-							.find('#container').css('min-width', 0);
+						$(this).contents().find('.submit-row').hide().end()
+							.find('#container').css('min-width', 0).css('padding', 0);
 					});
-				// set new data
-				dialog.data = { 'data': data };
 		},
 
 		insertPlugin: function (data) {

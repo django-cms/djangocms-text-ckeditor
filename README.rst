@@ -8,6 +8,7 @@ Text Plugin for django-cms with CK-Editor
 
 .. WARNING::
    For django CMS 2.3 and 2.4 use ``djangocms-text-ckeditor2`` < 2.
+
    ``djangocms-text-ckeditor`` >= 2 is compatible with django CMS 3 only.
 
 

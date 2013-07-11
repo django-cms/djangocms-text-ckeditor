@@ -13,7 +13,6 @@ $(document).ready(function () {
 
 			this.options = CMS.CKEditor.options.settings;
 			this.editor = editor;
-			this.data = null;
 
 			// don't do anything if there are no plugins defined
 			if(this.options.plugins.length === 0) return;
@@ -88,7 +87,7 @@ $(document).ready(function () {
 					CMS.API.Helpers.reloadBrowser = function() {
 						CKEDITOR.dialog.getCurrent().hide();
 
-						that.insertPlugin(that.data);
+						that.insertPlugin(CMS.API.Helpers.dataBridge);
 
 						CMS.API.Helpers.reloadBrowser = reload;
 						return false;
@@ -181,14 +180,6 @@ $(document).ready(function () {
 					// cancel if error is returned
 					if(data === 'error') return false;
 
-					// attach static icon to the object
-					data.alt = item.attr('rel');
-					data.id = parseInt(data.url.split('/')[data.url.split('/').length - 2]);
-					data.icon = that.options.static_url + 'ckeditor_plugins/cmsplugins/icons/' + item.attr('rel') + '.png';
-
-					// set new data, will be used for reload browser birdge
-					that.data = data;
-
 					// trigger dialog
 					that.addPluginDialog(item, data);
 				},
@@ -213,12 +204,14 @@ $(document).ready(function () {
 		},
 
 		insertPlugin: function (data) {
+			console.log(data);
+
 			var element = new CKEDITOR.dom.element('img', this.editor.document);
 				element.setAttributes({
-					'id': 'plugin_obj_' + data.id,
-					'src': data.icon,
-					'alt': data.alt,
-					'title': data.alt
+					'id': 'plugin_obj_' + data.plugin_id,
+					'src': data.plugin_icon,
+					'alt': data.plugin_type,
+					'title': data.plugin_desc
 				});
 
 			this.editor.insertElement(element);

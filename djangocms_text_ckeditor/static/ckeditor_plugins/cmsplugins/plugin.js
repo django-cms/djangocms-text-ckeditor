@@ -204,8 +204,6 @@ $(document).ready(function () {
 		},
 
 		insertPlugin: function (data) {
-			console.log(data);
-
 			var element = new CKEDITOR.dom.element('img', this.editor.document);
 				element.setAttributes({
 					'id': 'plugin_obj_' + data.plugin_id,

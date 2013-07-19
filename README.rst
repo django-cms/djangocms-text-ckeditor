@@ -100,5 +100,34 @@ If you are using South migrations, you might need to add an inspection rule:
         add_introspection_rules([], ['^djangocms_text_ckeditor\.fields\.HTMLField'])
     except ImportError:
         pass
+        
+Extending the plugin
+--------------------
+
+You can use this plugin as base to create your own CKEditor-based plugins.
+
+You need to create your own plugin model extending ``AbstractClass``:
+
+::
+
+    from djangocms_text_ckeditor.models import AbstractText
+
+    class MyTextModel(AbstractText):
+        title = models.CharField(max_length=100)
+
+and a plugin class extending ``TextPlugin`` class:
+
+::
+
+    from djangocms_text_ckeditor.cms_plugins import TextPlugin
+    from .models import MyTextModel
+    
+    
+    class MyTextPlugin(TextPlugin):
+        name = _(u"My text plugin")
+        model = MyTextModel
+    plugin_pool.register_plugin(MyTextPlugin)
+
+You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
 

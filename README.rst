@@ -7,7 +7,7 @@ Text Plugin for django-cms with CK-Editor
    ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
 .. WARNING::
-   For django CMS 2.3 and 2.4 use ``djangocms-text-ckeditor2`` < 2.
+   For django CMS 2.3 and 2.4 use ``djangocms-text-ckeditor`` < 2 (e.g.: version 1.0.10).
 
    ``djangocms-text-ckeditor`` >= 2 is compatible with django CMS 3 only.
 

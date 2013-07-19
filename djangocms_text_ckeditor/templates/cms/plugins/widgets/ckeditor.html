@@ -1,4 +1,12 @@
-{% load i18n %}
+{% load i18n staticfiles %}
+<script>
+window.CMS || window.parent.CMS || document.write(
+    '<script src="{% static "admin/js/jquery.min.js" %}"><\/script>' +
+    '<script src="{% static "cms/js/plugins/cms.base.js" %}"><\/script>' +
+    '<script src="{% static "ckeditor/ckeditor.js" %}"><\/script>' +
+    '<script src="{% static "js/cms.ckeditor.js" %}"><\/script>'
+);
+</script>
 <script type="text/javascript">
 (function($) {
 // CMS.$ will be passed for $
@@ -20,7 +28,7 @@ $(document).ready(function () {
 			'static_url': '{{ STATIC_URL }}',
 			'add_plugin_url': '{{ placeholder.get_add_url }}',
             'placeholder_id': {{ placeholder.pk|default:"''" }},
-			'plugin_id': {{ plugin_pk }},
+			'plugin_id': {{ plugin_pk|default:"''" }},
 			'plugin_language': '{{ plugin.language }}',
 			'lang': {
 				'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',

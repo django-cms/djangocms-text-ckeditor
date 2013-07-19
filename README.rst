@@ -104,6 +104,9 @@ If you are using South migrations, you might need to add an inspection rule:
 Extending the plugin
 --------------------
 
+.. NOTE::
+    Added in version 2.0.post (still unreleased)
+
 You can use this plugin as base to create your own CKEditor-based plugins.
 
 You need to create your own plugin model extending ``AbstractClass``:

@@ -9,8 +9,6 @@
 {% block extrahead %}
 {{ block.super }}
 <script type="text/javascript" src="{% static "cms/js/plugins/cms.base.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor.js" %}"></script>
-<script type="text/javascript" src="{% static "js/cms.ckeditor.js" %}"></script>
 <script type="text/javascript">
 (function($) {
 // CMS.$ will be passed for $
@@ -19,4 +17,6 @@ $(document).ready(function () {
 });
 })(CMS.$);
 </script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor.js" %}"></script>
+<script type="text/javascript" src="{% static "js/cms.ckeditor.js" %}"></script>
 {% endblock %}

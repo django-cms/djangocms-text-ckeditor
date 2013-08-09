@@ -1,6 +1,6 @@
 ﻿
 /**
- * @license Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
 
@@ -53,7 +53,8 @@ var CKBUILDER_CONFIG = {
 		'iframe' : 1,
 		'wysiwygarea' : 1,
 		'image' : 1,
-		'indent' : 1,
+		'indentblock' : 1,
+		'indentlist' : 1,
 		'smiley' : 1,
 		'justify' : 1,
 		'link' : 1,
@@ -74,11 +75,13 @@ var CKBUILDER_CONFIG = {
 		'showborders' : 1,
 		'sourcearea' : 1,
 		'specialchar' : 1,
+		'scayt' : 1,
 		'stylescombo' : 1,
 		'tab' : 1,
 		'table' : 1,
 		'tabletools' : 1,
 		'undo' : 1,
+		'wsc' : 1,
 		'dialog' : 1,
 		'dialogui' : 1,
 		'panelbutton' : 1,
@@ -89,10 +92,13 @@ var CKBUILDER_CONFIG = {
 		'popup' : 1,
 		'fakeobjects' : 1,
 		'richcombo' : 1,
-		'listblock' : 1
+		'listblock' : 1,
+		'indent' : 1,
+		'menubutton' : 1
 	},
 	languages : {
 		'af' : 1,
+		'sq' : 1,
 		'ar' : 1,
 		'eu' : 1,
 		'bn' : 1,
@@ -124,6 +130,7 @@ var CKBUILDER_CONFIG = {
 		'hi' : 1,
 		'hu' : 1,
 		'is' : 1,
+		'id' : 1,
 		'it' : 1,
 		'ja' : 1,
 		'km' : 1,
@@ -144,6 +151,7 @@ var CKBUILDER_CONFIG = {
 		'ru' : 1,
 		'sr' : 1,
 		'sr-latn' : 1,
+		'si' : 1,
 		'sk' : 1,
 		'sl' : 1,
 		'es' : 1,

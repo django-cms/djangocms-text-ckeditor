@@ -4,7 +4,7 @@
  */
 
 /* float left with the label */
-.cke_chrome { float: left; }
+.cke_chrome { float:left; width:100%; }
 
 /* special case when inside a text plugin */
 .djangocms_text_ckeditor-text .form-row label { display:none; }

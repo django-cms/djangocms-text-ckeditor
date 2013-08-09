@@ -28,6 +28,7 @@ $(document).ready(function () {
 				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
 				['Source']
 			],
+			'allowedContent': true,
 			'toolbarCanCollapse': false,
 			'extraPlugins': 'cmsplugins'
 		},

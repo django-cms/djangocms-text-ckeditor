@@ -10,7 +10,7 @@ from cms.utils import cms_static_url
 from django.utils import simplejson
 
 class TextEditorWidget(Textarea):
-    def __init__(self, attrs=None, installed_plugins=None, pk=None, placeholder=None):
+    def __init__(self, attrs=None, installed_plugins=None, pk=None, placeholder=None, plugin_language=None):
         """
         Create a widget for editing text + plugins.
 
@@ -20,6 +20,7 @@ class TextEditorWidget(Textarea):
         self.installed_plugins = installed_plugins
         self.pk = pk
         self.placeholder = placeholder
+        self.plugin_language = plugin_language
 
     def render_textarea(self, name, value, attrs=None):
         return super(TextEditorWidget, self).render(name, value, attrs)
@@ -33,6 +34,7 @@ class TextEditorWidget(Textarea):
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
+            'plugin_language': self.plugin_language,
             'placeholder': self.placeholder
         }
         return mark_safe(render_to_string('cms/plugins/widgets/ckeditor.html', context))

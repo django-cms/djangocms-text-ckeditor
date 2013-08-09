@@ -168,7 +168,7 @@ $(document).ready(function () {
 				'placeholder_id': this.options.placeholder_id,
 				'plugin_type': item.attr('rel'),
 				'parent_id': this.options.plugin_id,
-				'plugin_language': 'en'
+				'plugin_language':  this.options.plugin_language
 			};
 
 			// lets do some ajax

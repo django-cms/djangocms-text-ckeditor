@@ -105,7 +105,7 @@ Extending the plugin
 --------------------
 
 .. NOTE::
-    Added in version 2.0.post (still unreleased)
+    Added in version 2.0.1
 
 You can use this plugin as base to create your own CKEditor-based plugins.
 

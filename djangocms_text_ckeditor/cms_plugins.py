@@ -10,12 +10,6 @@ from djangocms_text_ckeditor.utils import plugin_tags_to_user_html
 from djangocms_text_ckeditor.forms import TextForm
 
 
-try:
-    import cms.cms_toolbar
-except ImportError:
-    raise Exception("You need at least django CMS 3.0 for this version of djangocms-text-ckeditor")
-
-
 class TextPlugin(CMSPluginBase):
     model = Text
     name = _("Text")

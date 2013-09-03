@@ -124,7 +124,7 @@ $(document).ready(function () {
 			this.editor.addMenuGroup('cmspluginsGroup');
 			this.editor.addMenuItem('cmspluginsItem', {
 				label: this.options.lang.edit,
-				icon: '../ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
+				icon: this.path + 'icons/cmsplugins.png',
 				command: 'cmspluginsEdit',
 				group: 'cmspluginsGroup'
 			});

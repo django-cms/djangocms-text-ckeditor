@@ -195,16 +195,18 @@ $(document).ready(function () {
 
 		addPluginDialog: function (item, data) {
 			// open the dialog
+			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
-				$(dialog.parts.title.$).text(this.options.lang.add);
-				$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
-					.bind('load', function () {
-						$(this).contents().find('.submit-row').hide().end()
-							.find('#container').css('min-width', 0).css('padding', 0);
-					});
+			$(dialog.parts.title.$).text(this.options.lang.add);
+			$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
+				.bind('load', function () {
+					$(this).contents().find('.submit-row').hide().end()
+					.find('#container').css('min-width', 0).css('padding', 0)
+					.find('#id_name').val(selected_text);
+				});
 		},
 
 		// on ajax receivement from server, build <a> or <img> tag dependig in the plugin type

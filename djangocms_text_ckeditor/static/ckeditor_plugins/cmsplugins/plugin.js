@@ -248,8 +248,8 @@ $(document).ready(function () {
 							new_element = new CKEDITOR.htmlParser.element('a', {
 								'href': '#',
 								'id': element.attributes.id,
-								'data-cmsplugin_src': element.attributes.src,
 								'data-cmsplugin_title': element.attributes.title,
+								'data-cmsplugin_src': element.attributes.src,
 								'data-cmsplugin_alt': element.attributes.alt
 							});
 							if (matches) {

@@ -40,7 +40,6 @@ the default is::
 
     CKEDITOR_SETTINGS = {
 	    'language': '{{ language }}',
-	    'toolbar': 'CMS',
 	    'skin': 'moono'
 	}
 

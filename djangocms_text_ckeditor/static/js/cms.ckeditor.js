@@ -14,8 +14,7 @@ $(document).ready(function () {
 			// ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
 			'language': 'en',
 			'skin': 'moono',
-			'toolbar': 'CMS',
-			'toolbar_CMS': [
+			'toolbar_CMSPlaceholder': [
 				['Undo', 'Redo'],
 				['cmsplugins', '-', 'ShowBlocks'],
 				['Format', 'Styles'],
@@ -27,6 +26,20 @@ $(document).ready(function () {
 				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
 				['Source']
 			],
+			'toolbar_HTMLField': [
+				['Undo', 'Redo'],
+				['cmsplugins', '-', 'ShowBlocks'],
+				['Format', 'Styles'],
+				['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
+				['Maximize', ''],
+				'/',
+				['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+				['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
+				['Link', 'Unlink'],
+				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
+				['Source']
+			],
+
 			'allowedContent': true,
 			'toolbarCanCollapse': false,
 			'extraPlugins': 'cmsplugins'
@@ -36,6 +49,7 @@ $(document).ready(function () {
 			this.container = $(container);
 
 			// add additional settings to options
+			this.options.toolbar = settings.toolbar;
 			this.options = $.extend(true, {
 				'settings': settings
 			}, this.options, options);

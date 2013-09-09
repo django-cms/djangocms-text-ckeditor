@@ -18,7 +18,7 @@ class AbstractText(CMSPlugin):
         abstract = True
 
     def __unicode__(self):
-        return u"%s" % (truncate_words(strip_tags(self.body), 3)[:30] + "...")
+        return truncate_words(strip_tags(self.body), 3)
 
     def save(self, *args, **kwargs):
         body = self.body

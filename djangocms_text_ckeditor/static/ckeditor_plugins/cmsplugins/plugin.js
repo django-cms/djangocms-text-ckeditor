@@ -15,7 +15,7 @@ $(document).ready(function () {
 			this.editor = editor;
 
 			// don't do anything if there are no plugins defined
-			if(this.options.plugins === undefined) return false;
+			if(this.options == undefined || this.options.plugins === undefined) return false;
 
 			this.setupDialog();
 

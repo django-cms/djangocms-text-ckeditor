@@ -1,11 +1,10 @@
 from django.db import models
 from cms.models import CMSPlugin
 from django.utils.html import strip_tags
+from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 from djangocms_text_ckeditor.utils import plugin_tags_to_id_list, replace_plugin_tags
 from djangocms_text_ckeditor.html import clean_html, extract_images
-
-from .compat import truncate_words
 
 
 class AbstractText(CMSPlugin):
@@ -18,7 +17,7 @@ class AbstractText(CMSPlugin):
         abstract = True
 
     def __unicode__(self):
-        return u"%s" % (truncate_words(strip_tags(self.body), 3)[:30] + "...")
+        return Truncator(strip_tags(self.body)).words(3, truncate="...")
 
     def save(self, *args, **kwargs):
         body = self.body

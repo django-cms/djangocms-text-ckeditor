@@ -91,16 +91,6 @@ And use it in your models, just like a TextField:
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
 
-If you are using South migrations, you might need to add an inspection rule:
-
-::
-
-    try:
-        from south.modelsinspector import add_introspection_rules
-        add_introspection_rules([], ['^djangocms_text_ckeditor\.fields\.HTMLField'])
-    except ImportError:
-        pass
-        
 Extending the plugin
 --------------------
 

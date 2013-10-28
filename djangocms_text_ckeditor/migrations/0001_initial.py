@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('cms', '0012_publisher.py'),
+    )
+
     def forwards(self, orm):
         # Adding model 'Text'
         db.create_table('cmsplugin_text', (

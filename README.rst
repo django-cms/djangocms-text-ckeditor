@@ -123,4 +123,7 @@ and a plugin class extending ``TextPlugin`` class:
 
 You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
+About CKEditor
+--------------
 
+The vurrent integrated Version of CKeditor is **4.2**. For a full documentation visit: http://ckeditor.com/

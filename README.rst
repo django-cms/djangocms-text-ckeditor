@@ -90,16 +90,6 @@ And use it in your models, just like a TextField:
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
 
-If you are using South migrations, you might need to add an inspection rule:
-
-::
-
-    try:
-        from south.modelsinspector import add_introspection_rules
-        add_introspection_rules([], ['^djangocms_text_ckeditor\.fields\.HTMLField'])
-    except ImportError:
-        pass
-        
 Extending the plugin
 --------------------
 
@@ -132,4 +122,7 @@ and a plugin class extending ``TextPlugin`` class:
 
 You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
+About CKEditor
+--------------
 
+The vurrent integrated Version of CKeditor is **4.2**. For a full documentation visit: http://ckeditor.com/

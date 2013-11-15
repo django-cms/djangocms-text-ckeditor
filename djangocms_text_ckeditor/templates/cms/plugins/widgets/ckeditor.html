@@ -14,7 +14,6 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-
 	// get the container id
 	var container = 'id_{{ name }}';
 	var prefixPos = container.indexOf('-__prefix__');
@@ -25,8 +24,8 @@ $(document).ready(function () {
 		container = container.replace('__prefix__', replacement);
 	}
 
-	// initialize ckeditor only if the container exists
-	if($('#'+container).length > 0) {
+	// initialize ckeditor only if the container exists and is ready
+	$('#'+container).ready(function() {
 		CMS.CKEditor.init(container, {{ settings|safe }}, {
 			'static_url': '{{ STATIC_URL }}',{% if placeholder %}
 			'toolbar': 'CMSPlaceholder',
@@ -53,8 +52,15 @@ $(document).ready(function () {
 			'toolbar': 'HTMLField'
 			{% endif %}
 		});
-	}
+	});
 
+	// if the elements are not visible, reload
+	// TODO this is an open issue on ckeditor: http://dev.ckeditor.com/ticket/9802
+	if($.browser.mozilla) {
+		setTimeout(function () {
+			if($('.cke_button_icon:visible').length === 0) window.location.reload();
+		}, 200);
+	}
 });
 })(CMS.$);
 </script>

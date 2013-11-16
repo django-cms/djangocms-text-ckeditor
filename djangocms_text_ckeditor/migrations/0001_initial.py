@@ -8,7 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     depends_on = (
-        ('cms', '0012_publisher.py'),
+        ('cms', '0001_initial.py'),
     )
 
     def forwards(self, orm):

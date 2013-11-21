@@ -61,7 +61,11 @@ def extract_images(data, plugin):
             image_data = base64.b64decode(image_data)
         except:
             image_data = base64.urlsafe_b64decode(image_data)
-        image_type = mime_type.split("/")[1]
+        try:
+            image_type = mime_type.split("/")[1]
+        except IndexError:
+            # No image type specified -- will convert to jpg below if it's valid image data
+            image_type = ""
         image = StringIO(image_data)
         # genarate filename and normalize image format
         if image_type == "jpg" or image_type == "jpeg":

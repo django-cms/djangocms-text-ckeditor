@@ -50,14 +50,6 @@ $(document).ready(function () {
 			]{% endif %}
 		});
 	});
-
-	// if the elements are not visible, reload
-	// TODO this is an open issue on ckeditor: http://dev.ckeditor.com/ticket/9802
-	if($.browser.mozilla) {
-		setTimeout(function () {
-			if($('.cke_button_icon:visible').length === 0) window.location.reload();
-		}, 200);
-	}
 });
 })(CMS.$);
 </script>

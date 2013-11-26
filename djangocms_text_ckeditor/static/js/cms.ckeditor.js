@@ -54,7 +54,7 @@ $(document).ready(function () {
 		// setup is called after ckeditor has been initialized
 		setup: function () {
 			// auto maximize modal if alone in a modal
-			if (this._is_alone_in_a_modal()) {
+			if (this._isAloneInModal()) {
 				this.editor.execCommand('maximize');
 			}
 
@@ -69,7 +69,7 @@ $(document).ready(function () {
 				.css('float', 'right');
 		},
 
-		_is_alone_in_a_modal: function () {
+		_isAloneInModal: function () {
 			// return true if the ckeditor is alone in a modal popup
 			return this.container.parents('body.djangocms_text_ckeditor-text').length > 0;
 		}

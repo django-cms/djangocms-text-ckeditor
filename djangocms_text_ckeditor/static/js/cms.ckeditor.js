@@ -34,7 +34,7 @@ $(document).ready(function () {
 		},
 
 		init: function (container, options, settings) {
-			this.container = $(container);
+			this.container = $('#' + container);
 
 			// add additional settings to options
 			this.options = $.extend(true, {

@@ -46,7 +46,7 @@ $(document).ready(function () {
 		},
 
 		init: function (container, options, settings) {
-			this.container = $(container);
+			this.container = $('#' + container);
 
 			// add additional settings to options
 			this.options.toolbar = settings.toolbar;
@@ -57,8 +57,8 @@ $(document).ready(function () {
 			// add additional plugins (autoloads plugins.js)
 			CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'ckeditor_plugins/cmsplugins/');
 
-			// render cckeditor
-			CKEDITOR.replace(container, this.options);
+			// render ckeditor
+			this.editor = CKEDITOR.replace(container, this.options);
 
 			// add additional styling
 			CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
@@ -66,6 +66,11 @@ $(document).ready(function () {
 
 		// setup is called after ckeditor has been initialized
 		setup: function () {
+			// auto maximize modal if alone in a modal
+			if (this._isAloneInModal()) {
+				this.editor.execCommand('maximize');
+			}
+
 			// add css tweks to the editor
 			this.styles();
 		},
@@ -75,6 +80,11 @@ $(document).ready(function () {
 			$('.cke_button__maximize, .cke_button__source').parent()
 				.css('margin-right', 0).parent()
 				.css('float', 'right');
+		},
+
+		_isAloneInModal: function () {
+			// return true if the ckeditor is alone in a modal popup
+			return this.container.parents('body.djangocms_text_ckeditor-text').length > 0;
 		}
 
 	};

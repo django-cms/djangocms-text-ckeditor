@@ -125,4 +125,4 @@ You can further customize your plugin as other plugins: http://django-cms.readth
 About CKEditor
 --------------
 
-The vurrent integrated Version of CKeditor is **4.2**. For a full documentation visit: http://ckeditor.com/
+The vurrent integrated Version of CKeditor is **4.3**. For a full documentation visit: http://ckeditor.com/

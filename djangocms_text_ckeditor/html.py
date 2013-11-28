@@ -38,6 +38,8 @@ def extract_images(data, plugin):
     extracts base64 encoded images from drag and drop actions in browser and saves
     those images as plugins
     """
+    if not TEXT_SAVE_IMAGE_FUNCTION:
+        return data
     tree_builder = html5lib.treebuilders.getTreeBuilder('dom')
     parser = html5lib.html5parser.HTMLParser(tree = tree_builder)
     dom = parser.parse(data)

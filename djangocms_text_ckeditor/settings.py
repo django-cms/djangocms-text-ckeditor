@@ -13,4 +13,3 @@ CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
 })
 
 TEXT_SAVE_IMAGE_FUNCTION = getattr(settings, 'TEXT_SAVE_IMAGE_FUNCTION', 'djangocms_text_ckeditor.picture_save.create_picture_plugin')
-

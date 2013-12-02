@@ -34,21 +34,23 @@ Upgrading from ``cms.plugins.text``
 Usage
 -----
 
-You can add a new setting to your settings.py called `CKEDITOR_SETTINGS`
-
-the default is::
+You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
 
     CKEDITOR_SETTINGS = {
 	    'language': '{{ language }}',
 	    'toolbar': 'CMS',
-	    'skin': 'moono'
+	    'skin': 'moono',
 	}
 
-It is a dict that hold all CKEditor settings. For an  overview of all the available settings have a look here:
+This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
+your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace
+``'toolbar': 'CMS'`` against ``'toolbar': 'HTMLField'`` in the above settings, in order to add an
+additional Link/Unlink editor to the toolbar.
 
-http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all settings
+For an  overview of all the available settings have a look here:
 
-If you want to use the ckeditor in your own models there is a HTMLField in djangocms_text_ckeditor.fields.
+http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
+
 
 Drag & Drop Images
 ------------------

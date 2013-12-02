@@ -51,7 +51,9 @@ $(document).ready(function () {
 				this.setupContextMenu();
 				this.editor.addCommand('cmspluginsEdit', {
 					exec: function () {
-						that.editPlugin(that.editor.getSelection().getSelectedElement());
+						var selection = that.editor.getSelection();
+						var element = selection.getSelectedElement() || selection.getCommonAncestor().getAscendant('a', true);
+						that.editPlugin(element);
 					}
 				});
 			}
@@ -59,13 +61,16 @@ $(document).ready(function () {
 			// hande event via doubleclick
 			// handle edit event on double click
 			this.editor.on('doubleclick', function(event) {
-				var element = that.editor.getSelection().getSelectedElement();
-
-				if(element && $(element.$).attr('id').split('_')[0] === 'plugin' && !element.isReadOnly()) {
+				var selection = that.editor.getSelection();
+				var element = selection.getSelectedElement() || selection.getCommonAncestor().getAscendant('a', true);
+				if(element && element.getAttribute('id').indexOf('plugin_obj_') === 0 && !element.isReadOnly()) {
 					event.data.dialog = '';
 					that.editPlugin(element);
 				}
 			});
+
+			// setup CKEDITOR.htmlDataProcessor
+			this.setupDataProcessor();
 		},
 
 		setupDialog: function () {
@@ -124,7 +129,7 @@ $(document).ready(function () {
 			this.editor.addMenuGroup('cmspluginsGroup');
 			this.editor.addMenuItem('cmspluginsItem', {
 				label: this.options.lang.edit,
-				icon: '../ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
+				icon: this.path + 'icons/cmsplugins.png',
 				command: 'cmspluginsEdit',
 				group: 'cmspluginsGroup'
 			});
@@ -132,15 +137,14 @@ $(document).ready(function () {
 			this.editor.removeMenuItem('image');
 
 			this.editor.contextMenu.addListener(function(element) {
-				if($(element.$).attr('id').split('_')[0] === 'plugin') {
+				if (element.getAttribute('id').indexOf('plugin_obj_') === 0) {
 					return { cmspluginsItem: CKEDITOR.TRISTATE_OFF };
 				}
 			});
 		},
 
-		editPlugin: function (el) {
-			var id = el.getAttribute('id').replace('plugin_obj_', '');
-
+		editPlugin: function (element) {
+			var id = element.getAttribute('id').replace('plugin_obj_', '');
 			this.editor.openDialog('cmspluginsDialog');
 
 			// now tweak in dynamic stuff
@@ -191,28 +195,89 @@ $(document).ready(function () {
 
 		addPluginDialog: function (item, data) {
 			// open the dialog
+			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
-				$(dialog.parts.title.$).text(this.options.lang.add);
-				$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
-					.bind('load', function () {
-						$(this).contents().find('.submit-row').hide().end()
-							.find('#container').css('min-width', 0).css('padding', 0);
-					});
+			$(dialog.parts.title.$).text(this.options.lang.add);
+			$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
+				.bind('load', function () {
+					$(this).contents().find('.submit-row').hide().end()
+					.find('#container').css('min-width', 0).css('padding', 0)
+					.find('#id_name').val(selected_text);
+				});
 		},
 
+		// on ajax receivement from server, build <a> or <img> tag dependig in the plugin type
 		insertPlugin: function (data) {
-			var element = new CKEDITOR.dom.element('img', this.editor.document);
-				element.setAttributes({
-					'id': 'plugin_obj_' + data.plugin_id,
-					'src': data.plugin_icon,
-					'alt': data.plugin_type,
-					'title': data.plugin_desc
+			var element, attrs = { id: 'plugin_obj_' + data.plugin_id };
+			if (data.plugin_type === 'Link') {
+				element = new CKEDITOR.dom.element('a', this.editor.document);
+				$.extend(attrs, {
+					'href': '#',
+					'data-cmsplugin_title': data.plugin_desc,
+					'data-cmsplugin_alt': data.plugin_type,
+					'data-cmsplugin_src': data.plugin_icon
 				});
-
+				element.setText(data.plugin_name);
+			} else {
+				element = new CKEDITOR.dom.element('img', this.editor.document);
+				$.extend(attrs, {
+					'title': data.plugin_desc,
+					'alt': data.plugin_type,
+					'src': data.plugin_icon
+				});
+			}
+			element.setAttributes(attrs);
 			this.editor.insertElement(element);
+		},
+
+		setupDataProcessor: function () {
+			var link_pattern = /^Link\s-\s(.+)$/;
+
+			this.editor.dataProcessor.dataFilter.addRules({
+				elements: {
+					// on load from server replace <img> tag by <a> in order to display a real link
+					img: function(element) {
+						var new_element, matches;
+						if (element.attributes.id && element.attributes.alt
+						  && element.attributes.alt === 'Link'
+						  && element.attributes.id.indexOf('plugin_obj_') === 0) {
+							matches = link_pattern.exec(element.attributes.title);
+							new_element = new CKEDITOR.htmlParser.element('a', {
+								'href': '#',
+								'id': element.attributes.id,
+								'data-cmsplugin_title': element.attributes.title,
+								'data-cmsplugin_src': element.attributes.src,
+								'data-cmsplugin_alt': element.attributes.alt
+							});
+							if (matches) {
+								new_element.add(new CKEDITOR.htmlParser.text(matches[1]));
+							}
+							return new_element;
+						}
+					}
+				}
+			});
+
+			this.editor.dataProcessor.htmlFilter.addRules({
+				elements: {
+					// on post to server replace <a> tag by <img> in order keep plugin format consistent
+					a: function(element) {
+						var new_element;
+						if (element.attributes.id && element.attributes.id.indexOf('plugin_obj_') === 0) {
+							new_element = new CKEDITOR.htmlParser.element('img', {
+								id: element.attributes.id,
+								src: element.attributes['data-cmsplugin_src'],
+								title: element.attributes['data-cmsplugin_title'],
+								alt: element.attributes['data-cmsplugin_alt']
+							});
+							return new_element;
+						}
+					}
+				}
+			});
 		}
 
 	});

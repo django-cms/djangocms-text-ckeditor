@@ -27,7 +27,7 @@ $(document).ready(function () {
 	// initialize ckeditor only if the container exists and is ready
 	$('#'+container).ready(function() {
 		CMS.CKEditor.init(container, {{ settings|safe }}, {
-			'static_url': '{{ STATIC_URL }}'{% if placeholder %},
+			'static_url': '{{ STATIC_URL }}',{% if placeholder %}
 			'add_plugin_url': '{{ placeholder.get_add_url }}',
 			'placeholder_id': {{ placeholder.pk|default:"''" }},
 			'plugin_id': {{ plugin_pk }},
@@ -45,9 +45,11 @@ $(document).ready(function () {
 						{% for plugin in module.list %}
 							{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.las %},{% endif %}
 						{% endfor %}
-					]}{% if not forloop.las %},{% endif %}
+					]}{% if not forloop.last %},{% endif %}
 				{% endfor %}
-			]{% endif %}
+			]{% else %}
+			'toolbar': 'HTMLField'
+			{% endif %}
 		});
 	});
 });

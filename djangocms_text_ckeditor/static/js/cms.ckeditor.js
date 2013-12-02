@@ -14,7 +14,7 @@ $(document).ready(function () {
 			// ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
 			'language': 'en',
 			'skin': 'moono',
-			'toolbar_CMSPlaceholder': [
+			'toolbar_CMS': [
 				['Undo', 'Redo'],
 				['cmsplugins', '-', 'ShowBlocks'],
 				['Format', 'Styles'],

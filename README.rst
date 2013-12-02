@@ -38,14 +38,14 @@ You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
 
     CKEDITOR_SETTINGS = {
 	    'language': '{{ language }}',
-	    'toolbar': 'CMSPlaceholder',
+	    'toolbar': 'CMS',
 	    'skin': 'moono',
 	}
 
 This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
 your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace
-``toolbar`` against ``HTMLField`` in the above settings, in order to add an additional Link/Unlink
-editor to the toolbar.
+``'toolbar': 'CMS'`` against ``'toolbar': 'HTMLField'`` in the above settings, in order to add an
+additional Link/Unlink editor to the toolbar.
 
 For an  overview of all the available settings have a look here:
 

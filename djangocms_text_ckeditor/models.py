@@ -12,6 +12,7 @@ class AbstractText(CMSPlugin):
     body = models.TextField(_("body"))
 
     search_fields = ('body',)
+    disable_child_plugins = True
 
     class Meta:
         abstract = True

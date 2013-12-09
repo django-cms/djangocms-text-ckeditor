@@ -1,16 +1,16 @@
 {% load i18n admin_static %}
 
 {% block extrastyle %}
-<link rel="stylesheet" type="text/css" href="{% static "css/cms.ckeditor.css" %}" />
+<link rel="stylesheet" href="{% static "css/cms.ckeditor.css" %}" />
 {% endblock %}
 
 {% block extrahead %}
-<script type="text/javascript" src="{% static "cms/js/plugins/cms.base.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor.js" %}"></script>
-<script type="text/javascript" src="{% static "js/cms.ckeditor.js" %}"></script>
+<script src="{% static "cms/js/plugins/cms.base.js" %}"></script>
+<script src="{% static "ckeditor/ckeditor.js" %}"></script>
+<script src="{% static "js/cms.ckeditor.js" %}"></script>
 {% endblock %}
 
-<script type="text/javascript">
+<script>
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {

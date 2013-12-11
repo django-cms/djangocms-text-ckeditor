@@ -6,7 +6,6 @@ from django.utils.translation.trans_real import get_language
 from django.utils import simplejson
 
 import djangocms_text_ckeditor.settings as text_settings
-from cms.utils import cms_static_url
 
 
 class TextEditorWidget(Textarea):

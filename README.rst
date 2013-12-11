@@ -71,6 +71,16 @@ Have a look at the function `create_picture_plugin` for details.
 To completely disable the feature, set `TEXT_SAVE_IMAGE_FUNCTION = None`.
 
 
+HTML sanitizing
+---------------
+
+The HTML entered through the plugin is sanitized to protect from dangerous tags.
+
+If you need to use `<iframe>` or other potentially malicious tags, set the
+`TEXT_HTML_SANITIZE` setting to `False`.
+
+
+
 Translations
 ------------
 

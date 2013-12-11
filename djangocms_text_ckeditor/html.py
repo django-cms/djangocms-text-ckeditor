@@ -9,11 +9,15 @@ import html5lib
 import re
 import base64
 from PIL import Image
-from .settings import TEXT_SAVE_IMAGE_FUNCTION
+from .settings import TEXT_SAVE_IMAGE_FUNCTION, TEXT_HTML_SANITIZE
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
-DEFAULT_PARSER = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
-                                     tree=treebuilders.getTreeBuilder("dom"))
+opts = {'tokenizer': sanitizer.HTMLSanitizer} if TEXT_HTML_SANITIZE else {}
+DEFAULT_PARSER = html5lib.HTMLParser(
+    tree=treebuilders.getTreeBuilder("dom"),
+    **opts
+)
+del opts
 
 
 def clean_html(data, full=True, parser=DEFAULT_PARSER):

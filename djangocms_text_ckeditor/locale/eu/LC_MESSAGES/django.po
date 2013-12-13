@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: django-cms\n"
-"Report-Msgid-Bugs-To: https://github.com/divio/django-cms/issues\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
 "PO-Revision-Date: 2013-06-04 07:05+0000\n"
 "Last-Translator: Ales Zabala Alava <shagi@gisa-elkartea.org>\n"

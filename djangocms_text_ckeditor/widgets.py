@@ -1,9 +1,10 @@
+import json
+
 from django.conf import settings
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
-from django.utils import simplejson
 
 import djangocms_text_ckeditor.settings as text_settings
 
@@ -29,7 +30,7 @@ class TextEditorWidget(Textarea):
         context = {
             'name': name,
             'language': language,
-            'settings': language.join(simplejson.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
+            'settings': language.join(json.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,

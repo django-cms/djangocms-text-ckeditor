@@ -137,7 +137,7 @@ $(document).ready(function () {
 			this.editor.removeMenuItem('image');
 
 			this.editor.contextMenu.addListener(function(element) {
-				if (element.getAttribute('id').indexOf('plugin_obj_') === 0) {
+				if (element.$.id.indexOf('plugin_obj_') === 0) {
 					return { cmspluginsItem: CKEDITOR.TRISTATE_OFF };
 				}
 			});

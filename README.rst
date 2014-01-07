@@ -131,17 +131,17 @@ Configurable sanitizer
 ----------------------
 
 ``djangocms-text-ckeditor`` uses `html5lib`_ to sanitize HTML to avoid
-security issues and to check for correct HTML code; this sanitisation
-may strip tags usesful for some use cases (as ``iframe``); you may
-customize the tags and attributes allowed by overriding
+security issues and to check for correct HTML code.
+Sanitisation may strip tags usesful for some use cases such as ``iframe``;
+you may customize the tags and attributes allowed by overriding the
 ``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings:
 
 ::
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
-    TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder',)
+    TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
 
-See `html5lib documentation`_ for further information.
+See the `html5lib documentation`_ for further information.
 
 .. _html5lib: https://pypi.python.org/pypi/html5lib
 .. _html5lib documentation: https://code.google.com/p/html5lib/wiki/UserDocumentation#Sanitizing_Tokenizer

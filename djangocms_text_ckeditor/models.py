@@ -74,7 +74,6 @@ class AbstractText(CMSPlugin):
         return translatable_content
 
     def set_translatable_content(self, fields):
-        instance = self.get_plugin_instance()[0]
         for field, value in fields.items():
             # Check for 'serialized' link plugin
             exp = r'(<a plugin="([\d]*)" href="[^"]*" target="[^"]*" alt="([^"]*)" title="([^"]*)" ' \
@@ -95,8 +94,8 @@ class AbstractText(CMSPlugin):
                     text = '<img alt="%s" id="plugin_obj_%s" src="%s" title="%s">' % (match[2], match[1], match[4], match[3])
                     value = value.replace(match[0], text)
 
-            setattr(instance, field, value)
-        instance.save()
+            setattr(self, field, value)
+        self.save()
 
         return True
 

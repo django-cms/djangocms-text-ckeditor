@@ -5,7 +5,7 @@ from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 import sys
-from djangocms_text_ckeditor.utils import plugin_tags_to_id_list, replace_plugin_tags
+from djangocms_text_ckeditor.utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
 from djangocms_text_ckeditor.html import clean_html, extract_images
 
 
@@ -98,6 +98,21 @@ class AbstractText(CMSPlugin):
         self.save()
 
         return True
+
+    def notify_on_autoadd_children(self, request, conf, children):
+        """
+        Method called when we auto add children to this plugin via 
+        default_plugins/<plugin>/children in CMS_PLACEHOLDER_CONF.
+        we must replace some strings with child tag for the CKEDITOR.
+        Strings are "%(_tag_child_<order>)s" with the inserted order of chidren
+        """
+        replacements = dict()
+        order = 1
+        for child in children:
+            replacements['_tag_child_'+str(order)] = plugin_to_tag(child)
+            order+=1
+        self.body = self.body % replacements
+        self.save()
 
 
 class Text(AbstractText):

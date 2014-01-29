@@ -35,6 +35,8 @@ Usage
 -----
 
 ``Default content in Placeholder``
+**********************************
+
     If you use Django-CMS >= 3.0, you can use TextPlugin in "default_plugins" 
     (see docs about CMS_PLACEHOLDER_CONF in Django CMS 3.0).
     TextPlugin require just one value : `body` where you write your default
@@ -76,14 +78,16 @@ Usage
             }
         }
 
-``CKEDITOR_SETTINGS``
+CKEDITOR_SETTINGS
+*****************
+
     You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
 
-    CKEDITOR_SETTINGS = {
-        'language': '{{ language }}',
-        'toolbar': 'CMS',
-        'skin': 'moono',
-    }
+        CKEDITOR_SETTINGS = {
+            'language': '{{ language }}',
+            'toolbar': 'CMS',
+            'skin': 'moono',
+        }
 
     This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
     your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace

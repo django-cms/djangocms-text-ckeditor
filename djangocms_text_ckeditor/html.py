@@ -9,11 +9,26 @@ import html5lib
 import re
 import base64
 from PIL import Image
-from .settings import TEXT_SAVE_IMAGE_FUNCTION
+from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
+                       TEXT_ADDITIONAL_ATTRIBUTES)
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
-DEFAULT_PARSER = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
-                                     tree=treebuilders.getTreeBuilder("dom"))
+
+def _get_default_parser():
+    sanitizer.HTMLSanitizer.acceptable_elements.extend(TEXT_ADDITIONAL_TAGS)
+    sanitizer.HTMLSanitizer.acceptable_attributes.extend(TEXT_ADDITIONAL_ATTRIBUTES)
+    sanitizer.HTMLSanitizer.allowed_elements = (
+        sanitizer.HTMLSanitizer.acceptable_elements +
+        sanitizer.HTMLSanitizer.mathml_elements +
+        sanitizer.HTMLSanitizer.svg_elements)
+    sanitizer.HTMLSanitizer.allowed_attributes = (
+        sanitizer.HTMLSanitizer.acceptable_attributes +
+        sanitizer.HTMLSanitizer.mathml_attributes +
+        sanitizer.HTMLSanitizer.svg_attributes)
+
+    return html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
+                               tree=treebuilders.getTreeBuilder("dom"))
+DEFAULT_PARSER = _get_default_parser()
 
 
 def clean_html(data, full=True, parser=DEFAULT_PARSER):

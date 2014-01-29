@@ -17,7 +17,7 @@ Installation
 
 This plugin requires `django CMS` 2.3 or higher to be properly installed.
 
-* In your projects `virtualenv`_, run ``pip install djangocms-text-ckeditor``.
+* In your projects `virtualenv`, run ``pip install djangocms-text-ckeditor``.
 * Add ``'djangocms_text_ckeditor'`` to your ``INSTALLED_APPS`` setting **BEFORE** the ``cms`` entry.
 * Run ``manage.py migrate djangocms_text_ckeditor``.
 
@@ -127,7 +127,26 @@ and a plugin class extending ``TextPlugin`` class:
 
 You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
+Configurable sanitizer
+----------------------
+
+``djangocms-text-ckeditor`` uses `html5lib`_ to sanitize HTML to avoid
+security issues and to check for correct HTML code.
+Sanitisation may strip tags usesful for some use cases such as ``iframe``;
+you may customize the tags and attributes allowed by overriding the
+``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings:
+
+::
+
+    TEXT_ADDITIONAL_TAGS = ('iframe',)
+    TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
+
+See the `html5lib documentation`_ for further information.
+
+.. _html5lib: https://pypi.python.org/pypi/html5lib
+.. _html5lib documentation: https://code.google.com/p/html5lib/wiki/UserDocumentation#Sanitizing_Tokenizer
+
 About CKEditor
 --------------
 
-The vurrent integrated Version of CKeditor is **4.3**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.3**. For a full documentation visit: http://ckeditor.com/

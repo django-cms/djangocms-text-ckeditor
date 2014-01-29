@@ -34,22 +34,70 @@ Upgrading from ``cms.plugins.text``
 Usage
 -----
 
-You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
+``Default content in Placeholder``
+**********************************
 
-    CKEDITOR_SETTINGS = {
-	    'language': '{{ language }}',
-	    'toolbar': 'CMS',
-	    'skin': 'moono',
-	}
+    If you use Django-CMS >= 3.0, you can use TextPlugin in "default_plugins" 
+    (see docs about CMS_PLACEHOLDER_CONF in Django CMS 3.0).
+    TextPlugin require just one value : `body` where you write your default
+    HTML content. If you want to add some "default children" to your
+    automagically added plugin (ie : a LinkPlugin), you have to put children 
+    references in the body. References are "%(_tag_child_<order>)s" with the 
+    inserted order of chidren.
+    
+    Exemple::
 
-This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
-your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace
-``'toolbar': 'CMS'`` against ``'toolbar': 'HTMLField'`` in the above settings, in order to add an
-additional Link/Unlink editor to the toolbar.
+        CMS_PLACEHOLDER_CONF = {
+            'content': {
+                'name' : _('Content'),
+                'plugins': ['TextPlugin', 'LinkPlugin'],
+                'default_plugins':[
+                    {
+                        'plugin_type':'TextPlugin',
+                        'values':{
+                            'body':'<p>Great websites : %(_tag_child_1)s and %(_tag_child_2)s</p>'
+                        },
+                        'children':[
+                            {
+                                'plugin_type':'LinkPlugin',
+                                'values':{
+                                    'name':'django',
+                                    'url':'https://www.djangoproject.com/'
+                                },
+                            },
+                            {
+                                'plugin_type':'LinkPlugin',
+                                'values':{
+                                    'name':'django-cms',
+                                    'url':'https://www.django-cms.org'
+                                },
+                            },
+                        ]
+                    },
+                ]
+            }
+        }
 
-For an  overview of all the available settings have a look here:
+CKEDITOR_SETTINGS
+*****************
 
-http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
+    You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
+
+        CKEDITOR_SETTINGS = {
+            'language': '{{ language }}',
+            'toolbar': 'CMS',
+            'skin': 'moono',
+        }
+
+    This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
+    your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace
+    ``'toolbar': 'CMS'`` against ``'toolbar': 'HTMLField'`` in the above settings, in order to add an
+    additional Link/Unlink editor to the toolbar.
+
+    For an  overview of all the available settings have a look here:
+
+    http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
+
 
 
 Drag & Drop Images

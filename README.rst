@@ -21,8 +21,6 @@ This plugin requires `django CMS` 2.3 or higher to be properly installed.
 * Add ``'djangocms_text_ckeditor'`` to your ``INSTALLED_APPS`` setting **BEFORE** the ``cms`` entry.
 * Run ``manage.py migrate djangocms_text_ckeditor``.
 
-
-
 Upgrading from ``cms.plugins.text``
 -----------------------------------
 
@@ -34,71 +32,67 @@ Upgrading from ``cms.plugins.text``
 Usage
 -----
 
-``Default content in Placeholder``
-**********************************
+Default content in Placeholder
+******************************
 
-    If you use Django-CMS >= 3.0, you can use TextPlugin in "default_plugins" 
-    (see docs about CMS_PLACEHOLDER_CONF in Django CMS 3.0).
-    TextPlugin require just one value : `body` where you write your default
-    HTML content. If you want to add some "default children" to your
-    automagically added plugin (ie : a LinkPlugin), you have to put children 
-    references in the body. References are "%(_tag_child_<order>)s" with the 
-    inserted order of chidren.
-    
-    Exemple::
+If you use Django-CMS >= 3.0, you can use ``TextPlugin`` in "default_plugins"
+(see docs about the CMS_PLACEHOLDER_CONF setting in Django CMS 3.0).
+``TextPlugin`` requires just one value: ``body`` where you write your default
+HTML content. If you want to add some "default children" to your
+automagically added plugin (i.e. a ``LinkPlugin``), you have to put children
+references in the body. References are ``"%(_tag_child_<order>)s"`` with the
+inserted order of chidren. For example::
 
-        CMS_PLACEHOLDER_CONF = {
-            'content': {
-                'name' : _('Content'),
-                'plugins': ['TextPlugin', 'LinkPlugin'],
-                'default_plugins':[
-                    {
-                        'plugin_type':'TextPlugin',
-                        'values':{
-                            'body':'<p>Great websites : %(_tag_child_1)s and %(_tag_child_2)s</p>'
-                        },
-                        'children':[
-                            {
-                                'plugin_type':'LinkPlugin',
-                                'values':{
-                                    'name':'django',
-                                    'url':'https://www.djangoproject.com/'
-                                },
-                            },
-                            {
-                                'plugin_type':'LinkPlugin',
-                                'values':{
-                                    'name':'django-cms',
-                                    'url':'https://www.django-cms.org'
-                                },
-                            },
-                        ]
+    CMS_PLACEHOLDER_CONF = {
+        'content': {
+            'name' : _('Content'),
+            'plugins': ['TextPlugin', 'LinkPlugin'],
+            'default_plugins':[
+                {
+                    'plugin_type':'TextPlugin',
+                    'values':{
+                        'body':'<p>Great websites : %(_tag_child_1)s and %(_tag_child_2)s</p>'
                     },
-                ]
-            }
+                    'children':[
+                        {
+                            'plugin_type':'LinkPlugin',
+                            'values':{
+                                'name':'django',
+                                'url':'https://www.djangoproject.com/'
+                            },
+                        },
+                        {
+                            'plugin_type':'LinkPlugin',
+                            'values':{
+                                'name':'django-cms',
+                                'url':'https://www.django-cms.org'
+                            },
+                        },
+                    ]
+                },
+            ]
         }
+    }
 
 CKEDITOR_SETTINGS
 *****************
 
-    You can override the setting `CKEDITOR_SETTINGS` in your settings.py::
+You can override the setting ``CKEDITOR_SETTINGS`` in your settings.py::
 
-        CKEDITOR_SETTINGS = {
-            'language': '{{ language }}',
-            'toolbar': 'CMS',
-            'skin': 'moono',
-        }
+    CKEDITOR_SETTINGS = {
+        'language': '{{ language }}',
+        'toolbar': 'CMS',
+        'skin': 'moono',
+    }
 
-    This is the default dict that holds all **CKEditor** settings. If you want to use the CKEditor in
-    your own models, then use the ``HTMLField`` from ``djangocms_text_ckeditor.fields`` and replace
-    ``'toolbar': 'CMS'`` against ``'toolbar': 'HTMLField'`` in the above settings, in order to add an
-    additional Link/Unlink editor to the toolbar.
+This is the default dict that holds all **CKEditor** settings. If you want to
+use the CKEditor in your own models, then use the ``HTMLField`` from
+``djangocms_text_ckeditor.fields`` and replace ``'toolbar': 'CMS'`` with
+``'toolbar': 'HTMLField'`` in the above settings, in order to add an
 
-    For an  overview of all the available settings have a look here:
+For an  overview of all the available settings have a look here:
 
-    http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
-
-
+http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 
 Drag & Drop Images
 ------------------
@@ -109,14 +103,14 @@ This image is base64 encoded and lives in the 'src' attribute as a 'data' tag.
 We detect this images, encode them and convert them to picture plugins.
 If you want to overwirite this behavior for your own picture plugin:
 
-There is a setting called:
+There is a setting called::
 
-`TEXT_SAVE_IMAGE_FUNCTION = 'djangocms_text_ckeditor.picture_save.create_picture_plugin'` 
+    TEXT_SAVE_IMAGE_FUNCTION = 'djangocms_text_ckeditor.picture_save.create_picture_plugin'
 
 you can overwrite this setting in your settings.py and point it to a function that handles image saves.
-Have a look at the function `create_picture_plugin` for details.
+Have a look at the function ``create_picture_plugin`` for details.
 
-To completely disable the feature, set `TEXT_SAVE_IMAGE_FUNCTION = None`.
+To completely disable the feature, set ``TEXT_SAVE_IMAGE_FUNCTION = None``.
 
 
 Translations
@@ -130,15 +124,11 @@ https://www.transifex.com/projects/p/django-cms/resource/djangocms-text-ckeditor
 Usage as a model field
 ----------------------
 
-If you want to use the widget on your own model fields, you can! Just import the provided ``HTMLField`` like so:
-
-::
+If you want to use the widget on your own model fields, you can! Just import the provided ``HTMLField`` like so::
 
     from djangocms_text_ckeditor.fields import HTMLField
 
-And use it in your models, just like a TextField:
-
-::
+And use it in your models, just like a ``TextField``::
 
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
@@ -151,23 +141,19 @@ Extending the plugin
 
 You can use this plugin as base to create your own CKEditor-based plugins.
 
-You need to create your own plugin model extending ``AbstractClass``:
-
-::
+You need to create your own plugin model extending ``AbstractClass``::
 
     from djangocms_text_ckeditor.models import AbstractText
 
     class MyTextModel(AbstractText):
         title = models.CharField(max_length=100)
 
-and a plugin class extending ``TextPlugin`` class:
-
-::
+and a plugin class extending ``TextPlugin`` class::
 
     from djangocms_text_ckeditor.cms_plugins import TextPlugin
     from .models import MyTextModel
-    
-    
+
+
     class MyTextPlugin(TextPlugin):
         name = _(u"My text plugin")
         model = MyTextModel
@@ -182,9 +168,7 @@ Configurable sanitizer
 security issues and to check for correct HTML code.
 Sanitisation may strip tags usesful for some use cases such as ``iframe``;
 you may customize the tags and attributes allowed by overriding the
-``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings:
-
-::
+``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings::
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
     TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')

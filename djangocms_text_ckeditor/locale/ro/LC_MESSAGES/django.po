@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# vially <vially2006@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: django-cms\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-27 16:37+0100\n"
+"PO-Revision-Date: 2014-01-14 23:00+0000\n"
+"Last-Translator: vially <vially2006@gmail.com>\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/django-cms/language/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#: cms_plugins.py:13
+msgid "Text"
+msgstr "Text"
+
+#: models.py:12
+msgid "body"
+msgstr "corp"
+
+#: templates/cms/plugins/widgets/ckeditor.html:28
+msgid "Please select a plugin type."
+msgstr "Vă rugăm să selectați tipul plugin-ului."
+
+#: templates/cms/plugins/widgets/ckeditor.html:34
+msgid "Text editor does not support inserting objects."
+msgstr "Editorul de text nu suportă inserare de obiecte."
+
+#: templates/cms/plugins/widgets/ckeditor.html:46
+msgid "Text editor does not support editing objects."
+msgstr "Editorul de text nu suportă editarea obiectelor."
+
+#: templates/cms/plugins/widgets/ckeditor.html:51
+msgid "No object selected."
+msgstr "Niciun obiect nu a fost selectat."
+
+#: templates/cms/plugins/widgets/ckeditor.html:55
+msgid "Not a plugin object"
+msgstr "Obiectul nu este de tip plugin"
+
+#: templates/cms/plugins/widgets/ckeditor.html:67
+msgid "Available Plugins"
+msgstr "Plugin-uri disponibile"
+
+#: templates/cms/plugins/widgets/ckeditor.html:70
+msgid "Insert plugin"
+msgstr "Introduce plugin"
+
+#: templates/cms/plugins/widgets/ckeditor.html:71
+msgid "Edit selected plugin"
+msgstr "Editează plugin-ul selectat"

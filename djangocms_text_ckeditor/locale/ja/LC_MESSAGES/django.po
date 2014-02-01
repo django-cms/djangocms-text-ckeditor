@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# whosaysni <whosaysni@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: django-cms\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-27 16:37+0100\n"
+"PO-Revision-Date: 2013-07-26 14:24+0000\n"
+"Last-Translator: Jonas Obrist <ojiidotch@gmail.com>\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/django-cms/language/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: cms_plugins.py:13
+msgid "Text"
+msgstr "テキスト"
+
+#: models.py:12
+msgid "body"
+msgstr "本文"
+
+#: templates/cms/plugins/widgets/ckeditor.html:28
+msgid "Please select a plugin type."
+msgstr "プラグインを選んで下さい"
+
+#: templates/cms/plugins/widgets/ckeditor.html:34
+msgid "Text editor does not support inserting objects."
+msgstr "テキストエディタはオブジェクトの挿入をサポートしていません。"
+
+#: templates/cms/plugins/widgets/ckeditor.html:46
+msgid "Text editor does not support editing objects."
+msgstr "テキストエディタはオブジェクトの編集をサポートしていません。"
+
+#: templates/cms/plugins/widgets/ckeditor.html:51
+msgid "No object selected."
+msgstr "オブジェクトが選択されていません。"
+
+#: templates/cms/plugins/widgets/ckeditor.html:55
+msgid "Not a plugin object"
+msgstr "プラグインオブジェクトではありません。"
+
+#: templates/cms/plugins/widgets/ckeditor.html:67
+msgid "Available Plugins"
+msgstr "利用可能なプラグイン"
+
+#: templates/cms/plugins/widgets/ckeditor.html:70
+msgid "Insert plugin"
+msgstr "プラグインの挿入"
+
+#: templates/cms/plugins/widgets/ckeditor.html:71
+msgid "Edit selected plugin"
+msgstr "選択中のプラグインを編集"

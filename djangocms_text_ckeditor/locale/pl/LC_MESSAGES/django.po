@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: django-cms\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-27 16:37+0100\n"
+"PO-Revision-Date: 2012-11-27 15:37+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/django-cms/language/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: cms_plugins.py:13
+msgid "Text"
+msgstr "Tekst"
+
+#: models.py:12
+msgid "body"
+msgstr "treść"
+
+#: templates/cms/plugins/widgets/ckeditor.html:28
+msgid "Please select a plugin type."
+msgstr "Proszę wybrać typ wtyczki."
+
+#: templates/cms/plugins/widgets/ckeditor.html:34
+msgid "Text editor does not support inserting objects."
+msgstr "Edytor tekstowy nie obsługuje wstawiania obiektów."
+
+#: templates/cms/plugins/widgets/ckeditor.html:46
+msgid "Text editor does not support editing objects."
+msgstr "Edytor tekstowy nie obsługuje edycji obiektów."
+
+#: templates/cms/plugins/widgets/ckeditor.html:51
+msgid "No object selected."
+msgstr "Nie wybrano obiektu."
+
+#: templates/cms/plugins/widgets/ckeditor.html:55
+msgid "Not a plugin object"
+msgstr "Obiekt nie jest wtyczką."
+
+#: templates/cms/plugins/widgets/ckeditor.html:67
+msgid "Available Plugins"
+msgstr "Dostępne wtyczki"
+
+#: templates/cms/plugins/widgets/ckeditor.html:70
+msgid "Insert plugin"
+msgstr "Wstaw wtyczkę"
+
+#: templates/cms/plugins/widgets/ckeditor.html:71
+msgid "Edit selected plugin"
+msgstr "Zmień wybraną wtyczkę"

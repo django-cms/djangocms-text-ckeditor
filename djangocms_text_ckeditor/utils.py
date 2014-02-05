@@ -3,7 +3,7 @@ from django.template.defaultfilters import force_escape
 import django
 
 from cms.models import CMSPlugin
-from cms.plugins.utils import downcast_plugins
+from cms.utils.plugins import downcast_plugins
 from distutils.version import LooseVersion
 from django.utils.functional import LazyObject
 from django.core.files.storage import get_storage_class

@@ -3,6 +3,7 @@ from django.template.defaultfilters import force_escape
 import django
 
 from cms.models import CMSPlugin
+from cms.utils.plugins import downcast_plugins
 from distutils.version import LooseVersion
 from django.utils.functional import LazyObject
 from django.core.files.storage import get_storage_class
@@ -61,7 +62,6 @@ def replace_plugin_tags(text, id_dict):
 
 
 def _plugin_dict(text, regex=OBJ_ADMIN_RE):
-    from cms.utils.plugins import downcast_plugins
     plugin_ids = plugin_tags_to_id_list(text, regex)
     plugin_list = downcast_plugins(CMSPlugin.objects.filter(pk__in=plugin_ids), select_placeholder=True)
     return dict((plugin.pk, plugin) for plugin in plugin_list)

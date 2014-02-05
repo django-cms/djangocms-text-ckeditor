@@ -1,5 +1,4 @@
 import re
-import warnings
 from django.template.defaultfilters import force_escape
 import django
 
@@ -65,7 +64,6 @@ def _plugin_dict(text, regex=OBJ_ADMIN_RE):
     try:
         from cms.utils.plugins import downcast_plugins
     except ImportError:
-        warnings.warn("cms.plugins.utils is deprecated. Use cms.utils.plugins instead.")
         from cms.plugins.utils import downcast_plugins
 
     plugin_ids = plugin_tags_to_id_list(text, regex)

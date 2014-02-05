@@ -1,14 +1,12 @@
 from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings
 import os
-import warnings
 
 
 def create_picture_plugin(filename, file, parent_plugin, **kwargs):
     try:
         from djangocms_picture.models import Picture
     except ImportError:
-        warnings.warn("cms.plugins.picture is deprecated. Use djangocms_picture instead.")
         from cms.plugins.picture.models import Picture
 
     pic = Picture()

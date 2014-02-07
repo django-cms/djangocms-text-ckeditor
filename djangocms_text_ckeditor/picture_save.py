@@ -1,10 +1,14 @@
 from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings
 import os
-import random
+
 
 def create_picture_plugin(filename, file, parent_plugin, **kwargs):
-    from cms.plugins.picture.models import Picture
+    try:
+        from djangocms_picture.models import Picture
+    except ImportError:
+        from cms.plugins.picture.models import Picture
+
     pic = Picture()
     pic.placeholder = parent_plugin.placeholder
     pic.parent = parent_plugin

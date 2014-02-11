@@ -2,13 +2,15 @@
 from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
+from django.db import models, connection
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.rename_table('cmsplugin_text', 'djangocms_text_ckeditor_text')
+        table_names = connection.introspection.table_names()
+        if 'cmsplugin_text' in table_names:
+            db.rename_table('cmsplugin_text', 'djangocms_text_ckeditor_text')
 
     def backwards(self, orm):
         db.rename_table('djangocms_text_ckeditor_text', 'cmsplugin_text')

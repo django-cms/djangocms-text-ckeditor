@@ -23,7 +23,6 @@ $(document).ready(function () {
 		var replacement = $('#' + name + "-TOTAL_FORMS").val();
 		container = container.replace('__prefix__', replacement);
 	}
-	console.log('container: ' + container);
 
 	// initialize ckeditor only if the container exists and is ready
 	$('#'+container).ready(function() {

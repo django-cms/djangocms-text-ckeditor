@@ -161,6 +161,14 @@ and a plugin class extending ``TextPlugin`` class::
 
 You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
+Adding plugins to the "CMS Plugins" dropdown
+--------------------------------------------
+
+If you have another plugin that you want to use inside texts you can make them appear in the dropdown by making them text_enabled.
+Check in `django-cms doc`_ how to do this.
+
+.. _django-cms doc: http://django-cms.readthedocs.org/en/develop/extending_cms/custom_plugins.html#text-enabled
+
 Configurable sanitizer
 ----------------------
 

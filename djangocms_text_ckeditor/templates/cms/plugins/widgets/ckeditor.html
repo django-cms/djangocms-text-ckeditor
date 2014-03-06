@@ -43,7 +43,7 @@ $(document).ready(function () {
 				{% for module in module_list %}
 					{ group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
 						{% for plugin in module.list %}
-							{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.las %},{% endif %}
+							{ 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.last %},{% endif %}
 						{% endfor %}
 					]}{% if not forloop.last %},{% endif %}
 				{% endfor %}

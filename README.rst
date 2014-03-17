@@ -92,7 +92,7 @@ use the CKEditor in your own models, then use the ``HTMLField`` from
 
 For an  overview of all the available settings have a look here:
 
-http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
+http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
 Drag & Drop Images
 ------------------

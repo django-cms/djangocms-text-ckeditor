@@ -23,6 +23,7 @@ $(document).ready(function () {
 				'/',
 				['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
 				['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
+				['HorizontalRule'],
 				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
 				['Source']
 			],
@@ -35,6 +36,7 @@ $(document).ready(function () {
 				'/',
 				['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
 				['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
+				['HorizontalRule'],
 				['Link', 'Unlink'],
 				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
 				['Source']

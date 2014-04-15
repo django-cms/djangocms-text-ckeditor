@@ -22,7 +22,7 @@ class TextPlugin(CMSPluginBase):
         Returns the Django form Widget to be used for
         the text area
         """
-        return TextEditorWidget(installed_plugins=plugins, pk=pk, placeholder=placeholder, plugin_language=language)
+        return TextEditorWidget(attrs={'class': 'CMS_CKEditor'}, installed_plugins=plugins, pk=pk, placeholder=placeholder, plugin_language=language)
 
     def get_form_class(self, request, plugins, pk, placeholder, language):
         """

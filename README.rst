@@ -94,6 +94,7 @@ For an  overview of all the available settings have a look here:
 
 http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
+
 Drag & Drop Images
 ------------------
 
@@ -132,6 +133,18 @@ And use it in your models, just like a ``TextField``::
 
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
+
+Configurable settings
+*********************
+
+When using ``HTMLField``, you can customize the ckeditor configuration for each
+field::
+
+    class MyModel(models.Model):
+        myfield = HTMLField(blank=True, configuration='CKEDITOR_SETTINGS_MYMODEL')
+
+and define a ``CKEDITOR_SETTINGS_MYMODEL`` parameter in project settings; values
+not specified in your custom configuration will be taken from the global ``CKEDITOR_SETTINGS``.
 
 Extending the plugin
 --------------------

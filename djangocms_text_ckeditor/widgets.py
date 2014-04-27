@@ -44,11 +44,17 @@ class TextEditorWidget(Textarea):
 
     def render_additions(self, name, value, attrs=None):
         language = get_language().split('-')[0]
+        configuration = deepcopy(self.configuration)
+        if not configuration.get('toolbar', False):
+            if self.placeholder:
+                configuration['toolbar'] = 'CMS'
+            else:
+                configuration['toolbar'] = 'HTMLField'
         context = {
             'ckeditor_class': self.ckeditor_class,
             'name': name,
             'language': language,
-            'settings': language.join(json.dumps(self.configuration).split("{{ language }}")),
+            'settings': language.join(json.dumps(configuration).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,

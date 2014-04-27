@@ -1,13 +1,13 @@
 {% load i18n l10n admin_static %}
 
 {% block extrastyle %}
-<link rel="stylesheet" href="{% static "css/cms.ckeditor.css" %}" />
+<link rel="stylesheet" href="{% static "djangocms_text_ckeditor/css/cms.ckeditor.css" %}" />
 {% endblock %}
 
 {% block extrahead %}
 <script src="{% static "cms/js/modules/cms.base.js" %}"></script>
-<script src="{% static "ckeditor/ckeditor.js" %}"></script>
-<script src="{% static "js/cms.ckeditor.js" %}"></script>
+<script src="{% static "djangocms_text_ckeditor/ckeditor/ckeditor.js" %}"></script>
+<script src="{% static "djangocms_text_ckeditor/js/cms.ckeditor.js" %}"></script>
 {% endblock %}
 
 <script>

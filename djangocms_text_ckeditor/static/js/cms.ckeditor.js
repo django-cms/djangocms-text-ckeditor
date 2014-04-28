@@ -48,8 +48,7 @@ $(document).ready(function () {
 		},
 
 		init: function (container, options, settings) {
-			if ($('#' + container).length > 0)
-			{
+			if ($('#' + container).length > 0) {
 				this.container = $('#' + container);
 
 				// add additional settings to options

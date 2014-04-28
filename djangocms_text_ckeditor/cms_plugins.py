@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+
+from djangocms_text_ckeditor.settings import TEXT_CKEDITOR_CONFIGURATION
 from djangocms_text_ckeditor.widgets import TextEditorWidget
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import plugin_tags_to_user_html
@@ -17,13 +19,17 @@ class TextPlugin(CMSPluginBase):
     form = TextForm
     render_template = "cms/plugins/text.html"
     change_form_template = "cms/plugins/text_plugin_change_form.html"
+    ckeditor_configuration = TEXT_CKEDITOR_CONFIGURATION
 
     def get_editor_widget(self, request, plugins, pk, placeholder, language):
         """
         Returns the Django form Widget to be used for
         the text area
         """
-        return TextEditorWidget(installed_plugins=plugins, pk=pk, placeholder=placeholder, plugin_language=language)
+        return TextEditorWidget(installed_plugins=plugins, pk=pk,
+                                placeholder=placeholder,
+                                plugin_language=language,
+                                configuration=self.ckeditor_configuration)
 
     def get_form_class(self, request, plugins, pk, placeholder, language):
         """

@@ -55,7 +55,7 @@ $(document).ready(function () {
 	// initialize ckeditor in admin inline for "add-row" link
 	if ($('.add-row a').length > 0) {
 		$('.add-row a').each(function() {
-			if ($(this).data('isInitCMSCKEditor') != 'yes') {
+			if ($(this).data('isInitCMSCKEditor') !== 'yes') {
 				$(this).click(function() {
 					initCMSCKEditor();
 				});

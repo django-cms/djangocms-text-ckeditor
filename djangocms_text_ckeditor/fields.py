@@ -11,12 +11,12 @@ except ImportError:
 
 class HTMLField(models.TextField):
     def formfield(self, **kwargs):
-        defaults = {'widget': TextEditorWidget()}
+        defaults = {'widget': TextEditorWidget}
         defaults.update(kwargs)
 
         # override the admin widget
         if defaults['widget'] == admin_widgets.AdminTextareaWidget:
-            defaults['widget'] = TextEditorWidget()
+            defaults['widget'] = TextEditorWidget
 
         return super(HTMLField, self).formfield(**defaults)
 

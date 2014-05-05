@@ -53,15 +53,14 @@ $(document).ready(function () {
 	initCMSCKEditor();
 
 	// initialize ckeditor in admin inline for "add-row" link
-	if ($('.add-row a').length > 0) {
-		$('.add-row a').each(function() {
-			if ($(this).data('isInitCMSCKEditor') !== 'yes') {
-				$(this).click(function() {
-					initCMSCKEditor();
-				});
-				$(this).data('isInitCMSCKEditor', 'yes');
-			}
-		})
+	var add_buttons = $('.add-row a');
+	if (add_buttons.length > 0) {
+		if (add_buttons.data('isInitCMSCKEditor') !== 'yes') {
+			add_buttons.click(function () {
+				initCMSCKEditor();
+			});
+			add_buttons.data('isInitCMSCKEditor', 'yes');
+		}
 	}
 });
 })(CMS.$);

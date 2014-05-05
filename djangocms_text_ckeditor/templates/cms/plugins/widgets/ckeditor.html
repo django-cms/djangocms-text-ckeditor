@@ -15,8 +15,8 @@
 // CMS.$ will be passed for $
 $(document).ready(function () {
 	function initCMSCKEditor() {
-		if ($('.CMS_CKEditor:visible').length > 0) {
-			$('.CMS_CKEditor:visible').each(function() {
+		if ($('.{{ ckeditor_class }}:visible').length > 0) {
+			$('.{{ ckeditor_class }}:visible').each(function() {
 				$(this).hide();
 
 				var container = $(this).attr('id');

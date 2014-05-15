@@ -3,7 +3,7 @@
 
 {% block extrahead %}
 {{ block.super }}
-<script>window.CKEDITOR_BASEPATH = "{{ STATIC_URL }}ckeditor/";</script>
+<script>window.CKEDITOR_BASEPATH = "{{ CKEDITOR_BASEPATH }}";</script>
 <script src="{% static "cms/js/modules/cms.base.js" %}"></script>
 <script>
 (function($) {

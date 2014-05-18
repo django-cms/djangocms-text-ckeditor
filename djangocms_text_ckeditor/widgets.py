@@ -16,6 +16,16 @@ class TextEditorWidget(Textarea):
 
         installed_plugins is a list of plugins to display that are text_enabled
         """
+        if attrs is None:
+            attrs = {}
+
+        self.ckeditor_class = 'CMS_CKEditor'
+        if self.ckeditor_class not in attrs.get('class', '').join(' '):
+            new_class = attrs.get('class', '') + ' %s' % self.ckeditor_class
+            attrs.update({
+                'class': new_class.strip()
+            })
+
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
@@ -28,6 +38,7 @@ class TextEditorWidget(Textarea):
     def render_additions(self, name, value, attrs=None):
         language = get_language().split('-')[0]
         context = {
+            'ckeditor_class': self.ckeditor_class,
             'name': name,
             'language': language,
             'settings': language.join(json.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),

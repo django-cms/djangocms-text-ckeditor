@@ -48,22 +48,24 @@ $(document).ready(function () {
 		},
 
 		init: function (container, options, settings) {
-			this.container = $('#' + container);
+			if ($('#' + container).length > 0) {
+				this.container = $('#' + container);
 
-			// add additional settings to options
-			this.options.toolbar = settings.toolbar;
-			this.options = $.extend(true, {
-				'settings': settings
-			}, this.options, options);
+				// add additional settings to options
+				this.options.toolbar = settings.toolbar;
+				this.options = $.extend(true, {
+					'settings': settings
+				}, this.options, options);
 
-			// add additional plugins (autoloads plugins.js)
-			CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'ckeditor_plugins/cmsplugins/');
+				// add additional plugins (autoloads plugins.js)
+				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'ckeditor_plugins/cmsplugins/');
 
-			// render ckeditor
-			this.editor = CKEDITOR.replace(container, this.options);
+				// render ckeditor
+				this.editor = CKEDITOR.replace(container, this.options);
 
-			// add additional styling
-			CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
+				// add additional styling
+				CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
+			}
 		},
 
 		// setup is called after ckeditor has been initialized

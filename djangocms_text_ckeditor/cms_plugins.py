@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.forms.fields import CharField
 from django.utils.translation import ugettext_lazy as _
 
@@ -54,6 +55,11 @@ class TextPlugin(CMSPluginBase):
         We override the change form template path
         to provide backwards compatibility with CMS 2.x
         """
+        ckeditor_basepath = '{0}/ckeditor/'.format(settings.STATIC_URL)
+        if ckeditor_basepath.startswith('//'):
+            protocol = 'https' if request.is_secure else 'http'
+            ckeditor_basepath = '{0}:{1}'.format(protocol, ckeditor_basepath)
+        context.update({'CKEDITOR_BASEPATH': ckeditor_basepath})
         if cms_version.startswith('2'):
             context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
         return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)

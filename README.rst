@@ -181,6 +181,8 @@ you may customize the tags and attributes allowed by overriding the
     TEXT_ADDITIONAL_TAGS = ('iframe',)
     TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
 
+To completely disable the feature, set ``TEXT_HTML_SANITIZE = False``.
+
 See the `html5lib documentation`_ for further information.
 
 .. _html5lib: https://pypi.python.org/pypi/html5lib

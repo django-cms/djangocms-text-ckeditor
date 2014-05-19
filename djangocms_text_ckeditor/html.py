@@ -10,24 +10,31 @@ import re
 import base64
 from PIL import Image
 from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
-                       TEXT_ADDITIONAL_ATTRIBUTES)
+                       TEXT_ADDITIONAL_ATTRIBUTES, TEXT_HTML_SANITIZE)
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
 
 def _get_default_parser():
-    sanitizer.HTMLSanitizer.acceptable_elements.extend(TEXT_ADDITIONAL_TAGS)
-    sanitizer.HTMLSanitizer.acceptable_attributes.extend(TEXT_ADDITIONAL_ATTRIBUTES)
-    sanitizer.HTMLSanitizer.allowed_elements = (
-        sanitizer.HTMLSanitizer.acceptable_elements +
-        sanitizer.HTMLSanitizer.mathml_elements +
-        sanitizer.HTMLSanitizer.svg_elements)
-    sanitizer.HTMLSanitizer.allowed_attributes = (
-        sanitizer.HTMLSanitizer.acceptable_attributes +
-        sanitizer.HTMLSanitizer.mathml_attributes +
-        sanitizer.HTMLSanitizer.svg_attributes)
+    opts = {}
 
-    return html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer,
-                               tree=treebuilders.getTreeBuilder("dom"))
+    if TEXT_HTML_SANITIZE:
+        sanitizer.HTMLSanitizer.acceptable_elements.extend(
+            TEXT_ADDITIONAL_TAGS)
+        sanitizer.HTMLSanitizer.acceptable_attributes.extend(
+            TEXT_ADDITIONAL_ATTRIBUTES)
+        sanitizer.HTMLSanitizer.allowed_elements = (
+            sanitizer.HTMLSanitizer.acceptable_elements +
+            sanitizer.HTMLSanitizer.mathml_elements +
+            sanitizer.HTMLSanitizer.svg_elements)
+        sanitizer.HTMLSanitizer.allowed_attributes = (
+            sanitizer.HTMLSanitizer.acceptable_attributes +
+            sanitizer.HTMLSanitizer.mathml_attributes +
+            sanitizer.HTMLSanitizer.svg_attributes)
+        opts['tokenizer'] = sanitizer
+
+    return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
+                               **opts)
+
 DEFAULT_PARSER = _get_default_parser()
 
 

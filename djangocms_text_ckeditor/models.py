@@ -1,6 +1,11 @@
 import re
 import sys
 
+try:
+    from django.utils.encoding import force_text as force_unicode_or_text
+except ImportError:
+    from django.utils.encoding import force_unicode as force_unicode_or_text
+
 from django.utils.encoding import force_unicode
 from django.db import models
 from django.utils.html import strip_tags
@@ -28,7 +33,7 @@ class AbstractText(CMSPlugin):
 
     def __init__(self, *args, **kwargs):
         super(AbstractText, self).__init__(*args, **kwargs)
-        self.body = force_unicode(self.body)
+        self.body = force_unicode_or_text(self.body)
 
     def save(self, *args, **kwargs):
         body = self.body

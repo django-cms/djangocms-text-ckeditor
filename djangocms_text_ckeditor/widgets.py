@@ -45,11 +45,17 @@ class TextEditorWidget(Textarea):
     def render_additions(self, name, value, attrs=None):
         language = get_language().split('-')[0]
         configuration = deepcopy(self.configuration)
-        if not configuration.get('toolbar', False):
-            if self.placeholder:
-                configuration['toolbar'] = 'CMS'
-            else:
-                configuration['toolbar'] = 'HTMLField'
+        # We are in a plugin -> we use toolbar_CMS or a custom defined toolbar
+        if self.placeholder:
+            configuration['toolbar'] = configuration.get('toolbar', 'CMS')
+        # We are not in a plugin but toolbar is set to CMS (the default) ->
+        # we force the use of toolbar_HTMLField
+        elif configuration.get('toolbar', False) == 'CMS':
+            configuration['toolbar'] = 'HTMLField'
+        # Toolbar is not set or set to a custom value -> we use the custom
+        # value or fallback to HTMLField
+        else:
+            configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
         context = {
             'ckeditor_class': self.ckeditor_class,
             'name': name,

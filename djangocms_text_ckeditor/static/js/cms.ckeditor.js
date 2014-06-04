@@ -50,10 +50,9 @@ $(document).ready(function () {
 		init: function (container, options, settings) {
 			if ($('#' + container).length > 0) {
 				this.container = $('#' + container);
-
 				// add additional settings to options
 				this.options.toolbar = settings.toolbar;
-				this.options = $.extend(true, {
+				this.options = $.extend(false, {
 					'settings': settings
 				}, this.options, options);
 

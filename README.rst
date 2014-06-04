@@ -85,14 +85,83 @@ You can override the setting ``CKEDITOR_SETTINGS`` in your settings.py::
         'skin': 'moono',
     }
 
-This is the default dict that holds all **CKEditor** settings. If you want to
-use the CKEditor in your own models, then use the ``HTMLField`` from
-``djangocms_text_ckeditor.fields`` and replace ``'toolbar': 'CMS'`` with
-``'toolbar': 'HTMLField'`` in the above settings, in order to add an
+This is the default dict that holds all **CKEditor** settings.
+
+Customizing plugin editor
+#########################
+
+To customize the plugin editor, use `toolbar_CMS` attribute, as in::
+
+    CKEDITOR_SETTINGS = {
+        'language': '{{ language }}',
+        'toolbar_CMS': [
+            ['Undo', 'Redo'],
+            ['cmsplugins', '-', 'ShowBlocks'],
+            ['Format', 'Styles'],
+        ]
+        'skin': 'moono',
+    }
+
+Customizing HTMLField editor
+############################
+
+If you use ``HTMLField`` from ``djangocms_text_ckeditor.fields`` in your own
+models, use `toolbar_HTMLField` attribute::
+
+    CKEDITOR_SETTINGS = {
+        'language': '{{ language }}',
+        'toolbar_HTMLField': [
+            ['Undo', 'Redo'],
+            ['ShowBlocks'],
+            ['Format', 'Styles'],
+        ]
+        'skin': 'moono',
+    }
+
+
+You can further customize each `HTMLField` field by using different
+configuration parameter in your settings::
+
+
+    models.py
+
+    class Model1(models.Model):
+        text = HTMLField(configuration='CKEDITOR_SETTINGS_MODEL1')
+
+    class Model2(models.Model):
+        text = HTMLField(configuration='CKEDITOR_SETTINGS_MODEL2')
+
+    settings.py
+
+    CKEDITOR_SETTINGS_MODEL1 = {
+        'toolbar_HTMLField': [
+            ['Undo', 'Redo'],
+            ['ShowBlocks'],
+            ['Format', 'Styles'],
+            ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ]
+    }
+
+    CKEDITOR_SETTINGS_MODEL2 = {
+        'toolbar_HTMLField': [
+            ['Undo', 'Redo'],
+            ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ]
+    }
+
+
+#. Add `configuration='MYSETTING'` to the `HTMLField` usage(s) you want to
+   customize;
+#. Define a setting parameter named as the string used in the `configuration`
+   argument of the `HTMLField` instance with the desidered configuration;
+
+Values not specified in your custom configuration will be taken from the global
+``CKEDITOR_SETTINGS``.
 
 For an  overview of all the available settings have a look here:
 
 http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
 
 Drag & Drop Images
 ------------------
@@ -132,6 +201,7 @@ And use it in your models, just like a ``TextField``::
 
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
+
 
 Extending the plugin
 --------------------

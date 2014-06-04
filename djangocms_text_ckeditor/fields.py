@@ -10,13 +10,26 @@ except ImportError:
 
 
 class HTMLField(models.TextField):
+    configuration = None
+
+    def __init__(self, *args, **kwargs):
+        # This allow widget configuration customization from the model definition
+        if kwargs.get('configuration', False):
+            self.configuration = kwargs['configuration']
+            del(kwargs['configuration'])
+        super(HTMLField, self).__init__(*args, **kwargs)
+
     def formfield(self, **kwargs):
-        defaults = {'widget': TextEditorWidget}
+        if self.configuration:
+            text_editor_widget = TextEditorWidget(configuration=self.configuration)
+        else:
+            text_editor_widget = TextEditorWidget
+        defaults = {'widget': text_editor_widget}
         defaults.update(kwargs)
 
         # override the admin widget
         if defaults['widget'] == admin_widgets.AdminTextareaWidget:
-            defaults['widget'] = TextEditorWidget
+            defaults['widget'] = text_editor_widget
 
         return super(HTMLField, self).formfield(**defaults)
 

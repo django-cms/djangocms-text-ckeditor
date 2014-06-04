@@ -1,12 +1,21 @@
 import re
+import sys
+
+try:
+    from django.utils.encoding import force_text as force_unicode_or_text
+except ImportError:
+    from django.utils.encoding import force_unicode as force_unicode_or_text
+
+from django.utils.encoding import force_unicode
 from django.db import models
-from cms.models import CMSPlugin
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
-import sys
-from djangocms_text_ckeditor.utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
-from djangocms_text_ckeditor.html import clean_html, extract_images
+
+from cms.models import CMSPlugin
+
+from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
+from .html import clean_html, extract_images
 
 
 class AbstractText(CMSPlugin):
@@ -21,6 +30,10 @@ class AbstractText(CMSPlugin):
 
     def __unicode__(self):
         return Truncator(strip_tags(self.body)).words(3, truncate="...")
+
+    def __init__(self, *args, **kwargs):
+        super(AbstractText, self).__init__(*args, **kwargs)
+        self.body = force_unicode_or_text(self.body)
 
     def save(self, *args, **kwargs):
         body = self.body

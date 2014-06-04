@@ -5,6 +5,7 @@ from django.conf import settings
 CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
     'language': '{{ language }}',
     'toolbar': 'CMS',
+    'toolbar_htmlfield': 'HTMLField',
     'skin': 'moono',
 #    'stylesSet': [
 #        {'name': 'Custom Style', 'element': 'h3', 'styles': {'color': 'Blue'}}

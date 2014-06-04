@@ -37,11 +37,14 @@ class TextEditorWidget(Textarea):
 
     def render_additions(self, name, value, attrs=None):
         language = get_language().split('-')[0]
+        ck_settings = text_settings.CKEDITOR_SETTINGS
+        if not self.placeholder and 'toolbar_htmlfield' in ck_settings:
+            ck_settings['toolbar'] = ck_settings['toolbar_htmlfield']
         context = {
             'ckeditor_class': self.ckeditor_class,
             'name': name,
             'language': language,
-            'settings': language.join(json.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
+            'settings': language.join(json.dumps(ck_settings).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,

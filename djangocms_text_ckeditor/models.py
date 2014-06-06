@@ -6,7 +6,6 @@ try:
 except ImportError:
     from django.utils.encoding import force_unicode as force_unicode_or_text
 
-from django.utils.encoding import force_unicode
 from django.db import models
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
@@ -47,7 +46,8 @@ class AbstractText(CMSPlugin):
         plugins = CMSPlugin.objects.filter(parent=self)
         for plugin in plugins:
             if not plugin.pk in ids:
-                plugin.delete() #delete plugins that are not referenced in the text anymore
+                #delete plugins that are not referenced in the text anymore
+                plugin.delete()
 
     def post_copy(self, old_instance, ziplist):
         """
@@ -123,7 +123,7 @@ class AbstractText(CMSPlugin):
         order = 1
         for child in children:
             replacements['_tag_child_'+str(order)] = plugin_to_tag(child)
-            order+=1
+            order += 1
         self.body = self.body % replacements
         self.save()
 

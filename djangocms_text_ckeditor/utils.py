@@ -1,15 +1,15 @@
+import os
 import re
-from django.template.defaultfilters import force_escape
-import django
-
 from cms.models import CMSPlugin
 from distutils.version import LooseVersion
-from django.utils.functional import LazyObject
+import django
 from django.core.files.storage import get_storage_class
-import os
+from django.template.defaultfilters import force_escape
+from django.utils.functional import LazyObject
 
 OBJ_ADMIN_RE_PATTERN = r'<img [^>]*\bid="plugin_obj_(\d+)"[^>]*/?>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
+
 
 def plugin_to_tag(obj):
     return u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % \
@@ -18,9 +18,11 @@ def plugin_to_tag(obj):
                     icon_alt=force_escape(obj.get_instance_icon_alt()),
                     )
 
+
 def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
     ids = regex.findall(text)
     return [int(id) for id in ids if id.isdigit()]
+
 
 def plugin_tags_to_user_html(text, context, placeholder):
     """
@@ -29,6 +31,7 @@ def plugin_tags_to_user_html(text, context, placeholder):
     context is the template context to use, placeholder is the placeholder name
     """
     plugin_map = _plugin_dict(text)
+
     def _render_tag(m):
         plugin_id = int(m.groups()[0])
         try:
@@ -40,6 +43,7 @@ def plugin_tags_to_user_html(text, context, placeholder):
             return u''
         return obj.render_plugin(context, placeholder)
     return OBJ_ADMIN_RE.sub(_render_tag, text)
+
 
 def replace_plugin_tags(text, id_dict):
     def _replace_tag(m):
@@ -86,6 +90,7 @@ class ConfiguredStorage(LazyObject):
         self._wrapped = get_storage_class(getattr(settings, 'STATICFILES_STORAGE', default_storage))()
 
 configured_storage = ConfiguredStorage()
+
 
 def static_url(path):
     '''

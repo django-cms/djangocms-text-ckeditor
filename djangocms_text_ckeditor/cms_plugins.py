@@ -6,11 +6,11 @@ from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from djangocms_text_ckeditor.settings import TEXT_CKEDITOR_CONFIGURATION
-from djangocms_text_ckeditor.widgets import TextEditorWidget
-from djangocms_text_ckeditor.models import Text
-from djangocms_text_ckeditor.utils import plugin_tags_to_user_html
-from djangocms_text_ckeditor.forms import TextForm
+from .settings import TEXT_CKEDITOR_CONFIGURATION
+from .widgets import TextEditorWidget
+from .models import Text
+from .utils import plugin_tags_to_user_html
+from .forms import TextForm
 
 
 class TextPlugin(CMSPluginBase):

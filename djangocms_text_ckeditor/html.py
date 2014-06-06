@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-try:
-    from io import BytesIO as StringIO
-except:
-    from StringIO import StringIO
-import uuid
+import base64
 from html5lib import sanitizer, serializer, treebuilders, treewalkers
 import html5lib
-import re
-import base64
+try:
+    from io import BytesIO as StringIO
+except ImportError:
+    from StringIO import StringIO
 from PIL import Image
+import re
+import uuid
+
 from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
                        TEXT_ADDITIONAL_ATTRIBUTES, TEXT_HTML_SANITIZE)
-from djangocms_text_ckeditor.utils import plugin_to_tag
+from .utils import plugin_to_tag
 
 
 def _get_default_parser():
@@ -54,6 +55,7 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False,
                                                  quote_attr_values=True)
     return u''.join(s.serialize(stream))
+
 
 def extract_images(data, plugin):
     """

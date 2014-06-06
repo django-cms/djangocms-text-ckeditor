@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
 
-import djangocms_text_ckeditor.settings as text_settings
+from . import settings as text_settings
 
 
 class TextEditorWidget(Textarea):

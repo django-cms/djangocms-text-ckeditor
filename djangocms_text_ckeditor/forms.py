@@ -1,7 +1,7 @@
 
 from django import forms
 from django.forms.models import ModelForm
-from djangocms_text_ckeditor.models import Text
+from .models import Text
 
 
 class TextForm(ModelForm):

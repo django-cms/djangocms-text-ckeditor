@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# akal <akal.mailbox@gmail.com>, 2013
+# Attila Kovacs <akal.mailbox@gmail.com>, 2013
 # fazekasda <fazekasda@gmail.com>, 2012
-# tibalogh, 2014
+# Tibor Balogh, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: django-cms\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
 "PO-Revision-Date: 2014-02-24 11:22+0000\n"
-"Last-Translator: tibalogh\n"
+"Last-Translator: Tibor Balogh\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/django-cms/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

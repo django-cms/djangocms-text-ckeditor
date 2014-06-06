@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Max Power <yakudzam@gmail.com>, 2013
+# Maxym Lynnyk <yakudzam@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-cms\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-27 16:37+0100\n"
 "PO-Revision-Date: 2013-05-26 15:00+0000\n"
-"Last-Translator: Max Power <yakudzam@gmail.com>\n"
+"Last-Translator: Maxym Lynnyk <yakudzam@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/django-cms/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

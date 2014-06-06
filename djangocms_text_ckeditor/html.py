@@ -30,7 +30,7 @@ def _get_default_parser():
             sanitizer.HTMLSanitizer.acceptable_attributes +
             sanitizer.HTMLSanitizer.mathml_attributes +
             sanitizer.HTMLSanitizer.svg_attributes)
-        opts['tokenizer'] = sanitizer
+        opts['tokenizer'] = sanitizer.HTMLSanitizer
 
     return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
                                **opts)

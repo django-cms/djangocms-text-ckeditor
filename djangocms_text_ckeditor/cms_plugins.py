@@ -12,6 +12,8 @@ from .models import Text
 from .utils import plugin_tags_to_user_html
 from .forms import TextForm
 
+import re
+
 
 class TextPlugin(CMSPluginBase):
     model = Text
@@ -51,8 +53,7 @@ class TextPlugin(CMSPluginBase):
             self.page
         )
         pk = self.cms_plugin_instance.pk
-        form = self.get_form_class(request, plugins, pk, self.cms_plugin_instance.placeholder,
-                                   self.cms_plugin_instance.language)
+        form = self.get_form_class(request, plugins, pk, self.cms_plugin_instance.placeholder, self.cms_plugin_instance.language)
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
 
@@ -71,12 +72,22 @@ class TextPlugin(CMSPluginBase):
         return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)
 
     def render(self, context, instance, placeholder):
+        body = plugin_tags_to_user_html(
+            instance.body,
+            context,
+            placeholder
+        )
+
+        # remove orphans
+        body = re.sub(
+            r'\s([\w]{0,1})\s',
+            r' \1&nbsp;',
+            body,
+            flags=re.UNICODE,
+        )
+
         context.update({
-            'body': plugin_tags_to_user_html(
-                instance.body,
-                context,
-                placeholder
-            ),
+            'body': body,
             'placeholder': placeholder,
             'object': instance
         })

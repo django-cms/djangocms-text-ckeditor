@@ -57,7 +57,7 @@ $(document).ready(function () {
 				}, this.options, options);
 
 				// add additional plugins (autoloads plugins.js)
-				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'ckeditor_plugins/cmsplugins/');
+				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + 'djangocms_text_ckeditor/ckeditor_plugins/cmsplugins/');
 
 				// render ckeditor
 				this.editor = CKEDITOR.replace(container, this.options);

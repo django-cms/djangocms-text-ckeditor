@@ -2,13 +2,11 @@
 import base64
 from html5lib import sanitizer, serializer, treebuilders, treewalkers
 import html5lib
-try:
-    from io import BytesIO as StringIO
-except ImportError:
-    from StringIO import StringIO
 from PIL import Image
 import re
 import uuid
+
+from django.utils.six import StringIO
 
 from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
                        TEXT_ADDITIONAL_ATTRIBUTES, TEXT_HTML_SANITIZE)

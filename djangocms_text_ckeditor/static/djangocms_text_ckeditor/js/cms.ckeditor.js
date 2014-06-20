@@ -57,7 +57,6 @@ $(document).ready(function () {
 				}, this.options, options);
 
 				// add additional plugins (autoloads plugins.js)
-                console.log(settings.static_url);
 				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
 
 				// render ckeditor

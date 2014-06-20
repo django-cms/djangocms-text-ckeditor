@@ -65,7 +65,7 @@ class TextPlugin(CMSPluginBase):
         We override the change form template path
         to provide backwards compatibility with CMS 2.x
         """
-        ckeditor_basepath = urljoin(settings.STATIC_URL, 'ckeditor/')
+        ckeditor_basepath = urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/')
         if ckeditor_basepath.startswith('//'):
             protocol = 'https' if request.is_secure else 'http'
             ckeditor_basepath = '{0}:{1}'.format(protocol, ckeditor_basepath)

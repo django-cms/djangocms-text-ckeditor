@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.forms.fields import CharField
 from django.utils.translation import ugettext_lazy as _
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
 
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
@@ -62,7 +66,7 @@ class TextPlugin(CMSPluginBase):
         We override the change form template path
         to provide backwards compatibility with CMS 2.x
         """
-        ckeditor_basepath = '{0}/ckeditor/'.format(settings.STATIC_URL)
+        ckeditor_basepath = urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/')
         if ckeditor_basepath.startswith('//'):
             protocol = 'https' if request.is_secure else 'http'
             ckeditor_basepath = '{0}:{1}'.format(protocol, ckeditor_basepath)

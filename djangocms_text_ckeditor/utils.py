@@ -1,3 +1,4 @@
+import importlib
 import os
 import re
 from cms.models import CMSPlugin
@@ -6,6 +7,7 @@ import django
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.utils.functional import LazyObject
+from .settings import TEXT_CUSTOM_FUNCTIONS
 
 OBJ_ADMIN_RE_PATTERN = r'<img [^>]*\bid="plugin_obj_(\d+)"[^>]*/?>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
@@ -17,6 +19,16 @@ def plugin_to_tag(obj):
                     icon_src=force_escape(obj.get_instance_icon_src()),
                     icon_alt=force_escape(obj.get_instance_icon_alt()),
                     )
+
+
+def function_to_user_html(text):
+    for function in TEXT_CUSTOM_FUNCTIONS:
+        module_name, function_name = function[:function.rindex('.')], function.rsplit('.', 1)[-1]
+        module = importlib.import_module(module_name)
+  	print function_name
+        function = getattr(module, function_name)
+        text = function(text)
+    return text
 
 
 def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):

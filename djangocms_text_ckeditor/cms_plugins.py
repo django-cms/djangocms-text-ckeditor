@@ -9,7 +9,7 @@ from cms.plugin_pool import plugin_pool
 from .settings import TEXT_CKEDITOR_CONFIGURATION
 from .widgets import TextEditorWidget
 from .models import Text
-from .utils import plugin_tags_to_user_html
+from .utils import function_to_user_html, plugin_tags_to_user_html
 from .forms import TextForm
 
 import re
@@ -77,6 +77,7 @@ class TextPlugin(CMSPluginBase):
             context,
             placeholder
         )
+        body = function_to_user_html(body)
 
         # remove orphans
         body = re.sub(

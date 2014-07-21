@@ -8,19 +8,18 @@ import uuid
 
 from django.utils.six import BytesIO
 
-from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
-                       TEXT_ADDITIONAL_ATTRIBUTES, TEXT_HTML_SANITIZE)
+from . import settings
 from .utils import plugin_to_tag
 
 
 def _get_default_parser():
     opts = {}
 
-    if TEXT_HTML_SANITIZE:
+    if settings.TEXT_HTML_SANITIZE:
         sanitizer.HTMLSanitizer.acceptable_elements.extend(
-            TEXT_ADDITIONAL_TAGS)
+            settings.TEXT_ADDITIONAL_TAGS)
         sanitizer.HTMLSanitizer.acceptable_attributes.extend(
-            TEXT_ADDITIONAL_ATTRIBUTES)
+            settings.TEXT_ADDITIONAL_ATTRIBUTES)
         sanitizer.HTMLSanitizer.allowed_elements = (
             sanitizer.HTMLSanitizer.acceptable_elements +
             sanitizer.HTMLSanitizer.mathml_elements +
@@ -29,6 +28,9 @@ def _get_default_parser():
             sanitizer.HTMLSanitizer.acceptable_attributes +
             sanitizer.HTMLSanitizer.mathml_attributes +
             sanitizer.HTMLSanitizer.svg_attributes)
+        sanitizer.HTMLSanitizer.allowed_protocols = (
+            sanitizer.HTMLSanitizer.acceptable_protocols +
+            list(settings.TEXT_ADDITIONAL_PROTOCOLS))
         opts['tokenizer'] = sanitizer.HTMLSanitizer
 
     return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
@@ -60,7 +62,7 @@ def extract_images(data, plugin):
     extracts base64 encoded images from drag and drop actions in browser and saves
     those images as plugins
     """
-    if not TEXT_SAVE_IMAGE_FUNCTION:
+    if not settings.TEXT_SAVE_IMAGE_FUNCTION:
         return data
     tree_builder = html5lib.treebuilders.getTreeBuilder('dom')
     parser = html5lib.html5parser.HTMLParser(tree = tree_builder)
@@ -121,8 +123,8 @@ def extract_images(data, plugin):
 
 
 def img_data_to_plugin(filename, image, parent_plugin, width=None, height=None):
-    func_name = TEXT_SAVE_IMAGE_FUNCTION.split(".")[-1]
-    module = __import__(".".join(TEXT_SAVE_IMAGE_FUNCTION.split(".")[:-1]), fromlist=[func_name])
+    func_name = settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[-1]
+    module = __import__(".".join(settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[:-1]), fromlist=[func_name])
     func = getattr(module, func_name)
     return func(filename, image, parent_plugin, width=width, height=height)
 

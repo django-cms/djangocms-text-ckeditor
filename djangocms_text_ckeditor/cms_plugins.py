@@ -1,10 +1,7 @@
 from django.conf import settings
 from django.forms.fields import CharField
+from django.utils.six.moves.urllib.parse import urljoin
 from django.utils.translation import ugettext_lazy as _
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin
 
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase

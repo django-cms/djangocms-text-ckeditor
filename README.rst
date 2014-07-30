@@ -202,6 +202,14 @@ And use it in your models, just like a ``TextField``::
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
 
+This field does not allow you to embed any other CMS plugins within the text editor. Plugins can only be embedded 
+within ``Placeholder`` fields.
+
+If you need to allow additional plugins to be embedded in a HTML field, convert the ``HTMLField`` to a ``Placeholderfield``
+and configure the placeholder to only accept TextPlugin. For more information on using placeholders outside of the CMS see:
+
+http://django-cms.readthedocs.org/en/latest/extending_cms/placeholders.html
+
 
 Extending the plugin
 --------------------

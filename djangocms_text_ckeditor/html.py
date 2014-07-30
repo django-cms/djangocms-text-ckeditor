@@ -6,7 +6,7 @@ from PIL import Image
 import re
 import uuid
 
-from django.utils.six import StringIO
+from django.utils.six import BytesIO
 
 from .settings import (TEXT_SAVE_IMAGE_FUNCTION, TEXT_ADDITIONAL_TAGS,
                        TEXT_ADDITIONAL_ATTRIBUTES, TEXT_HTML_SANITIZE)
@@ -90,7 +90,7 @@ def extract_images(data, plugin):
         except IndexError:
             # No image type specified -- will convert to jpg below if it's valid image data
             image_type = ""
-        image = StringIO(image_data)
+        image = BytesIO(image_data)
         # genarate filename and normalize image format
         if image_type == "jpg" or image_type == "jpeg":
             file_ending = "jpg"
@@ -101,7 +101,7 @@ def extract_images(data, plugin):
         else:
             # any not "web-safe" image format we try to convert to jpg
             im = Image.open(image)
-            new_image = StringIO()
+            new_image = BytesIO()
             file_ending = "jpg"
             im.save(new_image, "JPEG")
             new_image.seek(0)

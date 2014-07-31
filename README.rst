@@ -240,7 +240,7 @@ and a plugin class extending ``TextPlugin`` class::
 
 Note that if you override the `render` method that is inherited from the base ``TextPlugin`` class, any child text
 plugins will not render correctly. You must call the super ``render`` method in order for ``plugin_tags_to_user_html()``
-to render out all child plugins. For example:
+to render out all child plugins located in the ``body` field. For example::
 
     from djangocms_text_ckeditor.cms_plugins import TextPlugin
     from .models import MyTextModel

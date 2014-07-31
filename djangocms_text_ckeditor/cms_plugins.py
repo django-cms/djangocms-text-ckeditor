@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.forms.fields import CharField
-from django.utils.six.moves.urllib.parse import urljoin
 from django.utils.translation import ugettext_lazy as _
 
 from cms import __version__ as cms_version
@@ -12,6 +11,11 @@ from .widgets import TextEditorWidget
 from .models import Text
 from .utils import plugin_tags_to_user_html
 from .forms import TextForm
+
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
 
 
 class TextPlugin(CMSPluginBase):

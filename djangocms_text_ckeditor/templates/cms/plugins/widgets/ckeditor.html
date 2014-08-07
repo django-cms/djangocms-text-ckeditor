@@ -30,7 +30,8 @@ $(document).ready(function () {
 						'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
 						'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
 						'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
-						'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
+						'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
+						'link': '{% filter escapejs %}{% trans "Link" %}{% endfilter %}'
 					},
 					'plugins': [
 						{% regroup installed_plugins by module as module_list %}

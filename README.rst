@@ -239,9 +239,33 @@ and a plugin class extending ``TextPlugin`` class::
     class MyTextPlugin(TextPlugin):
         name = _(u"My text plugin")
         model = MyTextModel
+        
     plugin_pool.register_plugin(MyTextPlugin)
 
-You can further customize your plugin as other plugins: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
+Note that if you override the `render` method that is inherited from the base ``TextPlugin`` class, any child text
+plugins will not render correctly. You must call the super ``render`` method in order for ``plugin_tags_to_user_html()``
+to render out all child plugins located in the ``body` field. For example::
+
+    from djangocms_text_ckeditor.cms_plugins import TextPlugin
+    from .models import MyTextModel
+    
+    
+    class MyTextPlugin(TextPlugin):
+        name = _(u"My text plugin")
+        model = MyTextModel
+
+        def render(self, context, instance, placeholder):
+            context.update({
+                'name': instance.name,
+            })
+            # Other custom render code you may have
+        return super(MyTextPlugin, self).render(context, instance, placeholder)
+        
+    plugin_pool.register_plugin(MyTextPlugin)
+
+You can further `customize your plugin`_ as other plugins.
+
+.. _customize your plugin: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
 
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------

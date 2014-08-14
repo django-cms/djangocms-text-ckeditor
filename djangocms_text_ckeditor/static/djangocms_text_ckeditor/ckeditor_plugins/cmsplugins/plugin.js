@@ -212,7 +212,7 @@ $(document).ready(function () {
 		// on ajax receivement from server, build <a> or <img> tag dependig in the plugin type
 		insertPlugin: function (data) {
 			var element, attrs = { id: 'plugin_obj_' + data.plugin_id };
-			if (data.plugin_type === 'Link') {
+			if (data.plugin_type === this.options.lang.link) {
 				element = new CKEDITOR.dom.element('a', this.editor.document);
 				$.extend(attrs, {
 					'href': '#',
@@ -234,7 +234,8 @@ $(document).ready(function () {
 		},
 
 		setupDataProcessor: function () {
-			var link_pattern = /^Link\s-\s(.+)$/;
+			var link_name = this.options.lang.link;
+			var link_pattern = new RegExp("/^"+ link_name +"\s-\s(.+)$/");
 
 			this.editor.dataProcessor.dataFilter.addRules({
 				elements: {
@@ -242,7 +243,7 @@ $(document).ready(function () {
 					img: function(element) {
 						var new_element, matches;
 						if (element.attributes.id && element.attributes.alt
-						  && element.attributes.alt === 'Link'
+						  && element.attributes.alt === link_name
 						  && element.attributes.id.indexOf('plugin_obj_') === 0) {
 							matches = link_pattern.exec(element.attributes.title);
 							new_element = new CKEDITOR.htmlParser.element('a', {

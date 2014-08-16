@@ -7,15 +7,15 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '__first__'),
+        ('cms', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Text',
             fields=[
+                ('cmsplugin_ptr', models.OneToOneField(serialize=False, parent_link=True, auto_created=True, to='cms.CMSPlugin', primary_key=True)),
                 ('body', models.TextField(verbose_name='body')),
-                ('cmsplugin_ptr', models.OneToOneField(auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
             ],
             options={
                 'abstract': False,

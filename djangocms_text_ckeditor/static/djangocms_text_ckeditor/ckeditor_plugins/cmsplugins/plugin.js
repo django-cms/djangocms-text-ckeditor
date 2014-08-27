@@ -235,7 +235,7 @@ $(document).ready(function () {
 
 		setupDataProcessor: function () {
 			var link_name = this.options.lang.link;
-			var link_pattern = new RegExp("/^"+ link_name +"\s-\s(.+)$/");
+			var link_pattern = new RegExp("^"+ link_name +"\\s-\\s(.+)$");
 
 			this.editor.dataProcessor.dataFilter.addRules({
 				elements: {

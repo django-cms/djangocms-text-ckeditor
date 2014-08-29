@@ -33,16 +33,43 @@ You can add a new setting to your settings.py called `CKEDITOR_SETTINGS`
 the default is::
 
     CKEDITOR_SETTINGS = {
-	    'language': '{{ language }}',
-	    'toolbar': 'CMS',
-	    'skin': 'moono'
+        'default': {
+    	    'language': '{{ language }}',
+    	    'toolbar': 'CMS',
+    	    'skin': 'moono'
+        }
 	}
 
-It is a dict that hold all CKEditor settings. For an  overview of all the available settings have a look here:
+It is a dict that holds all CKEditor settings. You can define multiple settings by adding other keys in the dict::
+
+    CKEDITOR_SETTINGS = {
+        'default': {
+            'language': '{{ language }}',
+            'toolbar': 'CMS',
+            'skin': 'moono'
+        },
+        'simple': {
+            'language': '{{ language }}',
+            'toolbar': 'Simple',
+            'toolbar_Simple': [
+                ['Undo', 'Redo'],
+                ['Styles', ],
+                ['TextColor', 'BGColor', ],
+            ],
+            'autoParagraph': False,
+            'skin': 'moono',
+            'height': '80px'
+        }
+    }
+
+For an  overview of all the available settings have a look here:
 
 http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all settings
 
 If you want to use the ckeditor in your own models there is a HTMLField in djangocms_text_ckeditor.fields.
+In order to use a different settings dict, juste pass the settings name as keyword argument of HTMLField ::
+
+    title = HTMLField(verbose_name=_("title"), max_length=255, settings_name='simple')
 
 Drag & Drop Images
 ------------------

@@ -1,6 +1,7 @@
 from django.conf import settings
 import djangocms_text_ckeditor.settings as text_settings
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -10,7 +11,7 @@ from cms.utils import cms_static_url
 from django.utils import simplejson
 
 class TextEditorWidget(Textarea):
-    def __init__(self, attrs=None, installed_plugins=None, pk=None):
+    def __init__(self, settings_name, attrs=None, installed_plugins=None, pk=None):
         """
         Create a widget for editing text + plugins.
 
@@ -20,6 +21,11 @@ class TextEditorWidget(Textarea):
         self.installed_plugins = installed_plugins
         self.pk = pk
 
+        try:
+            self.settings = text_settings.CKEDITOR_SETTINGS[settings_name]
+        except KeyError:
+            raise ImproperlyConfigured("There is no key '{}' in CKEDITOR_SETTINGS".format(settings_name))
+
     def render_textarea(self, name, value, attrs=None):
         return super(TextEditorWidget, self).render(name, value, attrs)
 
@@ -28,7 +34,7 @@ class TextEditorWidget(Textarea):
         context = {
             'name': name,
             'language': language,
-            'settings': language.join(simplejson.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
+            'settings': language.join(simplejson.dumps(self.settings).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,

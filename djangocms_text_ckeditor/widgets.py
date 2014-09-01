@@ -1,3 +1,5 @@
+import json
+from copy import deepcopy
 from django.conf import settings
 import djangocms_text_ckeditor.settings as text_settings
 from django.conf import settings
@@ -10,7 +12,8 @@ from cms.utils import cms_static_url
 from django.utils import simplejson
 
 class TextEditorWidget(Textarea):
-    def __init__(self, attrs=None, installed_plugins=None, pk=None):
+    def __init__(self, attrs=None, installed_plugins=None, pk=None,
+                 configuration=None):
         """
         Create a widget for editing text + plugins.
 
@@ -19,16 +22,23 @@ class TextEditorWidget(Textarea):
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
+        if configuration and getattr(settings, configuration, False):
+            conf = deepcopy(text_settings.CKEDITOR_SETTINGS)
+            conf.update(getattr(settings, configuration))
+            self.configuration = conf
+        else:
+            self.configuration = text_settings.CKEDITOR_SETTINGS
 
     def render_textarea(self, name, value, attrs=None):
         return super(TextEditorWidget, self).render(name, value, attrs)
 
     def render_additions(self, name, value, attrs=None):
         language = get_language().split('-')[0]
+        configuration = deepcopy(self.configuration)
         context = {
             'name': name,
             'language': language,
-            'settings': language.join(simplejson.dumps(text_settings.CKEDITOR_SETTINGS).split("{{ language }}")),
+            'settings': language.join(json.dumps(configuration).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,

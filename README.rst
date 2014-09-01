@@ -44,6 +44,45 @@ http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for all setti
 
 If you want to use the ckeditor in your own models there is a HTMLField in djangocms_text_ckeditor.fields.
 
+You can further customize each `HTMLField` field by using different
+configuration parameter in your settings::
+
+
+    models.py
+
+    class Model1(models.Model):
+        text = HTMLField(configuration='CKEDITOR_SETTINGS_MODEL1')
+
+    class Model2(models.Model):
+        text = HTMLField(configuration='CKEDITOR_SETTINGS_MODEL2')
+
+    settings.py
+
+    CKEDITOR_SETTINGS_MODEL1 = {
+        'toolbar_HTMLField': [
+            ['Undo', 'Redo'],
+            ['ShowBlocks'],
+            ['Format', 'Styles'],
+            ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ]
+    }
+
+    CKEDITOR_SETTINGS_MODEL2 = {
+        'toolbar_HTMLField': [
+            ['Undo', 'Redo'],
+            ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ]
+    }
+
+
+#. Add `configuration='MYSETTING'` to the `HTMLField` usage(s) you want to
+   customize;
+#. Define a setting parameter named as the string used in the `configuration`
+   argument of the `HTMLField` instance with the desidered configuration;
+
+Values not specified in your custom configuration will be taken from the global
+``CKEDITOR_SETTINGS``.
+
 Drag & Drop Images
 ------------------
 

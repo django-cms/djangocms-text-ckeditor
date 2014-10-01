@@ -12,11 +12,13 @@ from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin
+from cms.utils.compat.dj import python_2_unicode_compatible
 
 from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
 from .html import clean_html, extract_images
 
 
+@python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
     body = models.TextField(_("body"))
@@ -27,7 +29,7 @@ class AbstractText(CMSPlugin):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return Truncator(strip_tags(self.body)).words(3, truncate="...")
 
     def __init__(self, *args, **kwargs):

@@ -2,7 +2,7 @@
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
+from django.db import models, connections
 
 
 class Migration(SchemaMigration):
@@ -13,11 +13,13 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Text'
-        db.create_table('cmsplugin_text', (
-            ('cmsplugin_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cms.CMSPlugin'], unique=True, primary_key=True)),
-            ('body', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('djangocms_text_ckeditor', ['Text'])
+        table_names = connections[db.db_alias].introspection.table_names()
+        if not 'cmsplugin_text' in table_names:
+            db.create_table('cmsplugin_text', (
+                ('cmsplugin_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cms.CMSPlugin'], unique=True, primary_key=True)),
+                ('body', self.gf('django.db.models.fields.TextField')()),
+            ))
+            db.send_create_signal('djangocms_text_ckeditor', ['Text'])
 
 
     def backwards(self, orm):

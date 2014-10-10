@@ -52,7 +52,7 @@ class TextPlugin(CMSPluginBase):
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = plugin_pool.get_text_enabled_plugins(
-            self.placeholder,
+            self.placeholder.slot,
             self.page
         )
         pk = self.cms_plugin_instance.pk

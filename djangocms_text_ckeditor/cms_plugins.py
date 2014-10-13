@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.forms.fields import CharField
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from cms.utils.urlutils import admin_reverse
 
 from .settings import TEXT_CKEDITOR_CONFIGURATION
 from .widgets import TextEditorWidget
@@ -49,6 +51,32 @@ class TextPlugin(CMSPluginBase):
             widget=widget, required=False
         )
         return TextPluginForm
+
+    def add_view(self, request, form_url='', extra_context=None):
+        """
+        This is a special case add view for the Text Plugin. Plugins should
+        never have to create an instance on a GET request, but unfortunately
+        the way the Text Plugin works (allowing child plugins on add), there is
+        no way around here.
+
+        If you're reading this code to learn how to write your own CMS Plugin,
+        please read another plugin as you should not do what this plugin does.
+        """
+        result = self.add_view_check_request(request)
+        if isinstance(result, HttpResponse):
+            return result
+        text = Text.objects.create(
+            language=request.GET['plugin_language'],
+            placeholder_id=request.GET['placeholder_id'],
+            parent_id = request.GET.get(
+                'plugin_parent', None
+            ),
+            plugin_type='TextPlugin',
+            body=''
+        )
+        return HttpResponseRedirect(
+            admin_reverse('cms_page_edit_plugin', args=(text.pk,))
+        )
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = plugin_pool.get_text_enabled_plugins(

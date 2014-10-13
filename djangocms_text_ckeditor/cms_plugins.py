@@ -1,3 +1,4 @@
+from distutils.version import LooseVersion
 from django.conf import settings
 from django.forms.fields import CharField
 from django.http import HttpResponse, HttpResponseRedirect
@@ -62,6 +63,10 @@ class TextPlugin(CMSPluginBase):
         If you're reading this code to learn how to write your own CMS Plugin,
         please read another plugin as you should not do what this plugin does.
         """
+        if LooseVersion(cms_version) < LooseVersion('3.1'):
+            return super(TextPlugin, self).add_view_check_request(
+                request, form_url, extra_context
+            )
         result = self.add_view_check_request(request)
         if isinstance(result, HttpResponse):
             return result

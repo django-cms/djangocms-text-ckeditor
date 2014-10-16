@@ -62,6 +62,7 @@ class TextEditorWidget(Textarea):
             'language': language,
             'settings': language.join(json.dumps(configuration).split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
+            'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
             'plugin_language': self.plugin_language,

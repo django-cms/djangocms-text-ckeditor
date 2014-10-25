@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block extrahead %}
+<script>window.CKEDITOR_BASEPATH = "{{ CKEDITOR_BASEPATH }}";</script>
 <script src="{% static "cms/js/modules/cms.base.js" %}"></script>
 <script src="{% static "djangocms_text_ckeditor/ckeditor/ckeditor.js" %}"></script>
 <script src="{% static "djangocms_text_ckeditor/js/cms.ckeditor.js" %}"></script>

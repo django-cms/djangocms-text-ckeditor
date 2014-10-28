@@ -20,7 +20,10 @@ class TextEditorWidget(Textarea):
         if attrs is None:
             attrs = {}
 
-        self.ckeditor_class = 'CMS_CKEditor'
+        if pk:
+            self.ckeditor_class = 'CMS_CKEditor_%s' % pk
+        else:
+            self.ckeditor_class = 'CMS_CKEditor'
         if self.ckeditor_class not in attrs.get('class', '').join(' '):
             new_class = attrs.get('class', '') + ' %s' % self.ckeditor_class
             attrs.update({

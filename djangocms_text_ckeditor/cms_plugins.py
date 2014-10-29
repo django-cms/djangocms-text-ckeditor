@@ -64,7 +64,7 @@ class TextPlugin(CMSPluginBase):
         please read another plugin as you should not do what this plugin does.
         """
         if LooseVersion(cms_version) < LooseVersion('3.1'):
-            return super(TextPlugin, self).add_view_check_request(
+            return super(TextPlugin, self).add_view(
                 request, form_url, extra_context
             )
         result = self.add_view_check_request(request)

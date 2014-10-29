@@ -63,7 +63,8 @@ class TextPlugin(CMSPluginBase):
         If you're reading this code to learn how to write your own CMS Plugin,
         please read another plugin as you should not do what this plugin does.
         """
-        if LooseVersion(cms_version) < LooseVersion('3.1'):
+        if not hasattr(self, 'add_view_check_request'):
+            # pre 3.1 compatiblity
             return super(TextPlugin, self).add_view(
                 request, form_url, extra_context
             )

@@ -1,5 +1,3 @@
-from distutils.version import LooseVersion
-from django.conf import settings
 from django.forms.fields import CharField
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -14,11 +12,6 @@ from .widgets import TextEditorWidget
 from .models import Text
 from .utils import plugin_tags_to_user_html
 from .forms import TextForm
-
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin
 
 
 class TextPlugin(CMSPluginBase):
@@ -86,7 +79,7 @@ class TextPlugin(CMSPluginBase):
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = plugin_pool.get_text_enabled_plugins(
-            self.placeholder,
+            self.placeholder.slot,
             self.page
         )
         pk = self.cms_plugin_instance.pk
@@ -100,11 +93,6 @@ class TextPlugin(CMSPluginBase):
         We override the change form template path
         to provide backwards compatibility with CMS 2.x
         """
-        ckeditor_basepath = urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/')
-        if ckeditor_basepath.startswith('//'):
-            protocol = 'https' if request.is_secure else 'http'
-            ckeditor_basepath = '{0}:{1}'.format(protocol, ckeditor_basepath)
-        context.update({'CKEDITOR_BASEPATH': ckeditor_basepath})
         if cms_version.startswith('2'):
             context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
         return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)

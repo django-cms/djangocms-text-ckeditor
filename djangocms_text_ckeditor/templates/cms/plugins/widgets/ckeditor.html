@@ -15,9 +15,9 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-	function init{{ ckeditor_class }}() {
-		if ($('.{{ ckeditor_class }}:visible').length > 0) {
-			$('.{{ ckeditor_class }}:visible').each(function() {
+	function initCMS_CKEditor_{{ ckeditor_selector }}() {
+		if ($('#{{ ckeditor_selector }}:visible').length > 0) {
+			$('#{{ ckeditor_selector }}:visible').each(function() {
 				$(this).hide();
 
 				var container = $(this).attr('id');
@@ -52,16 +52,16 @@ $(document).ready(function () {
 	}
 
 	// initialize ckeditor only if the container exists and is ready
-	init{{ ckeditor_class }}();
+	initCMS_CKEditor_{{ ckeditor_selector }}();
 
 	// initialize ckeditor in admin inline for "add-row" link
-	var add_buttons_{{ ckeditor_class }} = $('.add-row a');
-	if (add_buttons_{{ ckeditor_class }}.length > 0) {
-		if (add_buttons_{{ ckeditor_class }}.data('isInitCMSCKEditor') !== 'yes') {
-			add_buttons_{{ ckeditor_class }}.click(function () {
-				init{{ ckeditor_class }}();
+	var add_buttons_{{ ckeditor_selector }} = $('.add-row a');
+	if (add_buttons_{{ ckeditor_selector }}.length > 0) {
+		if (add_buttons_{{ ckeditor_selector }}.data('isInitCMSCKEditor') !== 'yes') {
+			add_buttons_{{ ckeditor_selector }}.click(function () {
+				init{{ ckeditor_selector }}();
 			});
-			add_buttons_{{ ckeditor_class }}.data('isInitCMSCKEditor', 'yes');
+			add_buttons_{{ ckeditor_selector }}.data('isInitCMSCKEditor', 'yes');
 		}
 	}
 });

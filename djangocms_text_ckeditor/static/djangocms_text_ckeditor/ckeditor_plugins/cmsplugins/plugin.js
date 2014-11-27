@@ -62,6 +62,8 @@
         // The plugin initialization logic goes inside this method.
         init: function (editor) {
             var that = this;
+            var definition = null;
+            var button = null;
 
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
@@ -79,33 +81,11 @@
 
             this.setupDialog();
 
-            // add the button
-            this.editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
-                toolbar: 'cms,0',
-                label: this.options.lang.toolbar,
-                title: this.options.lang.toolbar,
-                className: 'cke_panelbutton__cmsplugins',
-                modes: { wysiwyg: 1 },
-                editorFocus: 0,
-
-                panel: {
-                    css: [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
-                    attributes: { 'role': 'cmsplugins', 'aria-label': this.options.lang.aria }
-                },
-
-                // this is called when creating the dropdown list
-                onBlock: function (panel, block) {
-                    block.element.setHtml(that.editor.plugins.cmsplugins.setupDropdown());
-
-                    var anchors = $(block.element.$).find('.cke_panel_listItem a');
-
-                    anchors.bind('click', function (e) {
-                        e.preventDefault();
-
-                        that.addPlugin($(this), panel);
-                    });
-                }
-            });
+            // add the button, depending on whether we prefer buttons or a dropdown
+            if(this.options.plugins_integration && this.options.plugins_integration == 'buttons')
+                this._initButtons();
+            else
+                this._initDropdown();
 
             // handle edit event via context menu
             if (this.editor.contextMenu) {
@@ -151,6 +131,62 @@
             });
 
             this.setupDataProcessor();
+        },
+
+        _initDropdown: function () {
+            var that = this;
+            this.editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
+                'toolbar': 'cms,0',
+                'label': this.options.lang.toolbar,
+                'title': this.options.lang.toolbar,
+                'className' : 'cke_panelbutton__cmsplugins',
+                'modes': { wysiwyg:1 },
+                'editorFocus': 0,
+
+                'panel': {
+                    'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
+                    'attributes': { role: 'cmsplugins', 'aria-label': this.options.lang.aria }
+                },
+
+                // this is called when creating the dropdown list
+                'onBlock': function (panel, block) {
+                    block.element.setHtml(that.editor.plugins.cmsplugins.setupDropdown());
+
+                    var anchors = $(block.element.$).find('.cke_panel_listItem a');
+                        anchors.bind('click', function (e) {
+                            e.preventDefault();
+
+                            that.addPlugin($(this).rel, panel);
+                        });
+                }
+            });
+        },
+
+        _getPluginIconPath: function (item) {
+            if (item.icon_path)
+                return item.icon_path;
+
+            return this.path + 'icons/cmsplugins.png';
+        },
+
+        _initButtons: function () {
+            var that = this;
+            $.each(this.options.plugins, function (i, group) {
+                $.each(group.items, function (ii, item) {
+                    definition = {
+                        'command': 'cmsPlugin' + item.type,
+                        'label': item.title,
+                        'icon': CKEDITOR.getUrl(that._getPluginIconPath(item)),
+                        'toolbar': 'cms'
+                    };
+                    that.editor.addCommand(definition.command, {
+                        exec: function(editor) {
+                            that.addPlugin(item.type);
+                        }
+                    });
+                    that.editor.ui.addButton(definition.command, definition);
+                });
+            });
         },
 
         getElementFromSelection: function () {
@@ -283,11 +319,13 @@
                 });
         },
 
-        addPlugin: function (item, panel) {
+        addPlugin: function (plugin_type, panel) {
             var that = this;
 
             // hide the panel
-            panel.hide();
+            if(panel) {
+                panel.hide();
+            }
 
             this.editor.focus();
             this.editor.fire('saveSnapshot');
@@ -295,15 +333,15 @@
             // gather data
             var data = {
                 placeholder_id: this.options.placeholder_id,
-                plugin_type: item.attr('rel'),
+                plugin_type: plugin_type,
                 plugin_parent: this.options.plugin_id,
                 plugin_language: this.options.plugin_language
             };
 
-            that.addPluginDialog(item, data);
+            that.addPluginDialog(data);
         },
 
-        addPluginDialog: function (item, data) {
+        addPluginDialog: function (data) {
             var body = $(document);
             // open the dialog
             var selected_text = this.editor.getSelection().getSelectedText();

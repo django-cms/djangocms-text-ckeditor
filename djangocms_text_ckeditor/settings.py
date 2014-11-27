@@ -38,3 +38,4 @@ TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _("Generi
 ALLOW_TOKEN_PARSERS = (
     'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',
 )
+TEXT_PLUGINS_INTEGRATION = getattr(settings, 'TEXT_PLUGINS_INTEGRATION', 'dropdown')

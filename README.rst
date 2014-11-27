@@ -206,6 +206,18 @@ Have a look at the function ``create_picture_plugin`` for details.
 To completely disable the feature, set ``TEXT_SAVE_IMAGE_FUNCTION = None``.
 
 
+Plugin integration in ckeditor
+------------------------------
+
+By default, text plugins are available from a dropdown called 'cmsplugins' in the ckeditor toolbar::
+
+    TEXT_PLUGINS_INTEGRATION = 'dropdown'
+
+You may prefer buttons (if you have only few plugins for example)::
+
+    TEXT_PLUGINS_INTEGRATION = 'buttons'
+
+
 Translations
 ------------
 

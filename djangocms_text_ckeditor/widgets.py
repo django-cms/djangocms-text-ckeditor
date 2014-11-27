@@ -78,6 +78,7 @@ class TextEditorWidget(Textarea):
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
             'plugin_language': self.plugin_language,
+            'plugins_integration': text_settings.TEXT_PLUGINS_INTEGRATION,
             'placeholder': self.placeholder,
             'widget': self,
         }

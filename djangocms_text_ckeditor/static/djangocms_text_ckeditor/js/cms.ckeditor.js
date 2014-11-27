@@ -55,6 +55,10 @@
                         settings: settings
                     }, this.options, options);
 
+                    // dynamicaly add plugins button
+                    if (settings.plugins_integration && settings.plugins_integration == 'buttons')
+                        this._initPluginButtons()
+
                     // add extra plugins that we absolutely must have
                     this.options.extraPlugins = this.options.extraPlugins +=
                         ',cmsplugins,cmswidget,cmsresize,widget';
@@ -76,6 +80,34 @@
 
                     // add additional styling
                     CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
+                }
+            },
+
+            _initPluginButtons: function () {
+                // Search for cmsplugins button and replace it by plugin buttons.
+                var pluginsButtons = new Array();
+                $.each(this.options.settings.plugins, function (groupIndex, group) {
+                    $.each(group.items, function (itemIndex, item) {
+                        pluginsButtons.push('cmsPlugin' + item.type);
+                    });
+                });
+
+                this._insertPluginButtons(this.options.toolbar_CMS, pluginsButtons);
+            },
+
+            _insertPluginButtons: function(toolbar, buttons) {
+                for( var toolbarIndex = 0; toolbarIndex < toolbar.length; toolbarIndex++) {
+                    if( typeof toolbar[toolbarIndex] === 'string') {
+                        if (toolbar[toolbarIndex] == 'cmsplugins') {
+                            toolbar.splice(toolbarIndex, 1);
+                            for( var buttonsIndex = 0; buttonsIndex < buttons.length; buttonsIndex++) {
+                                toolbar.splice(buttonsIndex, 0, buttons[buttons.length - buttonsIndex - 1]);
+                            }
+                            break;
+                        }
+                    } else {
+                        this._insertPluginButtons(toolbar[toolbarIndex], buttons);
+                    }
                 }
             },
 

@@ -64,6 +64,15 @@ $(document).ready(function () {
 			add_buttons.data('isInitCMSCKEditor', 'yes');
 		}
 	}
+    //initialize ckeditor when a collapsed row is extended
+    $("fieldset.collapse a.collapse-toggle").click(function(e) {
+        var $this = $(this);
+        if (!$this.closest("fieldset").hasClass("collapsed") && $this.data('isInitCMSCKEditor') != 'yes') {
+            // Show
+            initCMSCKEditor();
+            $this.data('isInitCMSCKEditor', 'yes');
+        }
+    });
 });
 })(CMS.$);
 </script>

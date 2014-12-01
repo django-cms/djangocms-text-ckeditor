@@ -29,7 +29,7 @@ $(document).ready(function () {
 			],
 			'toolbar_HTMLField': [
 				['Undo', 'Redo'],
-				['cmsplugins', '-', 'ShowBlocks'],
+				['ShowBlocks'],
 				['Format', 'Styles'],
 				['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
 				['Maximize', ''],

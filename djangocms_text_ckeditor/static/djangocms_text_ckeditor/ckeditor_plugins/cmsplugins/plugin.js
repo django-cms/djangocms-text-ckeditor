@@ -157,43 +157,20 @@ $(document).ready(function () {
 				});
 		},
 
-		addPlugin: function (item, panel) {
-			var that = this;
+		addPlugin: function (item) {
+			var args = {
+				'placeholder_id': this.options.placeholder_id,
+				'plugin_type': item.attr('rel'),
+				'plugin_parent': this.options.plugin_id,
+				'plugin_language': this.options.plugin_language
+			};
 
-			// hide the panel
-			panel.hide();
+			var url = this.options.add_plugin_url + '?' + CMS.$.param(args);
 
 			// lets figure out how to write something to the editor
 			this.editor.focus();
 			this.editor.fire('saveSnapshot');
 
-			// gather data
-			var data = {
-				'placeholder_id': this.options.placeholder_id,
-				'plugin_type': item.attr('rel'),
-				'parent_id': this.options.plugin_id,
-				'plugin_language':  this.options.plugin_language
-			};
-
-			// lets do some ajax
-			$.ajax({
-				'type': 'POST',
-				'url': this.options.add_plugin_url,
-				'data': data,
-				'success': function (data) {
-					// cancel if error is returned
-					if(data === 'error') return false;
-
-					// trigger dialog
-					that.addPluginDialog(item, data);
-				},
-				'error': function (error) {
-					alert('There was an error creating the plugin.');
-				}
-			});
-		},
-
-		addPluginDialog: function (item, data) {
 			// open the dialog
 			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');
@@ -201,7 +178,7 @@ $(document).ready(function () {
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
 			$(dialog.parts.title.$).text(this.options.lang.add);
-			$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
+			$(dialog.parts.contents.$).find('iframe').attr('src', url)
 				.bind('load', function () {
 					$(this).contents().find('.submit-row').hide().end()
 					.find('#container').css('min-width', 0).css('padding', 0)

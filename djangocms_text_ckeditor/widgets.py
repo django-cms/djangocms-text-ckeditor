@@ -20,13 +20,6 @@ class TextEditorWidget(Textarea):
         if attrs is None:
             attrs = {}
 
-        self.ckeditor_class = 'CMS_CKEditor'
-        if self.ckeditor_class not in attrs.get('class', '').join(' '):
-            new_class = attrs.get('class', '') + ' %s' % self.ckeditor_class
-            attrs.update({
-                'class': new_class.strip()
-            })
-
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
@@ -43,6 +36,8 @@ class TextEditorWidget(Textarea):
         return super(TextEditorWidget, self).render(name, value, attrs)
 
     def render_additions(self, name, value, attrs=None):
+        # id attribute is always present when rendering a widget
+        ckeditor_selector = attrs['id']
         language = get_language().split('-')[0]
         configuration = deepcopy(self.configuration)
         # We are in a plugin -> we use toolbar_CMS or a custom defined toolbar
@@ -57,7 +52,7 @@ class TextEditorWidget(Textarea):
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
         context = {
-            'ckeditor_class': self.ckeditor_class,
+            'ckeditor_selector': ckeditor_selector,
             'name': name,
             'language': language,
             'settings': language.join(json.dumps(configuration).split("{{ language }}")),

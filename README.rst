@@ -223,7 +223,7 @@ Extending the plugin
 
 You can use this plugin as base to create your own CKEditor-based plugins.
 
-You need to create your own plugin model extending ``AbstractClass``::
+You need to create your own plugin model extending ``AbstractText``::
 
     from djangocms_text_ckeditor.models import AbstractText
 

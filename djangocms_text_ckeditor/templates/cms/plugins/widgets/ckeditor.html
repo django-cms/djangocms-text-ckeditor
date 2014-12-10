@@ -15,17 +15,17 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-	function initCMSCKEditor() {
-		if ($('.{{ ckeditor_class }}:visible').length > 0) {
-			$('.{{ ckeditor_class }}:visible').each(function() {
+	function initCMSCKEditor{{ ckeditor_selector }}() {
+		if ($('#{{ ckeditor_selector }}:visible').length > 0) {
+			$('#{{ ckeditor_selector }}:visible').each(function() {
 				$(this).hide();
 
 				var container = $(this).attr('id');
 				CMS.CKEditor.init(container, {{ settings|safe }}, {
-					'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',{% if placeholder %}
+					'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
 					'add_plugin_url': '{% cms_admin_url "admin:add-sub-plugin-to-text-plugin" %}',
-					'placeholder_id': {{ placeholder.pk|unlocalize|default:"''" }},
-					'plugin_id': {{ plugin_pk|unlocalize }},
+					'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
+					'plugin_id': {{ plugin_pk|default:"''"|unlocalize }},
 					'plugin_language': '{{ plugin_language }}',
 					'lang': {
 						'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
@@ -43,7 +43,7 @@ $(document).ready(function () {
 								{% endfor %}
 							]}{% if not forloop.last %},{% endif %}
 						{% endfor %}
-					]{% else %}
+					]{% if not placeholder %},
 					'toolbar': 'HTMLField'
 					{% endif %}
 				});
@@ -52,16 +52,16 @@ $(document).ready(function () {
 	}
 
 	// initialize ckeditor only if the container exists and is ready
-	initCMSCKEditor();
+	initCMSCKEditor{{ ckeditor_selector }}();
 
 	// initialize ckeditor in admin inline for "add-row" link
-	var add_buttons = $('.add-row a');
-	if (add_buttons.length > 0) {
-		if (add_buttons.data('isInitCMSCKEditor') !== 'yes') {
-			add_buttons.click(function () {
-				initCMSCKEditor();
+	var addButtons{{ ckeditor_selector }} = $('.add-row a');
+	if (addButtons{{ ckeditor_selector }}.length > 0) {
+		if (addButtons{{ ckeditor_selector }}.data('isInitCMSCKEditor') !== 'yes') {
+			addButtons{{ ckeditor_selector }}.click(function () {
+				initCMSCKEditor{{ ckeditor_selector }}();
 			});
-			add_buttons.data('isInitCMSCKEditor', 'yes');
+			addButtons{{ ckeditor_selector }}.data('isInitCMSCKEditor', 'yes');
 		}
 	}
 });

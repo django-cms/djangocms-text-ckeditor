@@ -1,0 +1,15 @@
+{% load cms_js_tags %}
+<html>
+<body>
+<script type="application/javascript">
+window.parent.CMS.CKEditor.addSubPlugin({
+    'plugin_id': {{ plugin.pk }},
+    'plugin_desc': {% javascript_string %}{{ plugin.get_short_description }}{% end_javascript_string %},
+    'plugin_icon': {% javascript_string %}{{ plugin.get_instance_icon_src }}{% end_javascript_string %},
+    'plugin_type': {% javascript_string %}{{ plugin.plugin_type }}{% end_javascript_string %},
+    'plugin_name': {% javascript_string %}{{ plugin.get_plugin_name }}{% end_javascript_string %}
+  }
+)
+</script>
+</body>
+</html>

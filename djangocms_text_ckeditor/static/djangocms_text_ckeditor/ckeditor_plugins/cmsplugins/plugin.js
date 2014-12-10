@@ -71,6 +71,12 @@ $(document).ready(function () {
 
 			// setup CKEDITOR.htmlDataProcessor
 			this.setupDataProcessor();
+
+			// setup callback for adding sub plugins
+			CMS.CKEditor.addSubPlugin = function(data){
+				CKEDITOR.dialog.getCurrent().hide();
+				that.insertPlugin(data);
+			};
 		},
 
 		setupDialog: function () {
@@ -177,8 +183,10 @@ $(document).ready(function () {
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
+
 			$(dialog.parts.title.$).text(this.options.lang.add);
-			$(dialog.parts.contents.$).find('iframe').attr('src', url)
+			var iframe = $(dialog.parts.contents.$).find('iframe');
+			var iframe = iframe.attr('src', url)
 				.bind('load', function () {
 					$(this).contents().find('.submit-row').hide().end()
 					.find('#container').css('min-width', 0).css('padding', 0)

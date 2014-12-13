@@ -15,7 +15,7 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-	function initCMSCKEditor{{ ckeditor_selector }}() {
+	function initCMSCKEditor{{ ckeditor_function }}() {
 		if ($('#{{ ckeditor_selector }}:visible').length > 0) {
 			$('#{{ ckeditor_selector }}:visible').each(function() {
 				$(this).hide();
@@ -52,16 +52,16 @@ $(document).ready(function () {
 	}
 
 	// initialize ckeditor only if the container exists and is ready
-	initCMSCKEditor{{ ckeditor_selector }}();
+	initCMSCKEditor{{ ckeditor_function }}();
 
 	// initialize ckeditor in admin inline for "add-row" link
-	var addButtons{{ ckeditor_selector }} = $('.add-row a');
-	if (addButtons{{ ckeditor_selector }}.length > 0) {
-		if (addButtons{{ ckeditor_selector }}.data('isInitCMSCKEditor') !== 'yes') {
-			addButtons{{ ckeditor_selector }}.click(function () {
-				initCMSCKEditor{{ ckeditor_selector }}();
+	var addButtons{{ ckeditor_function }} = $('.add-row a');
+	if (addButtons{{ ckeditor_function }}.length > 0) {
+		if (addButtons{{ ckeditor_function }}.data('isInitCMSCKEditor') !== 'yes') {
+			addButtons{{ ckeditor_function }}.click(function () {
+				initCMSCKEditor{{ ckeditor_function }}();
 			});
-			addButtons{{ ckeditor_selector }}.data('isInitCMSCKEditor', 'yes');
+			addButtons{{ ckeditor_function }}.data('isInitCMSCKEditor', 'yes');
 		}
 	}
 	//initialize ckeditor when a collapsed row is extended
@@ -69,7 +69,7 @@ $(document).ready(function () {
 		var $this = $(this);
 		if (!$this.closest("fieldset").hasClass("collapsed") && $this.data('isInitCMSCKEditor') != 'yes') {
 			// Show
-			initCMSCKEditor();
+			initCMSCKEditor{{ ckeditor_function }}();
 			$this.data('isInitCMSCKEditor', 'yes');
 		}
 	});

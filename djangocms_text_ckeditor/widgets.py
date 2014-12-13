@@ -4,6 +4,7 @@ from django.conf import settings
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
 from django.utils.translation.trans_real import get_language
 
 from . import settings as text_settings
@@ -53,6 +54,7 @@ class TextEditorWidget(Textarea):
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
         context = {
             'ckeditor_selector': ckeditor_selector,
+            'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
             'settings': language.join(json.dumps(configuration).split("{{ language }}")),

@@ -288,13 +288,13 @@ you may customize the tags and attributes allowed by overriding the
     TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
 
 **NOTE**: Some versions of CKEditor will pre-sanitize your text before passing it to the web server,
-rendering the above settings useless. To ensure this does not happen, you may need to configure the
-following::
+rendering the above settings useless. To ensure this does not happen, you may need to add the
+following parameters to ``CKEDITOR_SETTINGS``::
 
-   CKEDITOR_SETTINGS = {
+      ...
       'basicEntities': False,
       'entities': False,
-   }
+      ...
 
 To completely disable the feature, set ``TEXT_HTML_SANITIZE = False``.
 

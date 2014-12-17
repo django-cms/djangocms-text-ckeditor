@@ -65,12 +65,12 @@ $(document).ready(function () {
 		}
 	}
 	//initialize ckeditor when a collapsed row is extended
-	$("fieldset.collapse a.collapse-toggle").click(function(e) {
+	$("#{{ ckeditor_selector }}").closest("fieldset.collapse").find("a.collapse-toggle").click(function(e) {
 		var $this = $(this);
-		if (!$this.closest("fieldset").hasClass("collapsed") && $this.data('isInitCMSCKEditor') != 'yes') {
+		if (!$this.closest("fieldset").hasClass("collapsed") && $this.data('isInitCMSCKEditor_{{ ckeditor_selector }}') != 'yes') {
 			// Show
 			initCMSCKEditor{{ ckeditor_function }}();
-			$this.data('isInitCMSCKEditor', 'yes');
+			$this.data('isInitCMSCKEditor_{{ ckeditor_selector }}', 'yes');
 		}
 	});
 });

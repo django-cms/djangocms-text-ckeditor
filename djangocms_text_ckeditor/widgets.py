@@ -24,6 +24,12 @@ class TextEditorWidget(Textarea):
         if attrs is None:
             attrs = {}
 
+        self.ckeditor_class = 'CMS_CKEditor'
+        if self.ckeditor_class not in attrs.get('class', '').join(' '):
+            new_class = attrs.get('class', '') + ' %s' % self.ckeditor_class
+            attrs.update({
+                'class': new_class.strip()
+            })
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
@@ -56,6 +62,7 @@ class TextEditorWidget(Textarea):
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
         context = {
+            'ckeditor_class': self.ckeditor_class,
             'ckeditor_selector': ckeditor_selector,
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,

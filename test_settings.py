@@ -1,35 +1,63 @@
-INSTALLED_APPS = [
-    'django.contrib.contenttypes',
-    'django.contrib.auth',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.admin',
-    'mptt',
-    'cms',
-    'menus',
-    'djangocms_text_ckeditor',
-    'south',
-]
+# -*- coding: utf-8 -*-
+from distutils.version import LooseVersion
+import sys
+from tempfile import mkdtemp
+import django
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    }
+gettext = lambda s: s
+
+HELPER_SETTINGS = {
+    'ROOT_URLCONF': 'cms.urls',
+    'INSTALLED_APPS': [
+    ],
+    'LANGUAGE_CODE': 'en',
+    'LANGUAGES': (
+        ('en', gettext('English')),
+        ('fr', gettext('French')),
+        ('it', gettext('Italiano')),
+    ),
+    'CMS_LANGUAGES': {
+        1: [
+            {
+                'code': 'en',
+                'name': gettext('English'),
+                'public': True,
+            },
+            {
+                'code': 'it',
+                'name': gettext('Italiano'),
+                'public': True,
+            },
+            {
+                'code': 'fr',
+                'name': gettext('French'),
+                'public': True,
+            },
+        ],
+        'default': {
+            'hide_untranslated': False,
+        },
+    },
+    'MIGRATION_MODULES': {
+        'djangocms_text_ckeditor': 'djangocms_text_ckeditor.migrations_django',
+    },
+    'FILE_UPLOAD_TEMP_DIR': mkdtemp(),
+    'SITE_ID': 1
 }
 
-TEMPLATE_CONTEXT_PROCESSORS = [
-    'django.core.context_processors.auth',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'cms.context_processors.media',
-    'sekizai.context_processors.sekizai',
-]
+if LooseVersion(django.get_version()) < LooseVersion('1.6'):
+    HELPER_SETTINGS['INSTALLED_APPS'] += [
+        'discover_runner'
+    ]
+    HELPER_SETTINGS['TEST_RUNNER'] = 'discover_runner.DiscoverRunner'
 
-ROOT_URLCONF = 'cms.urls'
 
-SECRET_KEY = 'p*gkh#3zd6rpt*l%^4+4=2+*l$er!-uzef2ol3rmgu^m=-#f1w'
-
-SOUTH_TESTS_MIGRATE = False
+def run():
+    from collections import defaultdict
+    from djangocms_helper import main
+    args = defaultdict(str)
+    args['<application>'] = 'djangocms_text_ckeditor'
+    args['test'] = True
+    args['--cms'] = True
+    args['--extra-settings'] = 'test_settings.py'
+    main.core(args=args, application='djangocms_text_ckeditor')

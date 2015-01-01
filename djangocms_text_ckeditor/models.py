@@ -5,10 +5,6 @@ try:
     from django.utils.encoding import force_text as force_unicode_or_text
 except ImportError:
     from django.utils.encoding import force_unicode as force_unicode_or_text
-try:
-    from softhyphen.html import hyphenate
-except ImportError:
-    hyphenate = lambda t: t
 
 from django.db import models
 from django.utils.html import strip_tags
@@ -20,7 +16,6 @@ from cms.utils.compat.dj import python_2_unicode_compatible
 
 from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
 from .html import clean_html, extract_images
-from . import settings
 
 
 @python_2_unicode_compatible
@@ -35,7 +30,7 @@ class AbstractText(CMSPlugin):
         abstract = True
 
     def __str__(self):
-        return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
+        return Truncator(strip_tags(self.body)).words(3, truncate="...")
 
     def __init__(self, *args, **kwargs):
         super(AbstractText, self).__init__(*args, **kwargs)
@@ -45,8 +40,6 @@ class AbstractText(CMSPlugin):
         body = self.body
         body = extract_images(body, self)
         body = clean_html(body, full=False)
-        if settings.TEXT_AUTO_HYPHENATE:
-            body = hyphenate(body, language=self.cmsplugin_ptr.language)
         self.body = body
         super(AbstractText, self).save(*args, **kwargs)
 

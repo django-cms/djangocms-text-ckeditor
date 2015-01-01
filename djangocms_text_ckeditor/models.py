@@ -8,7 +8,7 @@ except ImportError:
 try:
     from softhyphen.html import hyphenate
 except ImportError:
-    hyphenate = lambda t: t
+    hyphenate = lambda t, language: t
 
 from django.db import models
 from django.utils.html import strip_tags

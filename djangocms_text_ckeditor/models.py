@@ -46,7 +46,10 @@ class AbstractText(CMSPlugin):
         body = extract_images(body, self)
         body = clean_html(body, full=False)
         if settings.TEXT_AUTO_HYPHENATE:
-            body = hyphenate(body, language=self.cmsplugin_ptr.language)
+            try:
+                body = hyphenate(body, language=self.cmsplugin_ptr.language)
+            except (TypeError, CMSPlugin.DoesNotExist):
+                body = hyphenate(body)
         self.body = body
         super(AbstractText, self).save(*args, **kwargs)
 

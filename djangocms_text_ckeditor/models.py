@@ -47,7 +47,7 @@ class AbstractText(CMSPlugin):
         body = clean_html(body, full=False)
         if settings.TEXT_AUTO_HYPHENATE:
             try:
-                body = hyphenate(body, language=self.cmsplugin_ptr.language)
+                body = hyphenate(body, language=self.language)
             except (TypeError, CMSPlugin.DoesNotExist):
                 body = hyphenate(body)
         self.body = body

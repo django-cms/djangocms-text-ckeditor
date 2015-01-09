@@ -11,3 +11,4 @@ djangocms_text_ckeditor.egg-info
 *.DS_Store
 .idea
 .tox
+.coverage

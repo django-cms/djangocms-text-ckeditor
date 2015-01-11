@@ -301,7 +301,7 @@ you may customize the tags and attributes allowed by overriding the
 ``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings::
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
-    TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
+    TEXT_ADDITIONAL_ATTRIBUTES = ('scrolling', 'allowfullscreen', 'frameborder')
 
 **NOTE**: Some versions of CKEditor will pre-sanitize your text before passing it to the web server,
 rendering the above settings useless. To ensure this does not happen, you may need to add the

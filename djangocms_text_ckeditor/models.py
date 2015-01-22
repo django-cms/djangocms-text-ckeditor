@@ -2,21 +2,17 @@ import re
 import sys
 
 try:
-    from django.utils.encoding import force_text as force_unicode_or_text
-except ImportError:
-    from django.utils.encoding import force_unicode as force_unicode_or_text
-try:
     from softhyphen.html import hyphenate
 except ImportError:
     hyphenate = lambda t: t
 
 from django.db import models
+from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin
-from cms.utils.compat.dj import python_2_unicode_compatible
 
 from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
 from .html import clean_html, extract_images
@@ -39,7 +35,7 @@ class AbstractText(CMSPlugin):
 
     def __init__(self, *args, **kwargs):
         super(AbstractText, self).__init__(*args, **kwargs)
-        self.body = force_unicode_or_text(self.body)
+        self.body = force_text(self.body)
 
     def save(self, *args, **kwargs):
         body = self.body
@@ -126,7 +122,7 @@ class AbstractText(CMSPlugin):
 
     def notify_on_autoadd_children(self, request, conf, children):
         """
-        Method called when we auto add children to this plugin via 
+        Method called when we auto add children to this plugin via
         default_plugins/<plugin>/children in CMS_PLACEHOLDER_CONF.
         we must replace some strings with child tag for the CKEDITOR.
         Strings are "%(_tag_child_<order>)s" with the inserted order of chidren

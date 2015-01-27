@@ -24,6 +24,7 @@ class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
     body = models.TextField(_("body"))
 
+    search_fields = ('body',)
     disable_child_plugins = True
 
     class Meta:

@@ -102,7 +102,7 @@ To customize the plugin editor, use `toolbar_CMS` attribute, as in::
             ['Undo', 'Redo'],
             ['cmsplugins', '-', 'ShowBlocks'],
             ['Format', 'Styles'],
-        ]
+        ],
         'skin': 'moono',
     }
 
@@ -118,7 +118,7 @@ models, use `toolbar_HTMLField` attribute::
             ['Undo', 'Redo'],
             ['ShowBlocks'],
             ['Format', 'Styles'],
-        ]
+        ],
         'skin': 'moono',
     }
 

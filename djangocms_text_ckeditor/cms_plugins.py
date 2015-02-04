@@ -22,6 +22,7 @@ class TextPlugin(CMSPluginBase):
     change_form_template = "cms/plugins/text_plugin_change_form.html"
     ckeditor_configuration = TEXT_CKEDITOR_CONFIGURATION
 
+
     def get_editor_widget(self, request, plugins, pk, placeholder, language):
         """
         Returns the Django form Widget to be used for

@@ -102,7 +102,7 @@ To customize the plugin editor, use `toolbar_CMS` attribute, as in::
             ['Undo', 'Redo'],
             ['cmsplugins', '-', 'ShowBlocks'],
             ['Format', 'Styles'],
-        ]
+        ],
         'skin': 'moono',
     }
 
@@ -118,7 +118,7 @@ models, use `toolbar_HTMLField` attribute::
             ['Undo', 'Redo'],
             ['ShowBlocks'],
             ['Format', 'Styles'],
-        ]
+        ],
         'skin': 'moono',
     }
 
@@ -215,6 +215,22 @@ and configure the placeholder to only accept TextPlugin. For more information on
 http://django-cms.readthedocs.org/en/latest/extending_cms/placeholders.html
 
 
+Auto Hyphenate Text
+-------------------
+
+You can hyphenate the text entered into the editor, so that the HTML entity ``&shy;`` (soft-hyphen_)
+automatically is added in between words, at the correct syllable boundary.
+
+To activate this feature, ``pip install django-softhyphen``. In ``settings.py`` add ``'softhyphen'``
+to the list of ``INSTALLED_APPS``. django-softhyphen_ also installs hyphening dictionaries for 25
+natural languages.
+
+In case you already installed ``django-softhyphen`` but do not want to soft hyphenate, set
+``TEXT_AUTO_HYPHENATE`` to ``False``.
+
+.. _soft-hyphen: http://www.w3.org/TR/html4/struct/text.html#h-9.3.3
+.. _django-softhyphen: https://github.com/datadesk/django-softhyphen
+
 Extending the plugin
 --------------------
 
@@ -285,7 +301,7 @@ you may customize the tags and attributes allowed by overriding the
 ``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings::
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
-    TEXT_ADDITIONAL_TAGS = ('scrolling', 'allowfullscreen', 'frameborder')
+    TEXT_ADDITIONAL_ATTRIBUTES = ('scrolling', 'allowfullscreen', 'frameborder')
 
 **NOTE**: Some versions of CKEditor will pre-sanitize your text before passing it to the web server,
 rendering the above settings useless. To ensure this does not happen, you may need to add the

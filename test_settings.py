@@ -7,8 +7,9 @@ import django
 gettext = lambda s: s
 
 HELPER_SETTINGS = {
-    'ROOT_URLCONF': 'cms.urls',
     'INSTALLED_APPS': [
+        'djangocms_picture',
+        'djangocms_link',
     ],
     'LANGUAGE_CODE': 'en',
     'LANGUAGES': (
@@ -40,6 +41,32 @@ HELPER_SETTINGS = {
     },
     'MIGRATION_MODULES': {
         'djangocms_text_ckeditor': 'djangocms_text_ckeditor.migrations_django',
+        'djangocms_picture': 'djangocms_picture.migrations_django',
+        'djangocms_link': 'djangocms_link.migrations_django',
+    },
+    'CMS_PERMISSION': True,
+    'CMS_PLACEHOLDER_CONF': {
+        'content': {
+            'plugins': ['TextPlugin', 'PicturePlugin'],
+            'text_only_plugins': ['LinkPlugin'],
+            'extra_context': {"width":640},
+            'name': gettext("Content"),
+            'language_fallback': True,
+            'default_plugins': [
+                {
+                    'plugin_type': 'TextPlugin',
+                    'values': {
+                        'body':'<p>Lorem ipsum dolor sit amet...</p>',
+                    },
+                },
+            ],
+            'child_classes': {
+                'TextPlugin': ['PicturePlugin', 'LinkPlugin'],
+            },
+            'parent_classes': {
+                'LinkPlugin': ['TextPlugin'],
+            },
+        },
     },
     'FILE_UPLOAD_TEMP_DIR': mkdtemp(),
     'SITE_ID': 1
@@ -53,11 +80,9 @@ if LooseVersion(django.get_version()) < LooseVersion('1.6'):
 
 
 def run():
-    from collections import defaultdict
-    from djangocms_helper import main
-    args = defaultdict(str)
-    args['<application>'] = 'djangocms_text_ckeditor'
-    args['test'] = True
-    args['--cms'] = True
-    args['--extra-settings'] = 'test_settings.py'
-    main.core(args=args, application='djangocms_text_ckeditor')
+    import sys
+    from djangocms_helper import runner
+    runner.cms('djangocms_text_ckeditor')
+
+if __name__ == "__main__":
+    run()

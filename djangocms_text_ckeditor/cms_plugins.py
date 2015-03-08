@@ -111,8 +111,12 @@ class TextPlugin(CMSPluginBase):
         return context
 
     def save_model(self, request, obj, form, change):
-        obj.clean_plugins()
         super(TextPlugin, self).save_model(request, obj, form, change)
+        # This must come after calling save
+        # If `clean_plugins()` deletes child plugins, django-treebeard will call
+        # save() again on the Text instance (aka obj in this context) to update mptt values (numchild, etc).
+        # See this ticket for details https://github.com/divio/djangocms-text-ckeditor/issues/212
+        obj.clean_plugins()
 
 
 plugin_pool.register_plugin(TextPlugin)

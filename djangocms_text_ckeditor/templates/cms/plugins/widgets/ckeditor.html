@@ -52,7 +52,7 @@ $(document).ready(function () {
 	}
 
 	// initialize ckeditor only if the container exists and is ready
-	initCMSCKEditor{{ ckeditor_function }}();
+	setTimeout(initCMSCKEditor{{ ckeditor_function }},50);
 
 	// initialize ckeditor in admin inline for "add-row" link
 	var addButtons{{ ckeditor_function }} = $('.add-row a');

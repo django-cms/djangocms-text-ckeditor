@@ -40,7 +40,6 @@ HELPER_SETTINGS = {
         },
     },
     'MIGRATION_MODULES': {
-        'djangocms_text_ckeditor': 'djangocms_text_ckeditor.migrations_django',
         'djangocms_picture': 'djangocms_picture.migrations_django',
         'djangocms_link': 'djangocms_link.migrations_django',
     },
@@ -86,3 +85,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+

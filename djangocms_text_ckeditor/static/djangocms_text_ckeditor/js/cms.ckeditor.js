@@ -55,7 +55,10 @@ $(document).ready(function () {
 				this.options = $.extend(false, {
 					'settings': settings
 				}, this.options, options);
-
+				// applying ckeditor to textareas
+				if (CKEDITOR.env.mobile) {
+					CKEDITOR.env.isCompatible = false;
+				}
 				// add additional plugins (autoloads plugins.js)
 				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
 

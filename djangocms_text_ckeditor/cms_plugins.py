@@ -1,3 +1,4 @@
+from cms.utils.placeholder import get_toolbar_plugin_struct
 from django.forms.fields import CharField
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -79,9 +80,14 @@ class TextPlugin(CMSPluginBase):
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        plugins = plugin_pool.get_text_enabled_plugins(
+        plugins = get_toolbar_plugin_struct(
+                plugin_pool.get_text_enabled_plugins(
+                self.placeholder.slot,
+                self.page
+            ),
             self.placeholder.slot,
-            self.page
+            self.page,
+            parent=TextPlugin
         )
         pk = self.cms_plugin_instance.pk
         form = self.get_form_class(request, plugins, pk, self.cms_plugin_instance.placeholder,

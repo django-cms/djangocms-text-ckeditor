@@ -65,6 +65,12 @@ HELPER_SETTINGS = {
             'parent_classes': {
                 'LinkPlugin': ['TextPlugin'],
             },
+            'plugin_modules': {
+                'LinkPlugin': 'Extra',
+            },
+            'plugin_labels': {
+                'LinkPlugin': 'Add a link',
+            }
         },
     },
     'FILE_UPLOAD_TEMP_DIR': mkdtemp(),

@@ -3,5 +3,5 @@ from django.apps import AppConfig
 
 
 class TextCkeditorConfig(AppConfig):
-    name = 'djangcms_text_ckeditor'
+    name = 'djangocms_text_ckeditor'
     verbose_name = "Text CKEditor"

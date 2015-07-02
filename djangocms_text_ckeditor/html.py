@@ -6,17 +6,15 @@ from PIL import Image
 import re
 import uuid
 
+try:
+    from django.utils.module_loading import import_string
+except ImportError:
+    from django.utils.module_loading import import_by_path as import_string
 from django.utils.six import BytesIO
 
 from . import settings
 from .utils import plugin_to_tag
-from .sanitizer import TextSanitizer, AllowTokenParser
-
-
-class DataAttributeParser(AllowTokenParser):
-
-    def parse(self, attribute, val):
-        return attribute.startswith('data-')
+from .sanitizer import TextSanitizer
 
 
 def _get_default_parser():
@@ -38,7 +36,13 @@ def _get_default_parser():
         sanitizer.HTMLSanitizer.allowed_protocols = (
             sanitizer.HTMLSanitizer.acceptable_protocols +
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
-        TextSanitizer.allow_token_parsers = (DataAttributeParser,)
+        parser_classes = []
+        for parser_class in settings.ALLOW_TOKEN_PARSERS:
+            print parser_class
+            imported = import_string(parser_class)
+            print imported
+            parser_classes.append(imported)
+        TextSanitizer.allow_token_parsers = parser_classes
         opts['tokenizer'] = TextSanitizer
 
     return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
@@ -50,7 +54,6 @@ DEFAULT_PARSER = _get_default_parser()
 def clean_html(data, full=True, parser=DEFAULT_PARSER):
     """
     Cleans HTML from XSS vulnerabilities using html5lib
-    
     If full is False, only the contents inside <body> will be returned (without
     the <body> tags).
     """

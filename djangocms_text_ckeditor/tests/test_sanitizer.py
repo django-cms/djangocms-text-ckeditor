@@ -4,6 +4,7 @@ import html5lib
 from django.test import TestCase
 from html5lib import treebuilders
 
+from .. import attribute_parsers
 from .. import html
 from .. import sanitizer
 from .. import settings
@@ -19,7 +20,7 @@ class SanitizerTestCase(TestCase):
 
     def test_sanitizer(self):
         allowed_attrs = html5lib.sanitizer.HTMLSanitizer.allowed_attributes[:]
-        sanitizer.TextSanitizer.allow_token_parsers = (html.DataAttributeParser,)
+        sanitizer.TextSanitizer.allow_token_parsers = (attribute_parsers.DataAttributeParser,)
         parser = html5lib.HTMLParser(
             tree=treebuilders.getTreeBuilder("dom"),
             tokenizer=sanitizer.TextSanitizer

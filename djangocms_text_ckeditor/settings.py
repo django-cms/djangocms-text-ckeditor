@@ -30,3 +30,7 @@ TEXT_CKEDITOR_CONFIGURATION = getattr(settings, 'TEXT_CKEDITOR_CONFIGURATION', N
 TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
 TEXT_CKEDITOR_BASE_PATH = getattr(settings, 'TEXT_CKEDITOR_BASE_PATH', urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/'))
 TEXT_AUTO_HYPHENATE = getattr(settings, 'TEXT_AUTO_HYPHENATE', True)
+
+ALLOW_TOKEN_PARSERS = (
+    'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',
+)

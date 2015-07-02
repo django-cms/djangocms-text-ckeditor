@@ -6,16 +6,12 @@ from PIL import Image
 import re
 import uuid
 
-try:
-    from django.utils.module_loading import import_string
-except ImportError:
-    from django.utils.module_loading import import_by_path as import_string
 from django.utils.six import BytesIO
 
 from . import settings
 from .utils import plugin_to_tag
 from .sanitizer import TextSanitizer
-
+from .module_loading import import_module
 
 def _get_default_parser():
     opts = {}
@@ -38,7 +34,7 @@ def _get_default_parser():
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
         parser_classes = []
         for parser_class in settings.ALLOW_TOKEN_PARSERS:
-            parser_classes.append(import_string(parser_class))
+            parser_classes.append(import_module(parser_class))
         TextSanitizer.allow_token_parsers = parser_classes
         opts['tokenizer'] = TextSanitizer
 

@@ -38,10 +38,7 @@ def _get_default_parser():
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
         parser_classes = []
         for parser_class in settings.ALLOW_TOKEN_PARSERS:
-            print parser_class
-            imported = import_string(parser_class)
-            print imported
-            parser_classes.append(imported)
+            parser_classes.append(import_string(parser_class))
         TextSanitizer.allow_token_parsers = parser_classes
         opts['tokenizer'] = TextSanitizer
 

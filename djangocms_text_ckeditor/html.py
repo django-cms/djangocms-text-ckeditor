@@ -10,6 +10,13 @@ from django.utils.six import BytesIO
 
 from . import settings
 from .utils import plugin_to_tag
+from .sanitizer import TextSanitizer, AllowTokenParser
+
+
+class DataAttributeParser(AllowTokenParser):
+
+    def parse(self, attribute, val):
+        return attribute.startswith('data-')
 
 
 def _get_default_parser():
@@ -31,7 +38,8 @@ def _get_default_parser():
         sanitizer.HTMLSanitizer.allowed_protocols = (
             sanitizer.HTMLSanitizer.acceptable_protocols +
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
-        opts['tokenizer'] = sanitizer.HTMLSanitizer
+        TextSanitizer.allow_token_parsers = (DataAttributeParser,)
+        opts['tokenizer'] = TextSanitizer
 
     return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
                                **opts)

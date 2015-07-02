@@ -27,7 +27,8 @@ class SanitizerTestCase(TestCase):
         )
         body = '<span data-one="1" data-two="2">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)
-        self.assertEqual('<span data-one="1" data-two="2">some text</span>', body)
+        self.assertTrue('data-one="1"' in body)
+        self.assertTrue('data-two="2"' in body)
         self.assertEqual(allowed_attrs, html5lib.sanitizer.HTMLSanitizer.allowed_attributes)
 
     def test_sanitizer_with_custom_token_parser(self):

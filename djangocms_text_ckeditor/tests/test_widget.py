@@ -71,7 +71,8 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
         page.publish(language)
         url = page.get_absolute_url(language)
         response = self.client.get(url)
-        self.assertContains(response, '<span data-one="1" data-two="2">some text</span>')
+        self.assertContains(response, 'data-one="1"')
+        self.assertContains(response, 'data-two="2"')
 
     def test_text_sanitizer_no_settings(self):
         settings.ALLOW_TOKEN_PARSERS = []

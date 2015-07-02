@@ -6,6 +6,7 @@ from .. import settings
 
 
 class HtmlSanitizerAdditionalProtocolsTests(TestCase):
+
     def tearDown(self):
         settings.TEXT_ADDITIONAL_PROTOCOLS = []
 

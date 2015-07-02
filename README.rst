@@ -212,7 +212,7 @@ And use it in your models, just like a ``TextField``::
     class MyModel(models.Model):
         myfield = HTMLField(blank=True)
 
-This field does not allow you to embed any other CMS plugins within the text editor. Plugins can only be embedded 
+This field does not allow you to embed any other CMS plugins within the text editor. Plugins can only be embedded
 within ``Placeholder`` fields.
 
 If you need to allow additional plugins to be embedded in a HTML field, convert the ``HTMLField`` to a ``Placeholderfield``
@@ -261,7 +261,7 @@ and a plugin class extending ``TextPlugin`` class::
     class MyTextPlugin(TextPlugin):
         name = _(u"My text plugin")
         model = MyTextModel
-        
+
     plugin_pool.register_plugin(MyTextPlugin)
 
 Note that if you override the `render` method that is inherited from the base ``TextPlugin`` class, any child text
@@ -270,8 +270,8 @@ to render out all child plugins located in the ``body`` field. For example::
 
     from djangocms_text_ckeditor.cms_plugins import TextPlugin
     from .models import MyTextModel
-    
-    
+
+
     class MyTextPlugin(TextPlugin):
         name = _(u"My text plugin")
         model = MyTextModel
@@ -282,7 +282,7 @@ to render out all child plugins located in the ``body`` field. For example::
             })
             # Other custom render code you may have
         return super(MyTextPlugin, self).render(context, instance, placeholder)
-        
+
     plugin_pool.register_plugin(MyTextPlugin)
 
 You can further `customize your plugin`_ as other plugins.
@@ -308,6 +308,24 @@ you may customize the tags and attributes allowed by overriding the
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
     TEXT_ADDITIONAL_ATTRIBUTES = ('scrolling', 'allowfullscreen', 'frameborder')
+
+In case you need more control on sanitisation you can extend AllowTokenParser class and define
+your logic into parse() method. For example, if you want to skip your donut attribute during
+sanitisation, you can create a class like this::
+
+    from djangocms_text_ckeditor.sanitizer import AllowTokenParser
+
+
+    class DonutAttributeParser(AllowTokenParser):
+
+        def parse(self, attribute, val):
+            return attribute.startswith('donut-')
+
+And add your class to ``ALLOW_TOKEN_PARSERS`` settings::
+
+    ALLOW_TOKEN_PARSERS = (
+        'mymodule.DonutAttributeParser',
+    )
 
 **NOTE**: Some versions of CKEditor will pre-sanitize your text before passing it to the web server,
 rendering the above settings useless. To ensure this does not happen, you may need to add the

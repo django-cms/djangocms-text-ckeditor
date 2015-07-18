@@ -6,7 +6,7 @@ from djangocms_text_ckeditor import __version__
 
 INSTALL_REQUIRES = [
     'django-cms>=3.0',
-    'html5lib<0.9999',
+    'html5lib>=0.90,!=0.9999,!=0.99999',
     'Pillow',
 ]
 
@@ -21,10 +21,16 @@ CLASSIFIERS = [
     'Topic :: Communications',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Message Boards',
-    "Programming Language :: Python :: 2.6",
-    "Programming Language :: Python :: 2.7",
-    "Programming Language :: Python :: 3.3",
-    "Programming Language :: Python :: 3.4",
+    'Programming Language :: Python :: 2.6',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
+    'Framework :: Django',
+    'Framework :: Django :: 1.4',
+    'Framework :: Django :: 1.5',
+    'Framework :: Django :: 1.6',
+    'Framework :: Django :: 1.7',
+    'Framework :: Django :: 1.8',
 ]
 
 setup(

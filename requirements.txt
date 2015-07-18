@@ -1,3 +1,3 @@
 django-cms>=3.0
-html5lib<0.9999
+html5lib>=0.999999
 pillow

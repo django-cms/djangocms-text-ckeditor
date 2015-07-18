@@ -1,8 +1,6 @@
 import os
 import re
 from cms.models import CMSPlugin
-from distutils.version import LooseVersion
-import django
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.utils.functional import LazyObject
@@ -80,8 +78,6 @@ The following class is taken from https://github.com/jezdez/django/compare/featu
 and should be removed and replaced by the django-core version in 1.4
 """
 default_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-if LooseVersion(django.get_version()) < LooseVersion('1.3'):
-    default_storage = 'staticfiles.storage.StaticFilesStorage'
 
 
 class ConfiguredStorage(LazyObject):

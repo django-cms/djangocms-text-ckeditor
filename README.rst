@@ -346,4 +346,4 @@ See the `html5lib documentation`_ for further information.
 About CKEditor
 --------------
 
-The current integrated Version of CKeditor is **4.4**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.5.1**. For a full documentation visit: http://ckeditor.com/

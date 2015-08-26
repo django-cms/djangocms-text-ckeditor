@@ -87,7 +87,8 @@ $(document).ready(function () {
 
 		_isAloneInModal: function () {
 			// return true if the ckeditor is alone in a modal popup
-			return this.container.parents('body.djangocms_text_ckeditor-text').length > 0;
+			return this.container.parents('body.app-djangocms_text_ckeditor.model-text').length > 0 // Django >= 1.7
+				|| this.container.parents('body.djangocms_text_ckeditor-text').length > 0; // Django < 1.7
 		}
 
 	};

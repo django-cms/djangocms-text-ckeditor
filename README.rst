@@ -46,7 +46,7 @@ Default content in Placeholder
 ******************************
 
 If you use Django-CMS >= 3.0, you can use ``TextPlugin`` in "default_plugins"
-(see docs about the CMS_PLACEHOLDER_CONF setting in Django CMS 3.0).
+(see docs about the `CMS_PLACEHOLDER_CONF`_ setting in Django CMS 3.0).
 ``TextPlugin`` requires just one value: ``body`` where you write your default
 HTML content. If you want to add some "default children" to your
 automagically added plugin (i.e. a ``LinkPlugin``), you have to put children
@@ -83,6 +83,8 @@ inserted order of chidren. For example::
             ]
         }
     }
+
+.. _CMS_PLACEHOLDER_CONF: http://docs.django-cms.org/en/latest/how_to/placeholders.html?highlight=cms_placeholder_conf
 
 CKEDITOR_SETTINGS
 *****************

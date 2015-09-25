@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+from django.utils.module_loading import import_by_path
 from html5lib import sanitizer, serializer, treebuilders, treewalkers
 import html5lib
 from PIL import Image
@@ -11,7 +12,7 @@ from django.utils.six import BytesIO
 from . import settings
 from .utils import plugin_to_tag
 from .sanitizer import TextSanitizer
-from .module_loading import import_module
+
 
 def _get_default_parser():
     opts = {}
@@ -34,7 +35,7 @@ def _get_default_parser():
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
         parser_classes = []
         for parser_class in settings.ALLOW_TOKEN_PARSERS:
-            parser_classes.append(import_module(parser_class))
+            parser_classes.append(import_by_path(parser_class))
 
         TextSanitizer.allow_token_parsers = parser_classes
         opts['tokenizer'] = TextSanitizer

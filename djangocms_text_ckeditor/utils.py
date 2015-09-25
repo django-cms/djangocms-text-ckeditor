@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+
 from cms.models import CMSPlugin
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape

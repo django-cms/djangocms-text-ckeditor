@@ -2,22 +2,21 @@
 import re
 import sys
 
-try:
-    from softhyphen.html import hyphenate
-except ImportError:
-    hyphenate = lambda t: t
-
+from cms.models import CMSPlugin
 from django.db import models
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
-from cms.models import CMSPlugin
-
-from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
-from .html import clean_html, extract_images
 from . import settings
+from .html import clean_html, extract_images
+from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
+
+try:
+    from softhyphen.html import hyphenate
+except ImportError:
+    hyphenate = lambda t: t
 
 
 @python_2_unicode_compatible

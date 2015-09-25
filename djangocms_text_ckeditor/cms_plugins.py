@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.forms.fields import CharField
-from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.translation import ugettext_lazy as _
-
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+from django.forms.fields import CharField
+from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
 
 from .forms import TextForm
 from .models import Text

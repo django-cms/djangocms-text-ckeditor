@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 import html5lib
-
 from django.test import TestCase
 from html5lib import treebuilders
 
-from .. import attribute_parsers
-from .. import html
-from .. import sanitizer
+from djangocms_text_ckeditor import attribute_parsers, html, sanitizer
 
 
 class SanitizerTestCase(TestCase):

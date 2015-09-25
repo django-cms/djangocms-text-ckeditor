@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 
-from .. import html
-from .. import settings
+from djangocms_text_ckeditor import html, settings
 
 
 class HtmlSanitizerAdditionalProtocolsTests(TestCase):

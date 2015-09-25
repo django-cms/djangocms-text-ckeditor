@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 import base64
-from django.utils.module_loading import import_by_path
-from html5lib import sanitizer, serializer, treebuilders, treewalkers
-import html5lib
-from PIL import Image
 import re
 import uuid
 
+import html5lib
+from django.utils.module_loading import import_by_path
 from django.utils.six import BytesIO
+from html5lib import sanitizer, serializer, treebuilders, treewalkers
+from PIL import Image
 
 from . import settings
-from .utils import plugin_to_tag
 from .sanitizer import TextSanitizer
+from .utils import plugin_to_tag
 
 
 def _get_default_parser():

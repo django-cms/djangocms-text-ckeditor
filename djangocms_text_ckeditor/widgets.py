@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from copy import deepcopy
+
 from django.conf import settings
 from django.forms import Textarea
 from django.template.loader import render_to_string

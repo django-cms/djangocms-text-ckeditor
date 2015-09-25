@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from cms.api import create_page, add_plugin
-from cms.test_utils.testcases import (CMSTestCase, URL_CMS_PLUGIN_EDIT)
-from djangocms_text_ckeditor.utils import plugin_to_tag
+from cms.api import add_plugin, create_page
+from cms.test_utils.testcases import URL_CMS_PLUGIN_EDIT, CMSTestCase
 from djangocms_helper.base_test import BaseTestCase
 
-from .. import html
-from .. import settings
+from djangocms_text_ckeditor import html, settings
+from djangocms_text_ckeditor.utils import plugin_to_tag
 
 
 class WidgetTestCase(CMSTestCase, BaseTestCase):

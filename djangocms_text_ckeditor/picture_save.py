@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import re
 from cms.models import CMSPlugin
@@ -10,11 +11,15 @@ OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
 
 
 def plugin_to_tag(obj):
-    return u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % \
-               dict(id=obj.id,
-                    icon_src=force_escape(obj.get_instance_icon_src()),
-                    icon_alt=force_escape(obj.get_instance_icon_alt()),
-                    )
+    return (
+        u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s"'
+        u'id="plugin_obj_%(id)d" />' % (
+            dict(
+                id=obj.id, icon_src=force_escape(obj.get_instance_icon_src()),
+                icon_alt=force_escape(obj.get_instance_icon_alt()),
+            )
+        )
+    )
 
 
 def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
@@ -54,11 +59,15 @@ def replace_plugin_tags(text, id_dict):
             # end user, or edited, so just remove it from the HTML
             # altogether
             return u''
-        return u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % \
-               dict(id=new_id,
-                    icon_src=force_escape(obj.get_instance_icon_src()),
-                    icon_alt=force_escape(obj.get_instance_icon_alt()),
-                    )
+        return (
+            u'<img src="%(icon_src)s" alt="%(icon_alt)s"'
+            u'title="%(icon_alt)s" id="plugin_obj_%(id)d" />' % (
+                dict(id=new_id,
+                     icon_src=force_escape(obj.get_instance_icon_src()),
+                     icon_alt=force_escape(obj.get_instance_icon_alt()),
+                     )
+            )
+        )
     return OBJ_ADMIN_RE.sub(_replace_tag, text)
 
 

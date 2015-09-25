@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import sys
 
@@ -58,8 +59,8 @@ class AbstractText(CMSPlugin):
         ids = plugin_tags_to_id_list(self.body)
         plugins = CMSPlugin.objects.filter(parent=self)
         for plugin in plugins:
-            if not plugin.pk in ids:
-                #delete plugins that are not referenced in the text anymore
+            if plugin.pk not in ids:
+                # delete plugins that are not referenced in the text anymore
                 plugin.delete()
 
     def post_copy(self, old_instance, ziplist):
@@ -135,7 +136,7 @@ class AbstractText(CMSPlugin):
         replacements = dict()
         order = 1
         for child in children:
-            replacements['_tag_child_'+str(order)] = plugin_to_tag(child)
+            replacements['_tag_child_' + str(order)] = plugin_to_tag(child)
             order += 1
         self.body = self.body % replacements
         self.save()

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.admin import widgets as admin_widgets
 from .html import clean_html

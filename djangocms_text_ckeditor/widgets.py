@@ -1,13 +1,10 @@
+# -*- coding: utf-8 -*-
 import json
 from copy import deepcopy
 from django.conf import settings
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-try:
-    from django.utils.text import slugify
-except:
-    from django.template.defaultfilters import slugify
 from django.utils.translation.trans_real import get_language
 
 from . import settings as text_settings
@@ -78,5 +75,6 @@ class TextEditorWidget(Textarea):
         return mark_safe(render_to_string('cms/plugins/widgets/ckeditor.html', context))
 
     def render(self, name, value, attrs=None):
-        return self.render_textarea(name, value, attrs) + \
-               self.render_additions(name, value, attrs)
+        return (
+            self.render_textarea(name, value, attrs) + self.render_additions(name, value, attrs)
+        )

@@ -1,4 +1,4 @@
-from cms.utils.placeholder import get_toolbar_plugin_struct
+# -*- coding: utf-8 -*-
 from django.forms.fields import CharField
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -6,13 +6,14 @@ from django.utils.translation import ugettext_lazy as _
 from cms import __version__ as cms_version
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 
-from .settings import TEXT_CKEDITOR_CONFIGURATION
-from .widgets import TextEditorWidget
-from .models import Text
-from .utils import plugin_tags_to_user_html
 from .forms import TextForm
+from .models import Text
+from .settings import TEXT_CKEDITOR_CONFIGURATION
+from .utils import plugin_tags_to_user_html
+from .widgets import TextEditorWidget
 
 
 class TextPlugin(CMSPluginBase):
@@ -22,7 +23,6 @@ class TextPlugin(CMSPluginBase):
     render_template = "cms/plugins/text.html"
     change_form_template = "cms/plugins/text_plugin_change_form.html"
     ckeditor_configuration = TEXT_CKEDITOR_CONFIGURATION
-
 
     def get_editor_widget(self, request, plugins, pk, placeholder, language):
         """
@@ -69,7 +69,7 @@ class TextPlugin(CMSPluginBase):
         text = Text.objects.create(
             language=request.GET['plugin_language'],
             placeholder_id=request.GET['placeholder_id'],
-            parent_id = request.GET.get(
+            parent_id=request.GET.get(
                 'plugin_parent', None
             ),
             plugin_type='TextPlugin',
@@ -81,7 +81,7 @@ class TextPlugin(CMSPluginBase):
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = get_toolbar_plugin_struct(
-                plugin_pool.get_text_enabled_plugins(
+            plugin_pool.get_text_enabled_plugins(
                 self.placeholder.slot,
                 self.page
             ),

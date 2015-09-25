@@ -7,7 +7,6 @@ from html5lib import treebuilders
 from .. import attribute_parsers
 from .. import html
 from .. import sanitizer
-from .. import settings
 
 
 class SanitizerTestCase(TestCase):

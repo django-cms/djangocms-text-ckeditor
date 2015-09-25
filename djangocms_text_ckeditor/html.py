@@ -71,7 +71,7 @@ def extract_images(data, plugin):
     if not settings.TEXT_SAVE_IMAGE_FUNCTION:
         return data
     tree_builder = html5lib.treebuilders.getTreeBuilder('dom')
-    parser = html5lib.html5parser.HTMLParser(tree = tree_builder)
+    parser = html5lib.html5parser.HTMLParser(tree=tree_builder)
     dom = parser.parse(data)
     found = False
     for img in dom.getElementsByTagName('img'):
@@ -116,7 +116,9 @@ def extract_images(data, plugin):
             image = new_image
         filename = u"%s.%s" % (uuid.uuid4(), file_ending)
         # transform image into a cms plugin
-        image_plugin = img_data_to_plugin(filename, image, parent_plugin=plugin, width=width, height=height)
+        image_plugin = img_data_to_plugin(
+            filename, image, parent_plugin=plugin, width=width, height=height
+        )
         # render the new html for the plugin
         new_img_html = plugin_to_tag(image_plugin)
         # replace the original image node with the newly created cms plugin html
@@ -130,7 +132,9 @@ def extract_images(data, plugin):
 
 def img_data_to_plugin(filename, image, parent_plugin, width=None, height=None):
     func_name = settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[-1]
-    module = __import__(".".join(settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[:-1]), fromlist=[func_name])
+    module = __import__(
+        ".".join(settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[:-1]), fromlist=[func_name]
+    )
     func = getattr(module, func_name)
     return func(filename, image, parent_plugin, width=width, height=height)
 

@@ -41,7 +41,6 @@ HELPER_SETTINGS = {
     },
     'MIGRATION_MODULES': {
         'djangocms_picture': 'djangocms_picture.migrations_django',
-        'djangocms_link': 'djangocms_link.migrations_django',
     },
     'CMS_PERMISSION': True,
     'CMS_PLACEHOLDER_CONF': {

@@ -36,9 +36,6 @@ HELPER_SETTINGS = {
             'hide_untranslated': False,
         },
     },
-    'MIGRATION_MODULES': {
-        'djangocms_picture': 'djangocms_picture.migrations_django',
-    },
     'CMS_PERMISSION': True,
     'CMS_PLACEHOLDER_CONF': {
         'content': {

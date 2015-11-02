@@ -1,22 +1,22 @@
+# -*- coding: utf-8 -*-
 import re
 import sys
 
-try:
-    from softhyphen.html import hyphenate
-except ImportError:
-    hyphenate = lambda t: t
-
+from cms.models import CMSPlugin
 from django.db import models
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
-from cms.models import CMSPlugin
-
-from .utils import plugin_tags_to_id_list, replace_plugin_tags, plugin_to_tag
-from .html import clean_html, extract_images
 from . import settings
+from .html import clean_html, extract_images
+from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
+
+try:
+    from softhyphen.html import hyphenate
+except ImportError:
+    hyphenate = lambda t: t
 
 
 @python_2_unicode_compatible
@@ -58,8 +58,8 @@ class AbstractText(CMSPlugin):
         ids = plugin_tags_to_id_list(self.body)
         plugins = CMSPlugin.objects.filter(parent=self)
         for plugin in plugins:
-            if not plugin.pk in ids:
-                #delete plugins that are not referenced in the text anymore
+            if plugin.pk not in ids:
+                # delete plugins that are not referenced in the text anymore
                 plugin.delete()
 
     def post_copy(self, old_instance, ziplist):
@@ -135,7 +135,7 @@ class AbstractText(CMSPlugin):
         replacements = dict()
         order = 1
         for child in children:
-            replacements['_tag_child_'+str(order)] = plugin_to_tag(child)
+            replacements['_tag_child_' + str(order)] = plugin_to_tag(child)
             order += 1
         self.body = self.body % replacements
         self.save()

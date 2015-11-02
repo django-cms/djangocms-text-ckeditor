@@ -1,5 +1,7 @@
-from django.db import models
+# -*- coding: utf-8 -*-
 from django.contrib.admin import widgets as admin_widgets
+from django.db import models
+
 from .html import clean_html
 from .widgets import TextEditorWidget
 

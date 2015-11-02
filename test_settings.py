@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-from distutils.version import LooseVersion
-import sys
 from tempfile import mkdtemp
-import django
 
 gettext = lambda s: s
 
@@ -54,7 +51,7 @@ HELPER_SETTINGS = {
                 {
                     'plugin_type': 'TextPlugin',
                     'values': {
-                        'body':'<p>Lorem ipsum dolor sit amet...</p>',
+                        'body': '<p>Lorem ipsum dolor sit amet...</p>',
                     },
                 },
             ],
@@ -76,12 +73,6 @@ HELPER_SETTINGS = {
     'SITE_ID': 1
 }
 
-if LooseVersion(django.get_version()) < LooseVersion('1.6'):
-    HELPER_SETTINGS['INSTALLED_APPS'] += [
-        'discover_runner'
-    ]
-    HELPER_SETTINGS['TEST_RUNNER'] = 'discover_runner.DiscoverRunner'
-
 
 def run():
     from djangocms_helper import runner
@@ -89,4 +80,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-

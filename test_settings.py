@@ -41,15 +41,14 @@ HELPER_SETTINGS = {
     },
     'MIGRATION_MODULES': {
         'djangocms_picture': 'djangocms_picture.migrations_django',
-        'djangocms_link': 'djangocms_link.migrations_django',
     },
     'CMS_PERMISSION': True,
     'CMS_PLACEHOLDER_CONF': {
         'content': {
             'plugins': ['TextPlugin', 'PicturePlugin'],
             'text_only_plugins': ['LinkPlugin'],
-            'extra_context': {"width": 640},
-            'name': gettext("Content"),
+            'extra_context': {'width': 640},
+            'name': gettext('Content'),
             'language_fallback': True,
             'default_plugins': [
                 {
@@ -85,10 +84,9 @@ if LooseVersion(django.get_version()) < LooseVersion('1.6'):
 
 
 def run():
-    import sys
     from djangocms_helper import runner
     runner.cms('djangocms_text_ckeditor')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()
 

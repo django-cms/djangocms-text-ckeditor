@@ -72,7 +72,7 @@ class TextPlugin(CMSPluginBase):
             parent_id = request.GET.get(
                 'plugin_parent', None
             ),
-            plugin_type='TextPlugin',
+            plugin_type=self.__class__.__name__,
             body=''
         )
         return HttpResponseRedirect(
@@ -87,7 +87,7 @@ class TextPlugin(CMSPluginBase):
             ),
             self.placeholder.slot,
             self.page,
-            parent=TextPlugin
+            parent=self.__class__
         )
         pk = self.cms_plugin_instance.pk
         form = self.get_form_class(request, plugins, pk, self.cms_plugin_instance.placeholder,

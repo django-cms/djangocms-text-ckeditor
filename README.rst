@@ -12,9 +12,9 @@ It currently supports:
    ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
 .. WARNING::
-   For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.6.
+   For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
 
-   ``djangocms-text-ckeditor`` >= 2.6 is compatible with Django 1.6 and up only.
+   ``djangocms-text-ckeditor`` >= 2.7 is compatible with Django 1.6 and up only.
 
 .. WARNING::
    For django CMS 2.3 and 2.4 use ``djangocms-text-ckeditor`` < 2 (e.g.: version 1.0.10).

@@ -8,7 +8,6 @@
 CKEDITOR.plugins.add( 'cmsresize', {
     init: function( editor ) {
         function dragHandler( evt ) {
-			console.log(evt, origin);
             var dx = evt.originalEvent.screenX - origin.x,
             dy = evt.originalEvent.screenY - origin.y,
             width = startSize.width,

@@ -44,7 +44,8 @@ $(document).ready(function () {
 
 			'allowedContent': true,
 			'toolbarCanCollapse': false,
-			'extraPlugins': 'cmsplugins'
+			'removePlugins': 'resize',
+			'extraPlugins': 'cmsplugins,cmsresize'
 		},
 
 		init: function (container, options, settings) {
@@ -58,6 +59,7 @@ $(document).ready(function () {
 
 				// add additional plugins (autoloads plugins.js)
 				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
+				CKEDITOR.plugins.addExternal('cmsresize', settings.static_url + '/ckeditor_plugins/cmsresize/');
 
 				// render ckeditor
 				this.editor = CKEDITOR.replace(container, this.options);
@@ -76,6 +78,7 @@ $(document).ready(function () {
 
 			// add css tweks to the editor
 			this.styles();
+			this._resizing();
 		},
 
 		styles: function () {
@@ -83,6 +86,18 @@ $(document).ready(function () {
 			$('.cke_button__maximize, .cke_button__source').parent()
 				.css('margin-right', 0).parent()
 				.css('float', 'right');
+		},
+
+		_resizing: function () {
+			$('.cms-ckeditor-resizer').on('pointerdown', function (e) {
+				e.preventDefault();
+				var event = CMS.$.Event('mousedown');
+				$.extend(event, {
+					screenX: e.originalEvent.screenX,
+					screenY: e.originalEvent.screenY
+				});
+				$(this).trigger(event);
+			});
 		},
 
 		_isAloneInModal: function () {

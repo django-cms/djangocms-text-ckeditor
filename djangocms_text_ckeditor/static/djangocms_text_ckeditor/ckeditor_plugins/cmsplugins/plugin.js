@@ -149,6 +149,7 @@ $(document).ready(function () {
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
+			$(dialog.getElement().$).addClass('cms-ckeditor-dialog');
 			$(dialog.parts.title.$).text(this.options.lang.edit);
 			$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
 				.bind('load', function () {
@@ -200,6 +201,7 @@ $(document).ready(function () {
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
+			$(dialog.getElement().$).addClass('cms-ckeditor-dialog');
 			$(dialog.parts.title.$).text(this.options.lang.add);
 			$(dialog.parts.contents.$).find('iframe').attr('src', data.url)
 				.bind('load', function () {

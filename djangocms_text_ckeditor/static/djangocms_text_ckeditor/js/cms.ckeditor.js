@@ -66,6 +66,9 @@ $(document).ready(function () {
 
 				// add additional styling
 				CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
+				// to enable maximize on iOS, see
+				// https://github.com/ckeditor/ckeditor-dev/blob/3b32b2564d545c42a718bb43a9d3de9bd31ec0a0/plugins/maximize/plugin.js#L126
+				CKEDITOR.env.iOS = false;
 			}
 		},
 

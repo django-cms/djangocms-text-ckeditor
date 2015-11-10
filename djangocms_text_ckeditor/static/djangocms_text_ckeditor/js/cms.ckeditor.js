@@ -4,7 +4,7 @@
 // CMS.$ will be passed for $
 $(document).ready(function () {
 	/*!
-	 * CNS.CKEditor
+	 * CMS.CKEditor
 	 * @version: 1.1.0
 	 * @description: Adds cms specific plugins to CKEditor
 	 */

@@ -58,15 +58,25 @@ $(document).ready(function () {
 				});
 			}
 
-			// hande event via doubleclick
 			// handle edit event on double click
-			this.editor.on('doubleclick', function(event) {
-				var selection = that.editor.getSelection();
-				var element = selection.getSelectedElement() || selection.getCommonAncestor().getAscendant('a', true);
-				if(element && element.getAttribute('id').indexOf('plugin_obj_') === 0 && !element.isReadOnly()) {
+			// if event is a jQuery event (touchend), than we mutate
+			// event a bit so we make the payload similar to what ckeditor.event produces
+			var handleEdit = function(event) {
+				if (event.type === 'touchend') {
+					var element = event.currentTarget;
+					event.data = event.data ||  {};
+				} else {
+					var selection = that.editor.getSelection();
+					var element = selection.getSelectedElement() || selection.getCommonAncestor().getAscendant('a', true);
+				}
+				if(element && element.getAttribute('id').indexOf('plugin_obj_') === 0) {
 					event.data.dialog = '';
 					that.editPlugin(element);
 				}
+			}
+			this.editor.on('doubleclick', handleEdit);
+			this.editor.on('instanceReady', function () {
+				CMS.$('img', CMS.$('iframe.cke_wysiwyg_frame')[0].contentWindow.document.documentElement).on('touchend', handleEdit);
 			});
 
 			// setup CKEDITOR.htmlDataProcessor

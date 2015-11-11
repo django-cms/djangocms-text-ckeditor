@@ -56,6 +56,19 @@
     height: 100%;
 }
 
+/* scrollable dropdowns on touch */
+.cke_panel {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+.cke_panel .cke_panel_frame {
+    display: block;
+    position: static;
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+}
+
 /* cms-resizer */
 .cms-ckeditor-resizer {
     border: none !important;

@@ -2001,6 +2001,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
 
             // Shim to help capturing "mousemove" over iframe.
             if ( iframeDialog ) {
+                CMS.$('.cke_dialog_resize_cover').remove();
                 dialogCover = CKEDITOR.dom.element.createFromHtml( '<div class="cke_dialog_resize_cover" style="height: 100%; position: absolute; width: 100%;"></div>' );
                 content.append( dialogCover );
             }

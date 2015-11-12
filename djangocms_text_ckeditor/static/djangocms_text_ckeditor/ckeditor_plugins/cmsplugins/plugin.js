@@ -62,7 +62,7 @@ $(document).ready(function () {
 			// if event is a jQuery event (touchend), than we mutate
 			// event a bit so we make the payload similar to what ckeditor.event produces
 			var handleEdit = function(event) {
-				if (event.type === 'touchend') {
+				if (event.type === 'touchend' || event.type === 'click') {
 					var element = event.currentTarget;
 					event.data = event.data ||  {};
 				} else {
@@ -77,7 +77,7 @@ $(document).ready(function () {
 			this.editor.on('doubleclick', handleEdit);
 			this.editor.on('instanceReady', function () {
 				CMS.$('img[id*="plugin_obj_"]', CMS.$('iframe.cke_wysiwyg_frame')[0]
-					.contentWindow.document.documentElement).on('touchend', handleEdit);
+					.contentWindow.document.documentElement).on('click touchend', handleEdit);
 			});
 
 			// setup CKEDITOR.htmlDataProcessor
@@ -91,7 +91,7 @@ $(document).ready(function () {
 				'minWidth': 600,
 				'minHeight': 200,
 				'contents': [{
-					'elements': [{ type: 'html', html: '<iframe style="position:absolute; left:0; top:0; width:100%; height:100%; border:none;" />' }]
+					'elements': [{ type: 'html', html: '<iframe style="position:static; width:100%; height:100%; border:none;" />' }]
 				}],
 				'onOk': function () {
 					var iframe = $(CKEDITOR.dialog.getCurrent().parts.contents.$).find('iframe').contents();
@@ -161,7 +161,7 @@ $(document).ready(function () {
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
-			dialog.resize(body.width() * 0.8, body.height() * 0.8);
+			dialog.resize(body.width() * 0.8, body.height() * 0.7);
 			$(dialog.getElement().$).addClass('cms-ckeditor-dialog');
 			$(dialog.parts.title.$).text(this.options.lang.edit);
 			$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
@@ -212,10 +212,10 @@ $(document).ready(function () {
 			// open the dialog
 			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');
-			dialog.resize(body.width() * 0.8, body.height() * 0.8);
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
+			dialog.resize(body.width() * 0.8, body.height() * 0.7);
 			$(dialog.getElement().$).addClass('cms-ckeditor-dialog');
 			$(dialog.parts.title.$).text(this.options.lang.add);
 			$(dialog.parts.contents.$).find('iframe').attr('src', data.url)

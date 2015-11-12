@@ -3196,7 +3196,6 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
 CKEDITOR.plugins.add( 'cmsdialog', {
     requires: 'dialogui',
     init: function( editor ) {
-		console.log('oi oi');
         editor.on( 'doubleclick', function( evt ) {
             if ( evt.data.dialog )
                 editor.openDialog( evt.data.dialog );

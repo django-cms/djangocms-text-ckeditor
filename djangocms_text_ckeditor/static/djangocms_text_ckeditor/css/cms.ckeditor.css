@@ -26,7 +26,6 @@
 }
 .cms-ckeditor-dialog .cke_dialog_page_contents {
     width: 100% !important;
-    /* height: 100% !important; */
 }
 .cms-ckeditor-dialog .cke_dialog_page_contents table {
     display: block;

@@ -92,7 +92,7 @@ $(document).ready(function () {
 		},
 
 		_resizing: function () {
-			$('.cms-ckeditor-resizer').on('pointerdown', function (e) {
+			$(document).on('pointerdown', '.cms-ckeditor-resizer', function (e) {
 				e.preventDefault();
 				var event = CMS.$.Event('mousedown');
 				$.extend(event, {

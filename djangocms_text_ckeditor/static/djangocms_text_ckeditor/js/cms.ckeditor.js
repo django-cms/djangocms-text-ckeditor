@@ -45,7 +45,7 @@ $(document).ready(function () {
 			'allowedContent': true,
 			'toolbarCanCollapse': false,
 			'removePlugins': 'resize',
-			'extraPlugins': 'cmsplugins,cmsresize'
+			'extraPlugins': 'cmsplugins,cmsresize,cmsdialog'
 		},
 
 		init: function (container, options, settings) {
@@ -60,6 +60,7 @@ $(document).ready(function () {
 				// add additional plugins (autoloads plugins.js)
 				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
 				CKEDITOR.plugins.addExternal('cmsresize', settings.static_url + '/ckeditor_plugins/cmsresize/');
+				CKEDITOR.plugins.addExternal('cmsdialog', settings.static_url + '/ckeditor_plugins/cmsdialog/');
 
 				// render ckeditor
 				this.editor = CKEDITOR.replace(container, this.options);

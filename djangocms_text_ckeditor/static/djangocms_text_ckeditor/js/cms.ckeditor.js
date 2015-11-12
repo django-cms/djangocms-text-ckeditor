@@ -3,9 +3,9 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-	/*!
-	 * CNS.CKEditor
-	 * @version: 1.1.0
+	/**
+	 * CMS.CKEditor
+	 *
 	 * @description: Adds cms specific plugins to CKEditor
 	 */
 	CMS.CKEditor = {
@@ -44,7 +44,8 @@ $(document).ready(function () {
 
 			'allowedContent': true,
 			'toolbarCanCollapse': false,
-			'extraPlugins': 'cmsplugins'
+			'removePlugins': 'resize',
+			'extraPlugins': 'cmsplugins,cmsresize,cmsdialog'
 		},
 
 		init: function (container, options, settings) {
@@ -58,12 +59,17 @@ $(document).ready(function () {
 
 				// add additional plugins (autoloads plugins.js)
 				CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
+				CKEDITOR.plugins.addExternal('cmsresize', settings.static_url + '/ckeditor_plugins/cmsresize/');
+				CKEDITOR.plugins.addExternal('cmsdialog', settings.static_url + '/ckeditor_plugins/cmsdialog/');
 
 				// render ckeditor
 				this.editor = CKEDITOR.replace(container, this.options);
 
 				// add additional styling
 				CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
+				// to enable maximize on iOS, see
+				// https://github.com/ckeditor/ckeditor-dev/blob/3b32b2564d545c42a718bb43a9d3de9bd31ec0a0/plugins/maximize/plugin.js#L126
+				CKEDITOR.env.iOS = false;
 			}
 		},
 
@@ -76,6 +82,7 @@ $(document).ready(function () {
 
 			// add css tweks to the editor
 			this.styles();
+			this._resizing();
 		},
 
 		styles: function () {
@@ -83,6 +90,18 @@ $(document).ready(function () {
 			$('.cke_button__maximize, .cke_button__source').parent()
 				.css('margin-right', 0).parent()
 				.css('float', 'right');
+		},
+
+		_resizing: function () {
+			$(document).on('pointerdown', '.cms-ckeditor-resizer', function (e) {
+				e.preventDefault();
+				var event = CMS.$.Event('mousedown');
+				$.extend(event, {
+					screenX: e.originalEvent.screenX,
+					screenY: e.originalEvent.screenY
+				});
+				$(this).trigger(event);
+			});
 		},
 
 		_isAloneInModal: function () {

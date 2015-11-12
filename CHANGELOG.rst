@@ -7,6 +7,7 @@ CHANGELOG
 * Add touch support for CKEditor dialogs
 * Add possibility to edit nested plugins on touch devices
 * Replace CMS base module with CMS admin bundle (will only work with CMS 3.2+)
+* Update CKEditor to 4.5.4
 
 2.7.0
 -----

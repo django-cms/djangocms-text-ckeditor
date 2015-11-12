@@ -27,6 +27,8 @@ $(document).ready(function () {
 				'className' : 'cke_panelbutton__cmsplugins',
 				'modes': { wysiwyg:1 },
 				'editorFocus': 1,
+				// 'width': parseInt(CMS.$('html').width() * 0.9, 10),
+				// 'height': parseInt(CMS.$('html').height() * 0.9, 10),
 
 				'panel': {
 					'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
@@ -156,9 +158,11 @@ $(document).ready(function () {
 		editPlugin: function (element) {
 			var id = element.getAttribute('id').replace('plugin_obj_', '');
 			this.editor.openDialog('cmspluginsDialog');
+			var body = CMS.$('.cms-ckeditor-dialog-background-cover');
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
+			dialog.resize(body.width() * 0.8, body.height() * 0.8);
 			$(dialog.getElement().$).addClass('cms-ckeditor-dialog');
 			$(dialog.parts.title.$).text(this.options.lang.edit);
 			$(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
@@ -205,9 +209,11 @@ $(document).ready(function () {
 		},
 
 		addPluginDialog: function (item, data) {
+			var body = CMS.$('.cms-ckeditor-dialog-background-cover');
 			// open the dialog
 			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');
+			dialog.resize(body.width() * 0.8, body.height() * 0.8);
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();

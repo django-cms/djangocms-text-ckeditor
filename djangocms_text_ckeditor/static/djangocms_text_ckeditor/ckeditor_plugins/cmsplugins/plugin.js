@@ -27,8 +27,6 @@ $(document).ready(function () {
 				'className' : 'cke_panelbutton__cmsplugins',
 				'modes': { wysiwyg:1 },
 				'editorFocus': 1,
-				// 'width': parseInt(CMS.$('html').width() * 0.9, 10),
-				// 'height': parseInt(CMS.$('html').height() * 0.9, 10),
 
 				'panel': {
 					'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),

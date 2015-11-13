@@ -157,7 +157,7 @@ $(document).ready(function () {
 		editPlugin: function (element) {
 			var id = element.getAttribute('id').replace('plugin_obj_', '');
 			this.editor.openDialog('cmspluginsDialog');
-			var body = CMS.$('.cms-ckeditor-dialog-background-cover');
+			var body = CMS.$(document);
 
 			// now tweak in dynamic stuff
 			var dialog = CKEDITOR.dialog.getCurrent();
@@ -208,7 +208,7 @@ $(document).ready(function () {
 		},
 
 		addPluginDialog: function (item, data) {
-			var body = CMS.$('.cms-ckeditor-dialog-background-cover');
+			var body = CMS.$(document);
 			// open the dialog
 			var selected_text = this.editor.getSelection().getSelectedText();
 			this.editor.openDialog('cmspluginsDialog');

@@ -67,17 +67,25 @@ $(document).ready(function () {
 
 				// add additional styling
 				CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
-				// to enable maximize on iOS, see
+				// uncomment to enable maximize on iOS, see
 				// https://github.com/ckeditor/ckeditor-dev/blob/3b32b2564d545c42a718bb43a9d3de9bd31ec0a0/plugins/maximize/plugin.js#L126
-				CKEDITOR.env.iOS = false;
+				// currently disabled because add plugins panel is unusable with it on iPads
+				// CKEDITOR.env.iOS = false;
 			}
 		},
 
 		// setup is called after ckeditor has been initialized
 		setup: function () {
 			// auto maximize modal if alone in a modal
+			var that = this;
+			var win = window.parent || window;
 			if (this._isAloneInModal()) {
+				// 70px is hardcoded to make it more performant. 20px + 20px - paddings, 30px label height
+				that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - 70);
 				this.editor.execCommand('maximize');
+				win.CMS.API.Helpers.addEventListener('modal-maximized modal-restored', function (e, payload) {
+					that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - 70);
+				});
 			}
 
 			// add css tweks to the editor

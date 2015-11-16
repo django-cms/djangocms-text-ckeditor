@@ -79,7 +79,7 @@ $(document).ready(function () {
 			}
 			this.editor.on('doubleclick', handleEdit);
 			this.editor.on('instanceReady', function () {
-				CMS.$('img[id*="plugin_obj_"]', CMS.$('iframe.cke_wysiwyg_frame')[0]
+				CMS.$('[id*="plugin_obj_"]', CMS.$('iframe.cke_wysiwyg_frame')[0]
 					.contentWindow.document.documentElement).on('click touchend', handleEdit);
 			});
 

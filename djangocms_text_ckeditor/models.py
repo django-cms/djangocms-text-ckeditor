@@ -25,6 +25,9 @@ class AbstractText(CMSPlugin):
     body = models.TextField(_("body"))
 
     search_fields = ('body',)
+
+    # This property is deprecated. And will be removed in a future release.
+    # It should be set on the Plugin, not the model.
     disable_child_plugins = True
 
     class Meta:

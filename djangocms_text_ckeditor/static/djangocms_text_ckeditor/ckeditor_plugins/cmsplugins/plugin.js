@@ -65,7 +65,10 @@ $(document).ready(function () {
 				if (event.type === 'touchend' || event.type === 'click') {
 					var element = event.currentTarget;
 					event.data = event.data ||  {};
+					that.editor.getSelection().fake(new CKEDITOR.dom.element(element));
 				} else {
+					// heavily relies on the fact that double click
+					// also selects an element
 					var selection = that.editor.getSelection();
 					var element = selection.getSelectedElement() || selection.getCommonAncestor().getAscendant('a', true);
 				}

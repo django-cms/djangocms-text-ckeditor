@@ -22,6 +22,7 @@ class TextPlugin(CMSPluginBase):
     render_template = "cms/plugins/text.html"
     change_form_template = "cms/plugins/text_plugin_change_form.html"
     ckeditor_configuration = TEXT_CKEDITOR_CONFIGURATION
+    disable_child_plugins = True
 
     def get_editor_widget(self, request, plugins, pk, placeholder, language):
         """

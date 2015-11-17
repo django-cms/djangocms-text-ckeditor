@@ -26,7 +26,7 @@ $(document).ready(function () {
 				'title': this.options.lang.toolbar,
 				'className' : 'cke_panelbutton__cmsplugins',
 				'modes': { wysiwyg:1 },
-				'editorFocus': 1,
+				'editorFocus': 0,
 
 				'panel': {
 					'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),

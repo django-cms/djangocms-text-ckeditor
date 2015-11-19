@@ -3,7 +3,7 @@ djangocms-text-ckeditor
 
 Text Plugin for django-cms with CK-Editor.
 
-The latest Version of this package supports:
+The latest version of this package supports:
 
 * Django 1.6+
 * django CMS 3.2+

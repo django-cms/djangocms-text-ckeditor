@@ -3,31 +3,30 @@ djangocms-text-ckeditor
 
 Text Plugin for django-cms with CK-Editor.
 
-It currently supports:
+The latest version of this package supports:
 
-* Django 1.6 - 1.8
-* django CMS 3.0 - 3.1
-
-.. WARNING::
-   ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
+* Django 1.6+
+* django CMS 3.2+
 
 .. WARNING::
-   For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
-
-   ``djangocms-text-ckeditor`` >= 2.7 is compatible with Django 1.6 and up only.
-
-.. WARNING::
-   For django CMS 2.3 and 2.4 use ``djangocms-text-ckeditor`` < 2 (e.g.: version 1.0.10).
-
-   ``djangocms-text-ckeditor`` >= 2 is compatible with django CMS 3 only.
+   - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
+   - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
+   - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
+   - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
 
 Installation
 ------------
 
-This plugin requires `django CMS` 3.0 or higher to be properly installed.
+This plugin requires `django CMS` 3.2+ or higher to be properly installed.
 
 * In your projects `virtualenv`, run ``pip install djangocms-text-ckeditor``.
+* Add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS`` (the order does not matter).
+* Run ``manage.py migrate djangocms_text_ckeditor``.
+
+Some notes:
+***********
+
 * If upgrading from previous ``djangocms_text_ckeditor``, be aware that the
   names of the migration modules have changed:
 
@@ -39,7 +38,7 @@ This plugin requires `django CMS` 3.0 or higher to be properly installed.
   to ``SOUTH_MIGRATION_MODULES``  (or define ``SOUTH_MIGRATION_MODULES`` if it does not exists);
 * If using Django 1.7 and you were using version prior to 2.5, remove
   ``djangocms_text_ckeditor`` from ``MIGRATION_MODULES``;
-* Run ``manage.py migrate djangocms_text_ckeditor``.
+
 
 Upgrading from ``cms.plugins.text``
 -----------------------------------
@@ -354,6 +353,11 @@ See the `html5lib documentation`_ for further information.
 
 .. _html5lib: https://pypi.python.org/pypi/html5lib
 .. _html5lib documentation: https://code.google.com/p/html5lib/wiki/UserDocumentation#Sanitizing_Tokenizer
+
+Search
+------
+
+djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldryn/aldryn-search>`_ to make text content using Haystack.
 
 About CKEditor
 --------------

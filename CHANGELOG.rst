@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-(UNRELEASED)
-------------
+(2.8.0)
+-------
 
 * Add touch support for CKEditor dialogs
 * Add possibility to edit nested plugins on touch devices

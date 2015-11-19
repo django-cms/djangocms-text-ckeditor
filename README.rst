@@ -5,17 +5,14 @@ Text Plugin for django-cms with CK-Editor.
 
 The latest Version of this package supports:
 
-* Django 1.8
+* Django 1.6+
 * django CMS 3.2+
 
 .. WARNING::
-   For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
-
-.. WARNING::
-   For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
-
-.. WARNING::
-   ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
+   - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
+   - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
+   - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
+   - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
 
 Installation
@@ -360,7 +357,7 @@ See the `html5lib documentation`_ for further information.
 Search
 ------
 
-djangocms-text-ckeditor works well along `aldryn-search <https://github.com/aldryn/aldryn-search>`_ to enable text content to be searchable using Haystack.
+djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldryn/aldryn-search>`_ to make text content using Haystack.
 
 About CKEditor
 --------------

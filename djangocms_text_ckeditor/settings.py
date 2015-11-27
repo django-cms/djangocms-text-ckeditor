@@ -6,6 +6,7 @@ except ImportError:
     from urlparse import urljoin
 
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 # See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 # for all settings
@@ -31,6 +32,8 @@ TEXT_CKEDITOR_CONFIGURATION = getattr(settings, 'TEXT_CKEDITOR_CONFIGURATION', N
 TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
 TEXT_CKEDITOR_BASE_PATH = getattr(settings, 'TEXT_CKEDITOR_BASE_PATH', urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/'))
 TEXT_AUTO_HYPHENATE = getattr(settings, 'TEXT_AUTO_HYPHENATE', True)
+TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _("Text"))
+TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _("Generic"))
 
 ALLOW_TOKEN_PARSERS = (
     'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',

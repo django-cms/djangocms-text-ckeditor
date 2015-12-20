@@ -1,5 +1,5 @@
 -r requirements.txt
 tox>=1.8
 djangocms-helper>=0.7
-djangocms-picture
-djangocms-link
+djangocms-picture>=0.2.0
+djangocms-link>=1.7.1

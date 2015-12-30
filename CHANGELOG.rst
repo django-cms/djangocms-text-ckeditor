@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+2.8.1 (2015-12-30)
+------------------
+
+* Fixes DatabaseError on newer CMS releases.
+* Adds setting to override Text plugin name
+* Adds setting to override Text plugin module name.
+
 2.8.0 (2015-11-19)
 ------------------
 

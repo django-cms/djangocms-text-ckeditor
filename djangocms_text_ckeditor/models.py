@@ -41,9 +41,6 @@ class AbstractText(CMSPlugin):
         self.body = force_text(self.body)
 
     def save(self, *args, **kwargs):
-        # we need to save the plugin first and then save the updated body, otherwise
-        # we cannot set the correct parent on extracted images
-        kwargs['update_fields'] = ('body',)
         super(AbstractText, self).save(*args, **kwargs)
         body = self.body
         body = extract_images(body, self)

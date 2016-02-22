@@ -26,7 +26,7 @@ $(document).ready(function () {
                 'title': this.options.lang.toolbar,
                 'className' : 'cke_panelbutton__cmsplugins',
                 'modes': { wysiwyg:1 },
-                'editorFocus': 1,
+                'editorFocus': 0,
 
                 'panel': {
                     'css': [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
@@ -79,7 +79,7 @@ $(document).ready(function () {
             }
             this.editor.on('doubleclick', handleEdit);
             this.editor.on('instanceReady', function () {
-                CMS.$('img[id*="plugin_obj_"]', CMS.$('iframe.cke_wysiwyg_frame')[0]
+                CMS.$('[id*="plugin_obj_"]', CMS.$('iframe.cke_wysiwyg_frame')[0]
                     .contentWindow.document.documentElement).on('click touchend', handleEdit);
             });
 

@@ -1,8 +1,15 @@
 CHANGELOG
 =========
 
-(UNRELEASED)
-------------
+2.8.1 (2015-12-30)
+------------------
+
+* Fixes DatabaseError on newer CMS releases.
+* Adds setting to override Text plugin name
+* Adds setting to override Text plugin module name.
+
+2.8.0 (2015-11-19)
+------------------
 
 * Add touch support for CKEditor dialogs
 * Add possibility to edit nested plugins on touch devices
@@ -11,8 +18,8 @@ CHANGELOG
 * Set the property `disable_child_plugins` to the Plugin class, deprecate the
   existing property on the model class.
 
-2.7.0
------
+2.7.0 (2015-11-03)
+------------------
 
 * Plugin is now only compatible with Django 1.6+, for Django 1.4 and 1.5 use
   ``djangocms-text-ckeditor`` < 2.7

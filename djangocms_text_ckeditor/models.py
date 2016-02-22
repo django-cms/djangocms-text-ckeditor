@@ -16,7 +16,8 @@ from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 try:
     from softhyphen.html import hyphenate
 except ImportError:
-    hyphenate = lambda t: t
+    def hyphenate(t):
+        return t
 
 
 @python_2_unicode_compatible

@@ -13,7 +13,7 @@ OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN)
 
 def plugin_to_tag(obj):
     return (
-        u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s"'
+        u'<img src="%(icon_src)s" alt="%(icon_alt)s" title="%(icon_alt)s" '
         u'id="plugin_obj_%(id)d" />' % (
             dict(
                 id=obj.id, icon_src=force_escape(obj.get_instance_icon_src()),

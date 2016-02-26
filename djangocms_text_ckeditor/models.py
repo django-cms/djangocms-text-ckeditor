@@ -23,6 +23,13 @@ except ImportError:
 @python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
+
+    # Set cmsplugin_ptr and remove related_name to avoid field name clashes
+    # with any other plugin that has a field called "file".
+    # https://github.com/divio/django-cms/issues/5030
+    cmsplugin_ptr = models.OneToOneField(
+        CMSPlugin, related_name='+', parent_link=True)
+
     body = models.TextField(_("body"))
 
     search_fields = ('body',)

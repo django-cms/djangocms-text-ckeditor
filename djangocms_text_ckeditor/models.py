@@ -24,11 +24,12 @@ except ImportError:
 class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
 
-    # Set cmsplugin_ptr and remove related_name to avoid field name clashes
-    # with any other plugin that has a field called "file".
+    # Add an app namespace to related_name to avoid field name clashes
+    # with any other plugins that have a field with the same name as the
+    # lowercase of the class name of this model.
     # https://github.com/divio/django-cms/issues/5030
     cmsplugin_ptr = models.OneToOneField(
-        CMSPlugin, related_name='+', parent_link=True)
+        CMSPlugin, related_name='%(app_label)s_%(class)s', parent_link=True)
 
     body = models.TextField(_("body"))
 

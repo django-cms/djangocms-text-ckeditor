@@ -10,6 +10,7 @@ from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
 from . import settings
+from . import compat
 from .html import clean_html, extract_images
 from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
@@ -29,7 +30,14 @@ class AbstractText(CMSPlugin):
     # lowercase of the class name of this model.
     # https://github.com/divio/django-cms/issues/5030
     cmsplugin_ptr = models.OneToOneField(
-        CMSPlugin, related_name='%(app_label)s_%(class)s', parent_link=True)
+        # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
+        CMSPlugin,
+        related_name=(
+            'djangocms_text_ckeditor_text' if compat.LTE_DJANGO_1_6
+            else '%(app_label)s_%(class)s'
+        ),
+        parent_link=True,
+    )
 
     body = models.TextField(_("body"))
 

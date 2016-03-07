@@ -9,8 +9,7 @@ from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
-from . import settings
-from . import compat
+from . import compat, settings
 from .html import clean_html, extract_images
 from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 

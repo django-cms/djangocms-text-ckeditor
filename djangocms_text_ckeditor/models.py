@@ -29,19 +29,23 @@ class AbstractText(CMSPlugin):
     # with any other plugins that have a field with the same name as the
     # lowercase of the class name of this model.
     # https://github.com/divio/django-cms/issues/5030
-    cmsplugin_ptr = models.OneToOneField(
+    if compat.LTE_DJANGO_1_6:
         # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
-        CMSPlugin,
-        related_name=(
-            'djangocms_text_ckeditor_text' if compat.LTE_DJANGO_1_6
-            else '%(app_label)s_%(class)s'
-        ),
-        parent_link=True,
-    )
+        cmsplugin_ptr = models.OneToOneField(
+            CMSPlugin,
+            related_name='+',
+            parent_link=True,
+        )
+        search_fields = tuple()
+    else:
+        cmsplugin_ptr = models.OneToOneField(
+            CMSPlugin,
+            related_name='%(app_label)s_%(class)s',
+            parent_link=True,
+        )
+        search_fields = ('body',)
 
     body = models.TextField(_("body"))
-
-    search_fields = ('body',)
 
     # This property is deprecated. And will be removed in a future release.
     # It should be set on the Plugin, not the model.

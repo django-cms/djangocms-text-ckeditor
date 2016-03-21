@@ -71,8 +71,11 @@ class AbstractText(CMSPlugin):
             except (TypeError, CMSPlugin.DoesNotExist):
                 body = hyphenate(body)
         self.body = body
-        kwargs['update_fields'] = ('body',)
-        super(AbstractText, self).save(*args, **kwargs)
+        # no need to pass args or kwargs here
+        # this 2nd save() call is internal and should be
+        # fully managed by us.
+        # think of it as an update() vs save()
+        super(AbstractText, self).save(update_fields=('body',))
 
     def clean_plugins(self):
         ids = plugin_tags_to_id_list(self.body)

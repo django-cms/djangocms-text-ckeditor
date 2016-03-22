@@ -10,7 +10,6 @@ from djangocms_helper.base_test import BaseTestCase
 from djangocms_text_ckeditor.models import Text
 
 
-
 class PluginActionsTestCase(CMSTestCase, BaseTestCase):
 
     def get_page_admin(self):

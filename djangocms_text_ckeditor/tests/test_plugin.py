@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
 
-from django.contrib import admin
-
 from cms.api import create_page
 from cms.models import CMSPlugin, Page
-from cms.test_utils.testcases import (
-    URL_CMS_PAGE_ADD,
-    URL_CMS_PLUGIN_EDIT,
-    CMSTestCase,
-)
+from cms.test_utils.testcases import CMSTestCase
+from django.contrib import admin
+from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor.models import Text
-from djangocms_helper.base_test import BaseTestCase
+
 
 
 class PluginActionsTestCase(CMSTestCase, BaseTestCase):

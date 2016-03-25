@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+2.9.1 (2015-03-25)
+------------------
+
+* Fixes backwards compatibility with Django 1.6
+* Fixes bug on Text.objects.create()
+
+
 2.9.0 (2015-03-04)
 ------------------
 

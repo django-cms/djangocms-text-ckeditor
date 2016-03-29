@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.9.1 (2015-03-25)
+2.9.1 (2015-03-29)
 ------------------
 
 * Fixes backwards compatibility with Django 1.6

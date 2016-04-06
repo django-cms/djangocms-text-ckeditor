@@ -192,22 +192,7 @@ $(document).ready(function () {
                 'plugin_language':  this.options.plugin_language
             };
 
-            // lets do some ajax
-            $.ajax({
-                'type': 'POST',
-                'url': this.options.add_plugin_url,
-                'data': data,
-                'success': function (data) {
-                    // cancel if error is returned
-                    if(data === 'error') return false;
-
-                    // trigger dialog
-                    that.addPluginDialog(item, data);
-                },
-                'error': function (error) {
-                    alert('There was an error creating the plugin.');
-                }
-            });
+            that.addPluginDialog(item, data);
         },
 
         addPluginDialog: function (item, data) {
@@ -221,14 +206,13 @@ $(document).ready(function () {
             dialog.resize(body.width() * 0.8, body.height() * 0.7);
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
             $(dialog.parts.title.$).text(this.options.lang.add);
-            $(dialog.parts.contents.$).find('iframe').attr('src', data.url)
+            $(dialog.parts.contents.$).find('iframe').attr('src', this.options.add_plugin_url + '?' + $.param(data))
                 .bind('load', function () {
                     $(this).contents().find('.submit-row').hide().end()
                     .find('#container').css('min-width', 0).css('padding', 0)
                     .find('#id_name').val(selected_text);
                 });
         },
-
         // on ajax receivement from server, build <a> or <img> tag dependig in the plugin type
         insertPlugin: function (data) {
             var element, attrs = { id: 'plugin_obj_' + data.plugin_id };

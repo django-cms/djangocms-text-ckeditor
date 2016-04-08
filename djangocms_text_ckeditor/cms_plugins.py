@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 from cms import __version__ as cms_version
+from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.forms.fields import CharField
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponseForbidden,
+    HttpResponseBadRequest,
+)
+from django.utils.encoding import force_text
+from django.utils.translation import ugettext
 
 from . import settings
 from .forms import TextForm
@@ -58,25 +66,41 @@ class TextPlugin(CMSPluginBase):
         If you're reading this code to learn how to write your own CMS Plugin,
         please read another plugin as you should not do what this plugin does.
         """
-        if not hasattr(self, 'add_view_check_request'):
-            # pre 3.1 compatiblity
+        plugin_instance = getattr(self, "cms_plugin_instance")
+
+        if not hasattr(self, 'validate_add_request') or plugin_instance:
+            # pre 3.3 compatibility
             return super(TextPlugin, self).add_view(
                 request, form_url, extra_context
             )
-        result = self.add_view_check_request(request)
-        if isinstance(result, HttpResponse):
-            return result
-        text = Text.objects.create(
-            language=request.GET['plugin_language'],
-            placeholder_id=request.GET['placeholder_id'],
-            parent_id=request.GET.get(
-                'plugin_parent', None
-            ),
-            plugin_type=self.__class__.__name__,
-            body=''
+
+        try:
+            data = self.validate_add_request(request)
+        except PermissionDenied:
+            message = ugettext('You do not have permission to add a plugin')
+            return HttpResponseForbidden(force_text(message))
+        except ValidationError as error:
+            return HttpResponseBadRequest(error.message)
+
+        parent = data.get('plugin_parent')
+
+        if parent:
+            position = parent.cmsplugin_set.count()
+        else:
+            position = CMSPlugin.objects.filter(
+                parent__isnull=True,
+                language=data['plugin_language'],
+                placeholder=data['placeholder_id'],
+            ).count()
+
+        plugin = CMSPlugin.objects.create(
+            language=data['plugin_language'],
+            plugin_type=data['plugin_type'],
+            position=position,
+            placeholder=data['placeholder_id']
         )
         return HttpResponseRedirect(
-            admin_reverse('cms_page_edit_plugin', args=(text.pk,))
+            admin_reverse('cms_page_edit_plugin', args=(plugin.pk,))
         )
 
     def get_form(self, request, obj=None, **kwargs):

@@ -82,26 +82,15 @@ class TextPlugin(CMSPluginBase):
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
 
-        parent = data.get('plugin_parent')
-
-        if parent:
-            position = parent.cmsplugin_set.count()
-        else:
-            position = CMSPlugin.objects.filter(
-                parent__isnull=True,
-                language=data['plugin_language'],
-                placeholder=data['placeholder_id'],
-            ).count()
-
         plugin = CMSPlugin.objects.create(
             language=data['plugin_language'],
             plugin_type=data['plugin_type'],
-            position=position,
-            placeholder=data['placeholder_id']
+            position=data['position'],
+            placeholder=data['placeholder_id'],
+            parent=data.get('plugin_parent'),
         )
-        return HttpResponseRedirect(
-            admin_reverse('cms_page_edit_plugin', args=(plugin.pk,))
-        )
+        success_url = admin_reverse('cms_page_edit_plugin', args=(plugin.pk,))
+        return HttpResponseRedirect(success_url)
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = get_toolbar_plugin_struct(

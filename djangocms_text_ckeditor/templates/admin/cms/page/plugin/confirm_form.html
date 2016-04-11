@@ -1,0 +1,9 @@
+{% extends "admin/cms/page/close_frame.html" %}
+{% block content %}
+{{ block.super }}
+<script>
+    (function(Window) {
+        Window.CMS.API.Helpers.dataBridge['plugin_cancel'] = 'value'
+    })(window.parent || window);
+</script>
+{% endblock content %}

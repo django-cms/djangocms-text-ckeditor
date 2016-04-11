@@ -5,9 +5,11 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.forms.fields import CharField
 from django.http import (
+    HttpResponse,
     HttpResponseRedirect,
     HttpResponseForbidden,
     HttpResponseBadRequest,
@@ -16,7 +18,7 @@ from django.utils.encoding import force_text
 from django.utils.translation import ugettext
 
 from . import settings
-from .forms import TextForm
+from .forms import DeleteOnCancelForm, TextForm
 from .models import Text
 from .utils import plugin_tags_to_user_html
 from .widgets import TextEditorWidget
@@ -90,7 +92,44 @@ class TextPlugin(CMSPluginBase):
             parent=data.get('plugin_parent'),
         )
         success_url = admin_reverse('cms_page_edit_plugin', args=(plugin.pk,))
+        success_url += '?delete-on-cancel'
         return HttpResponseRedirect(success_url)
+
+    def delete_on_cancel(self, request):
+        plugin_type = self.__class__.__name__
+        form = DeleteOnCancelForm(
+            request.POST or None,
+            text_plugin_type=plugin_type,
+        )
+
+        if not form.is_valid():
+            error = list(form.errors.values())[0]
+            return HttpResponseBadRequest(error)
+
+        plugin = form.cleaned_data['plugin']
+
+        if plugin.plugin_type == plugin_type:
+            has_add_permission = self.has_add_permission(request)
+        else:
+            plugin_class = plugin.get_plugin_class_instance()
+            has_add_permission = plugin_class.has_add_permission(request)
+
+        placeholder = plugin.placeholder
+
+        if not (has_add_permission
+                and placeholder.has_add_permission(request)):
+            message = ugettext("Unable to process your request. "
+                               "You don't have the required permissions.")
+            return HttpResponseForbidden(force_text(message))
+        elif form.is_valid_token():
+            # Token needs to be validated after checking permissions
+            # to avoid non-auth users from triggering validation mechanism.
+            plugin.delete()
+            # 204 -> request was successful but no response returned.
+            return HttpResponse(status=204)
+        else:
+            message = ugettext("Unable to process your request. Invalid token.")
+            return HttpResponseBadRequest(force_text(message))
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = get_toolbar_plugin_struct(
@@ -136,6 +175,13 @@ class TextPlugin(CMSPluginBase):
         # save() again on the Text instance (aka obj in this context) to update mptt values (numchild, etc).
         # See this ticket for details https://github.com/divio/djangocms-text-ckeditor/issues/212
         obj.clean_plugins()
+
+    def get_cancel_token(self, obj):
+        # Using the plugin type as salt
+        # ensures the token is unique for this type
+        # of plugin and cannot be used for others.
+        signer = signing.Signer(salt=obj.plugin_type)
+        return signer.sign(obj.pk).split(':')[1]
 
 
 plugin_pool.register_plugin(TextPlugin)

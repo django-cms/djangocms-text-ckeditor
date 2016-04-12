@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.core import signing
+from django.core.signing import BadSignature
 from django.db.models import Q
 from django.forms.models import ModelForm
 from django.utils.encoding import force_text
@@ -64,7 +65,7 @@ class DeleteOnCancelForm(forms.Form):
 
         try:
             signer.unsign(payload)
-        except:
+        except BadSignature:
             return False
         else:
             return True

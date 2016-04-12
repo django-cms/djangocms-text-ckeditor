@@ -3,7 +3,6 @@ from django import forms
 from django.core import signing
 from django.db.models import Q
 from django.forms.models import ModelForm
-from django.utils.translation import ugettext
 
 from cms.models import CMSPlugin
 
@@ -40,8 +39,8 @@ class DeleteOnCancelForm(forms.Form):
             .objects
             .select_related('placeholder')
             .filter(
-                Q(plugin_type=self.plugin_type)|
-                Q(parent__plugin_type=self.plugin_type)
+                Q(plugin_type=self.text_plugin_type)|
+                Q(parent__plugin_type=self.text_plugin_type)
             )
         )
         return plugins

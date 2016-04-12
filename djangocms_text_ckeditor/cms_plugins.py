@@ -5,8 +5,10 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+from django.conf.urls import url
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.urlresolvers import reverse
 from django.forms.fields import CharField
 from django.http import (
     HttpResponse,
@@ -34,28 +36,45 @@ class TextPlugin(CMSPluginBase):
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
 
-    def get_editor_widget(self, request, plugins, pk, placeholder, language):
+    def get_editor_widget(self, request, plugins, plugin):
         """
         Returns the Django form Widget to be used for
         the text area
         """
-        return TextEditorWidget(installed_plugins=plugins, pk=pk,
-                                placeholder=placeholder,
-                                plugin_language=language,
-                                configuration=self.ckeditor_configuration)
+        cancel_url_name = self.get_admin_url_name('delete_on_cancel')
+        cancel_url = reverse('admin:%s' % cancel_url_name)
 
-    def get_form_class(self, request, plugins, pk, placeholder, language):
+        instance = plugin.get_plugin_instance()[0]
+
+        if 'delete-on-cancel' in request.GET and not instance:
+            cancel_token = self.get_cancel_token(plugin)
+        else:
+            cancel_token = None
+
+        widget = TextEditorWidget(
+            installed_plugins=plugins, pk=plugin.pk,
+            placeholder=plugin.placeholder,
+            plugin_language=plugin.language,
+            configuration=self.ckeditor_configuration,
+            cancel_url=cancel_url,
+            cancel_token=cancel_token,
+        )
+        return widget
+
+    def get_form_class(self, request, plugins, plugin):
         """
         Returns a subclass of Form to be used by this plugin
         """
+        widget = self.get_editor_widget(
+            request=request,
+            plugins=plugins,
+            plugin=plugin,
+        )
+
         # We avoid mutating the Form declared above by subclassing
         class TextPluginForm(self.form):
-            pass
+            body = CharField(widget=widget, required=False)
 
-        widget = self.get_editor_widget(request, plugins, pk, placeholder, language)
-        TextPluginForm.declared_fields["body"] = CharField(
-            widget=widget, required=False
-        )
         return TextPluginForm
 
     def add_view(self, request, form_url='', extra_context=None):
@@ -95,12 +114,39 @@ class TextPlugin(CMSPluginBase):
         success_url += '?delete-on-cancel'
         return HttpResponseRedirect(success_url)
 
+    def get_plugin_urls(self):
+        def pattern(regex, func):
+            name = self.get_admin_url_name(func.__name__)
+            return url(regex, func, name=name)
+
+        url_patterns = [
+            # pattern(r'add-child-plugin/$', self.add_child_plugin),
+            pattern(r'delete-on-cancel/$', self.delete_on_cancel),
+        ]
+        return url_patterns
+
+    def get_admin_url_name(self, name):
+        model_name = self.model._meta.model_name
+        url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
+        return url_name
+
+    def has_permission(self, request):
+        return request.user.is_active and request.user.is_staff
+
+    def add_child_plugin(self, request):
+        if not self.has_permission(request):
+            message = ugettext("Unable to process your request. "
+                       "You don't have the required permissions.")
+            return HttpResponseForbidden(force_text(message))
+
     def delete_on_cancel(self, request):
+        if not self.has_permission(request):
+            message = ugettext("Unable to process your request. "
+                       "You don't have the required permissions.")
+            return HttpResponseForbidden(force_text(message))
+
         plugin_type = self.__class__.__name__
-        form = DeleteOnCancelForm(
-            request.POST or None,
-            text_plugin_type=plugin_type,
-        )
+        form = DeleteOnCancelForm(request.POST,text_plugin_type=plugin_type)
 
         if not form.is_valid():
             error = list(form.errors.values())[0]
@@ -141,9 +187,11 @@ class TextPlugin(CMSPluginBase):
             self.page,
             parent=self.__class__
         )
-        pk = self.cms_plugin_instance.pk
-        form = self.get_form_class(request, plugins, pk, self.cms_plugin_instance.placeholder,
-                                   self.cms_plugin_instance.language)
+        form = self.get_form_class(
+            request=request,
+            plugins=plugins,
+            plugin=self.cms_plugin_instance,
+        )
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
 

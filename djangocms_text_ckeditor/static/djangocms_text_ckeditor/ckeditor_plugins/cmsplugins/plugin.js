@@ -14,6 +14,8 @@ $(document).ready(function () {
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
+            this.cancelPromises = [];
+
             // don't do anything if there are no plugins defined
             if(this.options === undefined || this.options.plugins === undefined) return false;
 
@@ -213,8 +215,10 @@ $(document).ready(function () {
                     .find('#id_name').val(selected_text);
                 });
         },
+
         // on ajax receivement from server, build <a> or <img> tag dependig in the plugin type
         insertPlugin: function (data) {
+            var that = this;
             var element, attrs = { id: 'plugin_obj_' + data.plugin_id };
             if (data.plugin_type === this.options.lang.link) {
                 element = new CKEDITOR.dom.element('a', this.editor.document);
@@ -234,7 +238,75 @@ $(document).ready(function () {
                 });
             }
             element.setAttributes(attrs);
+
+            this.setupCancelCleanupCallback(data);
             this.editor.insertElement(element);
+        },
+
+        /**
+         * Sets up cleanup requests. If the plugin itself or child plugin was created and then
+         * creation was cancelled - we need to clean up created plugins.
+         *
+         * @method setupCancelCleanupCallback
+         * @public
+         * @param {Object} data plugin data
+         */
+        setupCancelCleanupCallback: function setupCancelCleanupCallback (data) {
+            if (!window.parent || !window.parent.CMS || !window.parent.CMS.API || !window.parent.CMS.API.Helpers) {
+                return;
+            }
+            var that = this;
+            var CMS = window.parent.CMS;
+            var cancelModalCallback = function cancelModalCallback(e, opts) {
+                if (!opts.instance.saved) {
+                    e.preventDefault();
+                    CMS.API.Toolbar.showLoader();
+                    // here deferred should actually be a post request to
+                    // "plugin_cancel" endpoint
+                    var deferred = new $.Deferred(function () {
+                        var def = this;
+                        setTimeout(function () {
+                            CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
+                            console.log('oi!', data);
+
+                            def.resolve();
+                        }, 2000);
+                    });
+
+                    that.cancelPromises.push(deferred);
+                    that.tryToCloseModal(opts.instance);
+                }
+            };
+        },
+
+        /**
+         * We need to close the modal after all plugins that are being cancelled have been removed.
+         * If there are any requests promises that are not yet resolved - try again.
+         *
+         * @method tryToCloseModal
+         * @public
+         * @param {CMS.Modal} modal modal instance that contains ckeditor plugin
+         */
+        tryToCloseModal: function (modal) {
+            var that = this;
+            $.when.apply(null, this.cancelPromises).then(function () {
+                var allResolved = (function () {
+                    var result = true;
+                    that.cancelPromises.forEach(function (promise) {
+                        if (promise.state() !== 'resolved') {
+                            result = false;
+                        }
+                    });
+                    return result;
+                }());
+
+                if (allResolved) {
+                    window.parent.CMS.API.Toolbar.hideLoader();
+                    modal.close();
+                } else {
+                    that.tryToCloseModal(modal);
+                }
+            });
         },
 
         setupDataProcessor: function () {

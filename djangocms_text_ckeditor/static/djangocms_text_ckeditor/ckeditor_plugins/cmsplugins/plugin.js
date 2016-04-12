@@ -14,6 +14,10 @@ $(document).ready(function () {
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
+            if (this.options && this.options.cancel_plugin_token && this.options.cancel_plugin_url) {
+                this.setupCancelCleanupCallback(this.options);
+            }
+
             this.cancelPromises = [];
 
             // don't do anything if there are no plugins defined
@@ -261,22 +265,27 @@ $(document).ready(function () {
                 if (!opts.instance.saved) {
                     e.preventDefault();
                     CMS.API.Toolbar.showLoader();
-                    // here deferred should actually be a post request to
-                    // "plugin_cancel" endpoint
-                    var deferred = new $.Deferred(function () {
-                        var def = this;
-                        setTimeout(function () {
-                            CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
-                            console.log('oi!', data);
-
-                            def.resolve();
-                        }, 2000);
+                    var deferred = $.ajax({
+                        method: 'POST',
+                        url: data.cancel_plugin_url,
+                        data: {
+                            plugin: data.plugin_id,
+                            token: data.cancel_plugin_token
+                        }
+                    }).done(function (res) {
+                        CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
+                        console.log('oi!', res);
+                        debugger
+                    }).error(function (res) {
+                        console.log('error!', res);
+                        debugger
                     });
 
                     that.cancelPromises.push(deferred);
                     that.tryToCloseModal(opts.instance);
                 }
             };
+            CMS.API.Helpers.addEventListener('modal-close', cancelModalCallback);
         },
 
         /**

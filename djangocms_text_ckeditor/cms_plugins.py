@@ -43,13 +43,14 @@ class TextPlugin(CMSPluginBase):
         """
         cancel_url_name = self.get_admin_url_name('delete_on_cancel')
         cancel_url = reverse('admin:%s' % cancel_url_name)
+        cancel_token = self.get_cancel_token(request, plugin)
 
-        instance = plugin.get_plugin_instance()[0]
-
-        if 'delete-on-cancel' in request.GET and not instance:
-            cancel_token = self.get_cancel_token(plugin)
-        else:
-            cancel_token = None
+        # should we delete the text plugin when
+        # the user cancels?
+        delete_text_on_cancel = (
+            'delete-on-cancel' in request.GET and
+            not plugin.get_plugin_instance()[0]
+        )
 
         widget = TextEditorWidget(
             installed_plugins=plugins, pk=plugin.pk,
@@ -58,6 +59,7 @@ class TextPlugin(CMSPluginBase):
             configuration=self.ckeditor_configuration,
             cancel_url=cancel_url,
             cancel_token=cancel_token,
+            delete_on_cancel=delete_text_on_cancel,
         )
         return widget
 
@@ -111,6 +113,8 @@ class TextPlugin(CMSPluginBase):
             parent=data.get('plugin_parent'),
         )
         success_url = admin_reverse('cms_page_edit_plugin', args=(plugin.pk,))
+        # Because we've created the cmsplugin record
+        # we need to delete the plugin when a user cancels.
         success_url += '?delete-on-cancel'
         return HttpResponseRedirect(success_url)
 
@@ -120,7 +124,6 @@ class TextPlugin(CMSPluginBase):
             return url(regex, func, name=name)
 
         url_patterns = [
-            # pattern(r'add-child-plugin/$', self.add_child_plugin),
             pattern(r'delete-on-cancel/$', self.delete_on_cancel),
         ]
         return url_patterns
@@ -133,32 +136,43 @@ class TextPlugin(CMSPluginBase):
     def has_permission(self, request):
         return request.user.is_active and request.user.is_staff
 
-    def add_child_plugin(self, request):
-        if not self.has_permission(request):
-            message = ugettext("Unable to process your request. "
-                       "You don't have the required permissions.")
-            return HttpResponseForbidden(force_text(message))
-
     def delete_on_cancel(self, request):
+        # This view is responsible for deleting a plugin
+        # bypassing the delete permissions.
+        # We check for add permissions because this view is meant
+        # only for plugins created through the ckeditor
+        # and the ckeditor plugin itself.
         if not self.has_permission(request):
             message = ugettext("Unable to process your request. "
-                       "You don't have the required permissions.")
-            return HttpResponseForbidden(force_text(message))
+                               "You don't have the required permissions.")
+            return HttpResponseForbidden(message)
 
         plugin_type = self.__class__.__name__
-        form = DeleteOnCancelForm(request.POST,text_plugin_type=plugin_type)
+
+        # This form validates the the given plugin is a child
+        # of the text plugin or is a text plugin.
+        # If the plugin is a child then we validate that this child
+        # is not present in the text plugin (because then it's not a cancel).
+        # If the plugin is a text plugin then we validate that the text
+        # plugin does NOT have a real instance attached.
+        form = DeleteOnCancelForm(request.POST, text_plugin_type=plugin_type)
 
         if not form.is_valid():
-            error = list(form.errors.values())[0]
-            return HttpResponseBadRequest(error)
+            message = ugettext("Unable to process your request.")
+            return HttpResponseBadRequest(message)
 
         plugin = form.cleaned_data['plugin']
 
-        if plugin.plugin_type == plugin_type:
-            has_add_permission = self.has_add_permission(request)
-        else:
-            plugin_class = plugin.get_plugin_class_instance()
-            has_add_permission = plugin_class.has_add_permission(request)
+        plugin_class = plugin.get_plugin_class_instance()
+
+        # The following attributes are needed for permission checking
+        # These are set when instantiating the plugin class
+        # with an admin site.
+        # Plugin views are currently not instantiated with an admin site.
+        plugin_class.model = plugin_class.model
+        plugin_class.opts = plugin_class.model._meta
+
+        has_add_permission = plugin_class.has_add_permission(request)
 
         placeholder = plugin.placeholder
 
@@ -166,16 +180,16 @@ class TextPlugin(CMSPluginBase):
                 and placeholder.has_add_permission(request)):
             message = ugettext("Unable to process your request. "
                                "You don't have the required permissions.")
-            return HttpResponseForbidden(force_text(message))
-        elif form.is_valid_token():
-            # Token needs to be validated after checking permissions
+            return HttpResponseForbidden(message)
+        elif form.is_valid_token(request.session.session_key):
+            # Token is validated after checking permissions
             # to avoid non-auth users from triggering validation mechanism.
             plugin.delete()
             # 204 -> request was successful but no response returned.
             return HttpResponse(status=204)
         else:
             message = ugettext("Unable to process your request. Invalid token.")
-            return HttpResponseBadRequest(force_text(message))
+            return HttpResponseBadRequest(message)
 
     def get_form(self, request, obj=None, **kwargs):
         plugins = get_toolbar_plugin_struct(
@@ -224,12 +238,11 @@ class TextPlugin(CMSPluginBase):
         # See this ticket for details https://github.com/divio/djangocms-text-ckeditor/issues/212
         obj.clean_plugins()
 
-    def get_cancel_token(self, obj):
-        # Using the plugin type as salt
-        # ensures the token is unique for this type
-        # of plugin and cannot be used for others.
-        signer = signing.Signer(salt=obj.plugin_type)
-        return signer.sign(obj.pk).split(':')[1]
+    def get_cancel_token(self, request, obj):
+        plugin_id = force_text(obj.pk)
+        # salt is different for every user
+        signer = signing.Signer(salt=request.session.session_key)
+        return signer.sign(plugin_id).split(':')[1]
 
 
 plugin_pool.register_plugin(TextPlugin)

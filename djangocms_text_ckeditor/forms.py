@@ -3,10 +3,13 @@ from django import forms
 from django.core import signing
 from django.db.models import Q
 from django.forms.models import ModelForm
+from django.utils.encoding import force_text
+from django.utils.translation import ugettext
 
 from cms.models import CMSPlugin
 
 from .models import Text
+from .utils import plugin_tags_to_id_list
 
 
 class DeleteOnCancelForm(forms.Form):
@@ -21,10 +24,43 @@ class DeleteOnCancelForm(forms.Form):
         super(DeleteOnCancelForm, self).__init__(*args, **kwargs)
         self.fields['plugin'].queryset = self.get_plugin_queryset()
 
-    def is_valid_token(self):
+    def clean(self):
         plugin = self.cleaned_data['plugin']
-        payload = ':'.join([plugin.pk, self.cleaned_data['token']])
-        signer = signing.Signer(salt=plugin.plugin_type)
+
+        if plugin.plugin_type == self.text_plugin_type:
+            text_plugin = plugin.get_plugin_instance()[0]
+
+            if text_plugin:
+                # Plugin has been saved
+                # This check prevents users from using a cancel token
+                # to delete any text plugin.
+                # Only non-saved text plugins can be deleted.
+                message = ugettext("Can't delete a saved plugin.")
+                raise forms.ValidationError(message, code='invalid')
+            return self.cleaned_data
+
+        text_plugin = plugin.parent.get_plugin_instance()[0]
+
+        if text_plugin:
+            plugin_ids = plugin_tags_to_id_list(text_plugin.body)
+        else:
+            plugin_ids = []
+
+        if plugin.pk in plugin_ids:
+            # Plugin has been saved
+            # This check prevents users from using a cancel token
+            # to delete any child of the text plugin.
+            # Only non-saved children can be deleted.
+            message = ugettext("Can't delete a saved plugin.")
+            raise forms.ValidationError(message, code='invalid')
+        return self.cleaned_data
+
+    def is_valid_token(self, session_id):
+        plugin = self.cleaned_data['plugin']
+        plugin_id = force_text(plugin.pk)
+        payload = ':'.join([plugin_id, self.cleaned_data['token']])
+
+        signer = signing.Signer(salt=session_id)
 
         try:
             signer.unsign(payload)
@@ -37,7 +73,7 @@ class DeleteOnCancelForm(forms.Form):
         plugins = (
             CMSPlugin
             .objects
-            .select_related('placeholder')
+            .select_related('placeholder', 'parent')
             .filter(
                 Q(plugin_type=self.text_plugin_type)|
                 Q(parent__plugin_type=self.text_plugin_type)

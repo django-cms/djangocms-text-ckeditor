@@ -15,7 +15,7 @@ class TextEditorWidget(Textarea):
 
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
-                 cancel_url=None, cancel_token=None):
+                 cancel_url=None, cancel_token=None, delete_on_cancel=False):
         """
         Create a widget for editing text + plugins.
 
@@ -43,6 +43,7 @@ class TextEditorWidget(Textarea):
             self.configuration = text_settings.CKEDITOR_SETTINGS
         self.cancel_url = cancel_url
         self.cancel_token = cancel_token
+        self.delete_on_cancel = delete_on_cancel
 
     def render_textarea(self, name, value, attrs=None):
         return super(TextEditorWidget, self).render(name, value, attrs)

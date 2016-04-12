@@ -91,8 +91,11 @@ class TextPlugin(CMSPluginBase):
         """
         plugin_instance = getattr(self, "cms_plugin_instance")
 
-        if not hasattr(self, 'validate_add_request') or plugin_instance:
-            # pre 3.3 compatibility
+        if plugin_instance:
+            # This can happen if the user did not properly cancel the plugin
+            # and so a "ghost" plugin instance is left over.
+            # The instance is a record that points to the Text plugin
+            # but is not a real text plugin instance.
             return super(TextPlugin, self).add_view(
                 request, form_url, extra_context
             )
@@ -105,6 +108,9 @@ class TextPlugin(CMSPluginBase):
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
 
+        # Sadly we have to create the CMSPlugin record on add GET request
+        # because we need this record in order to allow the user to add
+        # child plugins to the text (image, link, etc..)
         plugin = CMSPlugin.objects.create(
             language=data['plugin_language'],
             plugin_type=data['plugin_type'],
@@ -133,16 +139,13 @@ class TextPlugin(CMSPluginBase):
         url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
         return url_name
 
-    def has_permission(self, request):
-        return request.user.is_active and request.user.is_staff
-
     def delete_on_cancel(self, request):
         # This view is responsible for deleting a plugin
         # bypassing the delete permissions.
         # We check for add permissions because this view is meant
         # only for plugins created through the ckeditor
         # and the ckeditor plugin itself.
-        if not self.has_permission(request):
+        if not request.user.is_active and request.user.is_staff:
             message = ugettext("Unable to process your request. "
                                "You don't have the required permissions.")
             return HttpResponseForbidden(message)
@@ -208,15 +211,6 @@ class TextPlugin(CMSPluginBase):
         )
         kwargs['form'] = form  # override standard form
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
-
-    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
-        """
-        We override the change form template path
-        to provide backwards compatibility with CMS 2.x
-        """
-        if cms_version.startswith('2'):
-            context['change_form_template'] = "admin/cms/page/plugin_change_form.html"
-        return super(TextPlugin, self).render_change_form(request, context, add, change, form_url, obj)
 
     def render(self, context, instance, placeholder):
         context.update({

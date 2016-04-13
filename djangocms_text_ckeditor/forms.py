@@ -58,6 +58,10 @@ class DeleteOnCancelForm(forms.Form):
 
     def is_valid_token(self, session_id):
         plugin = self.cleaned_data['plugin']
+
+        if plugin.plugin_type != self.text_plugin_type:
+            plugin = plugin.parent
+
         plugin_id = force_text(plugin.pk)
         payload = ':'.join([plugin_id, self.cleaned_data['token']])
 

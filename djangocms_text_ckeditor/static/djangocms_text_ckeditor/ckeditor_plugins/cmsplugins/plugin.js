@@ -285,9 +285,11 @@ $(document).ready(function () {
                         CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
                         console.log('oi!', res);
                     }).error(function (res) {
-                        console.log(data);
-                        console.log(that);
-                        console.log('error!', res);
+                        CMS.API.Messages.open({
+                            message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
+                            delay: 0,
+                            error: true
+                        });
                     });
 
                     that.cancelPromises.push(deferred);

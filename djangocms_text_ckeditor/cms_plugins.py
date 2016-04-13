@@ -10,14 +10,18 @@ from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
 from django.forms.fields import CharField
+from django.db import transaction
+from django.db.models import F
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
     HttpResponseForbidden,
     HttpResponseBadRequest,
 )
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
+from django.views.decorators.http import require_POST
 
 from . import settings
 from .forms import DeleteOnCancelForm, TextForm
@@ -139,6 +143,8 @@ class TextPlugin(CMSPluginBase):
         url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
         return url_name
 
+    @method_decorator(require_POST)
+    @transaction.atomic
     def delete_on_cancel(self, request):
         # This view is responsible for deleting a plugin
         # bypassing the delete permissions.
@@ -188,6 +194,12 @@ class TextPlugin(CMSPluginBase):
             # Token is validated after checking permissions
             # to avoid non-auth users from triggering validation mechanism.
             plugin._no_reorder = True
+
+            if plugin.parent and plugin.parent.numchild > 0:
+                CMSPlugin.objects.filter(
+                    pk=plugin.parent_id,
+                    numchild__gt=0,
+                ).update(numchild=F('numchild') - 1)
             plugin.delete(no_mp=True)
             # 204 -> request was successful but no response returned.
             return HttpResponse(status=204)

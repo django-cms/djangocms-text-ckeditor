@@ -246,7 +246,11 @@ $(document).ready(function () {
             }
             element.setAttributes(attrs);
 
-            this.setupCancelCleanupCallback(data);
+            // in case it's a fresh text plugin children don't have to be
+            // deleted separately
+            if (!this.options.delete_on_cancel) {
+                this.setupCancelCleanupCallback(data);
+            }
             this.editor.insertElement(element);
         },
 

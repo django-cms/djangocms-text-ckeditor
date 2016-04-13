@@ -280,10 +280,7 @@ $(document).ready(function () {
                             token: that.options.cancel_plugin_token
                         }
                     }).done(function (res) {
-                        console.log(data);
-                        console.log(that);
                         CMS.API.Helpers.removeEventListener('modal-close.' + data.plugin_id);
-                        console.log('oi!', res);
                     }).fail(function (res) {
                         CMS.API.Messages.open({
                             message: res.responseText + ' | ' + res.status + ' ' + res.statusText,

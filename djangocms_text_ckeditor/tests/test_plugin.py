@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
-import json
 import re
 
-from cms.api import create_page
+from cms.api import add_plugin, create_page
 from cms.models import CMSPlugin, Page
 from cms.test_utils.testcases import CMSTestCase
 from django.contrib import admin
+from django.utils.encoding import force_text
 from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor.models import Text
+from djangocms_text_ckeditor.utils import plugin_to_tag
 
 
 class PluginActionsTestCase(CMSTestCase, BaseTestCase):
+
+    def add_plugin_to_text(self, text_plugin, plugin):
+        text_plugin.body = '%s %s' % (text_plugin.body, plugin_to_tag(plugin))
+        text_plugin.save()
+        return text_plugin
 
     def get_page_admin(self):
         admin.autodiscover()
@@ -114,7 +120,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             cancel_token = text_plugin_class.get_cancel_token(request, cms_plugin)
             data = {'plugin': text_plugin_pk, 'token': cancel_token}
             request = self.get_post_request(data)
-            response = text_plugin_class.delete_on_cancel(request)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_pk)
             self.assertEqual(response.status_code, 204)
 
         # Assert "ghost" plugin has been removed
@@ -122,3 +128,118 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
 
         # Assert "real" plugin was never created
         self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
+
+        # Assert user can't delete a non "ghost" plugin
+        text_plugin = add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+
+        with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            cancel_token = text_plugin_class.get_cancel_token(request, text_plugin)
+            data = {'token': cancel_token}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(
+                request,
+                force_text(text_plugin.pk)
+            )
+            self.assertEqual(response.status_code, 400)
+
+    def test_add_and_cancel_child_plugin(self):
+        """
+        Test that you can add a text plugin
+        """
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+
+        text_plugin = add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+
+        text_plugin_class = text_plugin.get_plugin_class_instance()
+
+        child_plugin_1 = add_plugin(
+            simple_placeholder,
+            'PicturePlugin',
+            'en',
+            target=text_plugin,
+            image=self.create_django_image_obj(),
+            alt="Foo",
+        )
+        child_plugin_2 = add_plugin(
+            simple_placeholder,
+            'PicturePlugin',
+            'en',
+            target=text_plugin,
+            image=self.create_django_image_obj(),
+            alt="Foo",
+        )
+        child_plugin_3 = add_plugin(
+            simple_placeholder,
+            'PicturePlugin',
+            'en',
+            target=text_plugin,
+            image=self.create_django_image_obj(),
+            alt="Foo",
+        )
+        child_plugin_4 = add_plugin(
+            simple_placeholder,
+            'PicturePlugin',
+            'en',
+            target=text_plugin,
+            image=self.create_django_image_obj(),
+            alt="Foo",
+        )
+
+        text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_1)
+        text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_4)
+        text_plugin_id = force_text(text_plugin.pk)
+
+        with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            cancel_token = text_plugin_class.get_cancel_token(request, text_plugin)
+
+            # Assert user is unable to delete a saved child plugin
+            data = {'token': cancel_token, 'child_plugins': [child_plugin_1.pk]}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_id)
+            self.assertEqual(response.status_code, 400)
+            self.assertObjectExist(CMSPlugin.objects.all(), pk=child_plugin_1.pk)
+
+            # Assert user is unable to delete if plugins array contains
+            # an unsaved plugin.
+            plugin_ids = [
+                child_plugin_1.pk,
+                child_plugin_2.pk,
+                child_plugin_3.pk,
+                child_plugin_4.pk,
+            ]
+            data = {'token': cancel_token, 'child_plugins': plugin_ids}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_id)
+            self.assertEqual(response.status_code, 400)
+            self.assertObjectExist(CMSPlugin.objects.all(), pk=child_plugin_1.pk)
+            self.assertObjectExist(CMSPlugin.objects.all(), pk=child_plugin_2.pk)
+            self.assertObjectExist(CMSPlugin.objects.all(), pk=child_plugin_3.pk)
+            self.assertObjectExist(CMSPlugin.objects.all(), pk=child_plugin_4.pk)
+
+            plugin_ids = [
+                child_plugin_2.pk,
+                child_plugin_3.pk,
+            ]
+            data = {'token': cancel_token, 'child_plugins': plugin_ids}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_id)
+            self.assertEqual(response.status_code, 204)
+
+            self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_2.pk)
+            self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_3.pk)
+
+    def test_add_and_cancel_plugin_permissions(self):
+        pass

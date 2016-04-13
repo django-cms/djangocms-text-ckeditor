@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
-from cms import __version__ as cms_version
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 from django.conf.urls import url
+from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
 from django.forms.fields import CharField
 from django.db import transaction
-from django.db.models import F
 from django.http import (
+    Http404,
     HttpResponse,
     HttpResponseRedirect,
     HttpResponseForbidden,
     HttpResponseBadRequest,
 )
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
@@ -46,7 +47,7 @@ class TextPlugin(CMSPluginBase):
         the text area
         """
         cancel_url_name = self.get_admin_url_name('delete_on_cancel')
-        cancel_url = reverse('admin:%s' % cancel_url_name)
+        cancel_url = reverse('admin:%s' % cancel_url_name, args=[plugin.pk])
         cancel_token = self.get_cancel_token(request, plugin)
 
         # should we delete the text plugin when
@@ -134,7 +135,7 @@ class TextPlugin(CMSPluginBase):
             return url(regex, func, name=name)
 
         url_patterns = [
-            pattern(r'delete-on-cancel/$', self.delete_on_cancel),
+            pattern(r'^(.+)/delete-on-cancel/$', self.delete_on_cancel),
         ]
         return url_patterns
 
@@ -145,7 +146,7 @@ class TextPlugin(CMSPluginBase):
 
     @method_decorator(require_POST)
     @transaction.atomic
-    def delete_on_cancel(self, request):
+    def delete_on_cancel(self, request, plugin_id):
         # This view is responsible for deleting a plugin
         # bypassing the delete permissions.
         # We check for add permissions because this view is meant
@@ -157,6 +158,21 @@ class TextPlugin(CMSPluginBase):
             return HttpResponseForbidden(message)
 
         plugin_type = self.__class__.__name__
+        plugins = (
+            CMSPlugin
+            .objects
+            .select_related('placeholder', 'parent')
+            .filter(plugin_type=plugin_type)
+        )
+
+        field = self.model._meta.pk
+
+        try:
+            object_id = field.to_python(unquote(plugin_id))
+        except (ValidationError, ValueError):
+            raise Http404('Invalid plugin id')
+
+        text_plugin = get_object_or_404(plugins, pk=object_id)
 
         # This form validates the the given plugin is a child
         # of the text plugin or is a text plugin.
@@ -164,26 +180,22 @@ class TextPlugin(CMSPluginBase):
         # is not present in the text plugin (because then it's not a cancel).
         # If the plugin is a text plugin then we validate that the text
         # plugin does NOT have a real instance attached.
-        form = DeleteOnCancelForm(request.POST, text_plugin_type=plugin_type)
+        form = DeleteOnCancelForm(
+            request.POST,
+            text_plugin=text_plugin,
+        )
 
         if not form.is_valid():
             message = ugettext("Unable to process your request.")
             return HttpResponseBadRequest(message)
 
-        plugin = form.cleaned_data['plugin']
+        text_plugin_class = text_plugin.get_plugin_class_instance()
+        # The following is needed for permission checking
+        text_plugin_class.opts = text_plugin_class.model._meta
 
-        plugin_class = plugin.get_plugin_class_instance()
+        has_add_permission = text_plugin_class.has_add_permission(request)
 
-        # The following attributes are needed for permission checking
-        # These are set when instantiating the plugin class
-        # with an admin site.
-        # Plugin views are currently not instantiated with an admin site.
-        plugin_class.model = plugin_class.model
-        plugin_class.opts = plugin_class.model._meta
-
-        has_add_permission = plugin_class.has_add_permission(request)
-
-        placeholder = plugin.placeholder
+        placeholder = text_plugin.placeholder
 
         if not (has_add_permission
                 and placeholder.has_add_permission(request)):
@@ -193,13 +205,7 @@ class TextPlugin(CMSPluginBase):
         elif form.is_valid_token(request.session.session_key):
             # Token is validated after checking permissions
             # to avoid non-auth users from triggering validation mechanism.
-            plugin._no_reorder = True
-
-            if plugin.parent and plugin.parent.numchild > 0:
-                CMSPlugin.objects.filter(
-                    pk=plugin.parent_id,
-                ).update(numchild=F('numchild') - 1)
-            plugin.delete(no_mp=True)
+            form.delete()
             # 204 -> request was successful but no response returned.
             return HttpResponse(status=204)
         else:

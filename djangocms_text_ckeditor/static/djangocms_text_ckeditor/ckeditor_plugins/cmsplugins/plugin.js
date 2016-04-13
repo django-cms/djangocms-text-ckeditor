@@ -274,22 +274,20 @@ $(document).ready(function () {
                     CMS.API.Toolbar.showLoader();
                     var deferred = $.ajax({
                         method: 'POST',
-                        url: data.cancel_plugin_url,
+                        url: that.options.cancel_plugin_url,
                         data: {
                             plugin: data.plugin_id,
-                            token: data.cancel_plugin_token
+                            token: that.options.cancel_plugin_token
                         }
                     }).done(function (res) {
                         console.log(data);
                         console.log(that);
                         CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
                         console.log('oi!', res);
-                        debugger
                     }).error(function (res) {
                         console.log(data);
                         console.log(that);
                         console.log('error!', res);
-                        debugger
                     });
 
                     that.cancelPromises.push(deferred);

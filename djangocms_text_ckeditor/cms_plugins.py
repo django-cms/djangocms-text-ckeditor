@@ -187,6 +187,7 @@ class TextPlugin(CMSPluginBase):
         elif form.is_valid_token(request.session.session_key):
             # Token is validated after checking permissions
             # to avoid non-auth users from triggering validation mechanism.
+            plugin._no_reorder = True
             plugin.delete()
             # 204 -> request was successful but no response returned.
             return HttpResponse(status=204)

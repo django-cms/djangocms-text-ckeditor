@@ -188,7 +188,7 @@ class TextPlugin(CMSPluginBase):
             # Token is validated after checking permissions
             # to avoid non-auth users from triggering validation mechanism.
             plugin._no_reorder = True
-            plugin.delete()
+            plugin.delete(no_mp=True)
             # 204 -> request was successful but no response returned.
             return HttpResponse(status=204)
         else:

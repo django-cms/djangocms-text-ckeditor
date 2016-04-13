@@ -195,10 +195,9 @@ class TextPlugin(CMSPluginBase):
             # to avoid non-auth users from triggering validation mechanism.
             plugin._no_reorder = True
 
-            if plugin.parent_id:
+            if plugin.parent and plugin.parent.numchild > 0:
                 CMSPlugin.objects.filter(
                     pk=plugin.parent_id,
-                    numchild__gt=0,
                 ).update(numchild=F('numchild') - 1)
             plugin.delete(no_mp=True)
             # 204 -> request was successful but no response returned.

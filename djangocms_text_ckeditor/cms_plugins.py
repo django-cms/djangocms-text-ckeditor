@@ -195,7 +195,7 @@ class TextPlugin(CMSPluginBase):
             # to avoid non-auth users from triggering validation mechanism.
             plugin._no_reorder = True
 
-            if plugin.parent:
+            if plugin.parent_id:
                 CMSPlugin.objects.filter(
                     pk=plugin.parent_id,
                     numchild__gt=0,

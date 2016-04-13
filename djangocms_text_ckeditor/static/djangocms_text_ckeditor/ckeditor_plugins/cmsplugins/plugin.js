@@ -14,7 +14,10 @@ $(document).ready(function () {
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
-            if (this.options && this.options.cancel_plugin_token && this.options.cancel_plugin_url) {
+            if (this.options &&
+                this.options.cancel_plugin_token &&
+                this.options.cancel_plugin_url &&
+                this.options.delete_on_cancel) {
                 this.setupCancelCleanupCallback(this.options);
             }
 
@@ -273,10 +276,14 @@ $(document).ready(function () {
                             token: data.cancel_plugin_token
                         }
                     }).done(function (res) {
+                        console.log(data);
+                        console.log(that);
                         CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
                         console.log('oi!', res);
                         debugger
                     }).error(function (res) {
+                        console.log(data);
+                        console.log(that);
                         console.log('error!', res);
                         debugger
                     });
@@ -299,22 +306,18 @@ $(document).ready(function () {
         tryToCloseModal: function (modal) {
             var that = this;
             $.when.apply(null, this.cancelPromises).then(function () {
-                var allResolved = (function () {
-                    var result = true;
-                    that.cancelPromises.forEach(function (promise) {
-                        if (promise.state() !== 'resolved') {
-                            result = false;
-                        }
-                    });
-                    return result;
-                }());
+                var allFinished = that.cancelPromises.every(function success (promise) {
+                    return promise.state() !== 'pending';
+                });
 
-                if (allResolved) {
+                if (allFinished) {
                     window.parent.CMS.API.Toolbar.hideLoader();
                     modal.close();
                 } else {
                     that.tryToCloseModal(modal);
                 }
+            }, function failure () {
+                console.error('Cancel request failed.');
             });
         },
 

@@ -282,7 +282,7 @@ $(document).ready(function () {
                     }).done(function (res) {
                         console.log(data);
                         console.log(that);
-                        CMS.API.Helpers.removeEventListener('modal-close', cancelModalCallback);
+                        CMS.API.Helpers.removeEventListener('modal-close.' + data.plugin_id);
                         console.log('oi!', res);
                     }).fail(function (res) {
                         CMS.API.Messages.open({
@@ -296,7 +296,7 @@ $(document).ready(function () {
                     that.tryToCloseModal(opts.instance);
                 }
             };
-            CMS.API.Helpers.addEventListener('modal-close', cancelModalCallback);
+            CMS.API.Helpers.addEventListener('modal-close.' + data.plugin_id, cancelModalCallback);
         },
 
         /**

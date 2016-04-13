@@ -317,7 +317,10 @@ $(document).ready(function () {
                     that.tryToCloseModal(modal);
                 }
             }, function failure () {
-                console.error('Cancel request failed.');
+                window.parent.CMS.API.Messages.open({
+                    error: true,
+                    message: 'Cancel request failed'
+                });
             });
         },
 

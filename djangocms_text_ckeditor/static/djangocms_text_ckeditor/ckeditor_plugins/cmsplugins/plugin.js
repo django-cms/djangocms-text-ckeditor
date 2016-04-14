@@ -14,14 +14,11 @@ $(document).ready(function () {
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
-            if (this.options &&
-                this.options.cancel_plugin_token &&
-                this.options.cancel_plugin_url &&
-                this.options.delete_on_cancel) {
-                this.setupCancelCleanupCallback(this.options);
-            }
-
-            this.cancelPromises = [];
+            /**
+             * populated with _fresh_ child plugins
+             */
+            this.child_plugins = [];
+            this.setupCancelCleanupCallback(this.options);
 
             // don't do anything if there are no plugins defined
             if(this.options === undefined || this.options.plugins === undefined) return false;
@@ -249,7 +246,7 @@ $(document).ready(function () {
             // in case it's a fresh text plugin children don't have to be
             // deleted separately
             if (!this.options.delete_on_cancel) {
-                this.setupCancelCleanupCallback(data);
+                this.child_plugins.push(data.plugin_id);
             }
             this.editor.insertElement(element);
         },
@@ -269,60 +266,32 @@ $(document).ready(function () {
             var that = this;
             var CMS = window.parent.CMS;
             var cancelModalCallback = function cancelModalCallback(e, opts) {
-                if (!opts.instance.saved) {
-                    e.preventDefault();
-                    CMS.API.Toolbar.showLoader();
-                    var deferred = $.ajax({
-                        method: 'POST',
-                        url: that.options.cancel_plugin_url,
-                        data: {
-                            plugin: data.plugin_id,
-                            token: that.options.cancel_plugin_token
-                        }
-                    }).done(function (res) {
-                        CMS.API.Helpers.removeEventListener('modal-close.' + data.plugin_id);
-                    }).fail(function (res) {
-                        CMS.API.Messages.open({
-                            message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
-                            delay: 0,
-                            error: true
-                        });
+                e.preventDefault();
+                CMS.API.Toolbar.showLoader();
+                var data = {
+                    token: that.options.cancel_plugin_token
+                };
+                if (!that.options.delete_on_cancel ) {
+                    data.child_plugins = that.child_plugins;
+                }
+                $.ajax({
+                    method: 'POST',
+                    url: that.options.cancel_plugin_url,
+                    data: data,
+                    // use 'child_plugins' instead of default 'child_plugins[]'
+                    traditional: true
+                }).done(function (res) {
+                    CMS.API.Helpers.removeEventListener('modal-close.text-plugin-' + that.options.plugin_id);
+                    opts.instance.close();
+                }).fail(function (res) {
+                    CMS.API.Messages.open({
+                        message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
+                        delay: 0,
+                        error: true
                     });
-
-                    that.cancelPromises.push(deferred);
-                    that.tryToCloseModal(opts.instance);
-                }
+                });
             };
-            CMS.API.Helpers.addEventListener('modal-close.' + data.plugin_id, cancelModalCallback);
-        },
-
-        /**
-         * We need to close the modal after all plugins that are being cancelled have been removed.
-         * If there are any requests promises that are not yet resolved - try again.
-         *
-         * @method tryToCloseModal
-         * @public
-         * @param {CMS.Modal} modal modal instance that contains ckeditor plugin
-         */
-        tryToCloseModal: function (modal) {
-            var that = this;
-            $.when.apply(null, this.cancelPromises).then(function () {
-                var allFinished = that.cancelPromises.every(function success (promise) {
-                    return promise.state() !== 'pending';
-                });
-
-                if (allFinished) {
-                    window.parent.CMS.API.Toolbar.hideLoader();
-                    modal.close();
-                } else {
-                    that.tryToCloseModal(modal);
-                }
-            }, function failure () {
-                window.parent.CMS.API.Messages.open({
-                    error: true,
-                    message: 'Cancel request failed'
-                });
-            });
+            CMS.API.Helpers.addEventListener('modal-close.text-plugin-' + that.options.plugin_id, cancelModalCallback);
         },
 
         setupDataProcessor: function () {

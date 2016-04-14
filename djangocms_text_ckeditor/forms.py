@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from cms.models import CMSPlugin
 from django import forms
 from django.core import signing
 from django.core.signing import BadSignature
 from django.forms.models import ModelForm
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
-
-from cms.models import CMSPlugin
 
 from .models import Text
 from .utils import plugin_tags_to_id_list

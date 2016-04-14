@@ -9,14 +9,14 @@ from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
-from django.forms.fields import CharField
 from django.db import transaction
+from django.forms.fields import CharField
 from django.http import (
     Http404,
     HttpResponse,
-    HttpResponseRedirect,
-    HttpResponseForbidden,
     HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseRedirect,
 )
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -197,8 +197,8 @@ class TextPlugin(CMSPluginBase):
 
         placeholder = text_plugin.placeholder
 
-        if not (has_add_permission
-                and placeholder.has_add_permission(request)):
+        if not (has_add_permission and
+                placeholder.has_add_permission(request)):
             message = ugettext("Unable to process your request. "
                                "You don't have the required permissions.")
             return HttpResponseForbidden(message)

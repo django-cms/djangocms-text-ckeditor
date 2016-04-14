@@ -105,6 +105,15 @@ class TextPlugin(CMSPluginBase):
                 request, form_url, extra_context
             )
 
+        if not self.has_add_permission(request):
+            # this permission check is done by Django on the normal
+            # workflow of adding a plugin.
+            # This is NOT the normal workflow because we create a plugin
+            # on GET request to the /add/ endpoint and so we bypass
+            # django's add_view, thus bypassing permission check.
+            message = ugettext('You do not have permission to add a plugin')
+            return HttpResponseForbidden(force_text(message))
+
         try:
             data = self.validate_add_request(request)
         except PermissionDenied:

@@ -266,12 +266,15 @@ $(document).ready(function () {
             var that = this;
             var CMS = window.parent.CMS;
             var cancelModalCallback = function cancelModalCallback(e, opts) {
+                if (!that.options.delete_on_cancel && !that.child_plugins.length) {
+                    return;
+                }
                 e.preventDefault();
                 CMS.API.Toolbar.showLoader();
                 var data = {
                     token: that.options.cancel_plugin_token
                 };
-                if (!that.options.delete_on_cancel ) {
+                if (!that.options.delete_on_cancel) {
                     data.child_plugins = that.child_plugins;
                 }
                 $.ajax({

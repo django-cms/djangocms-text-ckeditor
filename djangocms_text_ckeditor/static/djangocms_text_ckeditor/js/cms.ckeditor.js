@@ -84,7 +84,11 @@ $(document).ready(function () {
                 that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - 70);
                 this.editor.execCommand('maximize');
                 win.CMS.API.Helpers.addEventListener('modal-maximized modal-restored', function (e, payload) {
-                    that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - 70);
+                    try {
+                        that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - 70);
+                    } catch (e) {
+                        // sometimes throws errors if modal with text plugin is closed too fast
+                    }
                 });
             }
 

@@ -2,9 +2,11 @@
 import re
 
 from cms.api import add_plugin, create_page
-from cms.models import CMSPlugin, Page
+from cms.models import CMSPlugin, Page, Title
 from cms.test_utils.testcases import CMSTestCase
 from django.contrib import admin
+from django.contrib.auth import get_permission_codename
+from django.contrib.auth.models import Permission
 from django.utils.encoding import force_text
 from djangocms_helper.base_test import BaseTestCase
 
@@ -18,6 +20,15 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         text_plugin.body = '%s %s' % (text_plugin.body, plugin_to_tag(plugin))
         text_plugin.save()
         return text_plugin
+
+    def _give_permission(self, user, model, permission_type, save=True):
+        codename = get_permission_codename(permission_type, model._meta)
+        user.user_permissions.add(Permission.objects.get(codename=codename))
+
+    def _give_cms_permissions(self, user):
+        for perm_type in ['add', 'change', 'delete']:
+            for model in [Page, Title]:
+                self._give_permission(user, model, perm_type)
 
     def get_page_admin(self):
         admin.autodiscover()
@@ -241,5 +252,72 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_2.pk)
             self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_3.pk)
 
+    def test_cancel_token_per_session(self):
+        # Assert that a cancel token for the same plugin
+        # is different per user session.
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+
+        text_plugin = add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+
+        text_plugin_class = text_plugin.get_plugin_class_instance()
+
+        with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            cancel_token_1 = text_plugin_class.get_cancel_token(request, text_plugin)
+
+        with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            cancel_token_2 = text_plugin_class.get_cancel_token(request, text_plugin)
+
+        self.assertNotEqual(cancel_token_1, cancel_token_2)
+
     def test_add_and_cancel_plugin_permissions(self):
-        pass
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+
+        native_placeholder_admin = self.get_page_admin()
+
+        request = self.get_request()
+        request.GET = {
+            'plugin_type': 'TextPlugin',
+            'placeholder_id': simple_placeholder.pk,
+            'plugin_language': 'en',
+            'plugin_parent': '',
+        }
+
+        response = native_placeholder_admin.add_plugin(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # Point to the newly created text plugin
+        text_plugin_pk = self.get_plugin_id_from_response(response)
+        cms_plugin = CMSPlugin.objects.get(pk=text_plugin_pk)
+        text_plugin_class = cms_plugin.get_plugin_class_instance()
+
+        # Assert a standard user (no staff) can't delete ghost plugin
+        with self.login_user_context(self.get_standard_user()):
+            request = self.get_request()
+            cancel_token = text_plugin_class.get_cancel_token(request, cms_plugin)
+            data = {'plugin': text_plugin_pk, 'token': cancel_token}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_pk)
+            self.assertEqual(response.status_code, 403)
+
+        staff_user = self._create_user("addonly-staff", is_staff=True, is_superuser=False)
+
+        self._give_cms_permissions(staff_user)
+        self._give_permission(staff_user, text_plugin_class.model, 'add')
+
+        with self.login_user_context(staff_user):
+            request = self.get_request()
+            cancel_token = text_plugin_class.get_cancel_token(request, cms_plugin)
+            data = {'plugin': text_plugin_pk, 'token': cancel_token}
+            request = self.get_post_request(data)
+            response = text_plugin_class.delete_on_cancel(request, text_plugin_pk)
+            self.assertEqual(response.status_code, 204)

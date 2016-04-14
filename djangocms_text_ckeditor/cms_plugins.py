@@ -22,6 +22,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
 from . import settings
@@ -84,6 +85,7 @@ class TextPlugin(CMSPluginBase):
 
         return TextPluginForm
 
+    @xframe_options_sameorigin
     def add_view(self, request, form_url='', extra_context=None):
         """
         This is a special case add view for the Text Plugin. Plugins should
@@ -154,6 +156,7 @@ class TextPlugin(CMSPluginBase):
         return url_name
 
     @method_decorator(require_POST)
+    @xframe_options_sameorigin
     @transaction.atomic
     def delete_on_cancel(self, request, plugin_id):
         # This view is responsible for deleting a plugin

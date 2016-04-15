@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.admin import widgets as admin_widgets
 from django.db import models
+from django.utils.safestring import mark_safe
 
 from .html import clean_html
 from .widgets import TextEditorWidget
@@ -21,6 +22,20 @@ class HTMLField(models.TextField):
             self.configuration = kwargs['configuration']
             del(kwargs['configuration'])
         super(HTMLField, self).__init__(*args, **kwargs)
+
+    def from_db_value(self, value, expression, connection, context):
+        if value is None:
+            return value
+        return mark_safe(value)
+
+    def to_python(self, value):
+        # needed for django <= 1.8 compatibility
+        if value is None:
+            return value
+
+        # could be that value is already marked safe
+        # this is ok because mark_safe is idempotent
+        return mark_safe(value)
 
     def formfield(self, **kwargs):
         if self.configuration:

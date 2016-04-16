@@ -3,6 +3,7 @@ from django.contrib.admin import widgets as admin_widgets
 from django.db import models
 from django.forms.fields import CharField
 from django.utils.safestring import mark_safe
+from django.utils.six import add_metaclass
 
 from .compat import LTE_DJANGO_1_7
 from .html import clean_html
@@ -36,9 +37,6 @@ class HTMLFormField(CharField):
 
 class HTMLField(models.TextField):
     configuration = None
-
-    if LTE_DJANGO_1_7:
-        __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         # This allows widget configuration customization
@@ -83,3 +81,6 @@ class HTMLField(models.TextField):
     def clean(self, value, model_instance):
         value = super(HTMLField, self).clean(value, model_instance)
         return clean_html(value, full=False)
+
+if LTE_DJANGO_1_7:
+    HTMLField = add_metaclass(models.SubfieldBase)(HTMLField)

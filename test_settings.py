@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from tempfile import mkdtemp
 
-gettext = lambda s: s
+
+def gettext(s):
+    return s
+
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [

@@ -7,3 +7,8 @@ if django.VERSION < (1, 7):
 else:
     from django.utils.module_loading import import_string  # noqa
     LTE_DJANGO_1_6 = False  # noqa
+
+if django.VERSION < (1, 8):
+    LTE_DJANGO_1_7 = True
+else:
+    LTE_DJANGO_1_7 = False

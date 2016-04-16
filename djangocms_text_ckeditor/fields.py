@@ -4,6 +4,7 @@ from django.db import models
 from django.forms.fields import CharField
 from django.utils.safestring import mark_safe
 
+from .compat import LTE_DJANGO_1_7
 from .html import clean_html
 from .widgets import TextEditorWidget
 
@@ -36,6 +37,9 @@ class HTMLFormField(CharField):
 class HTMLField(models.TextField):
     configuration = None
 
+    if LTE_DJANGO_1_7:
+        __metaclass__ = models.SubfieldBase
+
     def __init__(self, *args, **kwargs):
         # This allows widget configuration customization
         # from the model definition
@@ -49,13 +53,15 @@ class HTMLField(models.TextField):
         return mark_safe(value)
 
     def to_python(self, value):
-        # needed for django <= 1.8 compatibility
+        # Only does anything if running Django <= 1.7
         if value is None:
             return value
 
-        # could be that value is already marked safe
-        # this is ok because mark_safe is idempotent
-        return mark_safe(value)
+        if LTE_DJANGO_1_7:
+            # could be that value is already marked safe
+            # this is ok because mark_safe is idempotent
+            value = mark_safe(value)
+        return value
 
     def formfield(self, **kwargs):
         if self.configuration:

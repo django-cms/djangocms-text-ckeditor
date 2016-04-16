@@ -73,3 +73,7 @@ class HTMLField(models.TextField):
         if defaults['widget'] == admin_widgets.AdminTextareaWidget:
             defaults['widget'] = widget
         return super(HTMLField, self).formfield(**defaults)
+
+    def clean(self, value, model_instance):
+        value = super(HTMLField, self).clean(value, model_instance)
+        return clean_html(value, full=False)

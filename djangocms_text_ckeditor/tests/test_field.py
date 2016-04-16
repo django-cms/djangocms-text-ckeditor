@@ -19,10 +19,6 @@ class FieldTestCase(BaseTestCase):
         original = 'Hello <h2>There</h2>'
         template = Template("{{ obj.text }}")
         text = SimpleText.objects.create(text='Hello <h2>There</h2>')
-        rendered = template.render(Context({'obj': text}))
-        # This fails because I'm explicitly passing  a non-safe string
-        # to the create() method.
-        self.assertNotEqual(original, rendered)
         # Fetching a new instance should now have the string marked
         # as safe.
         text = SimpleText.objects.get(pk=text.pk)

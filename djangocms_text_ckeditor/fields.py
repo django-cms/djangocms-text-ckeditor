@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.forms.fields import CharField
 from django.contrib.admin import widgets as admin_widgets
 from django.db import models
+from django.forms.fields import CharField
 from django.utils.safestring import mark_safe
 
 from .html import clean_html

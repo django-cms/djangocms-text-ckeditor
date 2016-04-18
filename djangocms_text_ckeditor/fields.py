@@ -36,13 +36,11 @@ class HTMLFormField(CharField):
 
 
 class HTMLField(models.TextField):
-    configuration = None
 
     def __init__(self, *args, **kwargs):
         # This allows widget configuration customization
         # from the model definition
-        if kwargs.get('configuration', None):
-            self.configuration = kwargs.pop('configuration')
+        self.configuration = kwargs.pop('configuration', None)
         super(HTMLField, self).__init__(*args, **kwargs)
 
     def from_db_value(self, value, expression, connection, context):
@@ -51,7 +49,12 @@ class HTMLField(models.TextField):
         return mark_safe(value)
 
     def to_python(self, value):
-        # Only does anything if running Django <= 1.7
+        # On Django >= 1.8 a new method
+        # was introduced (from_db_value) which is called
+        # whenever the value is loaded from the db.
+        # And to_python is called for serialization and cleaning.
+        # This means we don't need to add mark_safe on Django >= 1.8
+        # because it's handled by (from_db_value)
         if value is None:
             return value
 
@@ -69,7 +72,7 @@ class HTMLField(models.TextField):
 
         defaults = {
             'form_class': HTMLFormField,
-            'widget': TextEditorWidget,
+            'widget': widget,
         }
         defaults.update(kwargs)
 

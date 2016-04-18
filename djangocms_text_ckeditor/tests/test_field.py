@@ -12,8 +12,12 @@ class FieldTestCase(BaseTestCase):
     text_normal = '<p>some non malicious text</p>'
     text_with_iframe = ('<p>some non malicious text</p>'
                         '<iframe src="http://www.w3schools.com"></iframe>')
-    text_with_script = ('<p>some non malicious text</p>'
+    text_with_iframe_escaped = ('<p>some non malicious text</p>&lt;iframe '
+                                'src="http://www.w3schools.com"&gt;&lt;/iframe&gt;')
+    text_with_script = ('<p>some non malicious text</p> '
                         '<script>alert("Hello! I am an alert box!");</script>')
+    text_with_script_escaped = (u'<p>some non malicious text</p> &lt;script&gt;'
+                                u'alert("Hello! I am an alert box!");&lt;/script&gt;')
 
     def test_model_field_text_is_safe(self):
         original = 'Hello <h2>There</h2>'
@@ -38,17 +42,13 @@ class FieldTestCase(BaseTestCase):
         obj.full_clean()
         obj.save()
 
-        escaped = ('<p>some non malicious text</p>&lt;iframe '
-                   'src="http://www.w3schools.com"&gt;&lt;/iframe&gt;')
-        self.assertEqual(obj.text, escaped)
+        self.assertEqual(obj.text, self.text_with_iframe_escaped)
 
         obj = SimpleText(text=self.text_with_script)
         obj.full_clean()
         obj.save()
 
-        escaped = ('<p>some non malicious text</p>&lt;script&gt;'
-                   'alert("Hello! I am an alert box!");&lt;/script&gt;')
-        self.assertEqual(obj.text, escaped)
+        self.assertEqual(obj.text, self.text_with_script_escaped)
 
     def test_form_field_sanitized(self):
         form = SimpleTextForm(data={'text': self.text_normal})
@@ -59,13 +59,9 @@ class FieldTestCase(BaseTestCase):
         form = SimpleTextForm(data={'text': self.text_with_iframe})
         self.assertTrue(form.is_valid())
 
-        escaped = ('<p>some non malicious text</p>&lt;iframe '
-                   'src="http://www.w3schools.com"&gt;&lt;/iframe&gt;')
-        self.assertEqual(form.cleaned_data['text'], escaped)
+        self.assertEqual(form.cleaned_data['text'], self.text_with_iframe_escaped)
 
         form = SimpleTextForm(data={'text': self.text_with_script})
         self.assertTrue(form.is_valid())
 
-        escaped = ('<p>some non malicious text</p>&lt;script&gt;'
-                   'alert("Hello! I am an alert box!");&lt;/script&gt;')
-        self.assertEqual(form.cleaned_data['text'], escaped)
+        self.assertEqual(form.cleaned_data['text'], self.text_with_script_escaped)

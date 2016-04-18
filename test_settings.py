@@ -9,6 +9,7 @@ HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'djangocms_picture',
         'djangocms_link',
+        'djangocms_text_ckeditor.test_app',
     ],
     'LANGUAGE_CODE': 'en',
     'LANGUAGES': (

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from tempfile import mkdtemp
 
-gettext = lambda s: s
+
+def gettext(s):
+    return s
+
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'djangocms_picture',
         'djangocms_link',
+        'djangocms_text_ckeditor.test_app',
     ],
     'LANGUAGE_CODE': 'en',
     'LANGUAGES': (

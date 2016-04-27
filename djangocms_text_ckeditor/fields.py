@@ -32,7 +32,15 @@ class HTMLFormField(CharField):
 
     def clean(self, value):
         value = super(HTMLFormField, self).clean(value)
-        return clean_html(value, full=False)
+        clean_value = clean_html(value, full=False)
+
+        # We `mark_safe` here (as well as in the correct places) because Django
+        # Parler cache's the value directly from the in-memory object as it
+        # also stores the value in the database. So the cached version is never
+        # processed by `from_db_value()`.
+        clean_value = mark_safe(clean_value)
+
+        return clean_value
 
 
 class HTMLField(models.TextField):

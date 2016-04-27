@@ -6,7 +6,7 @@ CHANGELOG
 
 * Adds HtmlFormField
 * Moves text sanitation logic to the HtmlFormField
-* Text coming from a text field is now marked safe by default.
+* Text coming from an HTMLField is now marked safe by default.
 
 
 2.9.1 (2015-03-29)

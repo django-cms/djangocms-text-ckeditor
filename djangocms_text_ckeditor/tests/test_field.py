@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
+
 from django.template import Context, Template
+from django.utils.safestring import SafeData
 
 from djangocms_helper.base_test import BaseTestCase
 
+from djangocms_text_ckeditor.fields import HTMLFormField
 from djangocms_text_ckeditor.test_app.forms import SimpleTextForm
 from djangocms_text_ckeditor.test_app.models import SimpleText
+
+
+class HtmlFieldTestCase(BaseTestCase):
+
+    def test_html_form_field(self):
+        html_field = HTMLFormField()
+        self.assertTrue(isinstance(html_field.clean("some text"), SafeData))
 
 
 class FieldTestCase(BaseTestCase):

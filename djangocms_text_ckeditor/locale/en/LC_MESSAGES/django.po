@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 16:37+0100\n"
+"POT-Creation-Date: 2016-04-26 21:29-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cms_plugins.py:13
+#: cms_plugins.py:20
 msgid "Text"
 msgstr ""
 
-#: models.py:12
+#: models.py:26
 msgid "body"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:28
-msgid "Please select a plugin type."
-msgstr ""
-
+#: templates/cms/plugins/widgets/ckeditor.html:31
 #: templates/cms/plugins/widgets/ckeditor.html:34
-msgid "Text editor does not support inserting objects."
+msgid "CMS Plugins"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:46
-msgid "Text editor does not support editing objects."
+#: templates/cms/plugins/widgets/ckeditor.html:32
+msgid "Add CMS Plugin"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:51
-msgid "No object selected."
+#: templates/cms/plugins/widgets/ckeditor.html:33
+msgid "Edit CMS Plugin"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:55
-msgid "Not a plugin object"
+#: templates/cms/plugins/widgets/ckeditor.html:35
+msgid "Link"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:67
-msgid "Available Plugins"
-msgstr ""
-
-#: templates/cms/plugins/widgets/ckeditor.html:70
-msgid "Insert plugin"
-msgstr ""
-
-#: templates/cms/plugins/widgets/ckeditor.html:71
-msgid "Edit selected plugin"
+#: templates/cms/plugins/widgets/ckeditor.html:40
+msgid "Standard Plugins"
 msgstr ""

@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.9.3 (2016-04-27)
+------------------
+
+* Adds work-around for Django Parler internal caching
+
+
 2.9.2 (2016-04-26)
 ------------------
 

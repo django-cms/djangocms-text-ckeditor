@@ -224,15 +224,27 @@ class TextPlugin(CMSPluginBase):
             message = ugettext("Unable to process your request. Invalid token.")
             return HttpResponseBadRequest(message)
 
+    @classmethod
+    def get_child_plugin_candidates(cls, slot, page):
+        # This plugin can only have text_enabled plugins
+        # as children.
+        text_enabled_plugins = plugin_pool.get_text_enabled_plugins(
+            placeholder=slot,
+            page=page,
+        )
+        return text_enabled_plugins
+
     def get_form(self, request, obj=None, **kwargs):
+        get_plugin = plugin_pool.get_plugin
+        child_plugin_types = self.get_child_classes(
+            slot=self.placeholder.slot,
+            page=self.page,
+        )
+        child_plugins = (get_plugin(name) for name in child_plugin_types)
         plugins = get_toolbar_plugin_struct(
-            plugin_pool.get_text_enabled_plugins(
-                self.placeholder.slot,
-                self.page
-            ),
+            child_plugins,
             self.placeholder.slot,
             self.page,
-            parent=self.__class__
         )
         form = self.get_form_class(
             request=request,

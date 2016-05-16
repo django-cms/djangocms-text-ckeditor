@@ -14,6 +14,12 @@ $(document).ready(function () {
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
+            /**
+             * populated with _fresh_ child plugins
+             */
+            this.child_plugins = [];
+            this.setupCancelCleanupCallback(this.options);
+
             // don't do anything if there are no plugins defined
             if(this.options === undefined || this.options.plugins === undefined) return false;
 
@@ -192,22 +198,7 @@ $(document).ready(function () {
                 'plugin_language':  this.options.plugin_language
             };
 
-            // lets do some ajax
-            $.ajax({
-                'type': 'POST',
-                'url': this.options.add_plugin_url,
-                'data': data,
-                'success': function (data) {
-                    // cancel if error is returned
-                    if(data === 'error') return false;
-
-                    // trigger dialog
-                    that.addPluginDialog(item, data);
-                },
-                'error': function (error) {
-                    alert('There was an error creating the plugin.');
-                }
-            });
+            that.addPluginDialog(item, data);
         },
 
         addPluginDialog: function (item, data) {
@@ -221,7 +212,7 @@ $(document).ready(function () {
             dialog.resize(body.width() * 0.8, body.height() * 0.7);
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
             $(dialog.parts.title.$).text(this.options.lang.add);
-            $(dialog.parts.contents.$).find('iframe').attr('src', data.url)
+            $(dialog.parts.contents.$).find('iframe').attr('src', this.options.add_plugin_url + '?' + $.param(data))
                 .bind('load', function () {
                     $(this).contents().find('.submit-row').hide().end()
                     .find('#container').css('min-width', 0).css('padding', 0)
@@ -231,6 +222,7 @@ $(document).ready(function () {
 
         // on ajax receivement from server, build <a> or <img> tag dependig in the plugin type
         insertPlugin: function (data) {
+            var that = this;
             var element, attrs = { id: 'plugin_obj_' + data.plugin_id };
             if (data.plugin_type === this.options.lang.link) {
                 element = new CKEDITOR.dom.element('a', this.editor.document);
@@ -250,7 +242,59 @@ $(document).ready(function () {
                 });
             }
             element.setAttributes(attrs);
+
+            // in case it's a fresh text plugin children don't have to be
+            // deleted separately
+            if (!this.options.delete_on_cancel) {
+                this.child_plugins.push(data.plugin_id);
+            }
             this.editor.insertElement(element);
+        },
+
+        /**
+         * Sets up cleanup requests. If the plugin itself or child plugin was created and then
+         * creation was cancelled - we need to clean up created plugins.
+         *
+         * @method setupCancelCleanupCallback
+         * @public
+         * @param {Object} data plugin data
+         */
+        setupCancelCleanupCallback: function setupCancelCleanupCallback (data) {
+            if (!window.parent || !window.parent.CMS || !window.parent.CMS.API || !window.parent.CMS.API.Helpers) {
+                return;
+            }
+            var that = this;
+            var CMS = window.parent.CMS;
+            var cancelModalCallback = function cancelModalCallback(e, opts) {
+                if (!that.options.delete_on_cancel && !that.child_plugins.length) {
+                    return;
+                }
+                e.preventDefault();
+                CMS.API.Toolbar.showLoader();
+                var data = {
+                    token: that.options.cancel_plugin_token
+                };
+                if (!that.options.delete_on_cancel) {
+                    data.child_plugins = that.child_plugins;
+                }
+                $.ajax({
+                    method: 'POST',
+                    url: that.options.cancel_plugin_url,
+                    data: data,
+                    // use 'child_plugins' instead of default 'child_plugins[]'
+                    traditional: true
+                }).done(function (res) {
+                    CMS.API.Helpers.removeEventListener('modal-close.text-plugin-' + that.options.plugin_id);
+                    opts.instance.close();
+                }).fail(function (res) {
+                    CMS.API.Messages.open({
+                        message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
+                        delay: 0,
+                        error: true
+                    });
+                });
+            };
+            CMS.API.Helpers.addEventListener('modal-close.text-plugin-' + that.options.plugin_id, cancelModalCallback);
         },
 
         setupDataProcessor: function () {

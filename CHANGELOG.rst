@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.9.4.rc1 (2016-05-16)
+----------------------
+
+* Adds support for the django CMS's ability to better handle plugin creation
+
+
 2.9.3 (2016-04-27)
 ------------------
 

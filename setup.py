@@ -5,7 +5,7 @@ from djangocms_text_ckeditor import __version__
 
 
 INSTALL_REQUIRES = [
-    'django-cms>=3.0',
+    'django-cms>=3.3.0',
     'html5lib>=0.90,!=0.9999,!=0.99999',
     'Pillow',
 ]

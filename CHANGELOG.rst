@@ -4,7 +4,7 @@ CHANGELOG
 3.0.0 (2016-05-26)
 ------------------
 
-* Adds django CMS 3.3 support
+* Added support for django CMS 3.3
 * Backwards incompatible with django CMS < 3.3
 
 

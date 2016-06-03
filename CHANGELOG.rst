@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+3.0.1 (unreleased)
+------------------
+
+* Replace remaining CMS base module with CMS admin bundle that was missed in
+  2.8.0
+
+
 3.0.0 (2016-05-26)
 ------------------
 

@@ -231,7 +231,7 @@ within ``Placeholder`` fields.
 If you need to allow additional plugins to be embedded in a HTML field, convert the ``HTMLField`` to a ``Placeholderfield``
 and configure the placeholder to only accept TextPlugin. For more information on using placeholders outside of the CMS see:
 
-http://django-cms.readthedocs.org/en/latest/extending_cms/placeholders.html
+http://docs.django-cms.org/en/latest/introduction/templates_placeholders.html
 
 
 Auto Hyphenate Text
@@ -300,7 +300,7 @@ to render out all child plugins located in the ``body`` field. For example::
 
 You can further `customize your plugin`_ as other plugins.
 
-.. _customize your plugin: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
+.. _customize your plugin: http://docs.django-cms.org/en/latest/how_to/custom_plugins.html
 
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
@@ -308,7 +308,7 @@ Adding plugins to the "CMS Plugins" dropdown
 If you have another plugin that you want to use inside texts you can make them appear in the dropdown by making them text_enabled.
 Check in `django-cms doc`_ how to do this.
 
-.. _django-cms doc: http://django-cms.readthedocs.org/en/develop/reference/plugins.html#text-enabled
+.. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#text-enabled
 
 Configurable sanitizer
 ----------------------

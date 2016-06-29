@@ -17,6 +17,8 @@ from .utils import plugin_to_tag
 def _get_default_parser():
     opts = {}
 
+    sanitizer.HTMLSanitizer.acceptable_elements.extend(
+        ['cms-plugin'])
     if settings.TEXT_HTML_SANITIZE:
         sanitizer.HTMLSanitizer.acceptable_elements.extend(
             settings.TEXT_ADDITIONAL_TAGS)

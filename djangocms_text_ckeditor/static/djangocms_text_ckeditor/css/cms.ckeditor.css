@@ -60,6 +60,7 @@
 .cke_panel {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
+    min-height: 250px;
 }
 .cke_panel .cke_panel_frame {
     display: block;

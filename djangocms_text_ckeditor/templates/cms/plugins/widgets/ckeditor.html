@@ -1,4 +1,4 @@
-{% load i18n l10n admin_static %}
+{% load i18n l10n admin_static cms_static %}
 
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static "djangocms_text_ckeditor/css/cms.ckeditor.css" %}" />
@@ -6,7 +6,7 @@
 
 {% block extrahead %}
 <script>window.CKEDITOR_BASEPATH = "{{ CKEDITOR_BASEPATH }}";</script>
-<script src="{% static "cms/js/dist/bundle.admin.base.min.js" %}"></script>
+<script src="{% static_with_version "cms/js/dist/bundle.admin.base.min.js" %}"></script>
 <script src="{% static "djangocms_text_ckeditor/ckeditor/ckeditor.js" %}"></script>
 <script src="{% static "djangocms_text_ckeditor/js/cms.ckeditor.js" %}"></script>
 {% endblock %}

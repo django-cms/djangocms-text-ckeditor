@@ -52,12 +52,13 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         native_placeholder_admin = self.get_page_admin()
 
         request = self.get_request()
-        request.GET = {
+        request.GET = request.GET.copy()
+        request.GET.update({
             'plugin_type': 'TextPlugin',
             'placeholder_id': simple_placeholder.pk,
             'plugin_language': 'en',
             'plugin_parent': '',
-        }
+        })
         response = native_placeholder_admin.add_plugin(request)
 
         text_plugin_pk = self.get_plugin_id_from_response(response)
@@ -107,12 +108,13 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         native_placeholder_admin = self.get_page_admin()
 
         request = self.get_request()
-        request.GET = {
+        request.GET = request.GET.copy()
+        request.GET.update({
             'plugin_type': 'TextPlugin',
             'placeholder_id': simple_placeholder.pk,
             'plugin_language': 'en',
             'plugin_parent': '',
-        }
+        })
 
         response = native_placeholder_admin.add_plugin(request)
 
@@ -284,12 +286,13 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         native_placeholder_admin = self.get_page_admin()
 
         request = self.get_request()
-        request.GET = {
+        request.GET = request.GET.copy()
+        request.GET.update({
             'plugin_type': 'TextPlugin',
             'placeholder_id': simple_placeholder.pk,
             'plugin_language': 'en',
             'plugin_parent': '',
-        }
+        })
 
         response = native_placeholder_admin.add_plugin(request)
 

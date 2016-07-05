@@ -26,11 +26,11 @@ $(document).ready(function () {
 					'add_plugin_url': '{{ placeholder.get_add_url }}',
 					{% if widget.action_token %}
 					'action_token': '{{ widget.action_token }}',
-                    {% endif %}
+					{% endif %}
 					{% if widget.render_plugin_url %}
 					'render_plugin_url': '{{ widget.render_plugin_url }}',
 					{% endif %}
-					{% if widget.cancel_url %}
+					{% if widget.cancel_url and widget.action_token %}
 					'cancel_plugin_url': '{{ widget.cancel_url }}',
 					{% endif %}
 					'delete_on_cancel': {{ widget.delete_on_cancel|yesno:"true,false" }},

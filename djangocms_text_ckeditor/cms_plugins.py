@@ -12,13 +12,10 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
-    Http404,
-    HttpResponse,
-    HttpResponseBadRequest,
-    HttpResponseForbidden,
-    HttpResponseRedirect,
+    Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect,
 )
 from django.shortcuts import get_object_or_404
+from django.template import RequestContext
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
@@ -26,9 +23,9 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
 from . import settings
-from .forms import DeleteOnCancelForm, TextForm
+from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
-from .utils import plugin_tags_to_user_html
+from .utils import plugin_tags_to_admin_html, plugin_tags_to_user_html
 from .widgets import TextEditorWidget
 
 
@@ -48,8 +45,12 @@ class TextPlugin(CMSPluginBase):
         the text area
         """
         cancel_url_name = self.get_admin_url_name('delete_on_cancel')
-        cancel_url = reverse('admin:%s' % cancel_url_name, args=[plugin.pk])
-        cancel_token = self.get_cancel_token(request, plugin)
+        cancel_url = reverse('admin:%s' % cancel_url_name)
+
+        render_plugin_url_name = self.get_admin_url_name('render_plugin')
+        render_plugin_url = reverse('admin:%s' % render_plugin_url_name)
+
+        action_token = self.get_action_token(request, plugin)
 
         # should we delete the text plugin when
         # the user cancels?
@@ -63,8 +64,9 @@ class TextPlugin(CMSPluginBase):
             placeholder=plugin.placeholder,
             plugin_language=plugin.language,
             configuration=self.ckeditor_configuration,
+            render_plugin_url=render_plugin_url,
             cancel_url=cancel_url,
-            cancel_token=cancel_token,
+            action_token=action_token,
             delete_on_cancel=delete_text_on_cancel,
         )
         return widget
@@ -79,10 +81,27 @@ class TextPlugin(CMSPluginBase):
             plugin=plugin,
         )
 
+        instance = plugin.get_plugin_instance()[0]
+
+        if instance:
+            rendered_text = plugin_tags_to_admin_html(
+                text=instance.body,
+                context=RequestContext(request),
+                placeholder=plugin.placeholder,
+            )
+        else:
+            rendered_text = None
+
         # We avoid mutating the Form declared above by subclassing
         class TextPluginForm(self.form):
             body = CharField(widget=widget, required=False)
 
+            def __init__(self, *args, **kwargs):
+                initial = kwargs.pop('initial', {})
+
+                if rendered_text:
+                    initial['body'] = rendered_text
+                super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
     @xframe_options_sameorigin
@@ -156,7 +175,8 @@ class TextPlugin(CMSPluginBase):
             return url(regex, func, name=name)
 
         url_patterns = [
-            pattern(r'^(.+)/delete-on-cancel/$', self.delete_on_cancel),
+            pattern(r'^render-plugin/$', self.render_plugin),
+            pattern(r'^delete-on-cancel/$', self.delete_on_cancel),
         ]
         return url_patterns
 
@@ -165,21 +185,53 @@ class TextPlugin(CMSPluginBase):
         url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
         return url_name
 
+    def _get_text_plugin_from_request(self, request, data):
+        if not (request.user.is_active and request.user.is_staff):
+            raise PermissionDenied
+
+        form = ActionTokenValidationForm(data)
+
+        if form.is_valid():
+            session_key = request.session.session_key
+            text_plugin_id = form.get_id_from_token(session_key)
+
+            if text_plugin_id:
+                return self._get_plugin_or_404(text_plugin_id)
+        message = ugettext("Unable to process your request. Invalid token.")
+        raise ValidationError(message=force_text(message))
+
+    @xframe_options_sameorigin
+    def render_plugin(self, request):
+        try:
+            text_plugin = self._get_text_plugin_from_request(request, data=request.GET)
+        except ValidationError as error:
+            return HttpResponseBadRequest(error.message)
+
+        form = RenderPluginForm(request.GET, text_plugin=text_plugin)
+
+        if not form.is_valid():
+            message = ugettext("Unable to process your request.")
+            return HttpResponseBadRequest(message)
+
+        plugin_class = text_plugin.get_plugin_class_instance()
+        # The following is needed for permission checking
+        plugin_class.opts = plugin_class.model._meta
+
+        if not (plugin_class.has_change_permission(request, obj=text_plugin) and
+                text_plugin.placeholder.has_change_permission(request)):
+            raise PermissionDenied
+        return HttpResponse(form.render_plugin(request))
+
     @method_decorator(require_POST)
     @xframe_options_sameorigin
     @transaction.atomic
-    def delete_on_cancel(self, request, plugin_id):
+    def delete_on_cancel(self, request):
         # This view is responsible for deleting a plugin
         # bypassing the delete permissions.
-        # We check for add permissions because this view is meant
-        # only for plugins created through the ckeditor
-        # and the ckeditor plugin itself.
-        if not request.user.is_active and request.user.is_staff:
-            message = ugettext("Unable to process your request. "
-                               "You don't have the required permissions.")
-            return HttpResponseForbidden(message)
-
-        text_plugin = self._get_plugin_or_404(plugin_id)
+        try:
+            text_plugin = self._get_text_plugin_from_request(request, data=request.POST)
+        except ValidationError as error:
+            return HttpResponseBadRequest(error.message)
 
         # This form validates the the given plugin is a child
         # of the text plugin or is a text plugin.
@@ -187,37 +239,27 @@ class TextPlugin(CMSPluginBase):
         # is not present in the text plugin (because then it's not a cancel).
         # If the plugin is a text plugin then we validate that the text
         # plugin does NOT have a real instance attached.
-        form = DeleteOnCancelForm(
-            request.POST,
-            text_plugin=text_plugin,
-        )
+        form = DeleteOnCancelForm(request.POST, text_plugin=text_plugin)
 
         if not form.is_valid():
             message = ugettext("Unable to process your request.")
             return HttpResponseBadRequest(message)
 
-        text_plugin_class = text_plugin.get_plugin_class_instance()
+        plugin_class = text_plugin.get_plugin_class_instance()
         # The following is needed for permission checking
-        text_plugin_class.opts = text_plugin_class.model._meta
+        plugin_class.opts = plugin_class.model._meta
 
-        has_add_permission = text_plugin_class.has_add_permission(request)
-
-        placeholder = text_plugin.placeholder
-
-        if not (has_add_permission and
-                placeholder.has_add_permission(request)):
-            message = ugettext("Unable to process your request. "
-                               "You don't have the required permissions.")
-            return HttpResponseForbidden(message)
-        elif form.is_valid_token(request.session.session_key):
-            # Token is validated after checking permissions
-            # to avoid non-auth users from triggering validation mechanism.
-            form.delete()
-            # 204 -> request was successful but no response returned.
-            return HttpResponse(status=204)
-        else:
-            message = ugettext("Unable to process your request. Invalid token.")
-            return HttpResponseBadRequest(message)
+        # Check for add permissions because this view is meant
+        # only for plugins created through the ckeditor
+        # and the ckeditor plugin itself.
+        if not (plugin_class.has_add_permission(request) and
+                text_plugin.placeholder.has_add_permission(request)):
+            raise PermissionDenied
+        # Token is validated after checking permissions
+        # to avoid non-auth users from triggering validation mechanism.
+        form.delete()
+        # 204 -> request was successful but no response returned.
+        return HttpResponse(status=204)
 
     @classmethod
     def get_child_plugin_candidates(cls, slot, page):
@@ -283,11 +325,11 @@ class TextPlugin(CMSPluginBase):
         # See this ticket for details https://github.com/divio/djangocms-text-ckeditor/issues/212
         obj.clean_plugins()
 
-    def get_cancel_token(self, request, obj):
+    def get_action_token(self, request, obj):
         plugin_id = force_text(obj.pk)
         # salt is different for every user
         signer = signing.Signer(salt=request.session.session_key)
-        return signer.sign(plugin_id).split(':')[1]
+        return signer.sign(plugin_id)
 
     def _get_plugin_or_404(self, pk):
         plugin_type = self.__class__.__name__

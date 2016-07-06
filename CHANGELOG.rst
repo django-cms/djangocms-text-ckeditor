@@ -6,6 +6,7 @@ CHANGELOG
 
 * Replace remaining CMS base module with CMS admin bundle that was missed in
   2.8.0
+* Updated ckeditor to 4.5.9
 
 
 3.0.0 (2016-05-26)

@@ -1,12 +1,13 @@
 CHANGELOG
 =========
 
-3.0.1 (unreleased)
+3.0.1 (2016-07-15)
 ------------------
 
 * Replace remaining CMS base module with CMS admin bundle that was missed in
   2.8.0
 * Updated ckeditor to 4.5.9
+* Freeze html5lib-python<0.99999999/1.0b9
 
 
 3.0.0 (2016-05-26)

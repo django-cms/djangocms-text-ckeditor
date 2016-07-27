@@ -24,9 +24,14 @@ $(document).ready(function () {
 				CMS.CKEditor.init(container, {{ settings|safe }}, {
 					'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
 					'add_plugin_url': '{{ placeholder.get_add_url }}',
-					{% if widget.cancel_url and widget.cancel_token %}
+					{% if widget.action_token %}
+					'action_token': '{{ widget.action_token }}',
+					{% endif %}
+					{% if widget.render_plugin_url %}
+					'render_plugin_url': '{{ widget.render_plugin_url }}',
+					{% endif %}
+					{% if widget.cancel_url and widget.action_token %}
 					'cancel_plugin_url': '{{ widget.cancel_url }}',
-					'cancel_plugin_token': '{{ widget.cancel_token }}',
 					{% endif %}
 					'delete_on_cancel': {{ widget.delete_on_cancel|yesno:"true,false" }},
 					'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
@@ -36,8 +41,7 @@ $(document).ready(function () {
 						'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
 						'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
 						'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
-						'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-						'link': '{% filter escapejs %}{% trans "Link" %}{% endfilter %}'
+						'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
 					},
 					'plugins': [
 						{% regroup installed_plugins by module as module_list %}

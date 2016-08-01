@@ -9,7 +9,7 @@ from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
-from . import settings
+from . import compat, settings
 from .html import clean_html, extract_images
 from .utils import plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
@@ -23,9 +23,31 @@ except ImportError:
 @python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
+
+    # Add an app namespace to related_name to avoid field name clashes
+    # with any other plugins that have a field with the same name as the
+    # lowercase of the class name of this model.
+    # https://github.com/divio/django-cms/issues/5030
+    if compat.LTE_DJANGO_1_6:
+        # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
+        cmsplugin_ptr = models.OneToOneField(
+            CMSPlugin,
+            related_name='+',
+            parent_link=True,
+        )
+        search_fields = tuple()
+    else:
+        cmsplugin_ptr = models.OneToOneField(
+            CMSPlugin,
+            related_name='%(app_label)s_%(class)s',
+            parent_link=True,
+        )
+        search_fields = ('body',)
+
     body = models.TextField(_("body"))
 
-    search_fields = ('body',)
+    # This property is deprecated. And will be removed in a future release.
+    # It should be set on the Plugin, not the model.
     disable_child_plugins = True
 
     class Meta:
@@ -49,8 +71,11 @@ class AbstractText(CMSPlugin):
             except (TypeError, CMSPlugin.DoesNotExist):
                 body = hyphenate(body)
         self.body = body
-        kwargs['update_fields'] = ('body',)
-        super(AbstractText, self).save(*args, **kwargs)
+        # no need to pass args or kwargs here
+        # this 2nd save() call is internal and should be
+        # fully managed by us.
+        # think of it as an update() vs save()
+        super(AbstractText, self).save(update_fields=('body',))
 
     def clean_plugins(self):
         ids = plugin_tags_to_id_list(self.body)

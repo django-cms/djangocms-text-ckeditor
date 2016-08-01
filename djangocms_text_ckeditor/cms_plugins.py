@@ -6,22 +6,23 @@ from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 from django.forms.fields import CharField
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.translation import ugettext_lazy as _
 
+from . import settings
 from .forms import TextForm
 from .models import Text
-from .settings import TEXT_CKEDITOR_CONFIGURATION
 from .utils import plugin_tags_to_user_html
 from .widgets import TextEditorWidget
 
 
 class TextPlugin(CMSPluginBase):
     model = Text
-    name = _("Text")
+    name = settings.TEXT_PLUGIN_NAME
+    module = settings.TEXT_PLUGIN_MODULE_NAME
     form = TextForm
     render_template = "cms/plugins/text.html"
     change_form_template = "cms/plugins/text_plugin_change_form.html"
-    ckeditor_configuration = TEXT_CKEDITOR_CONFIGURATION
+    ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
+    disable_child_plugins = True
 
     def get_editor_widget(self, request, plugins, pk, placeholder, language):
         """

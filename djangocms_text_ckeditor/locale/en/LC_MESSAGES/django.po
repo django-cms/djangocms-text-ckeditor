@@ -25,6 +25,14 @@ msgstr ""
 msgid "body"
 msgstr ""
 
+#: settings.py:35
+msgid "Text"
+msgstr ""
+
+#: settings.py:36
+msgid "Generic"
+msgstr ""
+
 #: templates/cms/plugins/widgets/ckeditor.html:31
 #: templates/cms/plugins/widgets/ckeditor.html:34
 msgid "CMS Plugins"

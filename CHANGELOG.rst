@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+3.1.0 (unreleased)
+------------------
+
+* Added support for inline preview of text enabled CMS plugins
+* Added support for plugins to declare "text_editor_preview=False" in order for
+  them to be rendered with old-style label (useful for plugins with no valuable
+  visual representation, such as snippet, spacer, etc).
+
+
 3.0.1 (2016-07-15)
 ------------------
 

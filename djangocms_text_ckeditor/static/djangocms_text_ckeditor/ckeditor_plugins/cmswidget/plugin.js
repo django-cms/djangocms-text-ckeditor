@@ -1,4 +1,103 @@
 (function ($) {
+    /**
+     * Returns the focused widget, if of the type specific for this plugin.
+     * If no widget is focused, `null` is returned.
+     *
+     * @param {CKEDITOR.editor} editor
+     * @returns {CKEDITOR.plugins.widget|null} widget
+     */
+    function getSelectedWidget(editor) {
+        var widget = editor.widgets.focused;
+
+        if (widget && widget.name === 'cmswidget') {
+            return widget;
+        }
+
+        widget = editor.widgets.selected;
+
+        if (widget && widget.length) {
+            var index = widget.findIndex(function (w) {
+                return w.name === 'cmswidget';
+            });
+
+            if (index !== -1) {
+                return widget[index];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Block / inline-but-block widgets can't be aligned properly
+     * because CKEDITOR unwraps them and widget markup is then injected incorrectly
+     * into resulting markup. This is not the complete solution, but this is what we have.
+     *
+     * @param {CKEDITOR.plugins.widget} widget widget
+     * @returns {Boolean}
+     */
+    function canWidgetBeAligned(widget) {
+        if (widget.inline) {
+            if (CMS.$(widget.wrapper.$).hasClass('cke_widget_wrapper_force_block')) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    var alignCommandIntegrator = function (editor) {
+        var execCallbacks = [];
+
+        return function (value) {
+            var command = editor.getCommand('justify' + value);
+
+            if (!command) {
+                return;
+            }
+
+            execCallbacks.push(function () {
+                command.refresh(editor, editor.elementPath());
+            });
+
+            command.on('exec', function (e) {
+                var widget = getSelectedWidget(editor);
+
+                if (widget) {
+                    var enabled = canWidgetBeAligned(widget);
+
+                    if (!enabled) {
+                        // Once the widget changed its align, all the align commands
+                        // must be refreshed: the event is to be cancelled.
+                        for (var i = execCallbacks.length; i--;) {
+                            execCallbacks[i]();
+                        }
+
+                        e.cancel();
+                    }
+                }
+            });
+
+            command.on('refresh', function (e) {
+                var widget = getSelectedWidget(editor);
+
+                if (!widget) {
+                    return;
+                }
+
+                var enabled = canWidgetBeAligned(widget);
+
+                // Don't allow justify commands when widget alignment is disabled
+                if (!enabled) {
+                    this.setState(CKEDITOR.TRISTATE_DISABLED);
+                    e.cancel();
+                }
+            });
+        };
+    };
+
     CKEDITOR.plugins.add('cmswidget', {
         requires: 'widget',
         onLoad: function () {
@@ -31,87 +130,40 @@
 
         init: function (editor) {
             this.addWidgetDefinition(editor);
-            this.setupJustifyCommandHandlers(editor);
+        },
+
+        afterInit: function (editor) {
+            // Integrate with align commands (justify plugin).
+            var integrate = alignCommandIntegrator(editor);
+
+            ['left', 'right', 'center', 'block'].forEach(integrate);
         },
 
         addWidgetDefinition: function (editor) {
-            editor.widgets.add('cmswidget', (function widgetDef() {
-                return {
-                    button: 'CMS Plugin',
+            editor.widgets.add('cmswidget', {
+                button: 'CMS Plugin',
 
-                    template:
-                        '<cms-plugin style="unset: all">' +
-                        '</cms-plugin>',
+                template:
+                    '<cms-plugin style="unset: all">' +
+                    '</cms-plugin>',
 
-                    allowedContent: 'cms-plugin',
-                    disallowedContent: 'cms-plugin{float}',
+                allowedContent: 'cms-plugin',
+                disallowedContent: 'cms-plugin{float}',
 
-                    requiredContent: 'cms-plugin',
+                requiredContent: 'cms-plugin',
 
-                    upcast: function (element) {
-                        return element.name === 'cms-plugin';
-                    },
+                upcast: function (element) {
+                    return element.name === 'cms-plugin';
+                },
 
-                    init: function () {
-                        var contents = $(this.element.$).children();
-                        var displayProp = contents.css('display');
+                init: function () {
+                    var contents = $(this.element.$).children();
+                    var displayProp = contents.css('display');
 
-                        if (displayProp !== 'inline' && displayProp !== 'inline-block') {
-                            this.wrapper.addClass('cke_widget_wrapper_force_block');
-                        }
-
-                        this.bindJustifyHandlers();
-                    },
-
-                    /**
-                     * @function bindJustifyHandlers
-                     * @public
-                     * @see {setupJustifyCommandHandlers}
-                     */
-                    bindJustifyHandlers: function () {
-                        this.on('select', function () {
-                            editor.getCommand('justifyleft').disable();
-                            editor.getCommand('justifyright').disable();
-                            editor.getCommand('justifycenter').disable();
-                            editor.getCommand('justifyblock').disable();
-                        });
-
-                        this.on('deselect', function () {
-                            editor.getCommand('justifyleft').enable();
-                            editor.getCommand('justifyright').enable();
-                            editor.getCommand('justifycenter').enable();
-                            editor.getCommand('justifyblock').enable();
-                        });
+                    if (displayProp !== 'inline' && displayProp !== 'inline-block') {
+                        this.wrapper.addClass('cke_widget_wrapper_force_block');
                     }
-                };
-            })());
-        },
-
-        /**
-         * With "real preview" plugin markup can be incorrectly justified because of the extra
-         * wrapper. To avoid breaking up cms-plugin markup we disable justify commands when widgets
-         * are selected.
-         *
-         * @function setupJustifyCommandHandlers
-         * @param {CKEDITOR.editor} editor instance
-         */
-        setupJustifyCommandHandlers: function (editor) {
-            var commands = ['left', 'center', 'right', 'block'];
-
-            commands.forEach(function (command) {
-                var justifyCommand = editor.getCommand('justify' + command);
-
-                if (!justifyCommand) {
-                    return;
                 }
-
-                var originalRefresh = justifyCommand.refresh.bind(justifyCommand);
-
-                justifyCommand.refresh = function (ckeditor, path) {
-                    if (this.state !== CKEDITOR.TRISTATE_DISABLED) {
-                        originalRefresh(ckeditor, path);
-                    }
-                };
             });
         }
     });

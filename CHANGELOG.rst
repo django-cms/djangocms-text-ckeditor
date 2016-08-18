@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.1.0 (unreleased)
+3.1.0 (2016-08-18)
 ------------------
 
 * Added support for inline preview of text enabled CMS plugins

@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext
 
 from .models import Text
-from .utils import plugin_tags_to_id_list, plugin_to_tag
+from .utils import plugin_tags_to_id_list, plugin_to_tag, _render_cms_plugin
 
 
 class ActionTokenValidationForm(forms.Form):
@@ -43,7 +43,8 @@ class RenderPluginForm(forms.Form):
     def render_plugin(self, request):
         plugin = self.cleaned_data['plugin']
         context = RequestContext(request)
-        rendered_content = plugin.render_plugin(context)
+        context['request'] = request
+        rendered_content = _render_cms_plugin(plugin, context)
         return plugin_to_tag(plugin, content=rendered_content, admin=True)
 
 

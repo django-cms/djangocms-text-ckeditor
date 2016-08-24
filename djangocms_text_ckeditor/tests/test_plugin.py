@@ -16,10 +16,7 @@ from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
-    _render_cms_plugin,
-    _plugin_tags_to_html,
-    plugin_tags_to_admin_html,
-    plugin_tags_to_id_list,
+    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
     plugin_to_tag,
 )
 

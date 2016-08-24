@@ -400,7 +400,9 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.login_user_context(self.get_superuser()):
-            context = {'request': self.get_request()}
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
             text_with_rendered_plugins = plugin_tags_to_admin_html(
                 text=text_plugin.body,
                 context=context,
@@ -610,7 +612,9 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.assertNumQueries(2):
-            context = {'request': self.get_request()}
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
             rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
 
         for i in range(0, 10):

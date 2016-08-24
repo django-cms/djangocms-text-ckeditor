@@ -16,6 +16,7 @@ from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
+    _render_cms_plugin,
     _plugin_tags_to_html,
     plugin_tags_to_admin_html,
     plugin_tags_to_id_list,
@@ -402,9 +403,10 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.login_user_context(self.get_superuser()):
+            context = {'request': self.get_request()}
             text_with_rendered_plugins = plugin_tags_to_admin_html(
                 text=text_plugin.body,
-                context=RequestContext(self.get_request()),
+                context=context,
                 placeholder=text_plugin.placeholder,
             )
 
@@ -485,7 +487,8 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             context = RequestContext(request)
-            rendered_content = child_plugin.render_plugin(context)
+            context['request'] = request
+            rendered_content = _render_cms_plugin(child_plugin, context)
             rendered_child_plugin = plugin_to_tag(
                 child_plugin,
                 content=rendered_content,
@@ -610,7 +613,8 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.assertNumQueries(2):
-            rendered = text_plugin.render_plugin(placeholder=simple_placeholder)
+            context = {'request': self.get_request()}
+            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
 
         for i in range(0, 10):
             self.assertTrue('LinkPlugin record %d' % i in rendered)

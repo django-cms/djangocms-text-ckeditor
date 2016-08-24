@@ -8,12 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import compat, settings
 from .html import clean_html, extract_images
-from .utils import (
-    plugin_tags_to_db,
-    plugin_tags_to_id_list,
-    plugin_to_tag,
-    replace_plugin_tags,
-)
+from .utils import plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
 try:
     from softhyphen.html import hyphenate

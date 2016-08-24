@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext
 
 from .models import Text
-from .utils import plugin_tags_to_id_list, plugin_to_tag, _render_cms_plugin
+from .utils import _render_cms_plugin, plugin_tags_to_id_list, plugin_to_tag
 
 
 class ActionTokenValidationForm(forms.Form):

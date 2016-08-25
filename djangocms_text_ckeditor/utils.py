@@ -125,7 +125,7 @@ def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
         pk__in=plugin_ids,
         parent__plugin_type='TextPlugin',
     ).select_related('placeholder')
-    plugin_list = downcast_plugins(plugins)
+    plugin_list = downcast_plugins(plugins, select_placeholder=True)
     return dict((plugin.pk, plugin) for plugin in plugin_list)
 
 

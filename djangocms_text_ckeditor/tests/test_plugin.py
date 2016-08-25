@@ -138,18 +138,21 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         # Assert "real" plugin has not been created yet
         self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
 
+        add_url = response.url
+
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, cms_plugin)
-            response = self.client.get(response.url)
+            response = self.client.get(add_url)
 
             self.assertEqual(response.status_code, 200)
 
             # Assert cancel token is present
             self.assertContains(response, action_token)
 
-        request = self.get_post_request({'body': "Hello world"})
-        response = native_placeholder_admin.edit_plugin(request, text_plugin_pk)
+        with self.login_user_context(self.get_superuser()):
+            data = {'body': "Hello world"}
+            response = self.client.post(add_url, data)
 
         self.assertEqual(response.status_code, 200)
 

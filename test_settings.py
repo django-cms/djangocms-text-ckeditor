@@ -39,7 +39,7 @@ HELPER_SETTINGS = {
             'hide_untranslated': False,
         },
     },
-    'CMS_PERMISSION': True,
+    'CMS_PERMISSION': False,
     'CMS_PLACEHOLDER_CONF': {
         'content': {
             'plugins': ['TextPlugin', 'PicturePlugin'],

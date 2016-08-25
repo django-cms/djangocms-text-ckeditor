@@ -12,6 +12,19 @@ OBJ_ADMIN_RE_PATTERN = r'<cms-plugin [^>]*\bid="(?P<pk>\d+)"[^>]*/?>.*?</cms-plu
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 
+def _render_cms_plugin(plugin, context, placeholder=None):
+    request = context['request']
+
+    try:
+        from cms.plugin_rendering import ContentRenderer
+    except ImportError:
+        # djangoCMS < 3.4 compatibility
+        pass
+    else:
+        context['cms_content_renderer'] = ContentRenderer(request=request)
+    return plugin.render_plugin(context, placeholder=placeholder)
+
+
 def plugin_to_tag(obj, content='', admin=False):
     plugin_attrs = {
         'id': obj.pk,
@@ -70,13 +83,13 @@ def _plugin_tags_to_html(text, output_func):
 
 def plugin_tags_to_user_html(text, context, placeholder):
     def _render_plugin(obj, match):
-        return obj.render_plugin(context, placeholder)
+        return _render_cms_plugin(obj, context, placeholder)
     return _plugin_tags_to_html(text, output_func=_render_plugin)
 
 
 def plugin_tags_to_admin_html(text, context, placeholder):
     def _render_plugin(obj, match):
-        plugin_content = obj.render_plugin(context, placeholder)
+        plugin_content = _render_cms_plugin(obj, context, placeholder)
         return plugin_to_tag(obj, content=plugin_content, admin=True)
     return _plugin_tags_to_html(text, output_func=_render_plugin)
 
@@ -108,7 +121,10 @@ def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
     from cms.utils.plugins import downcast_plugins
 
     plugin_ids = plugin_tags_to_id_list(text, regex)
-    plugins = CMSPlugin.objects.filter(pk__in=plugin_ids)
+    plugins = CMSPlugin.objects.filter(
+        pk__in=plugin_ids,
+        parent__plugin_type='TextPlugin',
+    ).select_related('placeholder')
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
     return dict((plugin.pk, plugin) for plugin in plugin_list)
 

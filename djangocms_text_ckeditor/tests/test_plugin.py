@@ -16,9 +16,7 @@ from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
-    _plugin_tags_to_html,
-    plugin_tags_to_admin_html,
-    plugin_tags_to_id_list,
+    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
     plugin_to_tag,
 )
 
@@ -140,18 +138,21 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         # Assert "real" plugin has not been created yet
         self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
 
+        add_url = response.url
+
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, cms_plugin)
-            response = self.client.get(response.url)
+            response = self.client.get(add_url)
 
             self.assertEqual(response.status_code, 200)
 
             # Assert cancel token is present
             self.assertContains(response, action_token)
 
-        request = self.get_post_request({'body': "Hello world"})
-        response = native_placeholder_admin.edit_plugin(request, text_plugin_pk)
+        with self.login_user_context(self.get_superuser()):
+            data = {'body': "Hello world"}
+            response = self.client.post(add_url, data)
 
         self.assertEqual(response.status_code, 200)
 
@@ -402,9 +403,12 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
             text_with_rendered_plugins = plugin_tags_to_admin_html(
                 text=text_plugin.body,
-                context=RequestContext(self.get_request()),
+                context=context,
                 placeholder=text_plugin.placeholder,
             )
 
@@ -485,7 +489,8 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             context = RequestContext(request)
-            rendered_content = child_plugin.render_plugin(context)
+            context['request'] = request
+            rendered_content = _render_cms_plugin(child_plugin, context)
             rendered_child_plugin = plugin_to_tag(
                 child_plugin,
                 content=rendered_content,
@@ -610,7 +615,10 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.assertNumQueries(2):
-            rendered = text_plugin.render_plugin(placeholder=simple_placeholder)
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
+            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
 
         for i in range(0, 10):
             self.assertTrue('LinkPlugin record %d' % i in rendered)

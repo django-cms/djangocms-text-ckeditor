@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from distutils.version import LooseVersion
+
+import cms
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
@@ -27,6 +30,15 @@ from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginFo
 from .models import Text
 from .utils import plugin_tags_to_admin_html, plugin_tags_to_user_html
 from .widgets import TextEditorWidget
+
+
+CMS_34 = LooseVersion(cms.__version__) >= LooseVersion('3.4')
+
+
+def _user_can_change_placeholder(request, placeholder):
+    if CMS_34:
+        return placeholder.has_change_permission(request.user)
+    return placeholder.has_change_permission(request)
 
 
 class TextPlugin(CMSPluginBase):
@@ -84,9 +96,11 @@ class TextPlugin(CMSPluginBase):
         instance = plugin.get_plugin_instance()[0]
 
         if instance:
+            context = RequestContext(request)
+            context['request'] = request
             rendered_text = plugin_tags_to_admin_html(
                 text=instance.body,
-                context=RequestContext(request),
+                context=context,
                 placeholder=plugin.placeholder,
             )
         else:
@@ -218,7 +232,7 @@ class TextPlugin(CMSPluginBase):
         plugin_class.opts = plugin_class.model._meta
 
         if not (plugin_class.has_change_permission(request, obj=text_plugin) and
-                text_plugin.placeholder.has_change_permission(request)):
+                _user_can_change_placeholder(request, text_plugin.placeholder)):
             raise PermissionDenied
         return HttpResponse(form.render_plugin(request))
 
@@ -253,7 +267,7 @@ class TextPlugin(CMSPluginBase):
         # only for plugins created through the ckeditor
         # and the ckeditor plugin itself.
         if not (plugin_class.has_add_permission(request) and
-                text_plugin.placeholder.has_add_permission(request)):
+                _user_can_change_placeholder(request, text_plugin.placeholder)):
             raise PermissionDenied
         # Token is validated after checking permissions
         # to avoid non-auth users from triggering validation mechanism.

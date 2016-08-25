@@ -118,9 +118,15 @@ def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
 
 
 def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
+    from cms.utils.plugins import downcast_plugins
+
     plugin_ids = plugin_tags_to_id_list(text, regex)
-    plugins = CMSPlugin.objects.filter(pk__in=plugin_ids)
-    return dict((plugin.pk, plugin) for plugin in plugins.iterator())
+    plugins = CMSPlugin.objects.filter(
+        pk__in=plugin_ids,
+        parent__plugin_type='TextPlugin',
+    ).select_related('placeholder')
+    plugin_list = downcast_plugins(plugins)
+    return dict((plugin.pk, plugin) for plugin in plugin_list)
 
 
 """

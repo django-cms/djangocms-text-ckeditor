@@ -281,9 +281,18 @@
             $(dialog.parts.title.$).text(this.options.lang.add);
             $(dialog.parts.contents.$).find('iframe').attr('src', this.options.add_plugin_url + '?' + $.param(data))
                 .bind('load', function () {
-                    $(this).contents().find('.submit-row').hide().end()
-                    .find('#container').css('min-width', 0).css('padding', 0)
-                    .find('#id_name').val(selected_text);
+                    var contents = $(this).contents();
+
+                    contents.find('.submit-row').hide().end()
+                        .find('#container').css('min-width', 0).css('padding', 0);
+
+                    var inputs = contents.find('.js-ckeditor-use-selected-text');
+
+                    if (!inputs.length) {
+                        inputs = contents.find('#id_name');
+                    }
+
+                    inputs.val(selected_text);
                 });
         },
 

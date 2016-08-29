@@ -452,7 +452,9 @@
 
             this.editor.on('toHtml', function () {
                 // reset widgets to inline again to avoid creating block-level inline widget
-                that.editor.widgets.registered.cmswidget.inline = true;
+                if (that.editor.widgets.registered.cmswidget) {
+                    that.editor.widgets.registered.cmswidget.inline = true;
+                }
             }, null, null, BEFORE_PROCESSING_STARTED);
         }
     });

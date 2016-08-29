@@ -4,6 +4,7 @@ CHANGELOG
 3.2.0 (Unreleased)
 ------------------
 * Introduced support for djangoCMS 3.4.0
+* Fixed a JavaScript issue when using TextEditorWidget or HTMLField
 
 
 3.1.0 (2016-08-18)

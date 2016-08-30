@@ -1,0 +1,6 @@
+{
+    "package-name": "djangocms-text-ckeditor",
+    "installed-apps": [
+        "djangocms_text_ckeditor"
+    ]
+}

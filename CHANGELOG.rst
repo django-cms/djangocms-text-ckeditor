@@ -5,6 +5,7 @@ CHANGELOG
 ------------------
 * Introduced support for djangoCMS 3.4.0
 * Fixed a JavaScript issue when using TextEditorWidget or HTMLField
+* Added native Aldryn support
 
 
 3.1.0 (2016-08-18)

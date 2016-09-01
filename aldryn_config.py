@@ -63,3 +63,4 @@ class Form(forms.BaseForm):
         CKEDITOR_SETTINGS['stylesSet'] = 'default:{}'.format(style_set)
 
         settings['CKEDITOR_SETTINGS'] = CKEDITOR_SETTINGS
+        return settings

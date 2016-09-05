@@ -59,7 +59,6 @@
                     CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
                     CKEDITOR.dtd.$inline['cms-plugin'] = 1;
                     CKEDITOR.dtd.$transparent['cms-plugin'] = 1;
-                    CKEDITOR.dtd.$nonEditable['cms-plugin'] = 1;
                     CKEDITOR.dtd.body['cms-plugin'] = 1;
 
                     // add additional plugins (autoloads plugins.js)

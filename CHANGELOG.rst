@@ -8,6 +8,8 @@ CHANGELOG
 * Added native Aldryn support
 * Fixed a bug where invalid markup created by previous versions of the plugin
   would result in a broken markup after upgrading
+* Fixed a bug where whitespace would be incorrectly removed before the child
+  plugin on save of the text plugin
 
 
 3.1.0 (2016-08-18)

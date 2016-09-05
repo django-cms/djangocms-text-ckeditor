@@ -24,6 +24,32 @@
         return fakeRealType;
     }
 
+    /**
+     * @function replaceTagName
+     * @private
+     * @param {jQuery} elements
+     * @param {String} tagName
+     */
+    function replaceTagName(elements, tagName) {
+        elements.each(function (i, el) {
+            var newElement;
+
+            var element = $(el);
+
+            newElement = $('<' + tagName + '>');
+
+            // attributes
+            $.each(el.attributes, function (index, attribute) {
+                newElement.attr(attribute.nodeName, attribute.nodeValue);
+            });
+
+            // content
+            newElement.html(element.html());
+
+            element.replaceWith(newElement);
+        });
+    }
+
     CKEDITOR.plugins.add('cmsplugins', {
 
         // Register the icons. They must match command names.
@@ -425,7 +451,7 @@
 
             // need to update cms-plugin-nodes with fake "real type" so
             // ckeditor treats them as flow / phrasing elements correctly
-            // + we check if plugin markup should be rendered or no
+            // + we check if plugin markup should be rendered or not
             this.editor.on('toHtml', function (e) {
                 // now i have two problems
                 var newMarkup = e.data.dataValue.replace(
@@ -447,12 +473,30 @@
                     }
                 );
 
+                // in case we have a stale markup with <p> tag wrapped around
+                // we want to avoid a situation where browser would try to unwrap the tags in a way that would
+                // break the markup. what we do is we replace <cms-plugin> tags with divs if that is necessary,
+                // unwrap them with jQuery (which uses browser mechanism) and then replace the divs back
+                if (newMarkup.match(/<cms-plugin[^>]*(?=data-cke-real-element-type=\"div)/)) {
+                    // eslint-disable-next-line max-len
+                    var blockLevelPluginRegex = /<cms-plugin([^>]*(?=data-cke-real-element-type=\"div).*?>.*?<\/)cms-plugin>/g;
+
+                    var unwrappedMarkup = newMarkup.replace(blockLevelPluginRegex, '<div$1div>');
+                    // have to create a wrapper, otherwise we won't be able to return markup back
+                    var unwrappedElementsWrapper = $(unwrappedMarkup).wrapAll('<div>').parent();
+                    var wrappers = unwrappedElementsWrapper.find('div[data-cke-real-element-type="div"]');
+
+                    replaceTagName(wrappers, 'cms-plugin');
+
+                    newMarkup = unwrappedElementsWrapper.html();
+                }
+
                 e.data.dataValue = newMarkup;
             }, null, null, BEFORE_MARKUP_IS_PARSED);
 
             this.editor.on('toHtml', function () {
                 // reset widgets to inline again to avoid creating block-level inline widget
-                if (that.editor.widgets.registered.cmswidget) {
+                if (that.editor.widgets && that.editor.widgets.registered && that.editor.widgets.registered.cmswidget) {
                     that.editor.widgets.registered.cmswidget.inline = true;
                 }
             }, null, null, BEFORE_PROCESSING_STARTED);

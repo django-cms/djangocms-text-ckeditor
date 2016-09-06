@@ -7,6 +7,7 @@
 build
 env*
 dist
+!djangocms_text_ckeditor/static/djangocms_text_ckeditor/js/dist
 djangocms_text_ckeditor.egg-info
 *.DS_Store
 .idea

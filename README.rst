@@ -365,4 +365,12 @@ djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldry
 About CKEditor
 --------------
 
-The current integrated Version of CKeditor is **4.5.4**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.5.9**. For a full documentation visit: http://ckeditor.com/
+
+Building the js
+---------------
+
+``djangocms-text-ckeditor`` distributes a javascript bundle required for the
+plugin to work, which contains CKEditor itself and all the necessary plugins for
+functioning within CMS. To build the bundle you need to have to install
+dependencies with ``npm install`` and then to run ``gulp bundle``.

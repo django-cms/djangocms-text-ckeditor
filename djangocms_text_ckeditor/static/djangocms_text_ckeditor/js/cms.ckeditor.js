@@ -43,7 +43,7 @@
                 allowedContent: true,
                 toolbarCanCollapse: false,
                 removePlugins: 'resize',
-                extraPlugins: 'cmsplugins,cmswidget,cmsresize,cmsdialog,widget'
+                extraPlugins: ''
             },
 
             init: function (container, options, settings) {
@@ -55,6 +55,10 @@
                         settings: settings
                     }, this.options, options);
 
+                    // add extra plugins that we absolutely must have
+                    this.options.extraPlugins = this.options.extraPlugins += ',cmsplugins,cmswidget,cmsresize,' +
+                        'cmsdialog,widget';
+
                     document.createElement('cms-plugin');
                     CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
                     CKEDITOR.dtd.$inline['cms-plugin'] = 1;
@@ -62,10 +66,8 @@
                     CKEDITOR.dtd.body['cms-plugin'] = 1;
 
                     // add additional plugins (autoloads plugins.js)
-                    CKEDITOR.plugins.addExternal('cmswidget', settings.static_url + '/ckeditor_plugins/cmswidget/');
-                    CKEDITOR.plugins.addExternal('cmsplugins', settings.static_url + '/ckeditor_plugins/cmsplugins/');
-                    CKEDITOR.plugins.addExternal('cmsresize', settings.static_url + '/ckeditor_plugins/cmsresize/');
-                    CKEDITOR.plugins.addExternal('cmsdialog', settings.static_url + '/ckeditor_plugins/cmsdialog/');
+                    CKEDITOR.skin.addIcon('cmsplugins', settings.static_url +
+                        '/ckeditor_plugins/cmsplugins/icons/cmsplugins.png');
 
                     // render ckeditor
                     this.editor = CKEDITOR.replace(container, this.options);

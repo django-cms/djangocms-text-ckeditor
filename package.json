@@ -1,0 +1,27 @@
+{
+  "name": "djangocms-text-ckeditor",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divio/djangocms-text-ckeditor.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/divio/djangocms-text-ckeditor/issues"
+  },
+  "homepage": "https://github.com/divio/djangocms-text-ckeditor#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^2.1.0",
+    "gulp-if": "^2.0.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^2.0.0",
+    "minimist": "^1.2.0"
+  }
+}

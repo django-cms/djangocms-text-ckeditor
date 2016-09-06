@@ -70,8 +70,8 @@ gulp.task('bundle:cleanup:before', function () {
 
 gulp.task('bundle:js', function () {
     var f = filter([
-        '*',
-        '!' + PROJECT_PATH.js + '/../ckeditor/ckeditor.js'
+        '**',
+        '!**/ckeditor/ckeditor.js'
     ], { restore: true });
 
     return gulp.src(JS_BUNDLE)

@@ -375,6 +375,8 @@ plugin to work, which contains CKEditor itself and all the necessary plugins for
 functioning within CMS. To build the bundle you need to have to install
 dependencies with ``npm install`` and then to run ``gulp bundle``.
 
+This command also updates the file name loaded based on the file contents.
+
 Updating the CKEditor
 ---------------------
 

@@ -132,8 +132,6 @@
                 return body.is('.app-djangocms_text_ckeditor.model-text') || // Django >= 1.7
                     body.is('.djangocms_text_ckeditor-text'); // Django < 1.7
             }
-
         };
-
     });
 })(CMS.$);

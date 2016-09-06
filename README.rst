@@ -374,3 +374,9 @@ Building the js
 plugin to work, which contains CKEditor itself and all the necessary plugins for
 functioning within CMS. To build the bundle you need to have to install
 dependencies with ``npm install`` and then to run ``gulp bundle``.
+
+Updating the CKEditor
+---------------------
+
+Make sure to use the url in `build config
+<https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.

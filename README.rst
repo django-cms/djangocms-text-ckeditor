@@ -367,8 +367,8 @@ About CKEditor
 
 The current integrated Version of CKeditor is **4.5.9**. For a full documentation visit: http://ckeditor.com/
 
-Building the js
----------------
+Building the JavaScript
+-----------------------
 
 ``djangocms-text-ckeditor`` distributes a javascript bundle required for the
 plugin to work, which contains CKEditor itself and all the necessary plugins for

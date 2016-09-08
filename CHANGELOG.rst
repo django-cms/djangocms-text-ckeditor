@@ -1,8 +1,17 @@
 CHANGELOG
 =========
 
+3.2.1 (unreleased)
+------------------
+
+* Changed the way ckeditor js is loaded, everything is now loaded in one bundle
+* Changed the way ckeditor loads must-have external plugins, so user config
+  would have no effect on the settings
+
+
 3.2.0 (2016-09-07)
 ------------------
+
 * Introduced support for djangoCMS 3.4.0
 * Fixed a JavaScript issue when using TextEditorWidget or HTMLField
 * Added native Aldryn support

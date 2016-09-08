@@ -1,5 +1,5 @@
 /**
- * Modified version of the resize plugin to support touch events.
+ * Modified version of the dialog plugin to support touch events.
  *
  * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license

@@ -74,10 +74,10 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         )
         return text_plugin
 
-    def _replace_plugin_contents(self, text, new_plugin_content):
+    def _replace_plugin_contents(self, text, new_plugin_content, plugin_type):
         def _do_replace(obj, match):
             return plugin_to_tag(obj, content=new_plugin_content)
-        return _plugin_tags_to_html(text, output_func=_do_replace)
+        return _plugin_tags_to_html(text, output_func=_do_replace, plugin_type=plugin_type)
 
     def add_plugin_to_text(self, text_plugin, plugin):
         text_plugin.body = '%s %s' % (text_plugin.body, plugin_to_tag(plugin))
@@ -410,6 +410,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
                 text=text_plugin.body,
                 context=context,
                 placeholder=text_plugin.placeholder,
+                plugin_type=text_plugin.plugin_type
             )
 
             endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)
@@ -456,7 +457,8 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             # overridden to <img src="">
             overridden_text = self._replace_plugin_contents(
                 text_plugin.body,
-                new_plugin_content='<img src="">'
+                new_plugin_content='<img src="">',
+                plugin_type=text_plugin.plugin_type
             )
 
             endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)

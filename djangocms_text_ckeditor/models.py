@@ -58,7 +58,7 @@ class AbstractText(CMSPlugin):
         self.body = force_text(self.body)
 
     def clean(self):
-        self.body = plugin_tags_to_db(self.body)
+        self.body = plugin_tags_to_db(self.body, plugin_type=self.plugin_type)
 
     def save(self, *args, **kwargs):
         super(AbstractText, self).save(*args, **kwargs)

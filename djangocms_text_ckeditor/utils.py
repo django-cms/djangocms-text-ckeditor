@@ -59,13 +59,13 @@ def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
     return [int(id) for id in _find_plugins()]
 
 
-def _plugin_tags_to_html(text, output_func):
+def _plugin_tags_to_html(text, output_func, plugin_type):
     """
     Convert plugin object 'tags' into the form for public site.
 
     context is the template context to use, placeholder is the placeholder name
     """
-    plugins_by_id = get_plugins_from_text(text)
+    plugins_by_id = get_plugins_from_text(text, plugin_type)
 
     def _render_tag(m):
         try:
@@ -81,23 +81,23 @@ def _plugin_tags_to_html(text, output_func):
     return OBJ_ADMIN_RE.sub(_render_tag, text)
 
 
-def plugin_tags_to_user_html(text, context, placeholder):
+def plugin_tags_to_user_html(text, context, placeholder, plugin_type):
     def _render_plugin(obj, match):
         return _render_cms_plugin(obj, context, placeholder)
-    return _plugin_tags_to_html(text, output_func=_render_plugin)
+    return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
 
 
-def plugin_tags_to_admin_html(text, context, placeholder):
+def plugin_tags_to_admin_html(text, context, placeholder, plugin_type):
     def _render_plugin(obj, match):
         plugin_content = _render_cms_plugin(obj, context, placeholder)
         return plugin_to_tag(obj, content=plugin_content, admin=True)
-    return _plugin_tags_to_html(text, output_func=_render_plugin)
+    return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
 
 
-def plugin_tags_to_db(text):
+def plugin_tags_to_db(text, plugin_type):
     def _strip_plugin_content(obj, match):
         return plugin_to_tag(obj)
-    return _plugin_tags_to_html(text, output_func=_strip_plugin_content)
+    return _plugin_tags_to_html(text, output_func=_strip_plugin_content, plugin_type=plugin_type)
 
 
 def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
@@ -117,13 +117,13 @@ def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
     return regex.sub(_replace_tag, text)
 
 
-def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
+def get_plugins_from_text(text, plugin_type, regex=OBJ_ADMIN_RE):
     from cms.utils.plugins import downcast_plugins
 
     plugin_ids = plugin_tags_to_id_list(text, regex)
     plugins = CMSPlugin.objects.filter(
         pk__in=plugin_ids,
-        parent__plugin_type='TextPlugin',
+        parent__plugin_type=plugin_type,
     ).select_related('placeholder')
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
     return dict((plugin.pk, plugin) for plugin in plugin_list)

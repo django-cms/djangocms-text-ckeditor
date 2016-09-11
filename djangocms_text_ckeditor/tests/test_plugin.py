@@ -65,10 +65,10 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         )
         return plugin
 
-    def _add_text_plugin(self, placeholder):
+    def _add_text_plugin(self, placeholder, plugin_type="TextPlugin"):
         text_plugin = add_plugin(
             placeholder,
-            "TextPlugin",
+            plugin_type,
             "en",
             body="Hello World",
         )
@@ -604,6 +604,29 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder)
+
+        for i in range(0, 10):
+            plugin = self._add_child_plugin(
+                text_plugin,
+                plugin_type='LinkPlugin',
+                data_suffix=i
+            )
+
+            text_plugin = self.add_plugin_to_text(text_plugin, plugin)
+
+        with self.assertNumQueries(2):
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
+            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
+
+        for i in range(0, 10):
+            self.assertTrue('LinkPlugin record %d' % i in rendered)
+
+    def test_render_extended_plugin(self):
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+        text_plugin = self._add_text_plugin(simple_placeholder, 'ExtendedTextPlugin')
 
         for i in range(0, 10):
             plugin = self._add_child_plugin(

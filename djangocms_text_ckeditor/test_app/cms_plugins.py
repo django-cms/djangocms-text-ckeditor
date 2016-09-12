@@ -1,6 +1,7 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.template import engines
+from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
 
 class PreviewDisabledPlugin(CMSPluginBase):
@@ -12,3 +13,8 @@ class PreviewDisabledPlugin(CMSPluginBase):
 
 
 plugin_pool.register_plugin(PreviewDisabledPlugin)
+
+
+@plugin_pool.register_plugin
+class ExtendedTextPlugin(TextPlugin):
+    name = 'Extended'

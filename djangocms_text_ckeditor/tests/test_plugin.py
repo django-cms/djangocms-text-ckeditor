@@ -65,19 +65,19 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         )
         return plugin
 
-    def _add_text_plugin(self, placeholder):
+    def _add_text_plugin(self, placeholder, plugin_type="TextPlugin"):
         text_plugin = add_plugin(
             placeholder,
-            "TextPlugin",
+            plugin_type,
             "en",
             body="Hello World",
         )
         return text_plugin
 
-    def _replace_plugin_contents(self, text, new_plugin_content):
+    def _replace_plugin_contents(self, text, new_plugin_content, plugin_type):
         def _do_replace(obj, match):
             return plugin_to_tag(obj, content=new_plugin_content)
-        return _plugin_tags_to_html(text, output_func=_do_replace)
+        return _plugin_tags_to_html(text, output_func=_do_replace, plugin_type=plugin_type)
 
     def add_plugin_to_text(self, text_plugin, plugin):
         text_plugin.body = '%s %s' % (text_plugin.body, plugin_to_tag(plugin))
@@ -410,6 +410,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
                 text=text_plugin.body,
                 context=context,
                 placeholder=text_plugin.placeholder,
+                plugin_type=text_plugin.plugin_type
             )
 
             endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)
@@ -456,7 +457,8 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             # overridden to <img src="">
             overridden_text = self._replace_plugin_contents(
                 text_plugin.body,
-                new_plugin_content='<img src="">'
+                new_plugin_content='<img src="">',
+                plugin_type=text_plugin.plugin_type
             )
 
             endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)
@@ -604,6 +606,29 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder)
+
+        for i in range(0, 10):
+            plugin = self._add_child_plugin(
+                text_plugin,
+                plugin_type='LinkPlugin',
+                data_suffix=i
+            )
+
+            text_plugin = self.add_plugin_to_text(text_plugin, plugin)
+
+        with self.assertNumQueries(2):
+            request = self.get_request()
+            context = RequestContext(request)
+            context['request'] = request
+            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
+
+        for i in range(0, 10):
+            self.assertTrue('LinkPlugin record %d' % i in rendered)
+
+    def test_render_extended_plugin(self):
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+        text_plugin = self._add_text_plugin(simple_placeholder, 'ExtendedTextPlugin')
 
         for i in range(0, 10):
             plugin = self._add_child_plugin(

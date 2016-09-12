@@ -7,6 +7,8 @@ CHANGELOG
 * Changed the way ckeditor js is loaded, everything is now loaded in one bundle
 * Changed the way ckeditor loads must-have external plugins, so user config
   would have no effect on the settings
+* Fixed a regression where CKEditor would create unnecessary ``<p>`` tags around
+  CMS plugins
 
 
 3.2.0 (2016-09-07)

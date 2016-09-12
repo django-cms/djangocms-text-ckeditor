@@ -58,7 +58,7 @@ class Form(forms.BaseForm):
         elif boilerplate_name == 'bootstrap3':
             style_set = '/static/js/addons/ckeditor.wysiwyg.js'
         else:
-            style_set = '/static/js/modules/ckeditor.wysiwyg.js'
+            style_set = ''
 
         CKEDITOR_SETTINGS['stylesSet'] = 'default:{}'.format(style_set)
 

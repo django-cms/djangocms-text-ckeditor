@@ -403,6 +403,23 @@
             var BEFORE_MARKUP_IS_PARSED = 4;
 
             /**
+             * This override is required for the inline plugins that have preceding space, because otherwise CKEditor
+             * would remove that space while parsing
+             * html.
+             *
+             * Ref: https://github.com/ckeditor/ckeditor-dev/blob/master/core/htmlparser/fragment.js#L484
+             */
+            CKEDITOR.htmlParser.element = CKEDITOR.tools.override(CKEDITOR.htmlParser.element, function (original) {
+                return function (name, attributes) {
+                    original.call(this, name, attributes);
+
+                    if (name === 'cms-plugin' && attributes['data-cke-real-element-type'] === 'span') {
+                        this._.isBlockLike = false;
+                    }
+                };
+            });
+
+            /**
              * @function isBlockLikeChildren
              * @public
              * @param {CKEDITOR.htmlParser.element} element

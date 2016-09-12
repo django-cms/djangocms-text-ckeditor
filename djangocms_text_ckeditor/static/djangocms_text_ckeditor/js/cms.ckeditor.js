@@ -62,6 +62,8 @@
                     document.createElement('cms-plugin');
                     CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
                     CKEDITOR.dtd.$inline['cms-plugin'] = 1;
+                    // has to be here, otherwise extra <p> tags appear
+                    CKEDITOR.dtd.$nonEditable['cms-plugin'] = 1;
                     CKEDITOR.dtd.$transparent['cms-plugin'] = 1;
                     CKEDITOR.dtd.body['cms-plugin'] = 1;
 

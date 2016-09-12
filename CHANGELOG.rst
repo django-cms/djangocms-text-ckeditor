@@ -8,6 +8,8 @@ CHANGELOG
 * Changed the way ckeditor loads must-have external plugins, so user config
   would have no effect on the settings
 * Fixed error which prevented plugins extending TextPlugin to work
+* Fixed a regression where CKEditor would create unnecessary ``<p>`` tags around
+  CMS plugins
 
 
 3.2.0 (2016-09-07)

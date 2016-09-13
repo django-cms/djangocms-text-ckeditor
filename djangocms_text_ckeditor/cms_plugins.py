@@ -101,7 +101,6 @@ class TextPlugin(CMSPluginBase):
             rendered_text = plugin_tags_to_admin_html(
                 text=instance.body,
                 context=context,
-                placeholder=plugin.placeholder,
                 plugin_type=instance.plugin_type
             )
         else:
@@ -312,7 +311,6 @@ class TextPlugin(CMSPluginBase):
             'body': plugin_tags_to_user_html(
                 instance.body,
                 context,
-                placeholder,
                 instance.plugin_type
             ),
             'placeholder': placeholder,

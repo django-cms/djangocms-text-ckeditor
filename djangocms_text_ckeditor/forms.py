@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from cms.models import CMSPlugin
-from cms.toolbar.toolbar import CMSToolbar
 from django import forms
-from django.contrib.auth.models import AnonymousUser
 from django.core import signing
 from django.core.signing import BadSignature
 from django.forms.models import ModelForm
-from django.test import RequestFactory
 from django.utils.translation import ugettext
 
 from .models import Text
@@ -39,26 +36,11 @@ class RenderPluginForm(forms.Form):
         super(RenderPluginForm, self).__init__(*args, **kwargs)
         self.fields['plugin'].queryset = self.get_child_plugins()
 
-    def get_request(self, origin_request):
-        """
-        Returns a Request instance populated with cms specific attributes.
-        """
-        request_factory = RequestFactory(HTTP_HOST=origin_request.get_host())
-        request = request_factory.get(origin_request.path_info)
-        request.session = {}
-        request.LANGUAGE_CODE = origin_request.LANGUAGE_CODE
-        # Needed for plugin rendering.
-        request.current_page = None
-        request.user = AnonymousUser()
-        request.toolbar = CMSToolbar(request)
-        return request
-
     def get_child_plugins(self):
         return self.text_plugin.get_descendants()
 
     def render_plugin(self, request):
         plugin = self.cleaned_data['plugin']
-        request = self.get_request(origin_request=request)
         context = {'request': request}
         rendered_content = _render_cms_plugin(plugin, context)
         return plugin_to_tag(plugin, content=rendered_content, admin=True)

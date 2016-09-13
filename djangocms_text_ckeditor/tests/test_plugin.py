@@ -409,7 +409,6 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_with_rendered_plugins = plugin_tags_to_admin_html(
                 text=text_plugin.body,
                 context=context,
-                placeholder=text_plugin.placeholder,
                 plugin_type=text_plugin.plugin_type
             )
 

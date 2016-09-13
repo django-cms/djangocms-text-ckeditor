@@ -10,6 +10,8 @@ CHANGELOG
 * Fixed error which prevented plugins extending TextPlugin to work
 * Fixed a regression where CKEditor would create unnecessary ``<p>`` tags around
   CMS plugins
+* Fixed a bug where plugins rendered via the real-preview would not trigger
+  the context processors.
 
 
 3.2.0 (2016-09-07)

@@ -5,6 +5,7 @@ import re
 from cms.models import CMSPlugin
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
+from django.template.loader import render_to_string
 from django.utils.functional import LazyObject
 
 
@@ -12,17 +13,21 @@ OBJ_ADMIN_RE_PATTERN = r'<cms-plugin [^>]*\bid="(?P<pk>\d+)"[^>]*/?>.*?</cms-plu
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 
-def _render_cms_plugin(plugin, context, placeholder=None):
-    request = context['request']
+def _render_cms_plugin(plugin, context):
+    context['plugin'] = plugin
 
-    try:
-        from cms.plugin_rendering import ContentRenderer
-    except ImportError:
-        # djangoCMS < 3.4 compatibility
-        pass
-    else:
-        context['cms_content_renderer'] = ContentRenderer(request=request)
-    return plugin.render_plugin(context, placeholder=placeholder)
+    # This my fellow ckeditor enthusiasts is a hack..
+
+    # If I let djangoCMS render the plugin using {% render_plugin %}
+    # it will wrap the output in the toolbar markup which we don't want.
+
+    # If I render the plugin without rendering a template first, then context processors
+    # are not called and so plugins that rely on these like those using sekizai will error out.
+
+    # The compromise is to render a template so that Django binds the context to it
+    # and thus calls context processors AND render the plugin manually with the context
+    # after it's been bound to a template.
+    return render_to_string('cms/plugins/render_plugin_preview.html', context, request=context['request'])
 
 
 def plugin_to_tag(obj, content='', admin=False):
@@ -81,15 +86,15 @@ def _plugin_tags_to_html(text, output_func, plugin_type):
     return OBJ_ADMIN_RE.sub(_render_tag, text)
 
 
-def plugin_tags_to_user_html(text, context, placeholder, plugin_type):
+def plugin_tags_to_user_html(text, context, plugin_type):
     def _render_plugin(obj, match):
-        return _render_cms_plugin(obj, context, placeholder)
+        return _render_cms_plugin(obj, context)
     return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
 
 
-def plugin_tags_to_admin_html(text, context, placeholder, plugin_type):
+def plugin_tags_to_admin_html(text, context, plugin_type):
     def _render_plugin(obj, match):
-        plugin_content = _render_cms_plugin(obj, context, placeholder)
+        plugin_content = _render_cms_plugin(obj, context)
         return plugin_to_tag(obj, content=plugin_content, admin=True)
     return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
 

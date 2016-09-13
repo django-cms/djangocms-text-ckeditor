@@ -49,6 +49,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
                 'url': 'https://www.django-cms.org',
             },
             'PreviewDisabledPlugin': {},
+            'SekizaiPlugin': {},
         }
 
         if plugin_type == 'PicturePlugin':
@@ -409,7 +410,6 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             text_with_rendered_plugins = plugin_tags_to_admin_html(
                 text=text_plugin.body,
                 context=context,
-                placeholder=text_plugin.placeholder,
                 plugin_type=text_plugin.plugin_type
             )
 
@@ -516,8 +516,44 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             rendered_child_plugin = ('<cms-plugin render-plugin=false '
                                      'alt="Preview Disabled Plugin - 3 '
                                      '"title="Preview Disabled Plugin - 3" '
-                                     'id="3"><span>Preview is disabled for this plugin</span>'
-                                     '</cms-plugin>')
+                                     'id="3">\n<span>Preview is disabled for this plugin</span>'
+                                     '\n</cms-plugin>')
+
+            self.assertEqual(force_text(response.content), rendered_child_plugin)
+
+    def test_render_child_plugin_endpoint_calls_context_processors(self):
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+        text_plugin = add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+        text_plugin_class = text_plugin.get_plugin_class_instance()
+        child_plugin = self._add_child_plugin(
+            text_plugin,
+            plugin_type='SekizaiPlugin',
+        )
+        text_plugin = self.add_plugin_to_text(text_plugin, child_plugin)
+
+        with self.login_user_context(self.get_superuser()):
+            request = self.get_request()
+            action_token = text_plugin_class.get_action_token(request, text_plugin)
+            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            response = self.client.get(endpoint)
+
+            self.assertEqual(response.status_code, 200)
+
+            context = RequestContext(request)
+            context['request'] = request
+            rendered_content = _render_cms_plugin(child_plugin, context)
+            rendered_child_plugin = plugin_to_tag(
+                child_plugin,
+                content=rendered_content,
+                admin=True,
+            )
 
             self.assertEqual(force_text(response.content), rendered_child_plugin)
 
@@ -620,7 +656,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             request = self.get_request()
             context = RequestContext(request)
             context['request'] = request
-            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
+            rendered = _render_cms_plugin(text_plugin, context)
 
         for i in range(0, 10):
             self.assertTrue('LinkPlugin record %d' % i in rendered)
@@ -643,7 +679,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             request = self.get_request()
             context = RequestContext(request)
             context['request'] = request
-            rendered = _render_cms_plugin(text_plugin, context, placeholder=simple_placeholder)
+            rendered = _render_cms_plugin(text_plugin, context)
 
         for i in range(0, 10):
             self.assertTrue('LinkPlugin record %d' % i in rendered)

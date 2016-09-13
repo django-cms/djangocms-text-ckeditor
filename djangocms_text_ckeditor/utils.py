@@ -14,10 +14,35 @@ OBJ_ADMIN_RE_PATTERN = r'<cms-plugin [^>]*\bid="(?P<pk>\d+)"[^>]*/?>.*?</cms-plu
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 
-def _render_cms_plugin(plugin, context, placeholder=None):
+def _render_cms_plugin(plugin, context):
     request = context['request']
     context = flatten_context(context)
     context['plugin'] = plugin
+
+    try:
+        from cms.plugin_rendering import ContentRenderer
+    except ImportError:
+        # djangoCMS < 3.4 compatibility
+        pass
+    else:
+        context['cms_content_renderer'] = ContentRenderer(request=request)
+
+    # This my fellow ckeditor enthusiasts is a hack..
+
+    # If I let djangoCMS render the plugin using {% render_plugin %}
+    # it will wrap the output in the toolbar markup which we don't want.
+
+    # If I render the plugin without rendering a template first, then context processors
+    # are not called and so plugins that rely on these like those using sekizai will error out.
+
+    # The compromise is to render a template so that Django binds the context to it
+    # and thus calls context processors AND render the plugin manually once that template
+    # is rendered.
+
+    def _really_render_plugin():
+        return plugin.render_plugin(context)
+
+    context['render_text_plugin'] = _really_render_plugin
     return render_to_string('cms/plugins/render_plugin_preview.html', context, request=request)
 
 

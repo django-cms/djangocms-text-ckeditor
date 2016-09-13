@@ -2,6 +2,7 @@
 import os
 import re
 
+from classytags.utils import flatten_context
 from cms.models import CMSPlugin
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
@@ -14,6 +15,7 @@ OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 
 def _render_cms_plugin(plugin, context):
+    context = flatten_context(context)
     context['plugin'] = plugin
 
     # This my fellow ckeditor enthusiasts is a hack..
@@ -27,7 +29,12 @@ def _render_cms_plugin(plugin, context):
     # The compromise is to render a template so that Django binds the context to it
     # and thus calls context processors AND render the plugin manually with the context
     # after it's been bound to a template.
-    return render_to_string('cms/plugins/render_plugin_preview.html', context, request=context['request'])
+    response = render_to_string(
+        'cms/plugins/render_plugin_preview.html',
+        context,
+        request=context['request'],
+    )
+    return response
 
 
 def plugin_to_tag(obj, content='', admin=False):

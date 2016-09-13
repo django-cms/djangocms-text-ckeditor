@@ -4,6 +4,7 @@ from django import forms
 from django.core import signing
 from django.core.signing import BadSignature
 from django.forms.models import ModelForm
+from django.template import RequestContext
 from django.utils.translation import ugettext
 
 from .models import Text
@@ -41,7 +42,8 @@ class RenderPluginForm(forms.Form):
 
     def render_plugin(self, request):
         plugin = self.cleaned_data['plugin']
-        context = {'request': request}
+        context = RequestContext(request)
+        context['request'] = request
         rendered_content = _render_cms_plugin(plugin, context)
         return plugin_to_tag(plugin, content=rendered_content, admin=True)
 

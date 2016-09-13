@@ -3,7 +3,6 @@ import os
 import re
 
 from cms.models import CMSPlugin
-from classytags.utils import flatten_context
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
@@ -15,17 +14,7 @@ OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 
 def _render_cms_plugin(plugin, context):
-    request = context['request']
-    context = flatten_context(context)
     context['plugin'] = plugin
-
-    try:
-        from cms.plugin_rendering import ContentRenderer
-    except ImportError:
-        # djangoCMS < 3.4 compatibility
-        pass
-    else:
-        context['cms_content_renderer'] = ContentRenderer(request=request)
 
     # This my fellow ckeditor enthusiasts is a hack..
 
@@ -36,14 +25,9 @@ def _render_cms_plugin(plugin, context):
     # are not called and so plugins that rely on these like those using sekizai will error out.
 
     # The compromise is to render a template so that Django binds the context to it
-    # and thus calls context processors AND render the plugin manually once that template
-    # is rendered.
-
-    def _really_render_plugin():
-        return plugin.render_plugin(context)
-
-    context['render_text_plugin'] = _really_render_plugin
-    return render_to_string('cms/plugins/render_plugin_preview.html', context, request=request)
+    # and thus calls context processors AND render the plugin manually with the context
+    # after it's been bound to a template.
+    return render_to_string('cms/plugins/render_plugin_preview.html', context, request=context['request'])
 
 
 def plugin_to_tag(obj, content='', admin=False):

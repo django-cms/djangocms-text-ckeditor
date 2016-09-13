@@ -516,7 +516,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             rendered_child_plugin = ('<cms-plugin render-plugin=false '
                                      'alt="Preview Disabled Plugin - 3 '
                                      '"title="Preview Disabled Plugin - 3" '
-                                     'id="3"><span>Preview is disabled for this plugin</span>'
+                                     'id="3">\n<span>Preview is disabled for this plugin</span>'
                                      '\n</cms-plugin>')
 
             self.assertEqual(force_text(response.content), rendered_child_plugin)

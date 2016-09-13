@@ -15,5 +15,5 @@ def render_plugin_preview(context, plugin):
             editable=False,
         )
     else:
-        content  = plugin.render_plugin(context)
+        content = plugin.render_plugin(context)
     return content

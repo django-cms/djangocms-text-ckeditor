@@ -28,7 +28,7 @@ from django.views.decorators.http import require_POST
 from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
-from .utils import plugin_tags_to_admin_html, plugin_tags_to_user_html
+from .utils import plugin_tags_to_admin_html, plugin_tags_to_user_html, random_comment_exempt
 from .widgets import TextEditorWidget
 
 
@@ -213,6 +213,7 @@ class TextPlugin(CMSPluginBase):
         message = ugettext("Unable to process your request. Invalid token.")
         raise ValidationError(message=force_text(message))
 
+    @random_comment_exempt
     @xframe_options_sameorigin
     def render_plugin(self, request):
         try:

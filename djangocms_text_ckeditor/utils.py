@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+from functools import wraps
 
 from classytags.utils import flatten_context
 from cms.models import CMSPlugin
@@ -8,6 +9,7 @@ from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
 from django.utils.functional import LazyObject
+from django.utils.decorators import available_attrs
 
 
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin [^>]*\bid="(?P<pk>\d+)"[^>]*/?>.*?</cms-plugin>'
@@ -35,6 +37,17 @@ def _render_cms_plugin(plugin, context):
         request=context['request'],
     )
     return response
+
+
+def random_comment_exempt(view_func):
+    # Borrowed from
+    # https://github.com/lpomfrey/django-debreach/blob/f778d77ffc417/debreach/decorators.py#L21
+    # This is a no-op if django-debreach is not installed
+    def wrapped_view(*args, **kwargs):
+        response = view_func(*args, **kwargs)
+        response._random_comment_exempt = True
+        return response
+    return wraps(view_func, assigned=available_attrs(view_func))(wrapped_view)
 
 
 def plugin_to_tag(obj, content='', admin=False):

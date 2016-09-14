@@ -259,7 +259,14 @@
             dialog.resize(body.width() * 0.8, body.height() * 0.7); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
             $(dialog.parts.title.$).text(this.options.lang.edit);
-            $(dialog.parts.contents.$).find('iframe').attr('src', '../' + id + '/?_popup=1&no_preview')
+
+            var textPluginUrl = window.location.href;
+            var childPluginUrl = textPluginUrl.replace(
+                /(add-plugin|edit-plugin).*$/,
+                'edit-plugin/' + id + '/?_popup=1&no_preview'
+            );
+
+            $(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
                 .bind('load', function () {
                     var contents = $(this).contents();
 

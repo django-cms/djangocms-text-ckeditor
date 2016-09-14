@@ -10,6 +10,8 @@ CHANGELOG
 * Fixed error which prevented plugins extending TextPlugin to work
 * Fixed a regression where CKEditor would create unnecessary ``<p>`` tags around
   CMS plugins
+* Fixed a bug when child plugin cannot be edited while text plugin is not
+  completely created
 
 
 3.2.0 (2016-09-07)

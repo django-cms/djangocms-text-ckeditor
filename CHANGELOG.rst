@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.2.1 (unreleased)
+3.2.1 (2016-09-14)
 ------------------
 
 * Changed the way ckeditor js is loaded, everything is now loaded in one bundle

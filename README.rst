@@ -9,7 +9,7 @@ The latest version of this package supports:
 * django CMS >= 3.3
 
 .. WARNING::
-   - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.0).
+   - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
    - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x (e.g.: version 3.1.0).
    - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
    - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).

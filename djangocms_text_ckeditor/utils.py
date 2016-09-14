@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+from functools import wraps
 
 from classytags.utils import flatten_context
 from cms.models import CMSPlugin
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
+from django.utils.decorators import available_attrs
 from django.utils.functional import LazyObject
 
 
@@ -35,6 +37,17 @@ def _render_cms_plugin(plugin, context):
         request=context['request'],
     )
     return response
+
+
+def random_comment_exempt(view_func):
+    # Borrowed from
+    # https://github.com/lpomfrey/django-debreach/blob/f778d77ffc417/debreach/decorators.py#L21
+    # This is a no-op if django-debreach is not installed
+    def wrapped_view(*args, **kwargs):
+        response = view_func(*args, **kwargs)
+        response._random_comment_exempt = True
+        return response
+    return wraps(view_func, assigned=available_attrs(view_func))(wrapped_view)
 
 
 def plugin_to_tag(obj, content='', admin=False):
@@ -71,13 +84,13 @@ def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
     return [int(id) for id in _find_plugins()]
 
 
-def _plugin_tags_to_html(text, output_func, plugin_type):
+def _plugin_tags_to_html(text, output_func):
     """
     Convert plugin object 'tags' into the form for public site.
 
     context is the template context to use, placeholder is the placeholder name
     """
-    plugins_by_id = get_plugins_from_text(text, plugin_type)
+    plugins_by_id = get_plugins_from_text(text)
 
     def _render_tag(m):
         try:
@@ -93,23 +106,23 @@ def _plugin_tags_to_html(text, output_func, plugin_type):
     return OBJ_ADMIN_RE.sub(_render_tag, text)
 
 
-def plugin_tags_to_user_html(text, context, plugin_type):
+def plugin_tags_to_user_html(text, context):
     def _render_plugin(obj, match):
         return _render_cms_plugin(obj, context)
-    return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
+    return _plugin_tags_to_html(text, output_func=_render_plugin)
 
 
-def plugin_tags_to_admin_html(text, context, plugin_type):
+def plugin_tags_to_admin_html(text, context):
     def _render_plugin(obj, match):
         plugin_content = _render_cms_plugin(obj, context)
         return plugin_to_tag(obj, content=plugin_content, admin=True)
-    return _plugin_tags_to_html(text, output_func=_render_plugin, plugin_type=plugin_type)
+    return _plugin_tags_to_html(text, output_func=_render_plugin)
 
 
-def plugin_tags_to_db(text, plugin_type):
+def plugin_tags_to_db(text):
     def _strip_plugin_content(obj, match):
         return plugin_to_tag(obj)
-    return _plugin_tags_to_html(text, output_func=_strip_plugin_content, plugin_type=plugin_type)
+    return _plugin_tags_to_html(text, output_func=_strip_plugin_content)
 
 
 def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
@@ -129,14 +142,11 @@ def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
     return regex.sub(_replace_tag, text)
 
 
-def get_plugins_from_text(text, plugin_type, regex=OBJ_ADMIN_RE):
+def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
     from cms.utils.plugins import downcast_plugins
 
     plugin_ids = plugin_tags_to_id_list(text, regex)
-    plugins = CMSPlugin.objects.filter(
-        pk__in=plugin_ids,
-        parent__plugin_type=plugin_type,
-    ).select_related('placeholder')
+    plugins = CMSPlugin.objects.filter(pk__in=plugin_ids).select_related('placeholder')
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
     return dict((plugin.pk, plugin) for plugin in plugin_list)
 

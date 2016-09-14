@@ -4,6 +4,7 @@ from django.template import engines
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
 
+@plugin_pool.register_plugin
 class PreviewDisabledPlugin(CMSPluginBase):
     text_editor_preview = False
 
@@ -12,7 +13,10 @@ class PreviewDisabledPlugin(CMSPluginBase):
         return engines['django'].from_string(template)
 
 
-plugin_pool.register_plugin(PreviewDisabledPlugin)
+@plugin_pool.register_plugin
+class SekizaiPlugin(CMSPluginBase):
+    name = 'Sekizai'
+    render_template = 'test_app/plugin_with_sekizai.html'
 
 
 @plugin_pool.register_plugin

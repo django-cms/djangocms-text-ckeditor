@@ -12,6 +12,8 @@ CHANGELOG
   CMS plugins
 * Fixed a bug when child plugin cannot be edited while text plugin is not
   completely created
+* Fixed a bug where plugins rendered via the real-preview would not trigger
+  the context processors.
 
 
 3.2.0 (2016-09-07)

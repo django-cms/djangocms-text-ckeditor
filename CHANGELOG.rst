@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.2.2 (Unreleased)
+------------------
+
+* Fixed a problem with editing links that are not CMS plugins
+* Fixed a problem with prefilling fields when editing CMS plugins
+
 3.2.1 (2016-09-14)
 ------------------
 

@@ -2117,8 +2117,9 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
             coverKey = CKEDITOR.tools.genKey( backgroundColorStyle, backgroundCoverOpacity, baseFloatZIndex ),
             coverElement = covers[ coverKey ];
 
+        CMS.$('.cke_dialog_background_cover').remove();
         if ( !coverElement ) {
-			CMS.$('.cke_dialog_background_cover:not(".cms-ckeditor-dialog-background-cover")').remove();
+            covers = {};
             var html = [
                 '<div tabIndex="-1" style="position: ', ( CKEDITOR.env.ie6Compat ? 'absolute' : 'fixed' ),
                 '; z-index: ', baseFloatZIndex,
@@ -2223,12 +2224,12 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
     }
 
     function hideCover( editor ) {
+		CMS.$('.cke_dialog_background_cover').remove();
         if ( !currentCover )
             return;
 
         editor.focusManager.remove( currentCover );
         var win = CKEDITOR.document.getWindow();
-		// CMS.$('.cke_dialog_background_cover').remove();
         currentCover.hide();
         win.removeListener( 'resize', resizeCover );
 

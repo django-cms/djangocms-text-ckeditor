@@ -57,7 +57,7 @@
 
                     // add extra plugins that we absolutely must have
                     this.options.extraPlugins = this.options.extraPlugins +=
-                        ',cmsplugins,cmswidget,cmsresize,cmsdialog,widget';
+                        ',cmsplugins,cmswidget,cmsresize,widget';
 
                     document.createElement('cms-plugin');
                     CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;

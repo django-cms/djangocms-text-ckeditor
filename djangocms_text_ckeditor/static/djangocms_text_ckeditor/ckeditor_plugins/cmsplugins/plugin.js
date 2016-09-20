@@ -325,7 +325,9 @@
                         inputs = contents.find('#id_name');
                     }
 
-                    inputs.val(selected_text);
+                    if (!inputs.val().trim()) {
+                        inputs.val(selected_text);
+                    }
                 });
         },
 

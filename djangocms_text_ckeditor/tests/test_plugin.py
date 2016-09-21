@@ -511,11 +511,13 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
 
             self.assertEqual(response.status_code, 200)
 
+            # it is important that we do not add any extra whitespace inside of
+            # <cms-plugin></cms-plugin>
             rendered_child_plugin = ('<cms-plugin render-plugin=false '
                                      'alt="Preview Disabled Plugin - 3 '
                                      '"title="Preview Disabled Plugin - 3" '
-                                     'id="3">\n<span>Preview is disabled for this plugin</span>'
-                                     '\n</cms-plugin>')
+                                     'id="3"><span>Preview is disabled for this plugin</span>'
+                                     '</cms-plugin>')
 
             self.assertEqual(force_text(response.content), rendered_child_plugin)
 

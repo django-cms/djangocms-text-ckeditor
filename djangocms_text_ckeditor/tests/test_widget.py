@@ -29,7 +29,7 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
             self.assertContains(response, "group: 'Extra'")
             self.assertContains(response, "'title': 'Add a link'")
             self.assertContains(response, "group: 'Generic'")
-            self.assertContains(response, "'title': 'Picture'")
+            self.assertContains(response, "'title': 'Image'")
 
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')
@@ -42,16 +42,16 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
         page = create_page(title='pagina', template='page.html', language='en')
         placeholder = page.placeholders.get(slot='content')
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body="Lorem ipsum")
-        test_image = self.create_django_image_obj()
+        test_image = self.create_filer_image_object()
         pic_plugin = add_plugin(
-            placeholder, 'PicturePlugin', 'en', target=plugin, image=test_image, alt="Foo"
+            placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image
         )
         plugin.body = '%s %s' % (plugin.body, plugin_to_tag(pic_plugin))
         plugin.save()
         page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, 'Lorem ipsum')
-        self.assertContains(response, '<img src="/media/%s' % pic_plugin.image)
+        self.assertContains(response, '<img src="/media/')
 
     def test_contain_text(self):
         page = create_page(title='home', template='page.html', language='en')

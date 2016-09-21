@@ -53,7 +53,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         }
 
         if plugin_type == 'PicturePlugin':
-            data = {'alt': name, 'image': self.create_django_image_obj()}
+            data = {'caption_text': name, 'picture': self.create_filer_image_object()}
         else:
             data = basic_plugins[plugin_type]
 
@@ -246,32 +246,32 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             'PicturePlugin',
             'en',
             target=text_plugin,
-            image=self.create_django_image_obj(),
-            alt="Foo",
+            picture=self.create_filer_image_object(),
+            caption_text="Foo",
         )
         child_plugin_2 = add_plugin(
             simple_placeholder,
             'PicturePlugin',
             'en',
             target=text_plugin,
-            image=self.create_django_image_obj(),
-            alt="Foo",
+            picture=self.create_filer_image_object(),
+            caption_text="Foo",
         )
         child_plugin_3 = add_plugin(
             simple_placeholder,
             'PicturePlugin',
             'en',
             target=text_plugin,
-            image=self.create_django_image_obj(),
-            alt="Foo",
+            picture=self.create_filer_image_object(),
+            caption_text="Foo",
         )
         child_plugin_4 = add_plugin(
             simple_placeholder,
             'PicturePlugin',
             'en',
             target=text_plugin,
-            image=self.create_django_image_obj(),
-            alt="Foo",
+            picture=self.create_filer_image_object(),
+            caption_text="Foo",
         )
 
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_1)

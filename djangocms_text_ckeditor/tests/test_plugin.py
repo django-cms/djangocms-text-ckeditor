@@ -46,7 +46,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         basic_plugins = {
             'LinkPlugin': {
                 'name': name,
-                'url': 'https://www.django-cms.org',
+                'external_link': 'https://www.django-cms.org',
             },
             'PreviewDisabledPlugin': {},
             'SekizaiPlugin': {},

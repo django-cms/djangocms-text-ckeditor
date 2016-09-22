@@ -8,6 +8,7 @@ CHANGELOG
 * Fixed a problem with prefilling fields when editing CMS plugins
 * Fixed a bug with extra whitespace appearing around plugin rendered inside of
   the text plugin
+* Updated CKEditor to 4.5.11
 
 3.2.1 (2016-09-14)
 ------------------

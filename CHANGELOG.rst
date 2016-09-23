@@ -9,6 +9,8 @@ CHANGELOG
 * Fixed a bug with extra whitespace appearing around plugin rendered inside of
   the text plugin
 * Updated CKEditor to 4.5.11
+* Fixed JavaScript error thrown when multiple instances of TextField are used on
+  the page
 
 3.2.1 (2016-09-14)
 ------------------

@@ -1,4 +1,8 @@
 (function ($) {
+    if (CKEDITOR && CKEDITOR.plugins && CKEDITOR.plugins.registered && CKEDITOR.plugins.registered.cmswidget) {
+        return;
+    }
+
     /**
      * Returns the focused widget, if of the type specific for this plugin.
      * If no widget is focused, `null` is returned.

@@ -1,3 +1,7 @@
+(function ($) {
+if (CKEDITOR && CKEDITOR.plugins && CKEDITOR.plugins.registered && CKEDITOR.plugins.registered.cmsdialog) {
+    return;
+}
 /**
  * Modified version of the dialog plugin to support touch events.
  *
@@ -3402,3 +3406,4 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * @param data
  * @param {Number} data The new state. Either {@link CKEDITOR#DIALOG_STATE_IDLE} or {@link CKEDITOR#DIALOG_STATE_BUSY}.
  */
+})(CMS.$);

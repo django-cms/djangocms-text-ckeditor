@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.2.2 (Unreleased)
+3.3.0 (Unreleased)
 ------------------
 
 * Fixed a problem with editing links that are not CMS plugins
@@ -11,6 +11,7 @@ CHANGELOG
 * Updated CKEditor to 4.5.11
 * Fixed JavaScript error thrown when multiple instances of TextField are used on
   the page
+
 
 3.2.1 (2016-09-14)
 ------------------

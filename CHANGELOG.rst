@@ -11,6 +11,7 @@ CHANGELOG
 * Updated CKEditor to 4.5.11
 * Fixed JavaScript error thrown when multiple instances of TextField are used on
   the page
+* Fixed CKEditor not initializing inside of the ``inline``.
 
 
 3.2.1 (2016-09-14)

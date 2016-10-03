@@ -1,4 +1,8 @@
 (function ($) {
+    if (CKEDITOR && CKEDITOR.plugins && CKEDITOR.plugins.registered && CKEDITOR.plugins.registered.cmsplugins) {
+        return;
+    }
+
     /**
      * Determine if we should return `div` or `span` based on the
      * plugin markup.

@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.3.0 (Unreleased)
+3.3.0 (2016-10-04)
 ------------------
 
 * Fixed a problem with editing links that are not CMS plugins

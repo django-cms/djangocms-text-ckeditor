@@ -92,10 +92,12 @@
                     this.editor.execCommand('maximize');
                     win.CMS.API.Helpers.addEventListener('modal-maximized modal-restored', function () {
                         try {
-                            that.editor.resize(
-                                '100%',
-                                win.CMS.$('.cms-modal-frame').height() - TOOLBAR_HEIGHT_WITH_PADDINGS
-                            );
+                            if (!$('.cke_maximized').length) {
+                                that.editor.resize(
+                                    '100%',
+                                    win.CMS.$('.cms-modal-frame').height() - TOOLBAR_HEIGHT_WITH_PADDINGS
+                                );
+                            }
                         } catch (e) {
                             // sometimes throws errors if modal with text plugin is closed too fast
                         }

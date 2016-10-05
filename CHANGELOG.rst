@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.3.1 (unreleased)
+------------------
+
+* Fixed an issue with maximized CKEditor inside of maximized CMS modal in FF
+
+
 3.3.0 (2016-10-04)
 ------------------
 

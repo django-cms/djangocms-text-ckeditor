@@ -329,7 +329,7 @@
                         inputs = contents.find('#id_name');
                     }
 
-                    if (!inputs.val().trim()) {
+                    if (!(inputs.val() && inputs.val().trim())) {
                         inputs.val(selected_text);
                     }
                 });

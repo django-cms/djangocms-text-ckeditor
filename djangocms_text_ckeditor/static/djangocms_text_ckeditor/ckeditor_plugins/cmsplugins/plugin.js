@@ -235,7 +235,7 @@
             this.editor.addMenuGroup('cmspluginsGroup');
             this.editor.addMenuItem('cmspluginsItem', {
                 label: this.options.lang.edit,
-                icon: this.path + 'icons/cmsplugins.png',
+                icon: CMS.CKEditor.options.settings.static_url + '/ckeditor_plugins/cmsplugins/icons/cmsplugins.png',
                 command: 'cmspluginsEdit',
                 group: 'cmspluginsGroup'
             });

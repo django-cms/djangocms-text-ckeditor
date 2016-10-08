@@ -5,6 +5,9 @@ CHANGELOG
 ------------------
 
 * Fixed an issue with maximized CKEditor inside of maximized CMS modal in FF
+* Fixed path to the icon in the context menu
+* Fixed JavaScript error happening when certain fields wouldn't exist in child
+  plugin
 
 
 3.3.0 (2016-10-04)

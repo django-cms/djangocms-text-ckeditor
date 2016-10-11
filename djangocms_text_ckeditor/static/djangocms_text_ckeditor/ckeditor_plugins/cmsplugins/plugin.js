@@ -173,8 +173,8 @@
             var definition = function () {
                 return {
                     title: '',
-                    minWidth: 600,
-                    minHeight: 300,
+                    minWidth: 200,
+                    minHeight: 200,
                     contents: [{
                         elements: [
                             {

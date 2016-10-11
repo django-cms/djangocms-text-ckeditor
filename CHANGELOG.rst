@@ -8,6 +8,8 @@ CHANGELOG
 * Fixed path to the icon in the context menu
 * Fixed JavaScript error happening when certain fields wouldn't exist in child
   plugin
+* Fixed an issue with CKEditor dialogs going outside of the ckeditor area, which
+  was making them unusable
 
 
 3.3.0 (2016-10-04)

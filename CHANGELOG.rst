@@ -10,6 +10,8 @@ CHANGELOG
   plugin
 * Fixed an issue with CKEditor dialogs going outside of the ckeditor area, which
   was making them unusable
+* Fixed an issue when only the first selected text would be populated to the
+  title field in supported child plugins
 
 
 3.3.0 (2016-10-04)

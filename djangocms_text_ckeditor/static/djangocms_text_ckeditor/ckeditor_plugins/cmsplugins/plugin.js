@@ -317,8 +317,9 @@
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
             $(dialog.parts.title.$).text(this.options.lang.add);
             $(dialog.parts.contents.$).find('iframe').attr('src', this.options.add_plugin_url + '?' + $.param(data))
-                .bind('load', function () {
-                    var contents = $(this).contents();
+                .on('load.addplugin', function () {
+                    var iframe = $(this);
+                    var contents = iframe.contents();
 
                     contents.find('.submit-row').hide().end()
                         .find('#container').css('min-width', 0).css('padding', 0);
@@ -332,6 +333,8 @@
                     if (!(inputs.val() && inputs.val().trim())) {
                         inputs.val(selected_text);
                     }
+
+                    iframe.off('load.addplugin');
                 });
         },
 

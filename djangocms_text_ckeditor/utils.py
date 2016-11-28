@@ -163,6 +163,7 @@ class ConfiguredStorage(LazyObject):
         from django.conf import settings
         self._wrapped = get_storage_class(getattr(settings, 'STATICFILES_STORAGE', default_storage))()
 
+
 configured_storage = ConfiguredStorage()
 
 

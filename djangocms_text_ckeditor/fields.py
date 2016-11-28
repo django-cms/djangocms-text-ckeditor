@@ -93,5 +93,6 @@ class HTMLField(models.TextField):
         value = super(HTMLField, self).clean(value, model_instance)
         return clean_html(value, full=False)
 
+
 if LTE_DJANGO_1_7:
     HTMLField = add_metaclass(models.SubfieldBase)(HTMLField)

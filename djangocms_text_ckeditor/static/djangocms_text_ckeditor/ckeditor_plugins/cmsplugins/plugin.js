@@ -82,7 +82,7 @@
             this.setupDialog();
 
             // add the button, depending on whether we prefer buttons or a dropdown
-            if(this.options.plugins_integration && this.options.plugins_integration == 'buttons')
+            if(this.options.plugins_integration && this.options.plugins_integration === 'buttons')
                 this._initButtons();
             else
                 this._initDropdown();

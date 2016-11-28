@@ -247,12 +247,12 @@
             var tpl = '<div class="cke_panel_block">';
 
             // loop through the groups
-            $.each(this.options.plugins, function (i, group) {
+            $.each(this.options.plugins, function (pluginIndex, group) {
                 // add template
                 tpl += '<h1 class="cke_panel_grouptitle">' + group.group + '</h1>';
                 tpl += '<ul role="presentation" class="cke_panel_list">';
                 // loop through the plugins
-                $.each(group.items, function (ii, item) {
+                $.each(group.items, function (groupIndex, item) {
                     tpl += '<li class="cke_panel_listItem"><a href="#" rel="' + item.type + '">' +
                         item.title + '</a></li>';
                 });

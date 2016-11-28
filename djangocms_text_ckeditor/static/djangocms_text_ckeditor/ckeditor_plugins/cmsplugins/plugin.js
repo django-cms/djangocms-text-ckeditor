@@ -171,8 +171,8 @@
 
         _initButtons: function () {
             var that = this;
-            $.each(this.options.plugins, function (i, group) {
-                $.each(group.items, function (ii, item) {
+            $.each(this.options.plugins, function (pluginIndex, group) {
+                $.each(group.items, function (groupIndex, item) {
                     definition = {
                         'command': 'cmsPlugin' + item.type,
                         'label': item.title,

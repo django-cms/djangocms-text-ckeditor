@@ -165,8 +165,7 @@
         _getPluginIconPath: function (item) {
             if (item.icon_path)
                 return item.icon_path;
-
-            return this.path + 'icons/cmsplugins.png';
+            return CMS.CKEditor.options.settings.static_url + '/ckeditor_plugins/cmsplugins/icons/cmsplugins.png';
         },
 
         _initButtons: function () {

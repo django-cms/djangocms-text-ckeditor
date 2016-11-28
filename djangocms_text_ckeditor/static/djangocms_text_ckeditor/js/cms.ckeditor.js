@@ -56,7 +56,7 @@
                     }, this.options, options);
 
                     // dynamicaly add plugins button
-                    if (settings.plugins_integration && settings.plugins_integration == 'buttons') {
+                    if (settings.plugins_integration && settings.plugins_integration === 'buttons') {
                         this._initPluginButtons();
                     }
 
@@ -86,7 +86,8 @@
 
             _initPluginButtons: function () {
                 // Search for cmsplugins button and replace it by plugin buttons.
-                var pluginsButtons = new Array();
+                var pluginsButtons = [];
+
                 $.each(this.options.settings.plugins, function (groupIndex, group) {
                     $.each(group.items, function (itemIndex, item) {
                         pluginsButtons.push('cmsPlugin' + item.type);
@@ -96,12 +97,12 @@
                 this._insertPluginButtons(this.options.toolbar_CMS, pluginsButtons);
             },
 
-            _insertPluginButtons: function(toolbar, buttons) {
-                for( var toolbarIndex = 0; toolbarIndex < toolbar.length; toolbarIndex++) {
-                    if( typeof toolbar[toolbarIndex] === 'string') {
-                        if (toolbar[toolbarIndex] == 'cmsplugins') {
+            _insertPluginButtons: function (toolbar, buttons) {
+                for (var toolbarIndex = 0; toolbarIndex < toolbar.length; toolbarIndex++) {
+                    if (typeof toolbar[toolbarIndex] === 'string') {
+                        if (toolbar[toolbarIndex] === 'cmsplugins') {
                             toolbar.splice(toolbarIndex, 1);
-                            for( var buttonsIndex = 0; buttonsIndex < buttons.length; buttonsIndex++) {
+                            for (var buttonsIndex = 0; buttonsIndex < buttons.length; buttonsIndex++) {
                                 toolbar.splice(buttonsIndex, 0, buttons[buttons.length - buttonsIndex - 1]);
                             }
                             break;

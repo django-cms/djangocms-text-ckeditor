@@ -56,8 +56,9 @@
                     }, this.options, options);
 
                     // dynamicaly add plugins button
-                    if (settings.plugins_integration && settings.plugins_integration == 'buttons')
-                        this._initPluginButtons()
+                    if (settings.plugins_integration && settings.plugins_integration == 'buttons') {
+                        this._initPluginButtons();
+                    }
 
                     // add extra plugins that we absolutely must have
                     this.options.extraPlugins = this.options.extraPlugins +=

@@ -3,9 +3,7 @@ from django.contrib.admin import widgets as admin_widgets
 from django.db import models
 from django.forms.fields import CharField
 from django.utils.safestring import mark_safe
-from django.utils.six import add_metaclass
 
-from .compat import LTE_DJANGO_1_7
 from .html import clean_html
 from .widgets import TextEditorWidget
 
@@ -65,11 +63,6 @@ class HTMLField(models.TextField):
         # because it's handled by (from_db_value)
         if value is None:
             return value
-
-        if LTE_DJANGO_1_7:
-            # could be that value is already marked safe
-            # this is ok because mark_safe is idempotent
-            value = mark_safe(value)
         return value
 
     def formfield(self, **kwargs):
@@ -92,6 +85,3 @@ class HTMLField(models.TextField):
     def clean(self, value, model_instance):
         value = super(HTMLField, self).clean(value, model_instance)
         return clean_html(value, full=False)
-
-if LTE_DJANGO_1_7:
-    HTMLField = add_metaclass(models.SubfieldBase)(HTMLField)

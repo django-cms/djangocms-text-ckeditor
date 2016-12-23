@@ -45,6 +45,7 @@ def _get_default_parser():
     return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
                                **opts)
 
+
 DEFAULT_PARSER = _get_default_parser()
 
 

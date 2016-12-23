@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from distutils.version import LooseVersion
 
 import cms
@@ -41,6 +42,126 @@ def _user_can_change_placeholder(request, placeholder):
     return placeholder.has_change_permission(request)
 
 
+def post_add_plugin(operation, **kwargs):
+    from djangocms_history.actions import ADD_PLUGIN
+    from djangocms_history.helpers import get_bound_plugins, get_plugin_data
+    from djangocms_history.models import dump_json
+
+    text_plugin = kwargs['plugin']
+    new_plugin_ids = set(text_plugin._get_inline_plugin_ids())
+
+    if not new_plugin_ids:
+        # User has not embedded any plugins on the text
+        return
+
+    new_plugins = CMSPlugin.objects.filter(pk__in=new_plugin_ids)
+    new_plugins = get_bound_plugins(new_plugins)
+
+    # Extend the recorded added plugins to include the inline plugins (if any)
+    action = operation.actions.only('post_action_data').get(action=ADD_PLUGIN, order=1)
+    post_data = json.loads(action.post_action_data)
+    post_data['plugins'].extend(get_plugin_data(plugin) for plugin in new_plugins)
+    action.post_action_data = dump_json(post_data)
+    action.save(update_fields=['post_action_data'])
+
+
+def pre_change_plugin(operation, **kwargs):
+    from djangocms_history.actions import ADD_PLUGIN, DELETE_PLUGIN
+    from djangocms_history.helpers import get_bound_plugins, get_plugin_data
+
+    old_text_plugin = kwargs['old_plugin']
+    old_plugin_ids = set(old_text_plugin._get_inline_plugin_ids())
+
+    new_text_plugin = kwargs['new_plugin']
+    new_plugin_ids = set(new_text_plugin._get_inline_plugin_ids())
+
+    added_plugin_ids = new_plugin_ids.difference(old_plugin_ids)
+    deleted_plugin_ids = old_plugin_ids.difference(new_plugin_ids)
+    plugin_ids = added_plugin_ids | deleted_plugin_ids
+
+    if added_plugin_ids == deleted_plugin_ids:
+        # User has not added or removed embedded plugins
+        return
+
+    order = 1
+
+    # This app is a special case.
+    # We know the old and new tree orders because inline plugins
+    # have already been set on the database when this pre operation
+    # is executed.
+    old_tree = (
+        old_text_plugin
+        .cmsplugin_set
+        .filter(pk__in=old_plugin_ids)
+        .order_by('position')
+        .values_list('pk', flat=True)
+    )
+    old_tree = list(old_tree)
+
+    new_tree = (
+        new_text_plugin
+        .cmsplugin_set
+        .filter(pk__in=new_plugin_ids)
+        .order_by('position')
+        .values_list('pk', flat=True)
+    )
+    new_tree = list(new_tree)
+
+    plugins = CMSPlugin.objects.filter(pk__in=plugin_ids)
+    bound_plugins = list(get_bound_plugins(plugins))
+
+    if added_plugin_ids:
+        order += 1
+
+        pre_action_data = {
+            'order': old_tree,
+            'parent_id': old_text_plugin.pk,
+        }
+
+        post_plugin_data = [get_plugin_data(plugin) for plugin in bound_plugins
+                            if plugin.pk in added_plugin_ids]
+        post_action_data = {
+            'order': new_tree,
+            'parent_id': old_text_plugin.pk,
+            'plugins': post_plugin_data,
+        }
+
+        operation.create_action(
+            action=ADD_PLUGIN,
+            language=old_text_plugin.language,
+            placeholder=kwargs['placeholder'],
+            pre_data=pre_action_data,
+            post_data=post_action_data,
+            order=order,
+        )
+
+    if deleted_plugin_ids:
+        order += 1
+        deleted_plugins = [plugin for plugin in bound_plugins if plugin.pk in deleted_plugin_ids]
+        pre_plugin_data = [get_plugin_data(plugin) for plugin in deleted_plugins]
+        pre_action_data = {
+            'order': old_tree,
+            'parent_id': old_text_plugin.pk,
+            'plugins': pre_plugin_data,
+        }
+
+        post_plugin_data = [get_plugin_data(plugin, only_meta=True) for plugin in deleted_plugins]
+        post_action_data = {
+            'order': new_tree,
+            'parent_id': old_text_plugin.pk,
+            'plugins': post_plugin_data,
+        }
+
+        operation.create_action(
+            action=DELETE_PLUGIN,
+            language=old_text_plugin.language,
+            placeholder=kwargs['placeholder'],
+            pre_data=pre_action_data,
+            post_data=post_action_data,
+            order=order,
+        )
+
+
 class TextPlugin(CMSPluginBase):
     model = Text
     name = settings.TEXT_PLUGIN_NAME
@@ -50,6 +171,13 @@ class TextPlugin(CMSPluginBase):
     change_form_template = "cms/plugins/text_plugin_change_form.html"
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
+
+    # These are executed by the djangocms-history app
+    # We use them to inject inline plugin data
+    operation_handler_callbacks = {
+        'post_add_plugin': post_add_plugin,
+        'pre_change_plugin': pre_change_plugin,
+    }
 
     def get_editor_widget(self, request, plugins, plugin):
         """

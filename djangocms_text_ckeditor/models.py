@@ -78,12 +78,15 @@ class AbstractText(CMSPlugin):
         super(AbstractText, self).save(update_fields=('body',))
 
     def clean_plugins(self):
-        ids = plugin_tags_to_id_list(self.body)
+        ids = self._get_inline_plugin_ids()
         unbound_plugins = self.cmsplugin_set.exclude(pk__in=ids)
 
         for plugin in unbound_plugins:
             # delete plugins that are not referenced in the text anymore
             plugin.delete()
+
+    def _get_inline_plugin_ids(self):
+        return plugin_tags_to_id_list(self.body)
 
     def post_copy(self, old_instance, ziplist):
         """

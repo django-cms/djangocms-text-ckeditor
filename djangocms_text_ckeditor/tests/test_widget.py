@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from cms.api import add_plugin, create_page
-from cms.test_utils.testcases import URL_CMS_PLUGIN_EDIT, CMSTestCase
-from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor import html, settings
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
+from .base import BaseTestCase
 
-class WidgetTestCase(CMSTestCase, BaseTestCase):
+
+class WidgetTestCase(BaseTestCase):
+
     def setUp(self):
         self.super_user = self._create_user("test", True, True)
         self.default_parser = html.DEFAULT_PARSER
@@ -23,9 +24,10 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
         plugin = add_plugin(
             page.placeholders.get(slot='content'), 'TextPlugin', 'en', body='some text'
         )
-        url = '%s%s/' % (URL_CMS_PLUGIN_EDIT, plugin.pk)
+        endpoint = self.get_change_plugin_uri(plugin)
+
         with self.login_user_context(self.user):
-            response = self.client.get(url)
+            response = self.client.get(endpoint)
             self.assertContains(response, "group: 'Extra'")
             self.assertContains(response, "'title': 'Add a link'")
             self.assertContains(response, "group: 'Generic'")

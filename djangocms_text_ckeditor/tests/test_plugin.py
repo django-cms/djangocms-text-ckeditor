@@ -3,16 +3,13 @@ import re
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
-from cms.test_utils.testcases import CMSTestCase
-from cms.utils.urlutils import admin_reverse
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
 from django.template import RequestContext
 from django.utils.encoding import force_text
 from django.utils.html import escape
-from django.utils.http import urlencode
-from djangocms_helper.base_test import BaseTestCase
+from django.utils.http import urlencode, urlunquote
 
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
@@ -20,22 +17,10 @@ from djangocms_text_ckeditor.utils import (
     plugin_to_tag,
 )
 
+from .base import BaseTestCase
 
-class PluginActionsTestCase(CMSTestCase, BaseTestCase):
 
-    def get_admin_url(self, model, action, *args):
-        opts = model._meta
-        url_name = "{}_{}_{}".format(opts.app_label, opts.model_name, action)
-        return admin_reverse(url_name, args=args)
-
-    def _get_add_plugin_uri(self, placeholder, language='en'):
-        endpoint = placeholder.get_add_url()
-        uri = endpoint + '?' + urlencode({
-            'plugin_type': 'TextPlugin',
-            'placeholder_id': placeholder.pk,
-            'plugin_language': language,
-        })
-        return uri
+class PluginActionsTestCase(BaseTestCase):
 
     def _add_child_plugin(self, text_plugin, plugin_type='PicturePlugin', data_suffix=None):
         name = '{} record'.format(plugin_type)
@@ -102,28 +87,23 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         return self.get_request(post_data=data)
 
     def get_plugin_id_from_response(self, response):
+        url = urlunquote(response.url)
         # Ideal case, this looks like:
         # /en/admin/cms/page/edit-plugin/1/
-        return re.findall('\d+', response.url)[0]
+        return re.findall('\d+', url)[0]
 
     def test_add_and_edit_plugin(self):
         """
         Test that you can add a text plugin
         """
+        admin = self.get_superuser()
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
 
-        native_placeholder_admin = self.get_page_admin()
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
-        request = self.get_request()
-        request.GET = request.GET.copy()
-        request.GET.update({
-            'plugin_type': 'TextPlugin',
-            'placeholder_id': simple_placeholder.pk,
-            'plugin_language': 'en',
-            'plugin_parent': '',
-        })
-        response = native_placeholder_admin.add_plugin(request)
+        with self.login_user_context(admin):
+            response = self.client.get(endpoint)
 
         text_plugin_pk = self.get_plugin_id_from_response(response)
 
@@ -141,7 +121,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
 
         add_url = response.url
 
-        with self.login_user_context(self.get_superuser()):
+        with self.login_user_context(admin):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, cms_plugin)
             response = self.client.get(add_url)
@@ -151,7 +131,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             # Assert cancel token is present
             self.assertContains(response, action_token)
 
-        with self.login_user_context(self.get_superuser()):
+        with self.login_user_context(admin):
             data = {'body': "Hello world"}
             response = self.client.post(add_url, data)
 
@@ -172,18 +152,10 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
 
-        native_placeholder_admin = self.get_page_admin()
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
-        request = self.get_request()
-        request.GET = request.GET.copy()
-        request.GET.update({
-            'plugin_type': 'TextPlugin',
-            'placeholder_id': simple_placeholder.pk,
-            'plugin_language': 'en',
-            'plugin_parent': '',
-        })
-
-        response = native_placeholder_admin.add_plugin(request)
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, 302)
 
@@ -229,6 +201,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         """
         Test that you can add a text plugin
         """
+        admin = self.get_superuser()
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
 
@@ -277,7 +250,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_1)
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_4)
 
-        with self.login_user_context(self.get_superuser()):
+        with self.login_user_context(admin):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
 
@@ -346,7 +319,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.placeholders.get(slot='content')
 
-        endpoint = self._get_add_plugin_uri(simple_placeholder)
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
         with self.login_user_context(self.user):
             response = self.client.post(endpoint, {})
@@ -412,7 +385,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
                 context=context,
             )
 
-            endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)
+            endpoint = self.get_change_plugin_uri(text_plugin)
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 200)
@@ -459,7 +432,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
                 new_plugin_content='<img src="">',
             )
 
-            endpoint = self.get_admin_url(Page, 'edit_plugin', text_plugin.pk)
+            endpoint = self.get_change_plugin_uri(text_plugin)
             response = self.client.post(endpoint, {'body': overridden_text})
             text_plugin.refresh_from_db()
 
@@ -726,6 +699,7 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
         }
 
         endpoint = self.get_admin_url(Page, 'copy_plugins')
+        endpoint += '?' + urlencode({'cms_path': '/en/'})
 
         with self.login_user_context(self.user):
             response = self.client.post(endpoint, data)
@@ -739,3 +713,17 @@ class PluginActionsTestCase(CMSTestCase, BaseTestCase):
             idlist = sorted(plugin_tags_to_id_list(new_plugin.body))
             expected = sorted([plugins[4].pk, plugins[5].pk])
             self.assertEqual(idlist, expected)
+
+    def test_text_plugin_xss(self):
+        page = create_page('test page', 'page.html', u'en')
+        placeholder = page.placeholders.get(slot='content')
+        plugin = add_plugin(placeholder, 'TextPlugin', 'en', body='body')
+        endpoint = self.get_change_plugin_uri(plugin)
+
+        with self.login_user_context(self.user):
+            data = {
+                "body": "<div onload='do_evil_stuff();'>divcontent</div><a href='javascript:do_evil_stuff()'>acontent</a>"
+            }
+            response = self.client.post(endpoint, data)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(self.reload(plugin).body, '<div>divcontent</div><a>acontent</a>')

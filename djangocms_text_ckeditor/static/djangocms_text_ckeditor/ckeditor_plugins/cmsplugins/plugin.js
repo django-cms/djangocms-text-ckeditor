@@ -277,9 +277,10 @@
             $(dialog.parts.title.$).text(this.options.lang.edit);
 
             var textPluginUrl = window.location.href;
+            var path = encodeURIComponent(window.location.pathname);
             var childPluginUrl = textPluginUrl.replace(
                 /(add-plugin|edit-plugin).*$/,
-                'edit-plugin/' + id + '/?_popup=1&no_preview'
+                'edit-plugin/' + id + '/?_popup=1&no_preview&cms_history=0&cms_path=' + path
             );
 
             $(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
@@ -309,7 +310,9 @@
                 placeholder_id: this.options.placeholder_id,
                 plugin_type: item.attr('rel'),
                 plugin_parent: this.options.plugin_id,
-                plugin_language: this.options.plugin_language
+                plugin_language: this.options.plugin_language,
+                cms_path: window.location.pathname,
+                cms_history: 0
             };
 
             that.addPluginDialog(item, data);

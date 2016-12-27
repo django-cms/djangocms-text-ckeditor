@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+Unreleased
+----------
+
+* Fixed an issue when CKEditor was triggering unnecessary `delete-on-cancel`
+  requests after editing a plugin.
+
+
 3.3.1 (2016-11-02)
 ------------------
 

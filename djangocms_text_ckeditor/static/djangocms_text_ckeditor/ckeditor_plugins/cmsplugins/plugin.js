@@ -277,7 +277,7 @@
             $(dialog.parts.title.$).text(this.options.lang.edit);
 
             var textPluginUrl = window.location.href;
-            var path = encodeURIComponent(window.location.pathname);
+            var path = encodeURIComponent(window.parent.location.pathname + window.parent.location.search);
             var childPluginUrl = textPluginUrl.replace(
                 /(add-plugin|edit-plugin).*$/,
                 'edit-plugin/' + id + '/?_popup=1&no_preview&cms_history=0&cms_path=' + path
@@ -311,7 +311,7 @@
                 plugin_type: item.attr('rel'),
                 plugin_parent: this.options.plugin_id,
                 plugin_language: this.options.plugin_language,
-                cms_path: window.location.pathname,
+                cms_path: window.parent.location.pathname,
                 cms_history: 0
             };
 

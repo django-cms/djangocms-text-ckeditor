@@ -185,6 +185,7 @@
                     }],
                     onOk: function () {
                         var iframe = $(CKEDITOR.dialog.getCurrent().parts.contents.$).find('iframe').contents();
+                        var iframeUrl = iframe[0].URL;
 
                         iframe.find('form').submit();
 
@@ -193,8 +194,19 @@
 
                         CMS.API.Helpers.reloadBrowser = function () {
                             CKEDITOR.dialog.getCurrent().hide();
+                            var data = CMS.API.Helpers.dataBridge;
+                            var addedChildPlugin = false;
 
-                            that.insertPlugin(CMS.API.Helpers.dataBridge);
+                            if (iframeUrl.match(/add-plugin/)) {
+                                addedChildPlugin = true;
+                            }
+                            // in case it's a fresh text plugin children don't have to be
+                            // deleted separately
+                            if (!that.options.delete_on_cancel && addedChildPlugin) {
+                                that.child_plugins.push(data.plugin_id);
+                            }
+
+                            that.insertPlugin(data);
 
                             CMS.API.Helpers.reloadBrowser = reload;
                             return false;
@@ -349,12 +361,6 @@
                     plugin: data.plugin_id
                 }
             }).done(function (res) {
-                // in case it's a fresh text plugin children don't have to be
-                // deleted separately
-                if (!that.options.delete_on_cancel) {
-                    that.child_plugins.push(data.plugin_id);
-                }
-
                 that.editor.insertHtml(res, 'unfiltered_html');
                 that.editor.fire('updateSnapshot');
             });
@@ -378,31 +384,33 @@
                 if (!that.options.delete_on_cancel && !that.child_plugins.length) {
                     return;
                 }
-                e.preventDefault();
-                CMS.API.Toolbar.showLoader();
-                var data = {
-                    token: that.options.action_token
-                };
+                if (that.child_plugins.length) {
+                    e.preventDefault();
+                    CMS.API.Toolbar.showLoader();
+                    var data = {
+                        token: that.options.action_token
+                    };
 
-                if (!that.options.delete_on_cancel) {
-                    data.child_plugins = that.child_plugins;
-                }
-                $.ajax({
-                    method: 'POST',
-                    url: that.options.cancel_plugin_url,
-                    data: data,
-                    // use 'child_plugins' instead of default 'child_plugins[]'
-                    traditional: true
-                }).done(function () {
-                    CMS.API.Helpers.removeEventListener('modal-close.text-plugin-' + that.options.plugin_id);
-                    opts.instance.close();
-                }).fail(function (res) {
-                    CMS.API.Messages.open({
-                        message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
-                        delay: 0,
-                        error: true
+                    if (!that.options.delete_on_cancel) {
+                        data.child_plugins = that.child_plugins;
+                    }
+                    $.ajax({
+                        method: 'POST',
+                        url: that.options.cancel_plugin_url,
+                        data: data,
+                        // use 'child_plugins' instead of default 'child_plugins[]'
+                        traditional: true
+                    }).done(function () {
+                        CMS.API.Helpers.removeEventListener('modal-close.text-plugin-' + that.options.plugin_id);
+                        opts.instance.close();
+                    }).fail(function (res) {
+                        CMS.API.Messages.open({
+                            message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
+                            delay: 0,
+                            error: true
+                        });
                     });
-                });
+                }
             };
 
             CMS.API.Helpers.addEventListener(

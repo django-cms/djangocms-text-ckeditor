@@ -73,7 +73,8 @@ class TextEditorWidget(Textarea):
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
-            'settings': language.join(json.dumps(configuration, cls=DjangoJSONEncoder).split("{{ language }}")),
+            'settings': language.join(json.dumps(configuration, cls=DjangoJSONEncoder) \
+                                .split("{{ language }}")),
             'STATIC_URL': settings.STATIC_URL,
             'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,

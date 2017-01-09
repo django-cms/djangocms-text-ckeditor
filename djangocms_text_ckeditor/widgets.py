@@ -67,14 +67,15 @@ class TextEditorWidget(Textarea):
         # value or fallback to HTMLField
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
+
+        config = json.dumps(configuration, cls=DjangoJSONEncoder)
         context = {
             'ckeditor_class': self.ckeditor_class,
             'ckeditor_selector': ckeditor_selector,
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
-            'settings': language.join(json.dumps(configuration, cls=DjangoJSONEncoder) \
-                                .split("{{ language }}")),
+            'settings': config.replace("{{ language }}", language),
             'STATIC_URL': settings.STATIC_URL,
             'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,

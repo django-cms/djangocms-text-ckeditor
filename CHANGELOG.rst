@@ -1,11 +1,14 @@
 CHANGELOG
 =========
 
-Unreleased
-----------
+3.4.0 (unreleased)
+------------------
 
+* Introduced support for the djangocms-history app.
 * Fixed an issue when CKEditor was triggering unnecessary `delete-on-cancel`
   requests after editing a plugin.
+* Fixed a bug which raised an exception when using a lazy object on the plugin
+  configuration.
 
 
 3.3.1 (2016-11-02)

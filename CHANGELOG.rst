@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.4.0 (unreleased)
+3.4.0 (2017-01-23)
 ------------------
 
 * Introduced support for the djangocms-history app.

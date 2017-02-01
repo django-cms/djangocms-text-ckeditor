@@ -3,6 +3,7 @@ import re
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
+from cms.utils.urlutils import admin_reverse
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
@@ -26,7 +27,7 @@ class PluginActionsTestCase(BaseTestCase):
     def get_custom_admin_url(self, plugin_class, name):
         plugin_type = plugin_class.__name__.lower()
         url_name = "%s_%s_%s" % (plugin_class.model._meta.app_label, plugin_type, name)
-        return url_name
+        return admin_reverse(url_name)
 
     def _add_child_plugin(self, text_plugin, plugin_type='PicturePlugin', data_suffix=None):
         name = '{} record'.format(plugin_type)

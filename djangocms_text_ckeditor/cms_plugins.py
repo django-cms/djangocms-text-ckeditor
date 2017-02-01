@@ -322,8 +322,8 @@ class TextPlugin(CMSPluginBase):
         return url_patterns
 
     def get_admin_url_name(self, name):
-        model_name = self.model._meta.model_name
-        url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
+        plugin_type = self.__class__.__name__.lower()
+        url_name = "%s_%s_%s" % (self.model._meta.app_label, plugin_type, name)
         return url_name
 
     def _get_text_plugin_from_request(self, request, data):

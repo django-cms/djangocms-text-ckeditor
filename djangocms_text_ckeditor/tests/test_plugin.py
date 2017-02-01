@@ -18,9 +18,15 @@ from djangocms_text_ckeditor.utils import (
 )
 
 from .base import BaseTestCase
+from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
 
 class PluginActionsTestCase(BaseTestCase):
+
+    def get_custom_admin_url(self, plugin_class, name):
+        plugin_type = plugin_class.__name__.lower()
+        url_name = "%s_%s_%s" % (plugin_class.model._meta.app_label, plugin_type, name)
+        return url_name
 
     def _add_child_plugin(self, text_plugin, plugin_type='PicturePlugin', data_suffix=None):
         name = '{} record'.format(plugin_type)
@@ -330,7 +336,7 @@ class PluginActionsTestCase(BaseTestCase):
         cms_plugin = CMSPlugin.objects.get(pk=text_plugin_pk)
         text_plugin_class = cms_plugin.get_plugin_class_instance()
 
-        endpoint = self.get_admin_url(Text, 'delete_on_cancel')
+        endpoint = self.get_custom_admin_url(TextPlugin, 'delete_on_cancel')
 
         # Assert a standard user (no staff) can't delete ghost plugin
         with self.login_user_context(self.get_standard_user()):
@@ -455,7 +461,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
@@ -478,7 +484,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
@@ -513,7 +519,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
@@ -550,7 +556,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_standard_user()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
@@ -584,7 +590,7 @@ class PluginActionsTestCase(BaseTestCase):
 
         with self.login_user_context(self.get_superuser()):
             action_token = text_plugin_class.get_action_token(request, text_plugin)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
@@ -604,7 +610,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_superuser()):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin_2)
-            endpoint = self.get_admin_url(Text, 'render_plugin')
+            endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 

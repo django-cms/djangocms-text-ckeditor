@@ -12,6 +12,7 @@ from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
 
+from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
     _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
@@ -19,7 +20,6 @@ from djangocms_text_ckeditor.utils import (
 )
 
 from .base import BaseTestCase
-from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
 
 class PluginActionsTestCase(BaseTestCase):

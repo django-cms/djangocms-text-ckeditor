@@ -13,7 +13,7 @@
      * @returns {String} div|span
      */
     function getFakePluginElement(pluginMarkup) {
-        var innerTags = (pluginMarkup.match(/<([\S]*?)\s[\s\S]*?>/) || [0, false]).splice(1);
+        var innerTags = (pluginMarkup.match(/<\s*([^>\s]+)[\s\S]*?>/) || [0, false]).splice(1);
 
         var containsAnyBlockLikeElements = innerTags.some(function (tag) {
             return tag && CKEDITOR.dtd.$block[tag];
@@ -523,7 +523,7 @@
                 // unwrap them with jQuery (which uses browser mechanism) and then replace the divs back
                 if (newMarkup.match(/<cms-plugin[^>]*(?=data-cke-real-element-type=\"div)/)) {
                     // eslint-disable-next-line max-len
-                    var blockLevelPluginRegex = /<cms-plugin([^>]*(?=data-cke-real-element-type=\"div).*?>.*?<\/)cms-plugin>/g;
+                    var blockLevelPluginRegex = /<cms-plugin([^>]*(?=data-cke-real-element-type=\"div)[\s\S]*?>[\s\S]*?<\/)cms-plugin>/g;
 
                     var unwrappedMarkup = newMarkup.replace(blockLevelPluginRegex, '<div$1div>');
                     // have to create a wrapper, otherwise we won't be able to return markup back

@@ -13,3 +13,4 @@ djangocms_text_ckeditor.egg-info
 .idea
 .tox
 .coverage
+/node_modules/

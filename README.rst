@@ -187,6 +187,32 @@ For an  overview of all the available settings have a look here:
 http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
 
+Inline preview
+--------------
+
+The child plugins of TextPlugin can be rendered directly inside CKEditor if
+``text_editor_preview`` isn't ``False``. However there are few important points
+to note:
+
+- by default CKEditor doesn't load CSS of your project inside the editing area
+  and has specific settings regarding empty tags, which could mean that things
+  will not look as they should until CKEditor is configured correctly.
+
+  See examples:
+
+    - `add styles and js configuration`_
+    - `stop CKEditor from removing empty spans`_ (useful for iconfonts)
+
+- if you override widget default behaviour - be aware that it requires the
+  property "`allowedContent`_" `to contain`_ ``cms-plugin[*]`` as this custom tag is
+  what allows the inline previews to be rendered
+
+.. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
+.. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
+.. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
+.. _to contain: https://github.com/divio/djangocms-text-ckeditor/issues/405#issuecomment-276814197
+
+
 Drag & Drop Images
 ------------------
 

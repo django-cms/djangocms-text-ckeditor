@@ -15,8 +15,8 @@
 // CMS.$ will be passed for $
 $(document).ready(function () {
     function initCMSCKEditor{{ ckeditor_function }}() {
-        if ($('.CMS_CKEditor:visible').length > 0) {
-            $('.CMS_CKEditor:visible').each(function() {
+        if ($('#{{ ckeditor_selector }}:visible').length > 0) {
+            $('#{{ ckeditor_selector }}:visible').each(function() {
                 var editor = $(this);
 
                 if (editor.data('isCKEditorInitialized')) {

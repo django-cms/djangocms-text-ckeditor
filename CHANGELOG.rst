@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.4.1 (unreleased)
+3.5.0 (unreleased)
 ------------------
 
 * Fixed an issue where the rendered HTML of plugins nested in text plugins

@@ -106,7 +106,7 @@ You can override the setting ``CKEDITOR_SETTINGS`` in your settings.py::
     CKEDITOR_SETTINGS = {
         'language': '{{ language }}',
         'toolbar': 'CMS',
-        'skin': 'moono',
+        'skin': 'moono-lisa',
     }
 
 This is the default dict that holds all **CKEditor** settings.
@@ -123,7 +123,7 @@ To customize the plugin editor, use `toolbar_CMS` attribute, as in::
             ['cmsplugins', '-', 'ShowBlocks'],
             ['Format', 'Styles'],
         ],
-        'skin': 'moono',
+        'skin': 'moono-lisa',
     }
 
 Customizing HTMLField editor
@@ -139,7 +139,7 @@ models, use `toolbar_HTMLField` attribute::
             ['ShowBlocks'],
             ['Format', 'Styles'],
         ],
-        'skin': 'moono',
+        'skin': 'moono-lisa',
     }
 
 
@@ -391,7 +391,7 @@ djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldry
 About CKEditor
 --------------
 
-The current integrated Version of CKeditor is **4.5.11**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.6.2**. For a full documentation visit: http://ckeditor.com/
 
 Building the JavaScript
 -----------------------

@@ -26,6 +26,9 @@
 
 
 /* add / edit plugin modal */
+.cms-ckeditor-dialog .cke_dialog_body {
+    border: 1px solid #d1d1d1;
+}
 .cms-ckeditor-dialog .cke_dialog_contents_body {
     padding: 3px 0 !important;
 }

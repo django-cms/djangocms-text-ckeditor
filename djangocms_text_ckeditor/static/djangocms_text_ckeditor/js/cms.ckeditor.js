@@ -11,7 +11,7 @@
             options: {
                 // ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
                 language: 'en',
-                skin: 'moono',
+                skin: 'moono-lisa',
                 toolbar_CMS: [
                     ['Undo', 'Redo'],
                     ['cmsplugins', 'cmswidget', '-', 'ShowBlocks'],

@@ -1,9 +1,9 @@
 {% extends change_form_template|default:"admin/cms/page/plugin/change_form.html" %}
-{% load admin_static %}
+{% load cms_static %}
 
 {% block extrahead %}
 {{ block.super }}
-<script src="{% static "cms/js/dist/bundle.admin.base.min.js" %}"></script>
+<script src="{% static_with_version "cms/js/dist/bundle.admin.base.min.js" %}"></script>
 <script>
 (function($) {
 // CMS.$ will be passed for $

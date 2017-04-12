@@ -4,11 +4,48 @@ from django import forms
 from django.core import signing
 from django.core.signing import BadSignature
 from django.forms.models import ModelForm
-from django.utils.encoding import force_text
+from django.template import RequestContext
 from django.utils.translation import ugettext
 
 from .models import Text
-from .utils import plugin_tags_to_id_list
+from .utils import _render_cms_plugin, plugin_tags_to_id_list, plugin_to_tag
+
+
+class ActionTokenValidationForm(forms.Form):
+
+    token = forms.CharField(required=True)
+
+    def get_id_from_token(self, session_id):
+        payload = self.cleaned_data['token']
+
+        signer = signing.Signer(salt=session_id)
+
+        try:
+            return signer.unsign(payload)
+        except BadSignature:
+            return False
+
+
+class RenderPluginForm(forms.Form):
+    plugin = forms.ModelChoiceField(
+        queryset=CMSPlugin.objects.none(),
+        required=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.text_plugin = kwargs.pop('text_plugin')
+        super(RenderPluginForm, self).__init__(*args, **kwargs)
+        self.fields['plugin'].queryset = self.get_child_plugins()
+
+    def get_child_plugins(self):
+        return self.text_plugin.get_descendants()
+
+    def render_plugin(self, request):
+        plugin = self.cleaned_data['plugin']
+        context = RequestContext(request)
+        context['request'] = request
+        rendered_content = _render_cms_plugin(plugin, context)
+        return plugin_to_tag(plugin, content=rendered_content, admin=True)
 
 
 class DeleteOnCancelForm(forms.Form):
@@ -16,7 +53,6 @@ class DeleteOnCancelForm(forms.Form):
         queryset=CMSPlugin.objects.none(),
         required=False,
     )
-    token = forms.CharField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.text_plugin = kwargs.pop('text_plugin')
@@ -33,19 +69,6 @@ class DeleteOnCancelForm(forms.Form):
             message = ugettext("Can't delete a saved plugin.")
             raise forms.ValidationError(message, code='invalid')
         return self.cleaned_data
-
-    def is_valid_token(self, session_id):
-        plugin_id = force_text(self.text_plugin.pk)
-        payload = ':'.join([plugin_id, self.cleaned_data['token']])
-
-        signer = signing.Signer(salt=session_id)
-
-        try:
-            signer.unsign(payload)
-        except BadSignature:
-            return False
-        else:
-            return True
 
     def get_child_plugins(self):
         # We use this queryset to limit the plugins

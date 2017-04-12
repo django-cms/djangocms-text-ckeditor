@@ -5,10 +5,13 @@ Text Plugin for django-cms with CK-Editor.
 
 The latest version of this package supports:
 
-* Django 1.6+
-* django CMS 3.2+
+* Django >= 1.8
+* django CMS >= 3.3
 
 .. WARNING::
+   - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
+   - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x (e.g.: version 3.1.0).
+   - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
    - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
    - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
    - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
@@ -18,7 +21,7 @@ The latest version of this package supports:
 Installation
 ------------
 
-This plugin requires `django CMS` 3.2+ or higher to be properly installed.
+This plugin requires `django CMS` 3.3 or higher to be properly installed.
 
 * In your projects `virtualenv`, run ``pip install djangocms-text-ckeditor``.
 * Add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS`` (the order does not matter).
@@ -184,6 +187,32 @@ For an  overview of all the available settings have a look here:
 http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
 
+Inline preview
+--------------
+
+The child plugins of TextPlugin can be rendered directly inside CKEditor if
+``text_editor_preview`` isn't ``False``. However there are few important points
+to note:
+
+- by default CKEditor doesn't load CSS of your project inside the editing area
+  and has specific settings regarding empty tags, which could mean that things
+  will not look as they should until CKEditor is configured correctly.
+
+  See examples:
+
+    - `add styles and js configuration`_
+    - `stop CKEditor from removing empty spans`_ (useful for iconfonts)
+
+- if you override widget default behaviour - be aware that it requires the
+  property "`allowedContent`_" `to contain`_ ``cms-plugin[*]`` as this custom tag is
+  what allows the inline previews to be rendered
+
+.. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
+.. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
+.. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
+.. _to contain: https://github.com/divio/djangocms-text-ckeditor/issues/405#issuecomment-276814197
+
+
 Drag & Drop Images
 ------------------
 
@@ -229,7 +258,7 @@ within ``Placeholder`` fields.
 If you need to allow additional plugins to be embedded in a HTML field, convert the ``HTMLField`` to a ``Placeholderfield``
 and configure the placeholder to only accept TextPlugin. For more information on using placeholders outside of the CMS see:
 
-http://django-cms.readthedocs.org/en/latest/extending_cms/placeholders.html
+http://docs.django-cms.org/en/latest/introduction/templates_placeholders.html
 
 
 Auto Hyphenate Text
@@ -298,7 +327,7 @@ to render out all child plugins located in the ``body`` field. For example::
 
 You can further `customize your plugin`_ as other plugins.
 
-.. _customize your plugin: http://django-cms.readthedocs.org/en/latest/extending_cms/custom_plugins.html
+.. _customize your plugin: http://docs.django-cms.org/en/latest/how_to/custom_plugins.html
 
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
@@ -306,7 +335,7 @@ Adding plugins to the "CMS Plugins" dropdown
 If you have another plugin that you want to use inside texts you can make them appear in the dropdown by making them text_enabled.
 Check in `django-cms doc`_ how to do this.
 
-.. _django-cms doc: http://django-cms.readthedocs.org/en/develop/reference/plugins.html#text-enabled
+.. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#text-enabled
 
 Configurable sanitizer
 ----------------------
@@ -362,4 +391,20 @@ djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldry
 About CKEditor
 --------------
 
-The current integrated Version of CKeditor is **4.5.4**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.5.11**. For a full documentation visit: http://ckeditor.com/
+
+Building the JavaScript
+-----------------------
+
+``djangocms-text-ckeditor`` distributes a javascript bundle required for the
+plugin to work, which contains CKEditor itself and all the necessary plugins for
+functioning within CMS. To build the bundle you need to have to install
+dependencies with ``npm install`` and then to run ``gulp bundle``.
+
+This command also updates the file name loaded based on the file contents.
+
+Updating the CKEditor
+---------------------
+
+Make sure to use the url in `build config
+<https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.

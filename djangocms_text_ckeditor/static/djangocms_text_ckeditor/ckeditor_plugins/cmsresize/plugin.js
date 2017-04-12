@@ -1,3 +1,7 @@
+(function ($) {
+if (CKEDITOR && CKEDITOR.plugins && CKEDITOR.plugins.registered && CKEDITOR.plugins.registered.cmsresize) {
+    return;
+}
 /**
  * Modified version of the resize plugin to support touch events.
  *
@@ -173,3 +177,4 @@ CKEDITOR.plugins.add( 'cmsresize', {
  * @cfg {String} [resize_dir='vertical']
  * @member CKEDITOR.config
  */
+})(CMS.$);

@@ -11,7 +11,12 @@
 .djangocms_text_ckeditor-text .cke_chrome { float: none; }
 
 /* insure dialog has relative positioning for absolute positioned content */
-.cke_dialog_contents_body { position:relative; }
+.cms-ckeditor-dialog .cke_dialog {
+    position: fixed !important;
+}
+.cke_dialog_contents_body {
+    position: relative;
+}
 
 /* show cmsplugin label */
 .cke_button__cmsplugins .cke_button_label { padding-left:5px; padding-right:5px;  display:inline; }
@@ -60,6 +65,8 @@
 .cke_panel {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
+    height: auto;
+    max-height: 300px;
 }
 .cke_panel .cke_panel_frame {
     display: block;

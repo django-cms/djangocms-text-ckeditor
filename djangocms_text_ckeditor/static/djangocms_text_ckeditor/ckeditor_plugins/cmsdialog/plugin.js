@@ -1,5 +1,9 @@
+(function ($) {
+if (CKEDITOR && CKEDITOR.plugins && CKEDITOR.plugins.registered && CKEDITOR.plugins.registered.cmsdialog) {
+    return;
+}
 /**
- * Modified version of the resize plugin to support touch events.
+ * Modified version of the dialog plugin to support touch events.
  *
  * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
@@ -2117,8 +2121,9 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
             coverKey = CKEDITOR.tools.genKey( backgroundColorStyle, backgroundCoverOpacity, baseFloatZIndex ),
             coverElement = covers[ coverKey ];
 
+        CMS.$('.cke_dialog_background_cover').remove();
         if ( !coverElement ) {
-			CMS.$('.cke_dialog_background_cover:not(".cms-ckeditor-dialog-background-cover")').remove();
+            covers = {};
             var html = [
                 '<div tabIndex="-1" style="position: ', ( CKEDITOR.env.ie6Compat ? 'absolute' : 'fixed' ),
                 '; z-index: ', baseFloatZIndex,
@@ -2223,12 +2228,12 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
     }
 
     function hideCover( editor ) {
+		CMS.$('.cke_dialog_background_cover').remove();
         if ( !currentCover )
             return;
 
         editor.focusManager.remove( currentCover );
         var win = CKEDITOR.document.getWindow();
-		// CMS.$('.cke_dialog_background_cover').remove();
         currentCover.hide();
         win.removeListener( 'resize', resizeCover );
 
@@ -3401,3 +3406,4 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * @param data
  * @param {Number} data The new state. Either {@link CKEDITOR#DIALOG_STATE_IDLE} or {@link CKEDITOR#DIALOG_STATE_BUSY}.
  */
+})(CMS.$);

@@ -7,6 +7,9 @@ def gettext(s):
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
+        'easy_thumbnails',
+        'filer',
+        'mptt',
         'djangocms_picture',
         'djangocms_link',
         'djangocms_text_ckeditor.test_app',
@@ -39,7 +42,7 @@ HELPER_SETTINGS = {
             'hide_untranslated': False,
         },
     },
-    'CMS_PERMISSION': True,
+    'CMS_PERMISSION': False,
     'CMS_PLACEHOLDER_CONF': {
         'content': {
             'plugins': ['TextPlugin', 'PicturePlugin'],
@@ -70,7 +73,13 @@ HELPER_SETTINGS = {
         },
     },
     'FILE_UPLOAD_TEMP_DIR': mkdtemp(),
-    'SITE_ID': 1
+    'SITE_ID': 1,
+    'THUMBNAIL_PROCESSORS': (
+        'easy_thumbnails.processors.colorspace',
+        'easy_thumbnails.processors.autocrop',
+        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        'easy_thumbnails.processors.filters',
+    ),
 }
 
 

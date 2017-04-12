@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from cms.api import add_plugin, create_page
-from cms.test_utils.testcases import URL_CMS_PLUGIN_EDIT, CMSTestCase
-from djangocms_helper.base_test import BaseTestCase
 
 from djangocms_text_ckeditor import html, settings
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
+from .base import BaseTestCase
 
-class WidgetTestCase(CMSTestCase, BaseTestCase):
+
+class WidgetTestCase(BaseTestCase):
+
     def setUp(self):
         self.super_user = self._create_user("test", True, True)
         self.default_parser = html.DEFAULT_PARSER
@@ -23,13 +24,14 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
         plugin = add_plugin(
             page.placeholders.get(slot='content'), 'TextPlugin', 'en', body='some text'
         )
-        url = '%s%s/' % (URL_CMS_PLUGIN_EDIT, plugin.pk)
+        endpoint = self.get_change_plugin_uri(plugin)
+
         with self.login_user_context(self.user):
-            response = self.client.get(url)
+            response = self.client.get(endpoint)
             self.assertContains(response, "group: 'Extra'")
             self.assertContains(response, "'title': 'Add a link'")
             self.assertContains(response, "group: 'Generic'")
-            self.assertContains(response, "'title': 'Picture'")
+            self.assertContains(response, "'title': 'Image'")
 
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')
@@ -42,16 +44,16 @@ class WidgetTestCase(CMSTestCase, BaseTestCase):
         page = create_page(title='pagina', template='page.html', language='en')
         placeholder = page.placeholders.get(slot='content')
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body="Lorem ipsum")
-        test_image = self.create_django_image_obj()
+        test_image = self.create_filer_image_object()
         pic_plugin = add_plugin(
-            placeholder, 'PicturePlugin', 'en', target=plugin, image=test_image, alt="Foo"
+            placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image
         )
         plugin.body = '%s %s' % (plugin.body, plugin_to_tag(pic_plugin))
         plugin.save()
         page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, 'Lorem ipsum')
-        self.assertContains(response, '<img src="/media/%s' % pic_plugin.image)
+        self.assertContains(response, '<img src="/media/')
 
     def test_contain_text(self):
         page = create_page(title='home', template='page.html', language='en')

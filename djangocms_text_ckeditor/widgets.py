@@ -3,6 +3,7 @@ import json
 from copy import deepcopy
 
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -15,7 +16,8 @@ class TextEditorWidget(Textarea):
 
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
-                 cancel_url=None, cancel_token=None, delete_on_cancel=False):
+                 cancel_url=None, render_plugin_url=None, action_token=None,
+                 delete_on_cancel=False):
         """
         Create a widget for editing text + plugins.
 
@@ -42,7 +44,8 @@ class TextEditorWidget(Textarea):
         else:
             self.configuration = text_settings.CKEDITOR_SETTINGS
         self.cancel_url = cancel_url
-        self.cancel_token = cancel_token
+        self.render_plugin_url = render_plugin_url
+        self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
 
     def render_textarea(self, name, value, attrs=None):
@@ -64,13 +67,15 @@ class TextEditorWidget(Textarea):
         # value or fallback to HTMLField
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
+
+        config = json.dumps(configuration, cls=DjangoJSONEncoder)
         context = {
             'ckeditor_class': self.ckeditor_class,
             'ckeditor_selector': ckeditor_selector,
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
-            'settings': language.join(json.dumps(configuration).split("{{ language }}")),
+            'settings': config.replace("{{ language }}", language),
             'STATIC_URL': settings.STATIC_URL,
             'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,

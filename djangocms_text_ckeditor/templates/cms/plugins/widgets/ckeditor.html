@@ -15,10 +15,10 @@
 (function($) {
 // CMS.$ will be passed for $
 $(document).ready(function () {
-	function initCMSCKEditor{{ ckeditor_function }}() {
-		if ($('#{{ ckeditor_selector }}:visible').length > 0) {
-			$('#{{ ckeditor_selector }}:visible').each(function() {
-				$(this).hide();
+    function initCMSCKEditor{{ ckeditor_function }}() {
+        if ($('#{{ ckeditor_selector }}:visible').length > 0) {
+            $('#{{ ckeditor_selector }}:visible').each(function() {
+                var editor = $(this);
 
 				var container = $(this).attr('id');
 				CMS.CKEditor.init(container, {{ settings|safe }}, {

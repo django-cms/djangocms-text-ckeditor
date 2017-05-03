@@ -1,11 +1,12 @@
 CHANGELOG
 =========
 
-3.4.1 (unreleased)
+3.5.0 (unreleased)
 ------------------
 
 * Fixed an issue where the rendered HTML of plugins nested in text plugins
   leaked and became editable in some cases.
+* Updated CKEditor to 4.6.2
 
 
 3.4.0 (2017-01-23)

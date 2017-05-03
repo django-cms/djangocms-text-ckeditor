@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
     'language': '{{ language }}',
     'toolbar': 'CMS',
-    'skin': 'moono',
+    'skin': 'moono-lisa',
     'toolbarCanCollapse': False,
 })
 

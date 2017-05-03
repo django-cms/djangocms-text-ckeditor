@@ -11,18 +11,20 @@
             options: {
                 // ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
                 language: 'en',
-                skin: 'moono',
+                skin: 'moono-lisa',
                 toolbar_CMS: [
                     ['Undo', 'Redo'],
                     ['cmsplugins', 'cmswidget', '-', 'ShowBlocks'],
                     ['Format', 'Styles'],
                     ['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
+                    ['Scayt'],
                     ['Maximize', ''],
                     '/',
-                    ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
                     ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                     ['HorizontalRule'],
-                    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
+                    ['NumberedList', 'BulletedList'],
+                    ['Outdent', 'Indent', '-', 'Blockquote', '-', 'Link', 'Unlink', '-', 'Table'],
                     ['Source']
                 ],
                 toolbar_HTMLField: [
@@ -30,13 +32,15 @@
                     ['ShowBlocks'],
                     ['Format', 'Styles'],
                     ['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
+                    ['Scayt'],
                     ['Maximize', ''],
                     '/',
-                    ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
                     ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                     ['HorizontalRule'],
                     ['Link', 'Unlink'],
-                    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Table'],
+                    ['NumberedList', 'BulletedList'],
+                    ['Outdent', 'Indent', '-', 'Blockqote', '-', 'Link', 'Unlink', '-', 'Table'],
                     ['Source']
                 ],
 

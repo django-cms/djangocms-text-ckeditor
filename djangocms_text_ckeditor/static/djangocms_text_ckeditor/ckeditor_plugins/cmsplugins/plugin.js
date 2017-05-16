@@ -190,9 +190,9 @@
                         iframe.find('form').submit();
 
                         // catch the reload event and reattach
-                        var reload = CMS.API.Helpers.reloadBrowser;
+                        var onSave = CMS.API.Helpers.onPluginSave;
 
-                        CMS.API.Helpers.reloadBrowser = function () {
+                        CMS.API.Helpers.onPluginSave = function () {
                             CKEDITOR.dialog.getCurrent().hide();
                             var data = CMS.API.Helpers.dataBridge;
                             var addedChildPlugin = false;
@@ -208,7 +208,7 @@
 
                             that.insertPlugin(data);
 
-                            CMS.API.Helpers.reloadBrowser = reload;
+                            CMS.API.Helpers.onPluginSave = onSave;
                             return false;
                         };
                         return false;

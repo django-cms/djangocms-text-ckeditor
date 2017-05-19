@@ -397,6 +397,7 @@
                     if (!that.options.delete_on_cancel) {
                         data.child_plugins = that.child_plugins;
                     }
+
                     $.ajax({
                         method: 'POST',
                         url: that.options.cancel_plugin_url,
@@ -404,7 +405,9 @@
                         // use 'child_plugins' instead of default 'child_plugins[]'
                         traditional: true
                     }).done(function () {
-                        CMS.API.Helpers.removeEventListener('modal-close.text-plugin-' + that.options.plugin_id);
+                        CMS.API.Helpers.removeEventListener(
+                            'modal-close.text-plugin.text-plugin-' + that.options.plugin_id
+                        );
                         opts.instance.close();
                     }).fail(function (res) {
                         CMS.API.Messages.open({
@@ -417,7 +420,7 @@
             };
 
             CMS.API.Helpers.addEventListener(
-                'modal-close.text-plugin-' + that.options.plugin_id,
+                'modal-close.text-plugin.text-plugin-' + that.options.plugin_id,
                 cancelModalCallback
             );
         },

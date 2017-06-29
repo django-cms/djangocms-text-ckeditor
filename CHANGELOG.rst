@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+3.5.1 (unreleased)
+------------------
+
+* Introduced support for django CMS 3.5.0
+* Fixed a regression which prevented multiple HTMLFields
+  from having different configurations.
+
+
 3.5.0 (2017-05-03)
 ------------------
 

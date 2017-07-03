@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+from collections import OrderedDict
 from functools import wraps
 
 from classytags.utils import flatten_context
@@ -51,11 +52,11 @@ def random_comment_exempt(view_func):
 
 
 def plugin_to_tag(obj, content='', admin=False):
-    plugin_attrs = {
-        'id': obj.pk,
-        'icon_alt': force_escape(obj.get_instance_icon_alt()),
-        'content': content,
-    }
+    plugin_attrs = OrderedDict(
+        id=obj.pk,
+        icon_alt=force_escape(obj.get_instance_icon_alt()),
+        content=content,
+    )
 
     if admin:
         # Include extra attributes when rendering on the admin

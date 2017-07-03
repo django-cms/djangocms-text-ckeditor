@@ -1,5 +1,8 @@
 from django import template
 
+from ..compat import LTE_CMS_3_3
+
+
 register = template.Library()
 
 
@@ -7,18 +10,19 @@ register = template.Library()
 def render_plugin_preview(context, plugin):
     request = context['request']
 
-    try:
-        toolbar = request.toolbar
-        content_renderer = toolbar.content_renderer
-    except AttributeError:
-        content_renderer = None
+    if LTE_CMS_3_3:
+        return plugin.render_plugin(context)
 
-    if content_renderer:
-        content = content_renderer.render_plugin(
-            instance=plugin,
-            context=context,
-            editable=False,
-        )
-    else:
-        content = plugin.render_plugin(context)
+    try:
+        content_renderer = request.toolbar.content_renderer
+    except AttributeError:
+        from cms.plugin_rendering import ContentRenderer
+
+        content_renderer = ContentRenderer(request)
+
+    content = content_renderer.render_plugin(
+        instance=plugin,
+        context=context,
+        editable=False,
+    )
     return content

@@ -26,6 +26,6 @@ install:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PYVER=py35; fi"
 
 # command to run tests, e.g. python setup.py test
-script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS",isort,pep8
+script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS",pep8
 
 after_success: coveralls

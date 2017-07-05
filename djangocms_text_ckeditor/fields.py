@@ -83,5 +83,7 @@ class HTMLField(models.TextField):
         return super(HTMLField, self).formfield(**defaults)
 
     def clean(self, value, model_instance):
+        # This needs to be marked safe as well because the form field's
+        # clean method is not called on model.full_clean()
         value = super(HTMLField, self).clean(value, model_instance)
-        return clean_html(value, full=False)
+        return mark_safe(clean_html(value, full=False))

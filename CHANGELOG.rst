@@ -7,6 +7,8 @@ CHANGELOG
 * Introduced support for django CMS 3.5.0
 * Fixed a regression which prevented multiple HTMLFields
   from having different configurations.
+* Fixed a bug where text coming from ``HtmlField`` was escaped
+  when using it with other third party apps like django-parler.
 
 
 3.5.0 (2017-05-03)

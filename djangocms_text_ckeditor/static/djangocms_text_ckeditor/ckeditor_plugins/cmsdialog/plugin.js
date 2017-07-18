@@ -2121,7 +2121,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
             coverKey = CKEDITOR.tools.genKey( backgroundColorStyle, backgroundCoverOpacity, baseFloatZIndex ),
             coverElement = covers[ coverKey ];
 
-        CMS.$('.cke_dialog_background_cover').remove();
+        CMS.$('.cke_dialog_background_cover:not(.cms-ckeditor-dialog-background-cover)').remove();
         if ( !coverElement ) {
             covers = {};
             var html = [
@@ -2228,7 +2228,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
     }
 
     function hideCover( editor ) {
-		CMS.$('.cke_dialog_background_cover').remove();
+        CMS.$('.cke_dialog_background_cover:not(.cms-ckeditor-dialog-background-cover)').remove();
         if ( !currentCover )
             return;
 

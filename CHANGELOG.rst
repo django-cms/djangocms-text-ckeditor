@@ -9,6 +9,9 @@ CHANGELOG
   from having different configurations.
 * Fixed a bug where text coming from ``HtmlField`` was escaped
   when using it with other third party apps like django-parler.
+* Fixed a bug where dialog backdrop would've been incorrectly removed allowing
+  for disallowed actions.
+* Fixed a bug when a dialog would open underneath maximized editor.
 
 
 3.5.0 (2017-05-03)

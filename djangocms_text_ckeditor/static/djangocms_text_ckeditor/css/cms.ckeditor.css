@@ -13,6 +13,13 @@
 /* insure dialog has relative positioning for absolute positioned content */
 .cms-ckeditor-dialog .cke_dialog {
     position: fixed !important;
+    z-index: 9999 !important;
+}
+.cms-ckeditor-dialog-background-cover {
+    z-index: 9998 !important;
+}
+.cke_dialog_contents {
+    user-select: none;
 }
 .cke_dialog_contents_body {
     position: relative;

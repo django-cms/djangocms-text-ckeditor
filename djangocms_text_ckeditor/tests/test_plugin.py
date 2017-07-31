@@ -721,6 +721,15 @@ class PluginActionsTestCase(BaseTestCase):
             expected = sorted([plugins[4].pk, plugins[5].pk])
             self.assertEqual(idlist, expected)
 
+    def test_plugin_tags_to_id_list(self):
+        pairs = (
+            ('<cms-plugin id="1"></cms-plugin><cms-plugin id="2"></cms-plugin>', [1, 2]),
+            ('<cms-plugin alt="<h1>markup</h1>" id="1"></cms-plugin><cms-plugin id="1"></cms-plugin>', [1, 1]),
+        )
+
+        for markup, expected in pairs:
+            self.assertEqual(plugin_tags_to_id_list(markup), expected)
+
     def test_text_plugin_xss(self):
         page = create_page('test page', 'page.html', u'en')
         placeholder = page.placeholders.get(slot='content')

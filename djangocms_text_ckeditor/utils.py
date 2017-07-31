@@ -13,7 +13,7 @@ from django.utils.decorators import available_attrs
 from django.utils.functional import LazyObject
 
 
-OBJ_ADMIN_RE_PATTERN = r'<cms-plugin [^>]*\bid="(?P<pk>\d+)"[^>]*/?>.*?</cms-plugin>'
+OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 

@@ -335,7 +335,7 @@ Adding plugins to the "CMS Plugins" dropdown
 If you have another plugin that you want to use inside texts you can make them appear in the dropdown by making them text_enabled.
 Check in `django-cms doc`_ how to do this.
 
-.. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#text-enabled
+.. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#cms.plugin_base.CMSPluginBase.text_enabled
 
 Configurable sanitizer
 ----------------------

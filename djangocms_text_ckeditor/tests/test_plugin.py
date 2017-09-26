@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import re
 
 from cms.api import add_plugin, create_page, create_title
@@ -711,7 +712,6 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.user):
             response = self.client.post(endpoint, data)
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.content.decode('utf8').count('"position":'), 3)
             self.assertEqual(CMSPlugin.objects.filter(language='en').count(), 3)
             self.assertEqual(CMSPlugin.objects.filter(language=translation.language).count(), 3)
 
@@ -720,6 +720,50 @@ class PluginActionsTestCase(BaseTestCase):
             idlist = sorted(plugin_tags_to_id_list(new_plugin.body))
             expected = sorted([plugins[4].pk, plugins[5].pk])
             self.assertEqual(idlist, expected)
+
+    def test_copy_plugin_callback(self):
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.placeholders.get(slot='content')
+
+        text_plugin_1 = self._add_text_plugin(simple_placeholder)
+
+        child_plugin_1_a = self._add_child_plugin(
+            text_plugin_1,
+            plugin_type='LinkPlugin',
+        )
+
+        text_plugin_1 = self.add_plugin_to_text(text_plugin_1, child_plugin_1_a)
+
+        child_plugin_1_b = self._add_child_plugin(
+            text_plugin_1,
+            plugin_type='LinkPlugin',
+        )
+
+        text_plugin_1 = self.add_plugin_to_text(text_plugin_1, child_plugin_1_b)
+
+        text_plugin_2 = copy.copy(text_plugin_1)
+        text_plugin_2.pk = None
+        text_plugin_2.save()
+
+        child_plugin_2_a = self._add_child_plugin(
+            text_plugin_2,
+            plugin_type='LinkPlugin',
+        )
+        child_plugin_2_b = self._add_child_plugin(
+            text_plugin_2,
+            plugin_type='LinkPlugin',
+        )
+        source_map = {
+            child_plugin_1_a.pk: child_plugin_2_a,
+            child_plugin_1_b.pk: child_plugin_2_b,
+        }
+
+        TextPlugin.do_post_copy(text_plugin_2, source_map)
+
+        text_plugin_2.refresh_from_db()
+        idlist = sorted(plugin_tags_to_id_list(text_plugin_2.body))
+        expected = sorted([child_plugin_2_a.pk, child_plugin_2_b.pk])
+        self.assertEqual(idlist, expected)
 
     def test_plugin_tags_to_id_list(self):
         pairs = (

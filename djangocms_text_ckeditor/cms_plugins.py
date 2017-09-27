@@ -29,7 +29,13 @@ from django.views.decorators.http import require_POST
 from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
-from .utils import plugin_tags_to_admin_html, plugin_tags_to_user_html, random_comment_exempt
+from .utils import (
+    plugin_tags_to_admin_html,
+    plugin_tags_to_id_list,
+    plugin_tags_to_user_html,
+    random_comment_exempt,
+    replace_plugin_tags,
+)
 from .widgets import TextEditorWidget
 
 
@@ -178,6 +184,18 @@ class TextPlugin(CMSPluginBase):
         'post_add_plugin': post_add_plugin,
         'pre_change_plugin': pre_change_plugin,
     }
+
+    if CMS_34:
+        # On django CMS 3.5 this attribute is set automatically
+        # when do_post_copy is defined in the plugin class.
+        _has_do_post_copy = True
+
+    @classmethod
+    def do_post_copy(self, instance, source_map):
+        ids = plugin_tags_to_id_list(instance.body)
+        ids_map = {pk: source_map[pk].pk for pk in ids if pk in source_map}
+        new_text = replace_plugin_tags(instance.body, ids_map)
+        self.model.objects.filter(pk=instance.pk).update(body=new_text)
 
     def get_editor_widget(self, request, plugins, plugin):
         """

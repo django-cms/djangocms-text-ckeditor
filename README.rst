@@ -258,7 +258,7 @@ within ``Placeholder`` fields.
 If you need to allow additional plugins to be embedded in a HTML field, convert the ``HTMLField`` to a ``Placeholderfield``
 and configure the placeholder to only accept TextPlugin. For more information on using placeholders outside of the CMS see:
 
-http://docs.django-cms.org/en/latest/introduction/templates_placeholders.html
+http://docs.django-cms.org/en/latest/how_to/placeholders.html
 
 
 Auto Hyphenate Text

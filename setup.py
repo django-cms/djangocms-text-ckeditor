@@ -41,7 +41,6 @@ setup(
     packages=[
         'djangocms_text_ckeditor',
         'djangocms_text_ckeditor.migrations',
-        'djangocms_text_ckeditor.south_migrations',
         'djangocms_text_ckeditor.templatetags',
     ],
     install_requires=INSTALL_REQUIRES,

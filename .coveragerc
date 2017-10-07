@@ -3,7 +3,7 @@ branch = True
 source = djangocms_text_ckeditor
 
 [report]
-omit = ../*migrations*,../*tests*,../*south_migrations*
+omit = ../*migrations*,../*tests*
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma

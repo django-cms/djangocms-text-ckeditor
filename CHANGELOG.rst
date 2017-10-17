@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.5.1 (unreleased)
+3.5.1 (2017-10-17)
 ------------------
 
 * Introduced support for django CMS 3.5.0

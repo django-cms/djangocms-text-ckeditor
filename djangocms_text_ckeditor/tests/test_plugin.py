@@ -445,7 +445,7 @@ class PluginActionsTestCase(BaseTestCase):
             text_plugin.refresh_from_db()
 
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(text_plugin.body, expected_text)
+            self.assertXMLEqual(text_plugin.body, expected_text)
 
     def test_render_child_plugin_endpoint(self):
         simple_page = create_page('test page', 'page.html', u'en')

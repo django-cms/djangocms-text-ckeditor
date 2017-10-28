@@ -4,12 +4,12 @@ import re
 import uuid
 
 import html5lib
+from django.utils.module_loading import import_string
 from django.utils.six import BytesIO
 from html5lib import sanitizer, serializer, treebuilders, treewalkers
 from PIL import Image
 
 from . import settings
-from .compat import import_string
 from .sanitizer import TextSanitizer
 from .utils import plugin_to_tag
 

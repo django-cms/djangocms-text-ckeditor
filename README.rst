@@ -27,21 +27,6 @@ This plugin requires `django CMS` 3.3 or higher to be properly installed.
 * Add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS`` (the order does not matter).
 * Run ``manage.py migrate djangocms_text_ckeditor``.
 
-Some notes:
-***********
-
-* If upgrading from previous ``djangocms_text_ckeditor``, be aware that the
-  names of the migration modules have changed:
-
-  * Django 1.6: ``djangocms_text_ckeditor.migrations`` to
-    ``djangocms_text_ckeditor.south_migrations``
-  * Django 1.7: ``djangocms_text_ckeditor.migrations_django`` to
-    ``djangocms_text_ckeditor.migrations``
-* If using Django 1.6 add ``'djangocms_text_ckeditor': 'djangocms_text_ckeditor.south_migrations',``
-  to ``SOUTH_MIGRATION_MODULES``  (or define ``SOUTH_MIGRATION_MODULES`` if it does not exists);
-* If using Django 1.7 and you were using version prior to 2.5, remove
-  ``djangocms_text_ckeditor`` from ``MIGRATION_MODULES``;
-
 
 Upgrading from ``cms.plugins.text``
 -----------------------------------

@@ -26,9 +26,8 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
     'Framework :: Django',
-    'Framework :: Django :: 1.6',
-    'Framework :: Django :: 1.7',
     'Framework :: Django :: 1.8',
+    'Framework :: Django :: 1.9',
 ]
 
 setup(
@@ -41,7 +40,6 @@ setup(
     packages=[
         'djangocms_text_ckeditor',
         'djangocms_text_ckeditor.migrations',
-        'djangocms_text_ckeditor.south_migrations',
         'djangocms_text_ckeditor.templatetags',
     ],
     install_requires=INSTALL_REQUIRES,

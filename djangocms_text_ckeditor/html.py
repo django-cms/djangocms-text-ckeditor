@@ -94,7 +94,7 @@ def extract_images(data, plugin):
             mime_type = mime_type.split(";")[0]
         try:
             image_data = base64.b64decode(image_data)
-        except:
+        except Exception:
             image_data = base64.urlsafe_b64decode(image_data)
         try:
             image_type = mime_type.split("/")[1]

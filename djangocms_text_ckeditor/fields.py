@@ -7,12 +7,6 @@ from django.utils.safestring import mark_safe
 from .html import clean_html
 from .widgets import TextEditorWidget
 
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ['^djangocms_text_ckeditor\.fields\.HTMLField'])
-except ImportError:
-    pass
-
 
 class HTMLFormField(CharField):
 

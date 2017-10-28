@@ -6,7 +6,7 @@ from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
-from . import compat, settings
+from . import settings
 from .html import clean_html, extract_images
 from .utils import plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
@@ -25,23 +25,13 @@ class AbstractText(CMSPlugin):
     # with any other plugins that have a field with the same name as the
     # lowercase of the class name of this model.
     # https://github.com/divio/django-cms/issues/5030
-    if compat.LTE_DJANGO_1_6:
-        # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
-        cmsplugin_ptr = models.OneToOneField(
-            CMSPlugin,
-            related_name='+',
-            parent_link=True,
-        )
-        search_fields = tuple()
-    else:
-        cmsplugin_ptr = models.OneToOneField(
-            CMSPlugin,
-            related_name='%(app_label)s_%(class)s',
-            parent_link=True,
-        )
-        search_fields = ('body',)
-
+    cmsplugin_ptr = models.OneToOneField(
+        CMSPlugin,
+        related_name='%(app_label)s_%(class)s',
+        parent_link=True,
+    )
     body = models.TextField(_("body"))
+    search_fields = ('body',)
 
     # This property is deprecated. And will be removed in a future release.
     # It should be set on the Plugin, not the model.

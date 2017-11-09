@@ -376,7 +376,7 @@ djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldry
 About CKEditor
 --------------
 
-The current integrated Version of CKeditor is **4.6.2**. For a full documentation visit: http://ckeditor.com/
+The current integrated Version of CKeditor is **4.7.3**. For a full documentation visit: http://ckeditor.com/
 
 Building the JavaScript
 -----------------------

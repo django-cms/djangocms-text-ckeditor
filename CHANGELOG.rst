@@ -5,6 +5,7 @@ CHANGELOG
 ------------------
 
 * Updated CKEditor to 4.7.3
+* use html5lib==0.999999999
 
 
 3.5.1 (2017-10-17)

@@ -200,14 +200,14 @@ class TextPlugin(CMSPluginBase):
         self.model.objects.filter(pk=instance.pk).update(body=new_text)
 
     @staticmethod
-    def get_djangocms_translation_content(instance):
+    def get_translation_content(field, plugin_data):
         def _render_plugin_with_content(obj, match):
             # FIXME: use text_field_child_label_field = TRANSLATIONS_CONF[obj.plugin_type]['text_field_child_label']
             text_field_child_label_field = 'label'  # FIXME:
             content = getattr(obj, text_field_child_label_field)
             return plugin_to_tag(obj, content)
 
-        return _plugin_tags_to_html(instance.body, output_func=_render_plugin_with_content)
+        return _plugin_tags_to_html(plugin_data[field], output_func=_render_plugin_with_content)
 
     def get_editor_widget(self, request, plugins, plugin):
         """

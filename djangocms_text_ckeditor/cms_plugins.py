@@ -35,6 +35,8 @@ from .utils import (
     plugin_tags_to_user_html,
     random_comment_exempt,
     replace_plugin_tags,
+    plugin_to_tag,
+    _plugin_tags_to_html,
 )
 from .widgets import TextEditorWidget
 
@@ -196,6 +198,16 @@ class TextPlugin(CMSPluginBase):
         ids_map = {pk: source_map[pk].pk for pk in ids if pk in source_map}
         new_text = replace_plugin_tags(instance.body, ids_map)
         self.model.objects.filter(pk=instance.pk).update(body=new_text)
+
+    @staticmethod
+    def get_djangocms_translation_content(instance):
+        def _render_plugin_with_content(obj, match):
+            # FIXME: use text_field_child_label_field = TRANSLATIONS_CONF[obj.plugin_type]['text_field_child_label']
+            text_field_child_label_field = 'label'  # FIXME:
+            content = getattr(obj, text_field_child_label_field)
+            return plugin_to_tag(obj, content)
+
+        return _plugin_tags_to_html(instance.body, output_func=_render_plugin_with_content)
 
     def get_editor_widget(self, request, plugins, plugin):
         """

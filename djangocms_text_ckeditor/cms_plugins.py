@@ -202,12 +202,23 @@ class TextPlugin(CMSPluginBase):
     @staticmethod
     def get_translation_content(field, plugin_data):
         def _render_plugin_with_content(obj, match):
-            # FIXME: use text_field_child_label_field = TRANSLATIONS_CONF[obj.plugin_type]['text_field_child_label']
-            text_field_child_label_field = 'label'  # FIXME:
-            content = getattr(obj, text_field_child_label_field)
+            field = 'label'  # FIXME: Get field via DJANGOCMS_TRANSLATIONS_CONF
+            content = getattr(obj, field)
             return plugin_to_tag(obj, content)
 
-        return _plugin_tags_to_html(plugin_data[field], output_func=_render_plugin_with_content)
+        content = _plugin_tags_to_html(plugin_data[field], output_func=_render_plugin_with_content)
+        subplugins_within_this_content = plugin_tags_to_id_list(content)
+        return content, subplugins_within_this_content
+
+    @staticmethod
+    def get_translation_children_content(content, plugin):
+        import bs4  # FIXME: Try to stick to ckeditor utils.
+        soup = bs4.BeautifulSoup(content, 'html.parser')
+
+        return {
+            subplugin_id: soup.find('cms-plugin', id=subplugin_id).text
+            for subplugin_id in plugin_tags_to_id_list(content)
+        }
 
     def get_editor_widget(self, request, plugins, plugin):
         """

@@ -3,6 +3,8 @@ from cms.plugin_pool import plugin_pool
 from django.template import engines
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
+from djangocms_text_ckeditor.test_app.models import DummyLink
+
 
 @plugin_pool.register_plugin
 class PreviewDisabledPlugin(CMSPluginBase):
@@ -22,3 +24,9 @@ class SekizaiPlugin(CMSPluginBase):
 @plugin_pool.register_plugin
 class ExtendedTextPlugin(TextPlugin):
     name = 'Extended'
+
+
+@plugin_pool.register_plugin
+class DummyLinkPlugin(CMSPluginBase):
+    render_plugin = False
+    model = DummyLink

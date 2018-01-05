@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
 from distutils.version import LooseVersion
+import json
+import re
 
 import cms
 from cms.models import CMSPlugin
@@ -31,6 +32,7 @@ from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
+    OBJ_ADMIN_RE_PATTERN,
     plugin_tags_to_admin_html,
     plugin_tags_to_id_list,
     plugin_tags_to_user_html,
@@ -213,11 +215,15 @@ class TextPlugin(CMSPluginBase):
 
     @staticmethod
     def get_translation_children_content(content, plugin):
-        import bs4  # FIXME: Try to stick to ckeditor utils.
-        soup = bs4.BeautifulSoup(content, 'html.parser')
+        def _rreplace(text, old, new, count):
+            return new.join(text.rsplit(old, count))
+
+        OBJ_ADMIN_RE_PATTERN_WITH_CONTENT = _rreplace(OBJ_ADMIN_RE_PATTERN, '.*?', '(?P<content>.*?)', 1)
+        data = [x.groups() for x in re.finditer(OBJ_ADMIN_RE_PATTERN_WITH_CONTENT, content)]
+        data = {int(k): v for k, v in data}
 
         return {
-            subplugin_id: soup.find('cms-plugin', id=subplugin_id).text
+            subplugin_id: data[subplugin_id]
             for subplugin_id in plugin_tags_to_id_list(content)
         }
 

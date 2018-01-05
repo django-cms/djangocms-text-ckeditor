@@ -8,6 +8,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+from django.conf import settings as django_settings
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
@@ -202,7 +203,7 @@ class TextPlugin(CMSPluginBase):
     @staticmethod
     def get_translation_content(field, plugin_data):
         def _render_plugin_with_content(obj, match):
-            field = 'label'  # FIXME: Get field via DJANGOCMS_TRANSLATIONS_CONF
+            field = django_settings.DJANGOCMS_TRANSLATIONS_CONF[obj.plugin_type]['text_field_child_label']
             content = getattr(obj, field)
             return plugin_to_tag(obj, content)
 

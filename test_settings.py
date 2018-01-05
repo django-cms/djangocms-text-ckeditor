@@ -84,6 +84,10 @@ HELPER_SETTINGS = {
         ('page.html', 'Normal page'),
         ('plugin_with_sekizai.html', 'Plugin with sekizai'),
     ),
+    'DJANGOCMS_TRANSLATIONS_CONF': {
+        'Bootstrap3ButtonCMSPlugin': {'text_field_child_label': 'label'},
+        'DummyLinkPlugin': {'text_field_child_label': 'label'},
+    },
 }
 
 

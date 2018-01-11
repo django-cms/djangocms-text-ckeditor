@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import copy
+import importlib
 import json
 import re
+import unittest
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
@@ -14,8 +16,6 @@ from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
 
-from djangocms_transfer.exporter import export_page
-
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
@@ -24,6 +24,15 @@ from djangocms_text_ckeditor.utils import (
 )
 
 from .base import BaseTestCase
+
+
+def _dependencies_are_installed(*modules):
+    for module in modules:
+        try:
+            importlib.import_module(module)
+        except ImportError:
+            return False
+    return True
 
 
 class PluginActionsTestCase(BaseTestCase):
@@ -794,6 +803,10 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(self.reload(plugin).body, '<div>divcontent</div><a>acontent</a>')
 
 
+@unittest.skipIf(
+    not(_dependencies_are_installed('djangocms_transfer', 'djangocms_translations')),
+    'Optional dependencies for tests are not installed.'
+)
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
     def setUp(self):
         super(DjangoCMSTranslationsIntegrationTestCase, self).setUp()
@@ -801,6 +814,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         self.placeholder = self.page.placeholders.get(slot='content')
 
     def _export_page(self):
+        from djangocms_transfer.exporter import export_page
         return json.loads(export_page(self.page, 'en'))
 
     def test_textfield_without_children(self):
@@ -808,12 +822,12 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         add_plugin(self.placeholder, 'TextPlugin', 'en', body=raw_content)
 
         plugin = self._export_page()[0]['plugins'][0]
-        result, children_included_in_this_content = TextPlugin.get_translation_content('body', plugin['data'])
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
 
         self.assertEquals(result, raw_content)
         self.assertEquals(children_included_in_this_content, [])
 
-        result = TextPlugin.get_translation_children_content(result, plugin)
+        result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {})
 
     def test_textfield_with_children(self):
@@ -827,7 +841,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         parent.save()
 
         plugin = self._export_page()[0]['plugins'][0]
-        result, children_included_in_this_content = TextPlugin.get_translation_content('body', plugin['data'])
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
 
         expected = (
             parent_body
@@ -836,7 +850,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         self.assertEquals(result, expected)
         self.assertEquals(children_included_in_this_content, [child1.pk])
 
-        result = TextPlugin.get_translation_children_content(result, plugin)
+        result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1'})
 
     def test_textfield_with_multiple_children(self):
@@ -853,7 +867,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         parent.save()
 
         plugin = self._export_page()[0]['plugins'][0]
-        result, children_included_in_this_content = TextPlugin.get_translation_content('body', plugin['data'])
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
 
         expected = (
             parent_body
@@ -863,7 +877,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         self.assertEquals(result, expected)
         self.assertEquals(children_included_in_this_content, [child1.pk, child2.pk])
 
-        result = TextPlugin.get_translation_children_content(result, plugin)
+        result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1', child2.pk: 'CLICK ON LINK2'})
 
     def test_textfield_with_multiple_children_one_deleted(self):
@@ -883,7 +897,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
 
         child1.delete()
 
-        result, children_included_in_this_content = TextPlugin.get_translation_content('body', plugin['data'])
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
 
         expected = (
             '<p>Please  to go to link1 '
@@ -893,5 +907,5 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         self.assertEquals(result, expected)
         self.assertEquals(children_included_in_this_content, [child2.pk])
 
-        result = TextPlugin.get_translation_children_content(result, plugin)
+        result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child2.pk: 'CLICK ON LINK2'})

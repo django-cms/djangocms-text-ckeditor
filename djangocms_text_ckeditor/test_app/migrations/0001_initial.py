@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.db.models.deletion
 from djangocms_text_ckeditor.fields import HTMLField
 
 
@@ -14,7 +13,6 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DummyLink',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, related_name='test_app_dummylink', serialize=False, to='cms.CMSPlugin')),
                 ('label', models.TextField()),
             ],
             options={

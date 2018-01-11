@@ -9,7 +9,6 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
-from django.conf import settings as django_settings
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
@@ -32,7 +31,7 @@ from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_RE_PATTERN,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN,
     plugin_tags_to_admin_html,
     plugin_tags_to_id_list,
     plugin_tags_to_user_html,
@@ -203,9 +202,10 @@ class TextPlugin(CMSPluginBase):
         self.model.objects.filter(pk=instance.pk).update(body=new_text)
 
     @staticmethod
-    def get_translation_content(field, plugin_data):
+    def get_translation_export_content(field, plugin_data):
         def _render_plugin_with_content(obj, match):
-            field = django_settings.DJANGOCMS_TRANSLATIONS_CONF[obj.plugin_type]['text_field_child_label']
+            from djangocms_translations.utils import get_text_field_child_label
+            field = get_text_field_child_label(obj.plugin_type)
             content = getattr(obj, field)
             return plugin_to_tag(obj, content)
 
@@ -214,13 +214,9 @@ class TextPlugin(CMSPluginBase):
         return content, subplugins_within_this_content
 
     @staticmethod
-    def get_translation_children_content(content, plugin):
-        def _rreplace(text, old, new, count):
-            return new.join(text.rsplit(old, count))
-
-        OBJ_ADMIN_RE_PATTERN_WITH_CONTENT = _rreplace(OBJ_ADMIN_RE_PATTERN, '.*?', '(?P<content>.*?)', 1)
-        data = [x.groups() for x in re.finditer(OBJ_ADMIN_RE_PATTERN_WITH_CONTENT, content)]
-        data = {int(k): v for k, v in data}
+    def set_translation_import_content(content, plugin):
+        data = [x.groups() for x in re.finditer(OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, content)]
+        data = {int(pk): value for pk, value in data}
 
         return {
             subplugin_id: data[subplugin_id]

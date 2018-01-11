@@ -10,4 +10,6 @@ tox>=2.9.1
 coverage>=4.4.2
 flake8>=3.0.4
 
--e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer
+# In order to run skipped tests uncomment the next lines:
+# -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer
+# -e git+ssh://git@github.com/divio/djangocms-translations.git@master#egg=djangocms-translations

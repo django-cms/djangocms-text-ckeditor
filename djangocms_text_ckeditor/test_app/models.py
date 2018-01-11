@@ -12,12 +12,6 @@ class SimpleText(models.Model):
 
 @python_2_unicode_compatible
 class DummyLink(CMSPlugin):
-    cmsplugin_ptr = models.OneToOneField(
-        CMSPlugin,
-        on_delete=models.CASCADE,
-        related_name='%(app_label)s_%(class)s',
-        parent_link=True,
-    )
     label = models.TextField()
 
     class Meta:

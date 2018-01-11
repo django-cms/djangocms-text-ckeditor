@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import copy
-import importlib
 import json
 import re
 import unittest
@@ -16,6 +15,18 @@ from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
 
+try:
+    from djangocms_transfer.exporter import export_page
+    HAS_DJANGOCMS_TRANSFER = True
+except ImportError:
+    HAS_DJANGOCMS_TRANSFER = False
+
+try:
+    import djangocms_translations  # noqa
+    HAS_DJANGOCMS_TRANSLATIONS = True
+except ImportError:
+    HAS_DJANGOCMS_TRANSLATIONS = False
+
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
@@ -24,15 +35,6 @@ from djangocms_text_ckeditor.utils import (
 )
 
 from .base import BaseTestCase
-
-
-def _dependencies_are_installed(*modules):
-    for module in modules:
-        try:
-            importlib.import_module(module)
-        except ImportError:
-            return False
-    return True
 
 
 class PluginActionsTestCase(BaseTestCase):
@@ -803,8 +805,8 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(self.reload(plugin).body, '<div>divcontent</div><a>acontent</a>')
 
 
-@unittest.skipIf(
-    not(_dependencies_are_installed('djangocms_transfer', 'djangocms_translations')),
+@unittest.skipUnless(
+    HAS_DJANGOCMS_TRANSLATIONS and HAS_DJANGOCMS_TRANSFER and X,
     'Optional dependencies for tests are not installed.'
 )
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
@@ -814,7 +816,6 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         self.placeholder = self.page.placeholders.get(slot='content')
 
     def _export_page(self):
-        from djangocms_transfer.exporter import export_page
         return json.loads(export_page(self.page, 'en'))
 
     def test_textfield_without_children(self):

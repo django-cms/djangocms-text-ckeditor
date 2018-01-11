@@ -1,9 +1,25 @@
 # -*- coding: utf-8 -*-
 from tempfile import mkdtemp
+import sys
 
 
 def gettext(s):
     return s
+
+
+class DisableMigrations(dict):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        from distutils.version import LooseVersion
+        import django
+        DJANGO_1_9 = LooseVersion(django.get_version()) < LooseVersion('1.10')
+        if DJANGO_1_9:
+            return 'notmigrations'
+        else:
+            return None
+
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
@@ -12,7 +28,6 @@ HELPER_SETTINGS = {
         'mptt',
         'djangocms_picture',
         'djangocms_link',
-        'djangocms_text_ckeditor.test_app',
     ],
     'LANGUAGE_CODE': 'en',
     'LANGUAGES': (
@@ -89,11 +104,15 @@ HELPER_SETTINGS = {
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
 }
+if 'test' in sys.argv:
+    HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
+    HELPER_SETTINGS['INSTALLED_APPS'].append('djangocms_text_ckeditor.test_app')
 
 
 def run():
     from djangocms_helper import runner
     runner.cms('djangocms_text_ckeditor')
+
 
 if __name__ == '__main__':
     run()

@@ -14,6 +14,7 @@ from django.utils.functional import LazyObject
 
 
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'
+OBJ_ADMIN_WITH_CONTENT_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>(?P<content>.*?)</cms-plugin>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
 
 

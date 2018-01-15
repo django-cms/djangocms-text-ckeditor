@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import copy
+import json
 import re
+import unittest
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
@@ -12,6 +14,18 @@ from django.template import RequestContext
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
+
+try:
+    from djangocms_transfer.exporter import export_page
+    HAS_DJANGOCMS_TRANSFER = True
+except ImportError:
+    HAS_DJANGOCMS_TRANSFER = False
+
+try:
+    import djangocms_translations  # noqa
+    HAS_DJANGOCMS_TRANSLATIONS = True
+except ImportError:
+    HAS_DJANGOCMS_TRANSLATIONS = False
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.models import Text
@@ -782,8 +796,117 @@ class PluginActionsTestCase(BaseTestCase):
 
         with self.login_user_context(self.user):
             data = {
-                "body": "<div onload='do_evil_stuff();'>divcontent</div><a href='javascript:do_evil_stuff()'>acontent</a>"
+                "body": (
+                    "<div onload='do_evil_stuff();'>divcontent</div><a href='javascript:do_evil_stuff()'>acontent</a>"
+                )
             }
             response = self.client.post(endpoint, data)
             self.assertEqual(response.status_code, 200)
             self.assertEqual(self.reload(plugin).body, '<div>divcontent</div><a>acontent</a>')
+
+
+@unittest.skipUnless(
+    HAS_DJANGOCMS_TRANSLATIONS and HAS_DJANGOCMS_TRANSFER,
+    'Optional dependencies for tests are not installed.'
+)
+class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
+    def setUp(self):
+        super(DjangoCMSTranslationsIntegrationTestCase, self).setUp()
+        self.page = create_page('test page', 'page.html', 'en', published=True)
+        self.placeholder = self.page.placeholders.get(slot='content')
+
+    def _export_page(self):
+        return json.loads(export_page(self.page, 'en'))
+
+    def test_textfield_without_children(self):
+        raw_content = '<p>Please <a href="http://www.google.com">CLICK ON LINK1</a> to go to link1.</p>'
+        add_plugin(self.placeholder, 'TextPlugin', 'en', body=raw_content)
+
+        plugin = self._export_page()[0]['plugins'][0]
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
+
+        self.assertEquals(result, raw_content)
+        self.assertEquals(children_included_in_this_content, [])
+
+        result = TextPlugin.set_translation_import_content(result, plugin)
+        self.assertDictEqual(result, {})
+
+    def test_textfield_with_children(self):
+        parent = add_plugin(self.placeholder, 'TextPlugin', 'en', body='')
+        child1 = add_plugin(self.placeholder, 'DummyLinkPlugin', 'en', target=parent, label='CLICK ON LINK1')
+        parent_body = (
+            '<p>Please <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}"></cms-plugin> to go to link1.</p>'
+        ).format(child1.pk)
+        parent.body = parent_body
+        parent.save()
+
+        plugin = self._export_page()[0]['plugins'][0]
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
+
+        expected = (
+            parent_body
+            .replace('></cms-plugin>', '>CLICK ON LINK1</cms-plugin>', 1)
+        )
+        self.assertEquals(result, expected)
+        self.assertEquals(children_included_in_this_content, [child1.pk])
+
+        result = TextPlugin.set_translation_import_content(result, plugin)
+        self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1'})
+
+    def test_textfield_with_multiple_children(self):
+        parent = add_plugin(self.placeholder, 'TextPlugin', 'en', body='')
+        child1 = add_plugin(self.placeholder, 'DummyLinkPlugin', 'en', target=parent, label='CLICK ON LINK1')
+        child2 = add_plugin(self.placeholder, 'DummyLinkPlugin', 'en', target=parent, label='CLICK ON LINK2')
+        parent_body = (
+            '<p>Please <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}"></cms-plugin> to go to link1 '
+            'or <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}"></cms-plugin> to go to link2.</p>'
+        ).format(child1.pk, child2.pk)
+        parent.body = parent_body
+        parent.save()
+
+        plugin = self._export_page()[0]['plugins'][0]
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
+
+        expected = (
+            parent_body
+            .replace('></cms-plugin>', '>CLICK ON LINK1</cms-plugin>', 1)
+            .replace('></cms-plugin>', '>CLICK ON LINK2</cms-plugin>', 1)
+        )
+        self.assertEquals(result, expected)
+        self.assertEquals(children_included_in_this_content, [child1.pk, child2.pk])
+
+        result = TextPlugin.set_translation_import_content(result, plugin)
+        self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1', child2.pk: 'CLICK ON LINK2'})
+
+    def test_textfield_with_multiple_children_one_deleted(self):
+        parent = add_plugin(self.placeholder, 'TextPlugin', 'en', body='')
+        child1 = add_plugin(self.placeholder, 'DummyLinkPlugin', 'en', target=parent, label='CLICK ON LINK1')
+        child2 = add_plugin(self.placeholder, 'DummyLinkPlugin', 'en', target=parent, label='CLICK ON LINK2')
+        parent_body = (
+            '<p>Please <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}"></cms-plugin> to go to link1 '
+            'or <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}"></cms-plugin> to go to link2.</p>'
+        ).format(child1.pk, child2.pk)
+        parent.body = parent_body
+        parent.save()
+
+        plugin = self._export_page()[0]['plugins'][0]
+
+        child1.delete()
+
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
+
+        expected = (
+            '<p>Please  to go to link1 '
+            'or <cms-plugin alt="Dummy Link Plugin - dummy link object "'
+            'title="Dummy Link Plugin - dummy link object" id="{}">CLICK ON LINK2</cms-plugin> to go to link2.</p>'
+        ).format(child2.pk)
+        self.assertEquals(result, expected)
+        self.assertEquals(children_included_in_this_content, [child2.pk])
+
+        result = TextPlugin.set_translation_import_content(result, plugin)
+        self.assertDictEqual(result, {child2.pk: 'CLICK ON LINK2'})

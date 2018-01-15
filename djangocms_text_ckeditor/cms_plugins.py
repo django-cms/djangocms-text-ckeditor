@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
 from distutils.version import LooseVersion
+import json
+import re
 
 import cms
 from cms.models import CMSPlugin
@@ -30,11 +31,14 @@ from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN,
     plugin_tags_to_admin_html,
     plugin_tags_to_id_list,
     plugin_tags_to_user_html,
     random_comment_exempt,
     replace_plugin_tags,
+    plugin_to_tag,
+    _plugin_tags_to_html,
 )
 from .widgets import TextEditorWidget
 
@@ -196,6 +200,28 @@ class TextPlugin(CMSPluginBase):
         ids_map = {pk: source_map[pk].pk for pk in ids if pk in source_map}
         new_text = replace_plugin_tags(instance.body, ids_map)
         self.model.objects.filter(pk=instance.pk).update(body=new_text)
+
+    @staticmethod
+    def get_translation_export_content(field, plugin_data):
+        def _render_plugin_with_content(obj, match):
+            from djangocms_translations.utils import get_text_field_child_label
+            field = get_text_field_child_label(obj.plugin_type)
+            content = getattr(obj, field)
+            return plugin_to_tag(obj, content)
+
+        content = _plugin_tags_to_html(plugin_data[field], output_func=_render_plugin_with_content)
+        subplugins_within_this_content = plugin_tags_to_id_list(content)
+        return content, subplugins_within_this_content
+
+    @staticmethod
+    def set_translation_import_content(content, plugin):
+        data = [x.groups() for x in re.finditer(OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, content)]
+        data = {int(pk): value for pk, value in data}
+
+        return {
+            subplugin_id: data[subplugin_id]
+            for subplugin_id in plugin_tags_to_id_list(content)
+        }
 
     def get_editor_widget(self, request, plugins, plugin):
         """

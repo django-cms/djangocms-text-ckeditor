@@ -806,7 +806,7 @@ class PluginActionsTestCase(BaseTestCase):
 
 
 @unittest.skipUnless(
-    HAS_DJANGOCMS_TRANSLATIONS and HAS_DJANGOCMS_TRANSFER and X,
+    HAS_DJANGOCMS_TRANSLATIONS and HAS_DJANGOCMS_TRANSFER,
     'Optional dependencies for tests are not installed.'
 )
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):

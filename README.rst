@@ -192,6 +192,9 @@ to note:
   property "`allowedContent`_" `to contain`_ ``cms-plugin[*]`` as this custom tag is
   what allows the inline previews to be rendered
 
+- Important note: please avoid html tags in ``__str__`` representation of text
+  enabled plugins - this messes up inline preview.
+
 .. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
 .. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
 .. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules

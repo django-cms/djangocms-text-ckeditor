@@ -19,3 +19,12 @@ class DummyLink(CMSPlugin):
 
     def __str__(self):
         return 'dummy link object'
+
+
+@python_2_unicode_compatible
+class DummySpacer(CMSPlugin):
+    class Meta:
+        abstract = False
+
+    def __str__(self):
+        return 'dummy spacer object'

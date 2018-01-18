@@ -206,7 +206,7 @@ class TextPlugin(CMSPluginBase):
         def _render_plugin_with_content(obj, match):
             from djangocms_translations.utils import get_text_field_child_label
             field = get_text_field_child_label(obj.plugin_type)
-            content = getattr(obj, field)
+            content = getattr(obj, field) if field else ''
             return plugin_to_tag(obj, content)
 
         content = _plugin_tags_to_html(plugin_data[field], output_func=_render_plugin_with_content)

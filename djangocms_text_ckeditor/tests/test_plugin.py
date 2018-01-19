@@ -910,3 +910,25 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child2.pk: 'CLICK ON LINK2'})
+
+    def test_textfield_with_untranslatable_children(self):
+        parent = add_plugin(self.placeholder, 'TextPlugin', 'en', body='')
+        child1 = add_plugin(self.placeholder, 'DummySpacerPlugin', 'en', target=parent)
+        parent_body = (
+            '<p>This is cool <cms-plugin alt="Dummy Spacer Plugin - dummy spacer object "'
+            'title="Dummy Spacer Plugin - dummy spacer object" id="{}"></cms-plugin> this is nice</p>'
+        ).format(child1.pk)
+        parent.body = parent_body
+        parent.save()
+
+        plugin = self._export_page()[0]['plugins'][0]
+        result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
+
+        expected = (
+            parent_body
+        )
+        self.assertEquals(result, expected)
+        self.assertEquals(children_included_in_this_content, [child1.pk])
+
+        result = TextPlugin.set_translation_import_content(result, plugin)
+        self.assertDictEqual(result, {child1.pk: ''})

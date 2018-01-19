@@ -3,7 +3,7 @@ from cms.plugin_pool import plugin_pool
 from django.template import engines
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
-from djangocms_text_ckeditor.test_app.models import DummyLink
+from djangocms_text_ckeditor.test_app.models import DummyLink, DummySpacer
 
 
 @plugin_pool.register_plugin
@@ -30,3 +30,9 @@ class ExtendedTextPlugin(TextPlugin):
 class DummyLinkPlugin(CMSPluginBase):
     render_plugin = False
     model = DummyLink
+
+
+@plugin_pool.register_plugin
+class DummySpacerPlugin(CMSPluginBase):
+    render_plugin = False
+    model = DummySpacer

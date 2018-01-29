@@ -1,10 +1,11 @@
 CHANGELOG
 =========
 
-3.6.0 (unreleased)
+3.5.3 (2018-01-29)
 ------------------
 
 * Updated CKEditor to 4.7.3
+* Added context to translation payload when dealing with TextPlugin instances
 
 
 3.5.1 (2017-10-17)

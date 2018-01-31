@@ -1,7 +1,7 @@
 djangocms-text-ckeditor
 =======================
 
-Text Plugin for django-cms with CK-Editor.
+Text Plugin for django-cms with CKEditor.
 
 The latest version of this package supports:
 
@@ -10,7 +10,7 @@ The latest version of this package supports:
 
 .. WARNING::
    - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
-   - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x (e.g.: version 3.1.0).
+   - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x,<3.5.1 (e.g.: version 3.1.0).
    - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
    - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
    - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).

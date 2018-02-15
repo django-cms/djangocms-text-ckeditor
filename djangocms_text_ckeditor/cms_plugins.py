@@ -13,7 +13,10 @@ from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (

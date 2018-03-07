@@ -4,7 +4,6 @@ from django.db import models
 from django.forms.fields import CharField
 from django.utils.safestring import mark_safe
 
-from .html import clean_html
 from .widgets import TextEditorWidget
 
 
@@ -23,6 +22,8 @@ class HTMLFormField(CharField):
         super(HTMLFormField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
+        from .html import clean_html
+        
         value = super(HTMLFormField, self).clean(value)
         clean_value = clean_html(value, full=False)
 
@@ -77,6 +78,8 @@ class HTMLField(models.TextField):
         return super(HTMLField, self).formfield(**defaults)
 
     def clean(self, value, model_instance):
+        from .html import clean_html
+        
         # This needs to be marked safe as well because the form field's
         # clean method is not called on model.full_clean()
         value = super(HTMLField, self).clean(value, model_instance)

@@ -35,6 +35,9 @@ def _get_default_parser():
         sanitizer.HTMLSanitizer.allowed_protocols = (
             sanitizer.HTMLSanitizer.acceptable_protocols +
             list(settings.TEXT_ADDITIONAL_PROTOCOLS))
+        sanitizer.HTMLSanitizer.allowed_css_properties = (
+            sanitizer.HTMLSanitizer.acceptable_css_properties +
+            list(settings.TEXT_ADDITIONAL_CSS_PROPERTIES))
         parser_classes = []
         for parser_class in settings.ALLOW_TOKEN_PARSERS:
             parser_classes.append(import_string(parser_class))

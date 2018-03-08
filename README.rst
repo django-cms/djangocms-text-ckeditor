@@ -318,10 +318,11 @@ Configurable sanitizer
 security issues and to check for correct HTML code.
 Sanitisation may strip tags usesful for some use cases such as ``iframe``;
 you may customize the tags and attributes allowed by overriding the
-``TEXT_ADDITIONAL_TAGS`` and ``TEXT_ADDITIONAL_ATTRIBUTES`` settings::
+``TEXT_ADDITIONAL_TAGS``, ``TEXT_ADDITIONAL_ATTRIBUTES`` and ``TEXT_ADDITIONAL_CSS_PROPERTIES`` settings::
 
     TEXT_ADDITIONAL_TAGS = ('iframe',)
     TEXT_ADDITIONAL_ATTRIBUTES = ('scrolling', 'allowfullscreen', 'frameborder')
+    TEXT_ADDITIONAL_CSS_PROPERTIES = ('text-shadow',)
 
 In case you need more control on sanitisation you can extend AllowTokenParser class and define
 your logic into parse() method. For example, if you want to skip your donut attribute during

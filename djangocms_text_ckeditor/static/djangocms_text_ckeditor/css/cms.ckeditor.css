@@ -10,13 +10,9 @@
 .djangocms_text_ckeditor-text .form-row label { display:none; }
 .djangocms_text_ckeditor-text .cke_chrome { float: none; }
 
-/* insure dialog has relative positioning for absolute positioned content */
+/* ensure dialog has relative positioning for absolute positioned content */
 .cms-ckeditor-dialog .cke_dialog {
     position: fixed !important;
-    z-index: 9999 !important;
-}
-.cms-ckeditor-dialog-background-cover {
-    z-index: 9998 !important;
 }
 .cke_dialog_contents {
     user-select: none;

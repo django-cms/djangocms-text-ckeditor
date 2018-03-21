@@ -29,6 +29,8 @@ var PROJECT_PATTERNS = {
         PROJECT_PATH.js + '/**/*.js',
         PROJECT_PATH.js + '/../ckeditor_plugins/**/*.js',
         PROJECT_PATH.js + '/gulpfile.js',
+        '!' + PROJECT_PATH.js + '/pre.js',
+        '!' + PROJECT_PATH.js + '/post.js',
         '!' + PROJECT_PATH.js + '/../ckeditor_plugins/cmsresize/*.js',
         '!' + PROJECT_PATH.js + '/../ckeditor_plugins/cmsdialog/*.js',
         '!' + PROJECT_PATH.js + '/../ckeditor/**/*.js',
@@ -41,12 +43,14 @@ var PROJECT_PATTERNS = {
  * from array of paths that are the value.
  */
 var JS_BUNDLE = [
+    PROJECT_PATH.js + '/pre.js',
+    PROJECT_PATH.js + '/cms.ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor/ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmswidget/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsdialog/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsresize/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsplugins/plugin.js',
-    PROJECT_PATH.js + '/cms.ckeditor.js'
+    PROJECT_PATH.js + '/post.js'
 ];
 
 gulp.task('lint', ['lint:javascript']);
@@ -71,7 +75,9 @@ gulp.task('bundle:cleanup:before', function () {
 gulp.task('bundle:js', function () {
     var f = filter([
         '**',
-        '!**/ckeditor/ckeditor.js'
+        '!**/ckeditor/ckeditor.js',
+        '!**/pre.js',
+        '!**/post.js'
     ], { restore: true });
 
     return gulp.src(JS_BUNDLE)
@@ -94,16 +100,17 @@ gulp.task('bundle:js', function () {
 gulp.task('bundle:template', function () {
     var manifest = gulp.src(PROJECT_PATH.js + '/dist/rev-manifest.json');
 
-    return gulp.src([PROJECT_ROOT + '/../../templates/cms/plugins/widgets/ckeditor.html'])
+    return gulp.src([PROJECT_ROOT + '/../../widgets.py'])
         .pipe(replace(
             /bundle.*.cms.ckeditor.min.js/,
             'bundle.cms.ckeditor.min.js'
         ))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../templates/cms/plugins/widgets/'))
+        .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
         .pipe(revReplace({
-            manifest: manifest
+            manifest: manifest,
+            replaceInExtensions: ['.py']
         }))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../templates/cms/plugins/widgets/'));
+        .pipe(gulp.dest(PROJECT_ROOT + '/../../'));
 });
 
 gulp.task('bundle:cleanup', function () {

@@ -8,11 +8,27 @@ from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
+from django.contrib.admin.templatetags.admin_static import static
+
+from cms.utils.urlutils import static_with_version
 
 from . import settings as text_settings
 
+# this path is changed automatically whenever you run `gulp bundle`
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-45a646fecc.cms.ckeditor.min.js'
+
 
 class TextEditorWidget(Textarea):
+    class Media:
+        js = (
+            static_with_version('cms/js/dist/bundle.admin.base.min.js'),
+            static(PATH_TO_JS),
+        )
+        css = {
+            'all': {
+                'djangocms_text_ckeditor/css/cms.ckeditor.css'
+            }
+        }
 
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
@@ -32,6 +48,9 @@ class TextEditorWidget(Textarea):
             attrs.update({
                 'class': new_class.strip()
             })
+        attrs.update({
+            'data-ckeditor-basepath': text_settings.TEXT_CKEDITOR_BASE_PATH
+        })
         super(TextEditorWidget, self).__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk

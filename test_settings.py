@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 from tempfile import mkdtemp
+import os
 import sys
 
+port = 8000
+
+for arg in sys.argv:
+    if arg.startswith('--port='):
+        port = arg.split('=')[1]
 
 def gettext(s):
     return s
@@ -28,6 +34,8 @@ HELPER_SETTINGS = {
         'mptt',
         'djangocms_picture',
         'djangocms_link',
+        'djangocms_text_ckeditor',
+        'djangocms_text_ckeditor.test_app',
     ],
     'LANGUAGE_CODE': 'en',
     'LANGUAGES': (
@@ -104,15 +112,29 @@ HELPER_SETTINGS = {
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
 }
-if 'test' in sys.argv:
-    HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
-    HELPER_SETTINGS['INSTALLED_APPS'].append('djangocms_text_ckeditor.test_app')
 
+HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
 
-def run():
+def _helper_patch(*args, **kwargs):
+    from django.core.management import call_command
+    call_command('migrate', run_syncdb=True)
+
+def test():
     from djangocms_helper import runner
     runner.cms('djangocms_text_ckeditor')
 
+def run():
+    from djangocms_helper import runner
+    from djangocms_helper import utils
 
-if __name__ == '__main__':
+    os.environ.setdefault('DATABASE_URL', 'sqlite://localhost/testdb.sqlite')
+
+    # Patch djangocms_helper to create tables
+    utils._create_db = _helper_patch
+
+    # we use '.runner()', not '.cms()' nor '.run()' because it does not
+    # add 'test' argument implicitly
+    runner.runner([sys.argv[0], 'cms', '--cms', 'server', '--bind', '0.0.0.0', '--port', str(port)])
+
+if __name__ == "__main__":
     run()

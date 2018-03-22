@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.6.0 (unreleased)
+------------------
+
+* Changed the way ckeditor widget is initialized
+
+
 3.5.3 (2018-01-29)
 ------------------
 

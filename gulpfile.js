@@ -13,6 +13,9 @@ var rev = require('gulp-rev');
 var runSequence = require('run-sequence');
 var filter = require('gulp-filter');
 var del = require('del');
+var integrationTests = require('djangocms-casper-helpers/gulp');
+var path = require('path');
+var child_process = require('child_process');
 
 var argv = require('minimist')(process.argv.slice(2));
 
@@ -21,7 +24,8 @@ var options = {
 };
 var PROJECT_ROOT = __dirname + '/djangocms_text_ckeditor/static/djangocms_text_ckeditor';
 var PROJECT_PATH = {
-    js: PROJECT_ROOT + '/js'
+    js: PROJECT_ROOT + '/js',
+    tests: __dirname + '/djangocms_text_ckeditor/tests/frontend/'
 };
 
 var PROJECT_PATTERNS = {
@@ -29,6 +33,8 @@ var PROJECT_PATTERNS = {
         PROJECT_PATH.js + '/**/*.js',
         PROJECT_PATH.js + '/../ckeditor_plugins/**/*.js',
         PROJECT_PATH.js + '/gulpfile.js',
+        '!' + PROJECT_PATH.js + '/pre.js',
+        '!' + PROJECT_PATH.js + '/post.js',
         '!' + PROJECT_PATH.js + '/../ckeditor_plugins/cmsresize/*.js',
         '!' + PROJECT_PATH.js + '/../ckeditor_plugins/cmsdialog/*.js',
         '!' + PROJECT_PATH.js + '/../ckeditor/**/*.js',
@@ -41,12 +47,14 @@ var PROJECT_PATTERNS = {
  * from array of paths that are the value.
  */
 var JS_BUNDLE = [
+    PROJECT_PATH.js + '/pre.js',
+    PROJECT_PATH.js + '/cms.ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor/ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmswidget/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsdialog/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsresize/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsplugins/plugin.js',
-    PROJECT_PATH.js + '/cms.ckeditor.js'
+    PROJECT_PATH.js + '/post.js'
 ];
 
 gulp.task('lint', ['lint:javascript']);
@@ -60,6 +68,25 @@ gulp.task('lint:javascript', function () {
         .pipe(gulpif(!process.env.CI, plumber.stop()));
 });
 
+var INTEGRATION_TESTS = [
+    ['smoke']
+];
+
+// gulp tests:integration [--clean] [--screenshots] [--tests=loginAdmin,toolbar]
+var pathToBin = child_process.execSync('npm bin').toString().trim();
+var pathToCasper = path.join(pathToBin, 'casperjs');
+
+gulp.task('tests:integration', integrationTests({
+    tests: INTEGRATION_TESTS,
+    pathToTests: PROJECT_PATH.tests,
+    argv: argv,
+    dbPath: 'testdb.sqlite',
+    serverCommand: 'test_settings.py',
+    logger: console.log.bind(console), // eslint-disable-line no-console
+    waitForMigrations: 10,
+    pathToCasper: pathToCasper
+}));
+
 gulp.task('bundle', function (done) {
     runSequence('bundle:cleanup:before', 'bundle:js', 'bundle:template', 'bundle:cleanup', done);
 });
@@ -71,7 +98,9 @@ gulp.task('bundle:cleanup:before', function () {
 gulp.task('bundle:js', function () {
     var f = filter([
         '**',
-        '!**/ckeditor/ckeditor.js'
+        '!**/ckeditor/ckeditor.js',
+        '!**/pre.js',
+        '!**/post.js'
     ], { restore: true });
 
     return gulp.src(JS_BUNDLE)
@@ -94,16 +123,17 @@ gulp.task('bundle:js', function () {
 gulp.task('bundle:template', function () {
     var manifest = gulp.src(PROJECT_PATH.js + '/dist/rev-manifest.json');
 
-    return gulp.src([PROJECT_ROOT + '/../../templates/cms/plugins/widgets/ckeditor.html'])
+    return gulp.src([PROJECT_ROOT + '/../../widgets.py'])
         .pipe(replace(
             /bundle.*.cms.ckeditor.min.js/,
             'bundle.cms.ckeditor.min.js'
         ))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../templates/cms/plugins/widgets/'))
+        .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
         .pipe(revReplace({
-            manifest: manifest
+            manifest: manifest,
+            replaceInExtensions: ['.py']
         }))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../templates/cms/plugins/widgets/'));
+        .pipe(gulp.dest(PROJECT_ROOT + '/../../'));
 });
 
 gulp.task('bundle:cleanup', function () {

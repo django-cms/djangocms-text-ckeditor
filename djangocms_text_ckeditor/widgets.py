@@ -8,8 +8,8 @@ from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
-
 from django.contrib.admin.templatetags.admin_static import static
+
 from cms.utils.urlutils import static_with_version
 
 from . import settings as text_settings

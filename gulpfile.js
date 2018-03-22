@@ -13,6 +13,9 @@ var rev = require('gulp-rev');
 var runSequence = require('run-sequence');
 var filter = require('gulp-filter');
 var del = require('del');
+var integrationTests = require('djangocms-casper-helpers/gulp');
+var path = require('path');
+var child_process = require('child_process');
 
 var argv = require('minimist')(process.argv.slice(2));
 
@@ -21,7 +24,8 @@ var options = {
 };
 var PROJECT_ROOT = __dirname + '/djangocms_text_ckeditor/static/djangocms_text_ckeditor';
 var PROJECT_PATH = {
-    js: PROJECT_ROOT + '/js'
+    js: PROJECT_ROOT + '/js',
+    tests: __dirname + '/djangocms_text_ckeditor/tests/frontend/'
 };
 
 var PROJECT_PATTERNS = {
@@ -63,6 +67,25 @@ gulp.task('lint:javascript', function () {
         .pipe(eslint.failAfterError())
         .pipe(gulpif(!process.env.CI, plumber.stop()));
 });
+
+var INTEGRATION_TESTS = [
+    ['smoke']
+];
+
+// gulp tests:integration [--clean] [--screenshots] [--tests=loginAdmin,toolbar]
+var pathToBin = child_process.execSync('npm bin').toString().trim();
+var pathToCasper = path.join(pathToBin, 'casperjs');
+
+gulp.task('tests:integration', integrationTests({
+    tests: INTEGRATION_TESTS,
+    pathToTests: PROJECT_PATH.tests,
+    argv: argv,
+    dbPath: 'testdb.sqlite',
+    serverCommand: 'test_settings.py',
+    logger: console.log.bind(console), // eslint-disable-line no-console
+    waitForMigrations: 10,
+    pathToCasper: pathToCasper
+}));
 
 gulp.task('bundle', function (done) {
     runSequence('bundle:cleanup:before', 'bundle:js', 'bundle:template', 'bundle:cleanup', done);

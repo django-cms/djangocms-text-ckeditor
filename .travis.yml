@@ -16,10 +16,18 @@ env:
   - DJANGO='django19' CMS='cms34'
   - DJANGO='django110' CMS='cms34'
   - DJANGO='django111' CMS='cms34'
-  - DJANGO='django18' CMS='cms35'
-  - DJANGO='django19' CMS='cms35'
-  - DJANGO='django110' CMS='cms35'
-  - DJANGO='django111' CMS='cms35'
+  - DJANGO='django18' CMS='cms35' FE=1
+  - DJANGO='django19' CMS='cms35' FE=1
+  - DJANGO='django110' CMS='cms35' FE=1
+  - DJANGO='django111' CMS='cms35' FE=1
+
+before_script:
+  - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi
+  - if [ "$FE" == 1 ]; then npm config set spin false; fi
+  - if [ "$FE" == 1 ]; then npm install -g npm; fi
+  - if [ "$FE" == 1 ]; then npm install -g gulp@3.9.0; fi
+  - if [ "$FE" == 1 ]; then npm install -g codeclimate-test-reporter; fi
+  - if [ "$FE" == 1 ]; then npm ci; fi
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -28,8 +36,9 @@ install:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then export PYVER=py33; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PYVER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PYVER=py35; fi"
+  - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
 
 # command to run tests, e.g. python setup.py test
-script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS",pep8
+script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS$FE_STR",pep8
 
 after_success: coveralls

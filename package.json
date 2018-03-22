@@ -16,6 +16,7 @@
   "homepage": "https://github.com/divio/djangocms-text-ckeditor#readme",
   "devDependencies": {
     "del": "^2.2.2",
+    "djangocms-casper-helpers": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^2.1.0",

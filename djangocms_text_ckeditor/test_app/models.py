@@ -28,3 +28,14 @@ class DummySpacer(CMSPlugin):
 
     def __str__(self):
         return 'dummy spacer object'
+
+
+class Pizza(models.Model):
+    description = HTMLField()
+    allergens = HTMLField(blank=True)
+
+
+class Topping(models.Model):
+    name = models.CharField(max_length=255)
+    description = HTMLField()
+    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)

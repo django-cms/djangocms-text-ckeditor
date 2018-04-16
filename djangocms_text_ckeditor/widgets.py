@@ -19,17 +19,6 @@ PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-45a646fecc.cms.ckeditor.min
 
 
 class TextEditorWidget(Textarea):
-    class Media:
-        js = (
-            static_with_version('cms/js/dist/bundle.admin.base.min.js'),
-            static(PATH_TO_JS),
-        )
-        css = {
-            'all': {
-                'djangocms_text_ckeditor/css/cms.ckeditor.css'
-            }
-        }
-
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
                  cancel_url=None, render_plugin_url=None, action_token=None,
@@ -66,6 +55,20 @@ class TextEditorWidget(Textarea):
         self.render_plugin_url = render_plugin_url
         self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
+
+   @property
+    def media(self):
+        return forms.Media(
+            css={
+                'all': {
+                    'djangocms_text_ckeditor/css/cms.ckeditor.css'
+                },
+            },
+            js=(
+                static_with_version('cms/js/dist/bundle.admin.base.min.js'),
+                static(PATH_TO_JS),
+            )
+        )
 
     def render_textarea(self, name, value, attrs=None):
         return super(TextEditorWidget, self).render(name, value, attrs)

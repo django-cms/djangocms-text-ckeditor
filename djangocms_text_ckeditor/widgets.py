@@ -2,9 +2,9 @@
 import json
 from copy import deepcopy
 
+from django import forms
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
-from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
@@ -18,7 +18,7 @@ from . import settings as text_settings
 PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-45a646fecc.cms.ckeditor.min.js'
 
 
-class TextEditorWidget(Textarea):
+class TextEditorWidget(forms.Textarea):
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
                  cancel_url=None, render_plugin_url=None, action_token=None,

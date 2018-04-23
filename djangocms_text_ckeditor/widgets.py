@@ -56,7 +56,7 @@ class TextEditorWidget(Textarea):
         self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
 
-   @property
+    @property
     def media(self):
         return forms.Media(
             css={

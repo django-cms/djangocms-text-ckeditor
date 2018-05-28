@@ -7,8 +7,8 @@ import html5lib
 from django.utils.module_loading import import_string
 from django.utils.six import BytesIO
 from html5lib import serializer, treebuilders, treewalkers
-from html5lib.filters import sanitizer
 from html5lib.constants import namespaces
+from html5lib.filters import sanitizer
 from PIL import Image
 
 from . import settings
@@ -17,20 +17,36 @@ from .utils import plugin_to_tag
 
 
 def _filter_kwargs():
-    kwargs = dict(
-        allowed_elements=set(
-            tuple(sanitizer.allowed_elements) + ((namespaces['html'], 'cms-plugin'),)))
+    kwargs = {
+        'allowed_elements': set(
+            tuple(sanitizer.allowed_elements) +
+            (
+                (namespaces['html'], 'cms-plugin'),
+            )
+        ),
+    }
 
     if settings.TEXT_HTML_SANITIZE:
-        kwargs['allowed_elements'] = set(
-            tuple(kwargs['allowed_elements']) +
-            settings.TEXT_ADDITIONAL_TAGS)
-        kwargs['allowed_attributes'] = set(
-            tuple(sanitizer.allowed_attributes) +
-            settings.TEXT_ADDITIONAL_ATTRIBUTES)
-        kwargs['allowed_protocols'] = set(
-            tuple(sanitizer.allowed_protocols) +
-            tuple(settings.TEXT_ADDITIONAL_PROTOCOLS))
+        kwargs.update({
+            'allowed_elements': set(
+                tuple(kwargs['allowed_elements']) +
+                tuple(
+                    (namespaces['html'], tag)
+                    for tag in settings.TEXT_ADDITIONAL_TAGS
+                )
+            ),
+            'allowed_attributes': set(
+                tuple(sanitizer.allowed_attributes) +
+                tuple(
+                    (None, attr)
+                    for attr in settings.TEXT_ADDITIONAL_ATTRIBUTES
+                )
+            ),
+            'allowed_protocols': set(
+                tuple(sanitizer.allowed_protocols) +
+                tuple(settings.TEXT_ADDITIONAL_PROTOCOLS)
+            )
+        })
     return kwargs
 
 
@@ -61,7 +77,8 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     stream = TextSanitizer(walker(dom_tree), **kwargs)
     s = serializer.HTMLSerializer(
         omit_optional_tags=False,
-        quote_attr_values='always')
+        quote_attr_values='always',
+    )
     return u''.join(s.serialize(stream))
 
 

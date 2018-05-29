@@ -15,17 +15,16 @@ class SanitizerTestCase(TestCase):
         sanitizer.TextSanitizer.allow_token_parsers = self.allow_token_parsers
 
     def test_sanitizer(self):
-        allowed_attrs = html5lib.sanitizer.HTMLSanitizer.allowed_attributes[:]
+        allowed_attrs = html5lib.filters.sanitizer.allowed_attributes
         sanitizer.TextSanitizer.allow_token_parsers = (attribute_parsers.DataAttributeParser,)
         parser = html5lib.HTMLParser(
             tree=treebuilders.getTreeBuilder("dom"),
-            tokenizer=sanitizer.TextSanitizer
         )
         body = '<span data-one="1" data-two="2">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)
         self.assertTrue('data-one="1"' in body)
         self.assertTrue('data-two="2"' in body)
-        self.assertEqual(allowed_attrs, html5lib.sanitizer.HTMLSanitizer.allowed_attributes)
+        self.assertEqual(allowed_attrs, html5lib.filters.sanitizer.allowed_attributes)
 
     def test_sanitizer_with_custom_token_parser(self):
 
@@ -37,7 +36,6 @@ class SanitizerTestCase(TestCase):
         sanitizer.TextSanitizer.allow_token_parsers = (DonutAttributeParser,)
         parser = html5lib.HTMLParser(
             tree=treebuilders.getTreeBuilder("dom"),
-            tokenizer=sanitizer.TextSanitizer
         )
         body = '<span donut="yummy">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)
@@ -47,7 +45,6 @@ class SanitizerTestCase(TestCase):
         sanitizer.TextSanitizer.allow_token_parsers = ()
         parser = html5lib.HTMLParser(
             tree=treebuilders.getTreeBuilder("dom"),
-            tokenizer=sanitizer.TextSanitizer
         )
         body = '<span data-one="1" data-two="2">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)

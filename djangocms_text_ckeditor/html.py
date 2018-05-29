@@ -6,7 +6,9 @@ import uuid
 import html5lib
 from django.utils.module_loading import import_string
 from django.utils.six import BytesIO
-from html5lib import sanitizer, serializer, treebuilders, treewalkers
+from html5lib import serializer, treebuilders, treewalkers
+from html5lib.constants import namespaces
+from html5lib.filters import sanitizer
 from PIL import Image
 
 from . import settings
@@ -14,36 +16,37 @@ from .sanitizer import TextSanitizer
 from .utils import plugin_to_tag
 
 
-def _get_default_parser():
-    opts = {}
-
-    sanitizer.HTMLSanitizer.acceptable_elements.extend(['cms-plugin'])
+def _filter_kwargs():
+    kwargs = {
+        'allowed_elements': sanitizer.allowed_elements | frozenset(
+            ((namespaces['html'], 'cms-plugin'), ),
+        ),
+    }
 
     if settings.TEXT_HTML_SANITIZE:
-        sanitizer.HTMLSanitizer.acceptable_elements.extend(
-            settings.TEXT_ADDITIONAL_TAGS)
-        sanitizer.HTMLSanitizer.acceptable_attributes.extend(
-            settings.TEXT_ADDITIONAL_ATTRIBUTES)
-        sanitizer.HTMLSanitizer.allowed_elements = (
-            sanitizer.HTMLSanitizer.acceptable_elements +
-            sanitizer.HTMLSanitizer.mathml_elements +
-            sanitizer.HTMLSanitizer.svg_elements)
-        sanitizer.HTMLSanitizer.allowed_attributes = (
-            sanitizer.HTMLSanitizer.acceptable_attributes +
-            sanitizer.HTMLSanitizer.mathml_attributes +
-            sanitizer.HTMLSanitizer.svg_attributes)
-        sanitizer.HTMLSanitizer.allowed_protocols = (
-            sanitizer.HTMLSanitizer.acceptable_protocols +
-            list(settings.TEXT_ADDITIONAL_PROTOCOLS))
+        kwargs.update({
+            'allowed_elements': kwargs['allowed_elements'] | frozenset(
+                (namespaces['html'], tag)
+                for tag in settings.TEXT_ADDITIONAL_TAGS
+            ),
+            'allowed_attributes': sanitizer.allowed_attributes | frozenset(
+                (None, attr)
+                for attr in settings.TEXT_ADDITIONAL_ATTRIBUTES
+            ),
+            'allowed_protocols': sanitizer.allowed_protocols | frozenset(
+                settings.TEXT_ADDITIONAL_PROTOCOLS
+            ),
+        })
+    return kwargs
+
+
+def _get_default_parser():
+    if settings.TEXT_HTML_SANITIZE:
         parser_classes = []
         for parser_class in settings.ALLOW_TOKEN_PARSERS:
             parser_classes.append(import_string(parser_class))
-
         TextSanitizer.allow_token_parsers = parser_classes
-        opts['tokenizer'] = TextSanitizer
-
-    return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"),
-                               **opts)
+    return html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"))
 
 
 DEFAULT_PARSER = _get_default_parser()
@@ -60,9 +63,12 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     else:
         dom_tree = parser.parseFragment(data)
     walker = treewalkers.getTreeWalker("dom")
-    stream = walker(dom_tree)
-    s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False,
-                                                 quote_attr_values=True)
+    kwargs = _filter_kwargs()
+    stream = TextSanitizer(walker(dom_tree), **kwargs)
+    s = serializer.HTMLSerializer(
+        omit_optional_tags=False,
+        quote_attr_values='always',
+    )
     return u''.join(s.serialize(stream))
 
 

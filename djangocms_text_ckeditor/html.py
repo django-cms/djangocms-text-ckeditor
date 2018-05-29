@@ -18,34 +18,24 @@ from .utils import plugin_to_tag
 
 def _filter_kwargs():
     kwargs = {
-        'allowed_elements': set(
-            tuple(sanitizer.allowed_elements) +
-            (
-                (namespaces['html'], 'cms-plugin'),
-            )
+        'allowed_elements': sanitizer.allowed_elements | frozenset(
+            ((namespaces['html'], 'cms-plugin'), ),
         ),
     }
 
     if settings.TEXT_HTML_SANITIZE:
         kwargs.update({
-            'allowed_elements': set(
-                tuple(kwargs['allowed_elements']) +
-                tuple(
-                    (namespaces['html'], tag)
-                    for tag in settings.TEXT_ADDITIONAL_TAGS
-                )
+            'allowed_elements': kwargs['allowed_elements'] | frozenset(
+                (namespaces['html'], tag)
+                for tag in settings.TEXT_ADDITIONAL_TAGS
             ),
-            'allowed_attributes': set(
-                tuple(sanitizer.allowed_attributes) +
-                tuple(
-                    (None, attr)
-                    for attr in settings.TEXT_ADDITIONAL_ATTRIBUTES
-                )
+            'allowed_attributes': sanitizer.allowed_attributes | frozenset(
+                (None, attr)
+                for attr in settings.TEXT_ADDITIONAL_ATTRIBUTES
             ),
-            'allowed_protocols': set(
-                tuple(sanitizer.allowed_protocols) +
-                tuple(settings.TEXT_ADDITIONAL_PROTOCOLS)
-            )
+            'allowed_protocols': sanitizer.allowed_protocols | frozenset(
+                settings.TEXT_ADDITIONAL_PROTOCOLS
+            ),
         })
     return kwargs
 

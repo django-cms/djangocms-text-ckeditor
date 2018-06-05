@@ -349,7 +349,7 @@ class TextPlugin(CMSPluginBase):
         )
 
         query = request.GET.copy()
-        query['plugin'] = plugin.pk
+        query['plugin'] = str(plugin.pk)
 
         success_url = admin_reverse('cms_page_add_plugin')
         # Because we've created the cmsplugin record

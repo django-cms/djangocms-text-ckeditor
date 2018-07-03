@@ -320,16 +320,16 @@ You can further `customize your plugin`_ as other plugins.
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
 
-If you have created a plugin that you want to use inside texts you can make them appear in the dropdown by 
-making them `text_enabled`. This means that you assign the property `text_enabled` of a plugin to `True`, 
+If you have created a plugin that you want to use within Text plugins you can make them appear in the dropdown by 
+making them `text_enabled`. This means that you assign the property ``text_enabled`` of a plugin to ``True``, 
 the default value is `False`. Here is a very simple implementation::
 
     class MyTextPlugin(TextPlugin):
-        name = _(u"My text plugin")
+        name = "My text plugin"
         model = MyTextModel
         text_enabled = True
 
-When the plugin is picked up, it will be available in the "CMS Plugins" dropdown, which you can find in the editor. 
+When the plugin is picked up, it will be available in the *CMS Plugins* dropdown, which you can find in the editor. 
 This makes it very easy for users to insert special content in a user-friendly Text block, which they are familiair with. 
 
 The plugin will even be previewed in the text editor. **Pro-tip**: make sure your plugin provides its own `icon_alt` method.

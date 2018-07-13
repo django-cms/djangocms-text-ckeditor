@@ -13,7 +13,10 @@ from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.core.urlresolvers import reverse
+try:
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
@@ -21,6 +24,7 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
+from django.utils import six
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
@@ -346,7 +350,7 @@ class TextPlugin(CMSPluginBase):
         )
 
         query = request.GET.copy()
-        query['plugin'] = plugin.pk
+        query['plugin'] = six.text_type(plugin.pk)
 
         success_url = admin_reverse('cms_page_add_plugin')
         # Because we've created the cmsplugin record

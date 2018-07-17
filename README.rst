@@ -320,8 +320,22 @@ You can further `customize your plugin`_ as other plugins.
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
 
-If you have another plugin that you want to use inside texts you can make them appear in the dropdown by making them text_enabled.
-Check in `django-cms doc`_ how to do this.
+If you have created a plugin that you want to use within Text plugins you can make them appear in the dropdown by 
+making them `text_enabled`. This means that you assign the property ``text_enabled`` of a plugin to ``True``, 
+the default value is `False`. Here is a very simple implementation::
+
+    class MyTextPlugin(TextPlugin):
+        name = "My text plugin"
+        model = MyTextModel
+        text_enabled = True
+
+When the plugin is picked up, it will be available in the *CMS Plugins* dropdown, which you can find in the editor. 
+This makes it very easy for users to insert special content in a user-friendly Text block, which they are familiair with. 
+
+The plugin will even be previewed in the text editor. **Pro-tip**: make sure your plugin provides its own `icon_alt` method.
+That way, if you have many `text_enabled`-plugins, it can display a hint about it. For example, if you created a plugin which displays prices of configurable product, it can display a tooltip with the name of that product.
+
+For more information about extending the CMS with plugins, read `django-cms doc`_ on how to do this.
 
 .. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#cms.plugin_base.CMSPluginBase.text_enabled
 

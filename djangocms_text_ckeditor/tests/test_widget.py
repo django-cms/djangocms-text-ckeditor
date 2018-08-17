@@ -2,6 +2,7 @@
 from cms.api import add_plugin, create_page
 
 from djangocms_text_ckeditor import html, settings
+from djangocms_text_ckeditor.compat import get_page_placeholders
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
 from .base import BaseTestCase
@@ -22,7 +23,7 @@ class WidgetTestCase(BaseTestCase):
     def test_sub_plugin_config(self):
         page = create_page(title='home', template='page.html', language='en')
         plugin = add_plugin(
-            page.placeholders.get(slot='content'), 'TextPlugin', 'en', body='some text'
+            get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en', body='some text'
         )
         endpoint = self.get_change_plugin_uri(plugin)
 
@@ -35,14 +36,14 @@ class WidgetTestCase(BaseTestCase):
 
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')
-        add_plugin(page.placeholders.get(slot='content'), 'TextPlugin', 'en', body="Lorem ipsum")
+        add_plugin(get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en', body="Lorem ipsum")
         page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, "Lorem ipsum")
 
     def test_child_plugin(self):
         page = create_page(title='pagina', template='page.html', language='en')
-        placeholder = page.placeholders.get(slot='content')
+        placeholder = get_page_placeholders(page, 'en').get(slot='content')
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body="Lorem ipsum")
         test_image = self.create_filer_image_object()
         pic_plugin = add_plugin(
@@ -57,7 +58,7 @@ class WidgetTestCase(BaseTestCase):
 
     def test_contain_text(self):
         page = create_page(title='home', template='page.html', language='en')
-        add_plugin(page.placeholders.get(slot='content'), 'TextPlugin', 'en', body='some text')
+        add_plugin(get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en', body='some text')
         language = 'en'
         page.publish(language)
         url = page.get_absolute_url(language)
@@ -67,7 +68,7 @@ class WidgetTestCase(BaseTestCase):
     def test_text_sanitizer(self):
         page = create_page(title='home', template='page.html', language='en')
         add_plugin(
-            page.placeholders.get(slot='content'), 'TextPlugin', 'en',
+            get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en',
             body='<span data-one="1" data-two="2">some text</span>'
         )
         language = 'en'
@@ -82,7 +83,7 @@ class WidgetTestCase(BaseTestCase):
         html.DEFAULT_PARSER = html._get_default_parser()
         page = create_page(title='home', template='page.html', language='en')
         add_plugin(
-            page.placeholders.get(slot='content'), 'TextPlugin', 'en',
+            get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en',
             body='<span data-one="1" data-two="2">some text</span>'
         )
         language = 'en'

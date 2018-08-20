@@ -251,6 +251,7 @@ class TextPlugin(CMSPluginBase):
             installed_plugins=plugins, pk=plugin.pk,
             placeholder=plugin.placeholder,
             plugin_language=plugin.language,
+            plugin_position=plugin.position,
             configuration=self.ckeditor_configuration,
             render_plugin_url=render_plugin_url,
             cancel_url=cancel_url,
@@ -352,7 +353,7 @@ class TextPlugin(CMSPluginBase):
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)
 
-        success_url = admin_reverse('cms_page_add_plugin')
+        success_url = admin_reverse('cms_placeholder_add_plugin')
         # Because we've created the cmsplugin record
         # we need to delete the plugin when a user cancels.
         success_url += '?delete-on-cancel&' + query.urlencode()

@@ -7,7 +7,7 @@
         {{ settings|safe }},
         {
             'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
-            'add_plugin_url': '{{ placeholder.get_add_url }}',
+            'add_plugin_url': '{% url "admin:cms_placeholder_add_plugin" %}',
             {% if widget.action_token %}
             'action_token': '{{ widget.action_token }}',
             {% endif %}
@@ -21,6 +21,7 @@
             'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
             'plugin_id': {{ plugin_pk|default:"''"|unlocalize }},
             'plugin_language': '{{ plugin_language }}',
+            'plugin_position': {{ plugin_position|default:1|unlocalize }},
             'lang': {
                 'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
                 'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',

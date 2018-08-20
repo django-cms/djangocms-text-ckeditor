@@ -7,7 +7,7 @@
         {{ settings|safe }},
         {
             'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
-            'add_plugin_url': '{% if placeholder.get_add_url %}{{ placeholder.get_add_url }}{% else %}{% url "admin:cms_placeholder_add_plugin" %}{% endif %}',
+            'add_plugin_url': '{% url "admin:cms_placeholder_add_plugin" %}',
             {% if widget.action_token %}
             'action_token': '{{ widget.action_token }}',
             {% endif %}

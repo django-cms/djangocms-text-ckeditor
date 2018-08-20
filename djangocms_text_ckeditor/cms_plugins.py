@@ -8,6 +8,7 @@ from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
+from cms.utils.urlutils import admin_reverse
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
@@ -31,7 +32,6 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
 from . import settings
-from .compat import get_page_placeholder_endpoint
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
@@ -353,7 +353,7 @@ class TextPlugin(CMSPluginBase):
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)
 
-        success_url = get_page_placeholder_endpoint('add_plugin')
+        success_url = admin_reverse('cms_placeholder_add_plugin')
         # Because we've created the cmsplugin record
         # we need to delete the plugin when a user cancels.
         success_url += '?delete-on-cancel&' + query.urlencode()

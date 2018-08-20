@@ -28,10 +28,6 @@ except ImportError:
     HAS_DJANGOCMS_TRANSLATIONS = False
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from djangocms_text_ckeditor.compat import (
-    get_page_placeholders,
-    get_page_placeholder_endpoint,
-)
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
     _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
@@ -124,7 +120,7 @@ class PluginActionsTestCase(BaseTestCase):
         """
         admin = self.get_superuser()
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
@@ -176,7 +172,7 @@ class PluginActionsTestCase(BaseTestCase):
         Test that you can add a text plugin
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
@@ -229,7 +225,7 @@ class PluginActionsTestCase(BaseTestCase):
         """
         admin = self.get_superuser()
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
             simple_placeholder,
@@ -320,7 +316,7 @@ class PluginActionsTestCase(BaseTestCase):
         # Assert that a cancel token for the same plugin
         # is different per user session.
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
             simple_placeholder,
@@ -343,7 +339,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_add_and_cancel_plugin_permissions(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
 
@@ -385,7 +381,7 @@ class PluginActionsTestCase(BaseTestCase):
         as initial data to the text field.
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
             simple_placeholder,
@@ -431,7 +427,7 @@ class PluginActionsTestCase(BaseTestCase):
         of a child plugin directly in the text plugin text.
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
             simple_placeholder,
@@ -467,7 +463,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_render_child_plugin_endpoint(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
             "TextPlugin",
@@ -522,7 +518,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_render_child_plugin_endpoint_calls_context_processors(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
             "TextPlugin",
@@ -562,7 +558,7 @@ class PluginActionsTestCase(BaseTestCase):
         on the placeholder attached object and the text plugin.
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
             "TextPlugin",
@@ -590,7 +586,7 @@ class PluginActionsTestCase(BaseTestCase):
         matches the child plugin parent.
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
             "TextPlugin",
@@ -639,7 +635,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_render_plugin(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder)
 
         for i in range(0, 10):
@@ -662,7 +658,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_render_extended_plugin(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder, 'ExtendedTextPlugin')
 
         for i in range(0, 10):
@@ -688,7 +684,7 @@ class PluginActionsTestCase(BaseTestCase):
         Test that copying of textplugins replaces references to copied plugins
         """
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = self._add_text_plugin(simple_placeholder)
 
@@ -724,7 +720,7 @@ class PluginActionsTestCase(BaseTestCase):
             'source_language': 'en',
         }
 
-        endpoint = get_page_placeholder_endpoint('copy_plugins')
+        endpoint = admin_reverse('cms_placeholder_copy_plugins')
         endpoint += '?' + urlencode({'cms_path': '/en/'})
 
         with self.login_user_context(self.user):
@@ -741,7 +737,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_copy_plugin_callback(self):
         simple_page = create_page('test page', 'page.html', u'en')
-        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin_1 = self._add_text_plugin(simple_placeholder)
 
@@ -794,7 +790,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def test_text_plugin_xss(self):
         page = create_page('test page', 'page.html', u'en')
-        placeholder = get_page_placeholders(page, 'en').get(slot='content')
+        placeholder = page.get_placeholders('en').get(slot='content')
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body='body')
         endpoint = self.get_change_plugin_uri(plugin)
 
@@ -817,7 +813,7 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
     def setUp(self):
         super(DjangoCMSTranslationsIntegrationTestCase, self).setUp()
         self.page = create_page('test page', 'page.html', 'en', published=True)
-        self.placeholder = get_page_placeholders(self.page, 'en').get(slot='content')
+        self.placeholder = self.page.get_placeholders('en').get(slot='content')
 
     def _export_page(self):
         return json.loads(export_page(self.page, 'en'))

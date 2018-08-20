@@ -1,7 +1,5 @@
 from django import template
 
-from ..compat import LTE_CMS_3_3
-
 
 register = template.Library()
 
@@ -9,9 +7,6 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def render_plugin_preview(context, plugin):
     request = context['request']
-
-    if LTE_CMS_3_3:
-        return plugin.render_plugin(context)
 
     try:
         content_renderer = request.toolbar.content_renderer

@@ -251,6 +251,7 @@ class TextPlugin(CMSPluginBase):
             installed_plugins=plugins, pk=plugin.pk,
             placeholder=plugin.placeholder,
             plugin_language=plugin.language,
+            plugin_position=plugin.position,
             configuration=self.ckeditor_configuration,
             render_plugin_url=render_plugin_url,
             cancel_url=cancel_url,

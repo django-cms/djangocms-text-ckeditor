@@ -66,10 +66,25 @@
             this.options = CMS.CKEditor.options.settings;
             this.editor = editor;
 
+
+            CKEDITOR.on('instanceReady', function () {
+                var widgetInstances = [];
+
+                for (key in editor.widgets.instances) {
+                    if (editor.widgets.instances.hasOwnProperty(key)) {
+                        widgetInstances.push(editor.widgets.instances[key]);
+                    }
+                }
+
+                that.numberOfChildren = CKEDITOR.tools.array.filter(widgetInstances, function(i) {
+                    return i.name === 'cms-widget';
+                }).length;
+            });
+
             /**
              * populated with _fresh_ child plugins
              */
-            this.child_plugins = [];
+            this.unsaved_child_plugins = [];
             this.setupCancelCleanupCallback(this.options);
 
             // don't do anything if there are no plugins defined
@@ -203,10 +218,11 @@
                             // in case it's a fresh text plugin children don't have to be
                             // deleted separately
                             if (!that.options.delete_on_cancel && addedChildPlugin) {
-                                that.child_plugins.push(data.plugin_id);
+                                that.unsaved_child_plugins.push(data.plugin_id);
                             }
 
                             that.insertPlugin(data);
+                            that.numberOfChildren += 1;
 
                             CMS.API.Helpers.onPluginSave = onSave;
                             return false;
@@ -311,6 +327,7 @@
                 plugin_type: item.attr('rel'),
                 plugin_parent: this.options.plugin_id,
                 plugin_language: this.options.plugin_language,
+                plugin_position: this.options.plugin_position + 1 + this.numberOfChildren,
                 cms_path: window.parent.location.pathname,
                 cms_history: 0
             };
@@ -384,10 +401,10 @@
             var that = this;
             var CMS = window.parent.CMS;
             var cancelModalCallback = function cancelModalCallback(e, opts) {
-                if (!that.options.delete_on_cancel && !that.child_plugins.length) {
+                if (!that.options.delete_on_cancel && !that.unsaved_child_plugins.length) {
                     return;
                 }
-                if (that.child_plugins.length) {
+                if (that.unsaved_child_plugins.length) {
                     e.preventDefault();
                     CMS.API.Toolbar.showLoader();
                     var data = {
@@ -395,7 +412,7 @@
                     };
 
                     if (!that.options.delete_on_cancel) {
-                        data.child_plugins = that.child_plugins;
+                        data.child_plugins = that.unsaved_child_plugins;
                     }
 
                     $.ajax({

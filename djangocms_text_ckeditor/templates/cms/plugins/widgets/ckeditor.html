@@ -21,6 +21,7 @@
             'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
             'plugin_id': {{ plugin_pk|default:"''"|unlocalize }},
             'plugin_language': '{{ plugin_language }}',
+            'plugin_position': {{ plugin_position|default:1|unlocalize }},
             'lang': {
                 'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
                 'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',

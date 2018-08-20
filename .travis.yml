@@ -10,16 +10,8 @@ python:
 
 env:
   matrix:
-  - DJANGO='django18' CMS='cms33'
-  - DJANGO='django19' CMS='cms33'
-  - DJANGO='django18' CMS='cms34'
-  - DJANGO='django19' CMS='cms34'
-  - DJANGO='django110' CMS='cms34'
-  - DJANGO='django111' CMS='cms34'
-  - DJANGO='django18' CMS='cms35' FE=1
-  - DJANGO='django19' CMS='cms35' FE=1
-  - DJANGO='django110' CMS='cms35' FE=1
-  - DJANGO='django111' CMS='cms35' FE=1
+  - DJANGO='dj111' CMS='cms40' FE=1
+  - DJANGO='dj20' CMS='cms40' FE=1
 
 before_script:
   - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi

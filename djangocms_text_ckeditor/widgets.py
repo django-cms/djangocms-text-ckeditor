@@ -61,9 +61,9 @@ class TextEditorWidget(forms.Textarea):
     def media(self):
         return forms.Media(
             css={
-                'all': {
-                    'djangocms_text_ckeditor/css/cms.ckeditor.css'
-                },
+                'all': [
+                    'djangocms_text_ckeditor/css/cms.ckeditor.css',
+                ],
             },
             js=(
                 static_with_version('cms/js/dist/bundle.admin.base.min.js'),
@@ -110,7 +110,7 @@ class TextEditorWidget(forms.Textarea):
         }
         return mark_safe(render_to_string('cms/plugins/widgets/ckeditor.html', context))
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         return (
             self.render_textarea(name, value, attrs) + self.render_additions(name, value, attrs)
         )

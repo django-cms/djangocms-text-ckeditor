@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+3.6.1 (2018-10-29)
+-----------------
+
+* Added Django 2.0 & 2.1 support
+* Updated setup.py to use html5lib>=0.999999999
+* Fixed ValueError on  static file resolution at import time
+
+
 3.6.0 (2018-04-11)
 ------------------
 

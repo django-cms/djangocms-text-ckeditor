@@ -1,8 +1,9 @@
+from django.template import engines
+
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
-from django.template import engines
-from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
+from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.test_app.models import DummyLink, DummySpacer
 
 

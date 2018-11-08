@@ -5,8 +5,8 @@ Text Plugin for django-cms with CKEditor.
 
 The latest version of this package supports:
 
-* Django >= 1.8
-* django CMS >= 3.3
+* Django >= 1.11
+* django CMS >= 3.4.5
 
 .. WARNING::
    - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
@@ -21,7 +21,7 @@ The latest version of this package supports:
 Installation
 ------------
 
-This plugin requires `django CMS` 3.3 or higher to be properly installed.
+This plugin requires `django CMS` 3.4.5 or higher to be properly installed.
 
 * In your projects `virtualenv`, run ``pip install djangocms-text-ckeditor``.
 * Add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS`` (the order does not matter).
@@ -320,8 +320,8 @@ You can further `customize your plugin`_ as other plugins.
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
 
-If you have created a plugin that you want to use within Text plugins you can make them appear in the dropdown by 
-making them `text_enabled`. This means that you assign the property ``text_enabled`` of a plugin to ``True``, 
+If you have created a plugin that you want to use within Text plugins you can make them appear in the dropdown by
+making them `text_enabled`. This means that you assign the property ``text_enabled`` of a plugin to ``True``,
 the default value is `False`. Here is a very simple implementation::
 
     class MyTextPlugin(TextPlugin):
@@ -329,8 +329,8 @@ the default value is `False`. Here is a very simple implementation::
         model = MyTextModel
         text_enabled = True
 
-When the plugin is picked up, it will be available in the *CMS Plugins* dropdown, which you can find in the editor. 
-This makes it very easy for users to insert special content in a user-friendly Text block, which they are familiair with. 
+When the plugin is picked up, it will be available in the *CMS Plugins* dropdown, which you can find in the editor.
+This makes it very easy for users to insert special content in a user-friendly Text block, which they are familiair with.
 
 The plugin will even be previewed in the text editor. **Pro-tip**: make sure your plugin provides its own `icon_alt` method.
 That way, if you have many `text_enabled`-plugins, it can display a hint about it. For example, if you created a plugin which displays prices of configurable product, it can display a tooltip with the name of that product.

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Topping, Pizza
+
+from .models import Pizza, Topping
 
 
 class ToppingInlineAdmin(admin.TabularInline):
@@ -13,7 +14,7 @@ class PizzaAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
         ('Advanced', {
-            'classes': ('collapse',),
+            # 'classes': ('collapse',),
             'fields': ('allergens',)
         }),
     )

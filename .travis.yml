@@ -14,9 +14,9 @@ matrix:
     - python: 2.7
       env: DJANGO='dj111' CMS='cms35' FE=1
     - python: 3.5
-      env: DJANGO='dj111' CMS='cms34' FE=1
+      env: DJANGO='dj111' CMS='cms34'
     - python: 2.7
-      env: DJANGO='dj111' CMS='cms34' FE=1
+      env: DJANGO='dj111' CMS='cms34'
     # Django 2.0
     - python: 3.5
       env: DJANGO='dj20' CMS='cms36'

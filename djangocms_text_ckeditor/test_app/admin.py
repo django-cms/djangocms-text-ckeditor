@@ -14,6 +14,8 @@ class PizzaAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
         ('Advanced', {
+            # NOTE: Disabled because when PizzaAdmin uses a collapsed
+            # class then the order of javascript libs is incorrect.
             # 'classes': ('collapse',),
             'fields': ('allergens',)
         }),

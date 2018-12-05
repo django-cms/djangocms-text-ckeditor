@@ -14,6 +14,7 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
+from django.urls import reverse
 from django.utils import six
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
@@ -37,12 +38,6 @@ from .utils import (
     replace_plugin_tags,
 )
 from .widgets import TextEditorWidget
-
-try:
-    from django.core.urlresolvers import reverse
-except ImportError:
-    from django.urls import reverse
-
 
 CMS_34 = LooseVersion(cms.__version__) >= LooseVersion('3.4')
 

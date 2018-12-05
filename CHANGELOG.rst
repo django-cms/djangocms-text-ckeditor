@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+3.7.0 (unreleased)
+------------------
+
+* Added support for Django 1.11, 2.0 and 2.1
+* Removed support for Django < 1.11
+* Adapted testing infrastructure (tox/travis) to incorporate
+  django CMS 3.5 and 3.6
+
+
 3.6.1 (2018-11-08)
 -----------------
 

@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-from distutils.version import LooseVersion
 import json
 import re
+from distutils.version import LooseVersion
 
-import cms
-from cms.models import CMSPlugin
-from cms.plugin_base import CMSPluginBase
-from cms.plugin_pool import plugin_pool
-from cms.utils.placeholder import get_toolbar_plugin_struct
-from cms.utils.urlutils import admin_reverse
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
-try:
-    from django.core.urlresolvers import reverse
-except ImportError:
-    from django.urls import reverse
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
@@ -24,6 +14,7 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
+from django.urls import reverse
 from django.utils import six
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
@@ -31,21 +22,22 @@ from django.utils.translation import ugettext
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
+import cms
+from cms.models import CMSPlugin
+from cms.plugin_base import CMSPluginBase
+from cms.plugin_pool import plugin_pool
+from cms.utils.placeholder import get_toolbar_plugin_struct
+from cms.utils.urlutils import admin_reverse
+
 from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN,
-    plugin_tags_to_admin_html,
-    plugin_tags_to_id_list,
-    plugin_tags_to_user_html,
-    random_comment_exempt,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html,
+    plugin_tags_to_id_list, plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt,
     replace_plugin_tags,
-    plugin_to_tag,
-    _plugin_tags_to_html,
 )
 from .widgets import TextEditorWidget
-
 
 CMS_34 = LooseVersion(cms.__version__) >= LooseVersion('3.4')
 
@@ -243,7 +235,7 @@ class TextPlugin(CMSPluginBase):
         # should we delete the text plugin when
         # the user cancels?
         delete_text_on_cancel = (
-            'delete-on-cancel' in request.GET and
+            'delete-on-cancel' in request.GET and  # noqa
             not plugin.get_plugin_instance()[0]
         )
 
@@ -407,7 +399,7 @@ class TextPlugin(CMSPluginBase):
         # The following is needed for permission checking
         plugin_class.opts = plugin_class.model._meta
 
-        if not (plugin_class.has_change_permission(request, obj=text_plugin) and
+        if not (plugin_class.has_change_permission(request, obj=text_plugin) and  # noqa
                 _user_can_change_placeholder(request, text_plugin.placeholder)):
             raise PermissionDenied
         return HttpResponse(form.render_plugin(request))
@@ -442,7 +434,7 @@ class TextPlugin(CMSPluginBase):
         # Check for add permissions because this view is meant
         # only for plugins created through the ckeditor
         # and the ckeditor plugin itself.
-        if not (plugin_class.has_add_permission(request) and
+        if not (plugin_class.has_add_permission(request) and  # noqa
                 _user_can_change_placeholder(request, text_plugin.placeholder)):
             raise PermissionDenied
         # Token is validated after checking permissions

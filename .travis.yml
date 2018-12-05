@@ -1,25 +1,32 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 
 sudo: false
 
-python:
-  - 3.5
-  - 2.7
-
-env:
-  matrix:
-  - DJANGO='django18' CMS='cms33'
-  - DJANGO='django19' CMS='cms33'
-  - DJANGO='django18' CMS='cms34'
-  - DJANGO='django19' CMS='cms34'
-  - DJANGO='django110' CMS='cms34'
-  - DJANGO='django111' CMS='cms34'
-  - DJANGO='django18' CMS='cms35' FE=1
-  - DJANGO='django19' CMS='cms35' FE=1
-  - DJANGO='django110' CMS='cms35' FE=1
-  - DJANGO='django111' CMS='cms35' FE=1
+matrix:
+  include:
+    # Django 1.11
+    - python: 3.5
+      env: DJANGO='dj111' CMS='cms36' FE=1
+    - python: 2.7
+      env: DJANGO='dj111' CMS='cms36' FE=1
+    - python: 3.5
+      env: DJANGO='dj111' CMS='cms35' FE=1
+    - python: 2.7
+      env: DJANGO='dj111' CMS='cms35' FE=1
+    - python: 3.5
+      env: DJANGO='dj111' CMS='cms34'
+    - python: 2.7
+      env: DJANGO='dj111' CMS='cms34'
+    # Django 2.0
+    - python: 3.5
+      env: DJANGO='dj20' CMS='cms36'
+    - python: 3.5
+      env: DJANGO='dj20' CMS='cms36' FE=1
+    # Django 2.1
+    - python: 3.5
+      env: DJANGO='dj21' CMS='cms36'
+    - python: 3.5
+      env: DJANGO='dj21' CMS='cms36' FE=1
 
 before_script:
   - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi
@@ -29,16 +36,14 @@ before_script:
   - if [ "$FE" == 1 ]; then npm install -g codeclimate-test-reporter; fi
   - if [ "$FE" == 1 ]; then npm ci; fi
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox>=1.8 coveralls
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PYVER=py27; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then export PYVER=py33; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PYVER=py34; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PYVER=py35; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
 
-# command to run tests, e.g. python setup.py test
-script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS$FE_STR",pep8
+script:
+  - COMMAND='coverage run' tox -e"$PY_VER-$DJANGO-$CMS$FE_STR",pep8
 
-after_success: coveralls
+after_success:
+  - coveralls

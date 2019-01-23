@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -32,12 +33,6 @@ HELPER_SETTINGS = {
         'djangocms_text_ckeditor',
         'djangocms_text_ckeditor.test_app',
     ],
-    'LANGUAGE_CODE': 'en',
-    'LANGUAGES': (
-        ('en', gettext('English')),
-        ('fr', gettext('French')),
-        ('it', gettext('Italiano')),
-    ),
     'CMS_LANGUAGES': {
         1: [
             {
@@ -60,6 +55,13 @@ HELPER_SETTINGS = {
             'hide_untranslated': False,
         },
     },
+    'LANGUAGES': (
+        ('en', gettext('English')),
+        ('fr', gettext('French')),
+        ('it', gettext('Italiano')),
+    ),
+    'LANGUAGE_CODE': 'en',
+    'ALLOWED_HOSTS': ['localhost'],
     'CMS_PERMISSION': False,
     'CMS_PLACEHOLDER_CONF': {
         'content': {
@@ -135,5 +137,5 @@ def run():
     runner.runner([sys.argv[0], 'cms', '--cms', 'server', '--bind', '0.0.0.0', '--port', str(port)])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()

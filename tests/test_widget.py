@@ -11,7 +11,7 @@ from .base import BaseTestCase
 class WidgetTestCase(BaseTestCase):
 
     def setUp(self):
-        self.super_user = self._create_user("test", True, True)
+        self.super_user = self._create_user('test', True, True)
         self.default_parser = html.DEFAULT_PARSER
 
     def tearDown(self):
@@ -37,15 +37,15 @@ class WidgetTestCase(BaseTestCase):
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')
         placeholder = get_page_placeholders(page, 'en').get(slot='content')
-        add_plugin(placeholder, 'TextPlugin', 'en', body="Lorem ipsum")
+        add_plugin(placeholder, 'TextPlugin', 'en', body='Lorem ipsum')
         page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
-        self.assertContains(response, "Lorem ipsum")
+        self.assertContains(response, 'Lorem ipsum')
 
     def test_child_plugin(self):
         page = create_page(title='pagina', template='page.html', language='en')
         placeholder = get_page_placeholders(page, 'en').get(slot='content')
-        plugin = add_plugin(placeholder, 'TextPlugin', 'en', body="Lorem ipsum")
+        plugin = add_plugin(placeholder, 'TextPlugin', 'en', body='Lorem ipsum')
         test_image = self.create_filer_image_object()
         pic_plugin = add_plugin(
             placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image
@@ -65,7 +65,7 @@ class WidgetTestCase(BaseTestCase):
         page.publish(language)
         url = page.get_absolute_url(language)
         response = self.client.get(url)
-        self.assertContains(response, "some text")
+        self.assertContains(response, 'some text')
 
     def test_text_sanitizer(self):
         page = create_page(title='home', template='page.html', language='en')

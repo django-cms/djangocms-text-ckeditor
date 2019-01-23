@@ -13,7 +13,7 @@ class HtmlFieldTestCase(BaseTestCase):
 
     def test_html_form_field(self):
         html_field = HTMLFormField()
-        self.assertTrue(isinstance(html_field.clean("some text"), SafeData))
+        self.assertTrue(isinstance(html_field.clean('some text'), SafeData))
 
 
 class FieldTestCase(BaseTestCase):
@@ -30,7 +30,7 @@ class FieldTestCase(BaseTestCase):
 
     def test_model_field_text_is_safe(self):
         original = 'Hello <h2>There</h2>'
-        template = Template("{{ obj.text }}")
+        template = Template('{{ obj.text }}')
         text = SimpleText.objects.create(text='Hello <h2>There</h2>')
         # Fetching a new instance should now have the string marked
         # as safe.

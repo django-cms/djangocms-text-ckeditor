@@ -14,7 +14,7 @@ class BaseTestCase33(CMSTestCase, _BaseTestCase):
 
     def get_admin_url(self, model, action, *args):
         opts = model._meta
-        url_name = "{}_{}_{}".format(opts.app_label, opts.model_name, action)
+        url_name = '{}_{}_{}'.format(opts.app_label, opts.model_name, action)
         return admin_reverse(url_name, args=args)
 
     def get_add_plugin_uri(self, placeholder, plugin_type, language='en', parent=None):

@@ -23,7 +23,7 @@ def create_picture_plugin(filename, file, parent_plugin, **kwargs):
     if not os.path.exists(os.path.dirname(full_path)):
         os.makedirs(os.path.dirname(full_path))
     pic.image = path
-    f = open(full_path, "wb")
+    f = open(full_path, 'wb')
     f.write(file.read())
     f.close()
     pic.save()

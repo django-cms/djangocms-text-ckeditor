@@ -44,7 +44,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def get_custom_admin_url(self, plugin_class, name):
         plugin_type = plugin_class.__name__.lower()
-        url_name = "%s_%s_%s" % (plugin_class.model._meta.app_label, plugin_type, name)
+        url_name = '%s_%s_%s' % (plugin_class.model._meta.app_label, plugin_type, name)
         return admin_reverse(url_name)
 
     def _add_child_plugin(self, text_plugin, plugin_type='PicturePlugin', data_suffix=None):
@@ -76,12 +76,12 @@ class PluginActionsTestCase(BaseTestCase):
         )
         return plugin
 
-    def _add_text_plugin(self, placeholder, plugin_type="TextPlugin"):
+    def _add_text_plugin(self, placeholder, plugin_type='TextPlugin'):
         text_plugin = add_plugin(
             placeholder,
             plugin_type,
-            "en",
-            body="Hello World",
+            'en',
+            body='Hello World',
         )
         return text_plugin
 
@@ -157,7 +157,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertContains(response, action_token)
 
         with self.login_user_context(admin):
-            data = {'body': "Hello world"}
+            data = {'body': 'Hello world'}
             response = self.client.post(add_url, data)
 
         self.assertEqual(response.status_code, 200)
@@ -168,7 +168,7 @@ class PluginActionsTestCase(BaseTestCase):
         text_plugin = Text.objects.get(pk=text_plugin_pk)
 
         # Assert the text was correctly saved
-        self.assertEqual(text_plugin.body, "Hello world")
+        self.assertEqual(text_plugin.body, 'Hello world')
 
     def test_add_and_cancel_plugin(self):
         """
@@ -209,8 +209,8 @@ class PluginActionsTestCase(BaseTestCase):
         # Assert user can't delete a non "ghost" plugin
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
 
@@ -232,8 +232,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
 
@@ -245,7 +245,7 @@ class PluginActionsTestCase(BaseTestCase):
             'en',
             target=text_plugin,
             picture=self.create_filer_image_object(),
-            caption_text="Foo",
+            caption_text='Foo',
         )
         child_plugin_2 = add_plugin(
             simple_placeholder,
@@ -253,7 +253,7 @@ class PluginActionsTestCase(BaseTestCase):
             'en',
             target=text_plugin,
             picture=self.create_filer_image_object(),
-            caption_text="Foo",
+            caption_text='Foo',
         )
         child_plugin_3 = add_plugin(
             simple_placeholder,
@@ -261,7 +261,7 @@ class PluginActionsTestCase(BaseTestCase):
             'en',
             target=text_plugin,
             picture=self.create_filer_image_object(),
-            caption_text="Foo",
+            caption_text='Foo',
         )
         child_plugin_4 = add_plugin(
             simple_placeholder,
@@ -269,7 +269,7 @@ class PluginActionsTestCase(BaseTestCase):
             'en',
             target=text_plugin,
             picture=self.create_filer_image_object(),
-            caption_text="Foo",
+            caption_text='Foo',
         )
 
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin_1)
@@ -323,8 +323,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
 
@@ -365,7 +365,7 @@ class PluginActionsTestCase(BaseTestCase):
             response = self.client.post(endpoint, data)
             self.assertEqual(response.status_code, 403)
 
-        staff_user = self._create_user("addonly-staff", is_staff=True, is_superuser=False)
+        staff_user = self._create_user('addonly-staff', is_staff=True, is_superuser=False)
 
         self._give_cms_permissions(staff_user)
         self._give_permission(staff_user, text_plugin_class.model, 'add')
@@ -388,8 +388,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
 
@@ -434,8 +434,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
 
@@ -469,8 +469,8 @@ class PluginActionsTestCase(BaseTestCase):
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
         text_plugin_class = text_plugin.get_plugin_class_instance()
@@ -524,8 +524,8 @@ class PluginActionsTestCase(BaseTestCase):
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
         text_plugin_class = text_plugin.get_plugin_class_instance()
@@ -564,8 +564,8 @@ class PluginActionsTestCase(BaseTestCase):
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
         text_plugin_class = text_plugin.get_plugin_class_instance()
@@ -592,8 +592,8 @@ class PluginActionsTestCase(BaseTestCase):
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the first",
         )
         text_plugin_class = text_plugin.get_plugin_class_instance()
@@ -618,8 +618,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         text_plugin_2 = add_plugin(
             simple_placeholder,
-            "TextPlugin",
-            "en",
+            'TextPlugin',
+            'en',
             body="I'm the second",
         )
 
@@ -707,10 +707,10 @@ class PluginActionsTestCase(BaseTestCase):
 
         # create a page translation to copy plugins to
         translation = create_title(
-            "fr",
-            "test-page-fr",
+            'fr',
+            'test-page-fr',
             simple_page,
-            slug="test-page-fr"
+            slug='test-page-fr'
         )
 
         self.assertEqual(CMSPlugin.objects.filter(language='en').count(), 3)
@@ -799,8 +799,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         with self.login_user_context(self.user):
             data = {
-                "body": (
-                    "<div onload='do_evil_stuff();'>divcontent</div><a href='javascript:do_evil_stuff()'>acontent</a>"
+                'body': (
+                    '<div onload="do_evil_stuff();">divcontent</div><a href="javascript:do_evil_stuff();">acontent</a>'
                 )
             }
             response = self.client.post(endpoint, data)

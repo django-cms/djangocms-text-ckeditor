@@ -26,7 +26,7 @@ except ImportError:
 
 @python_2_unicode_compatible
 class AbstractText(CMSPlugin):
-    """Abstract Text Plugin Class"""
+    """ Abstract Text Plugin Class """
 
     # Add an app namespace to related_name to avoid field name clashes
     # with any other plugins that have a field with the same name as the
@@ -38,7 +38,7 @@ class AbstractText(CMSPlugin):
         related_name='%(app_label)s_%(class)s',
         parent_link=True,
     )
-    body = models.TextField(_("body"))
+    body = models.TextField(_('body'))
     search_fields = ('body',)
 
     # This property is deprecated. And will be removed in a future release.

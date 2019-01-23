@@ -178,8 +178,8 @@ class TextPlugin(CMSPluginBase):
     name = settings.TEXT_PLUGIN_NAME
     module = settings.TEXT_PLUGIN_MODULE_NAME
     form = TextForm
-    render_template = "cms/plugins/text.html"
-    change_form_template = "cms/plugins/text_plugin_change_form.html"
+    render_template = 'cms/plugins/text.html'
+    change_form_template = 'cms/plugins/text_plugin_change_form.html'
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
 
@@ -296,7 +296,7 @@ class TextPlugin(CMSPluginBase):
             # CMS >= 3.4 compatibility
             self.cms_plugin_instance = self._get_plugin_or_404(request.GET['plugin'])
 
-        if getattr(self, "cms_plugin_instance", None):
+        if getattr(self, 'cms_plugin_instance', None):
             # This can happen if the user did not properly cancel the plugin
             # and so a "ghost" plugin instance is left over.
             # The instance is a record that points to the Text plugin
@@ -368,7 +368,7 @@ class TextPlugin(CMSPluginBase):
 
     def get_admin_url_name(self, name):
         plugin_type = self.__class__.__name__.lower()
-        url_name = "%s_%s_%s" % (self.model._meta.app_label, plugin_type, name)
+        url_name = '%s_%s_%s' % (self.model._meta.app_label, plugin_type, name)
         return url_name
 
     def _get_text_plugin_from_request(self, request, data):
@@ -383,7 +383,7 @@ class TextPlugin(CMSPluginBase):
 
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
-        message = ugettext("Unable to process your request. Invalid token.")
+        message = ugettext('Unable to process your request. Invalid token.')
         raise ValidationError(message=force_text(message))
 
     @random_comment_exempt
@@ -397,7 +397,7 @@ class TextPlugin(CMSPluginBase):
         form = RenderPluginForm(request.GET, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext("Unable to process your request.")
+            message = ugettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -429,7 +429,7 @@ class TextPlugin(CMSPluginBase):
         form = DeleteOnCancelForm(request.POST, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext("Unable to process your request.")
+            message = ugettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -459,7 +459,7 @@ class TextPlugin(CMSPluginBase):
         return text_enabled_plugins
 
     def get_form(self, request, obj=None, **kwargs):
-        plugin = getattr(self, "cms_plugin_instance", None) or obj
+        plugin = getattr(self, 'cms_plugin_instance', None) or obj
         get_plugin = plugin_pool.get_plugin
         child_plugin_types = self.get_child_classes(
             slot=plugin.placeholder.slot,
@@ -491,7 +491,7 @@ class TextPlugin(CMSPluginBase):
         return context
 
     def save_model(self, request, obj, form, change):
-        if getattr(self, "cms_plugin_instance", None):
+        if getattr(self, 'cms_plugin_instance', None):
             # Because the plugin was created by manually
             # creating the CMSPlugin record, it's important
             # to assign all the values from the CMSPlugin record

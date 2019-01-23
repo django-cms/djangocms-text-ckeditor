@@ -19,7 +19,7 @@ class SanitizerTestCase(TestCase):
         allowed_attrs = html5lib.filters.sanitizer.allowed_attributes
         sanitizer.TextSanitizer.allow_token_parsers = (attribute_parsers.DataAttributeParser,)
         parser = html5lib.HTMLParser(
-            tree=treebuilders.getTreeBuilder("dom"),
+            tree=treebuilders.getTreeBuilder('dom'),
         )
         body = '<span data-one="1" data-two="2">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)
@@ -36,7 +36,7 @@ class SanitizerTestCase(TestCase):
 
         sanitizer.TextSanitizer.allow_token_parsers = (DonutAttributeParser,)
         parser = html5lib.HTMLParser(
-            tree=treebuilders.getTreeBuilder("dom"),
+            tree=treebuilders.getTreeBuilder('dom'),
         )
         body = '<span donut="yummy">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)
@@ -45,7 +45,7 @@ class SanitizerTestCase(TestCase):
     def test_sanitizer_without_token_parsers(self):
         sanitizer.TextSanitizer.allow_token_parsers = ()
         parser = html5lib.HTMLParser(
-            tree=treebuilders.getTreeBuilder("dom"),
+            tree=treebuilders.getTreeBuilder('dom'),
         )
         body = '<span data-one="1" data-two="2">some text</span>'
         body = html.clean_html(body, full=False, parser=parser)

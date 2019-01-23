@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import html5lib
 from django.test import TestCase
+
+import html5lib
 from html5lib import treebuilders
 
 from djangocms_text_ckeditor import attribute_parsers, html, sanitizer

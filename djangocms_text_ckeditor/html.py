@@ -3,9 +3,10 @@ import base64
 import re
 import uuid
 
-import html5lib
 from django.utils.module_loading import import_string
 from django.utils.six import BytesIO
+
+import html5lib
 from html5lib import serializer, treebuilders, treewalkers
 from html5lib.constants import namespaces
 from html5lib.filters import sanitizer

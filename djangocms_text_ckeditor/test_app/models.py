@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from cms.models import CMSPlugin
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+
+from cms.models import CMSPlugin
 
 from djangocms_text_ckeditor.fields import HTMLField
 

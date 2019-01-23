@@ -32,7 +32,7 @@ HELPER_SETTINGS = {
         'djangocms_picture',
         'djangocms_link',
         'djangocms_text_ckeditor',
-        'djangocms_text_ckeditor.test_app',
+        'djangocms_text_ckeditor.tests.test_app',
     ],
     'CMS_LANGUAGES': {
         1: [

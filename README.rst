@@ -20,6 +20,8 @@ a text plugin.
    - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
    - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
+.. image:: preview.gif
+
 
 Contributing
 ============

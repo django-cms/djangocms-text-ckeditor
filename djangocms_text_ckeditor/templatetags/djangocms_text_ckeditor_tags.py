@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import template
 
 from ..compat import LTE_CMS_3_3

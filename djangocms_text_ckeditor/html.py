@@ -63,7 +63,7 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
         dom_tree = parser.parse(data)
     else:
         dom_tree = parser.parseFragment(data)
-    walker = treewalkers.getTreeWalker("dom")
+    walker = treewalkers.getTreeWalker('dom')
     kwargs = _filter_kwargs()
     stream = TextSanitizer(walker(dom_tree), **kwargs)
     s = serializer.HTMLSerializer(

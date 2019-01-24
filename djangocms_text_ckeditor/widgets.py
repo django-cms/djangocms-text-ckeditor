@@ -96,7 +96,7 @@ class TextEditorWidget(forms.Textarea):
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
-            'settings': config.replace("{{ language }}", language),
+            'settings': config.replace('{{ language }}', language),
             'STATIC_URL': settings.STATIC_URL,
             'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,

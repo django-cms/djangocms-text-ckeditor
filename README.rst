@@ -10,6 +10,10 @@ directly to your web pages. Enhance your website experience with our community
 maintained editor. This package aims to integrate CKEditor into django CMS as
 a text plugin.
 
+This addon is compatible with `Divio Cloud <http://divio.com>`_ and is also available on the
+`django CMS Marketplace <https://marketplace.django-cms.org/en/addons/browse/djangocms-text-ckeditor/>`_
+for easy installation.
+
 .. WARNING::
 
    - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).

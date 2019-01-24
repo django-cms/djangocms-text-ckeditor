@@ -26,7 +26,9 @@ except ImportError:
 
 @python_2_unicode_compatible
 class AbstractText(CMSPlugin):
-    """ Abstract Text Plugin Class """
+    """
+    Abstract Text Plugin Class
+    """
 
     # Add an app namespace to related_name to avoid field name clashes
     # with any other plugins that have a field with the same name as the

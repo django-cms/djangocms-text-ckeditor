@@ -311,7 +311,7 @@ class TextPlugin(CMSPluginBase):
             # This is NOT the normal workflow because we create a plugin
             # on GET request to the /add/ endpoint and so we bypass
             # django's add_view, thus bypassing permission check.
-            message = ugettext('You do not have permission to add a plugin')
+            message = ugettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
 
         try:
@@ -330,7 +330,7 @@ class TextPlugin(CMSPluginBase):
             }
 
         except PermissionDenied:
-            message = ugettext('You do not have permission to add a plugin')
+            message = ugettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)

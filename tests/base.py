@@ -7,7 +7,7 @@ from cms.utils.urlutils import admin_reverse
 
 from djangocms_helper.base_test import BaseTestCase as _BaseTestCase
 
-from ..compat import LTE_CMS_3_3
+from djangocms_text_ckeditor.compat import LTE_CMS_3_3
 
 
 class BaseTestCase33(CMSTestCase, _BaseTestCase):

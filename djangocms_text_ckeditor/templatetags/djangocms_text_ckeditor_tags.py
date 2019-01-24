@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 
-from ..compat import LTE_CMS_3_3
+from djangocms_text_ckeditor.compat import LTE_CMS_3_3
 
 
 register = template.Library()

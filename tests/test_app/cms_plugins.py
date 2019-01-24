@@ -5,7 +5,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from djangocms_text_ckeditor.tests.test_app.models import (
+from tests.test_app.models import (
     DummyLink, DummySpacer,
 )
 

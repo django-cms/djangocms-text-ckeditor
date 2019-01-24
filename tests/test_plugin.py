@@ -115,7 +115,7 @@ class PluginActionsTestCase(BaseTestCase):
         url = urlunquote(response.url)
         # Ideal case, this looks like:
         # /en/admin/cms/page/edit-plugin/1/
-        return re.findall('\d+', url)[0]
+        return re.findall('\d+', url)[0]  # noqa
 
     def test_add_and_edit_plugin(self):
         """

@@ -1,59 +1,67 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Michael P. Jung <michael.jung@terreon.de>, 2013
+# Angelo Dini <angelo.dini@divio.ch>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: django-cms\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 16:37+0100\n"
-"PO-Revision-Date: 2013-04-29 09:32+0000\n"
-"Last-Translator: Patrick Lauber <patrick.lauber@divio.ch>\n"
-"Language-Team: German (http://www.transifex.com/divio/django-cms/language/de/)\n"
+"POT-Creation-Date: 2019-01-24 10:13+0100\n"
+"PO-Revision-Date: 2019-01-23 16:28+0000\n"
+"Last-Translator: Angelo Dini <angelo.dini@divio.ch>, 2019\n"
+"Language-Team: German (https://www.transifex.com/divio/teams/58664/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cms_plugins.py:13
-msgid "Text"
-msgstr "Text"
+#: cms_plugins.py:314 cms_plugins.py:333
+msgid "You do not have permission to add a plugin."
+msgstr "Sie haben keine Rechte um ein Plugin hinzuzufügen."
 
-#: models.py:12
+#: cms_plugins.py:386
+msgid "Unable to process your request. Invalid token."
+msgstr "Die Anfrage kann nicht bearbeitet werden. Inkorrektes Token."
+
+#: cms_plugins.py:400 cms_plugins.py:432
+msgid "Unable to process your request."
+msgstr "Die Anfrage kann nicht bearbeitet werden."
+
+#: forms.py:70
+msgid "Can't delete a saved plugin."
+msgstr "Gespeichertes Plugin kann nicht gelöscht werden."
+
+#: models.py:43
 msgid "body"
 msgstr "Body"
 
+#: settings.py:38
+msgid "Text"
+msgstr "Text"
+
+#: settings.py:39
+msgid "Generic"
+msgstr "Generisch"
+
+#: templates/cms/plugins/widgets/ckeditor.html:25
 #: templates/cms/plugins/widgets/ckeditor.html:28
-msgid "Please select a plugin type."
-msgstr "Bitte ein Plugin auswählen"
+msgid "CMS Plugins"
+msgstr "CMS Plugins"
 
-#: templates/cms/plugins/widgets/ckeditor.html:34
-msgid "Text editor does not support inserting objects."
-msgstr "Der Texteditor unterstützt das Einfügen von Objekten nicht."
+#: templates/cms/plugins/widgets/ckeditor.html:26
+msgid "Add CMS Plugin"
+msgstr "CMS Plugin hinzufügen"
 
-#: templates/cms/plugins/widgets/ckeditor.html:46
-msgid "Text editor does not support editing objects."
-msgstr "Der Texteditor unterstützt das Bearbeiten von Objekten nicht."
+#: templates/cms/plugins/widgets/ckeditor.html:27
+msgid "Edit CMS Plugin"
+msgstr "CMS Plugin editieren"
 
-#: templates/cms/plugins/widgets/ckeditor.html:51
-msgid "No object selected."
-msgstr "Kein Objekt ausgewählt."
-
-#: templates/cms/plugins/widgets/ckeditor.html:55
-msgid "Not a plugin object"
-msgstr "Kein Plugin-Objekt"
-
-#: templates/cms/plugins/widgets/ckeditor.html:67
-msgid "Available Plugins"
-msgstr "Verfügbare Plugins"
-
-#: templates/cms/plugins/widgets/ckeditor.html:70
-msgid "Insert plugin"
-msgstr "Plugin einfügen"
-
-#: templates/cms/plugins/widgets/ckeditor.html:71
-msgid "Edit selected plugin"
-msgstr "Ausgewähltes Plugin bearbeiten"
+#: templates/cms/plugins/widgets/ckeditor.html:33
+msgid "Standard Plugins"
+msgstr "Standart Plugins"

@@ -1,59 +1,68 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Bertrand Bordage <bordage.bertrand@gmail.com>, 2013
+# Angelo Dini <angelo.dini@divio.ch>, 2019
+# Nicolas PASCAL <np.pascal@gmail.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: django-cms\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 16:37+0100\n"
-"PO-Revision-Date: 2013-05-24 10:10+0000\n"
-"Last-Translator: Bertrand Bordage <bordage.bertrand@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/divio/django-cms/language/fr/)\n"
+"POT-Creation-Date: 2019-01-24 10:13+0100\n"
+"PO-Revision-Date: 2019-01-23 16:28+0000\n"
+"Last-Translator: Nicolas PASCAL <np.pascal@gmail.com>, 2019\n"
+"Language-Team: French (https://www.transifex.com/divio/teams/58664/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: cms_plugins.py:13
-msgid "Text"
-msgstr "Texte"
+#: cms_plugins.py:314 cms_plugins.py:333
+msgid "You do not have permission to add a plugin."
+msgstr ""
 
-#: models.py:12
+#: cms_plugins.py:386
+msgid "Unable to process your request. Invalid token."
+msgstr "Impossible de traiter votre demande. Jeton invalide."
+
+#: cms_plugins.py:400 cms_plugins.py:432
+msgid "Unable to process your request."
+msgstr "Impossible de traiter votre demande."
+
+#: forms.py:70
+msgid "Can't delete a saved plugin."
+msgstr "Impossible de supprimer le plugin enregistré."
+
+#: models.py:43
 msgid "body"
 msgstr "corps"
 
+#: settings.py:38
+msgid "Text"
+msgstr "Texte"
+
+#: settings.py:39
+msgid "Generic"
+msgstr "Générique"
+
+#: templates/cms/plugins/widgets/ckeditor.html:25
 #: templates/cms/plugins/widgets/ckeditor.html:28
-msgid "Please select a plugin type."
-msgstr "Veuillez sélectionner un type de greffon."
+msgid "CMS Plugins"
+msgstr "CMS Plugins"
 
-#: templates/cms/plugins/widgets/ckeditor.html:34
-msgid "Text editor does not support inserting objects."
-msgstr "L'éditeur de texte ne permet pas l'insertion d'objets."
+#: templates/cms/plugins/widgets/ckeditor.html:26
+msgid "Add CMS Plugin"
+msgstr "Ajouter un plugin CMS"
 
-#: templates/cms/plugins/widgets/ckeditor.html:46
-msgid "Text editor does not support editing objects."
-msgstr "L'éditeur de texte ne permet pas l'édition d'objets."
+#: templates/cms/plugins/widgets/ckeditor.html:27
+msgid "Edit CMS Plugin"
+msgstr "Modifier le plugin CMS"
 
-#: templates/cms/plugins/widgets/ckeditor.html:51
-msgid "No object selected."
-msgstr "Aucun objet selectionné."
-
-#: templates/cms/plugins/widgets/ckeditor.html:55
-msgid "Not a plugin object"
-msgstr "L'objet selectionné n'est pas un greffon"
-
-#: templates/cms/plugins/widgets/ckeditor.html:67
-msgid "Available Plugins"
-msgstr "Greffons disponibles"
-
-#: templates/cms/plugins/widgets/ckeditor.html:70
-msgid "Insert plugin"
-msgstr "Ajouter un greffon"
-
-#: templates/cms/plugins/widgets/ckeditor.html:71
-msgid "Edit selected plugin"
-msgstr "Modifier le greffon sélectionné"
+#: templates/cms/plugins/widgets/ckeditor.html:33
+msgid "Standard Plugins"
+msgstr "Plugins Standard"

@@ -8,6 +8,7 @@ except ImportError:
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+
 # See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 # for all settings
 

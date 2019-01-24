@@ -14,6 +14,7 @@ from cms.utils.urlutils import static_with_version
 
 from . import settings as text_settings
 
+
 # this path is changed automatically whenever you run `gulp bundle`
 PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-45a646fecc.cms.ckeditor.min.js'
 
@@ -95,7 +96,7 @@ class TextEditorWidget(forms.Textarea):
             'ckeditor_function': ckeditor_selector.replace('-', '_'),
             'name': name,
             'language': language,
-            'settings': config.replace("{{ language }}", language),
+            'settings': config.replace('{{ language }}', language),
             'STATIC_URL': settings.STATIC_URL,
             'CKEDITOR_BASEPATH': text_settings.TEXT_CKEDITOR_BASE_PATH,
             'installed_plugins': self.installed_plugins,

@@ -3,9 +3,10 @@ import base64
 import re
 import uuid
 
-import html5lib
 from django.utils.module_loading import import_string
 from django.utils.six import BytesIO
+
+import html5lib
 from html5lib import serializer, treebuilders, treewalkers
 from html5lib.constants import namespaces
 from html5lib.filters import sanitizer
@@ -62,7 +63,7 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
         dom_tree = parser.parse(data)
     else:
         dom_tree = parser.parseFragment(data)
-    walker = treewalkers.getTreeWalker("dom")
+    walker = treewalkers.getTreeWalker('dom')
     kwargs = _filter_kwargs()
     stream = TextSanitizer(walker(dom_tree), **kwargs)
     s = serializer.HTMLSerializer(
@@ -96,34 +97,34 @@ def extract_images(data, plugin):
         dr = m.groupdict()
         mime_type = dr['mime_type']
         image_data = dr['data']
-        if mime_type.find(";"):
-            mime_type = mime_type.split(";")[0]
+        if mime_type.find(';'):
+            mime_type = mime_type.split(';')[0]
         try:
             image_data = base64.b64decode(image_data)
         except Exception:
             image_data = base64.urlsafe_b64decode(image_data)
         try:
-            image_type = mime_type.split("/")[1]
+            image_type = mime_type.split('/')[1]
         except IndexError:
             # No image type specified -- will convert to jpg below if it's valid image data
-            image_type = ""
+            image_type = ''
         image = BytesIO(image_data)
         # genarate filename and normalize image format
-        if image_type == "jpg" or image_type == "jpeg":
-            file_ending = "jpg"
-        elif image_type == "png":
+        if image_type == 'jpg' or image_type == 'jpeg':
+            file_ending = 'jpg'
+        elif image_type == 'png':
             file_ending = 'png'
-        elif image_type == "gif":
-            file_ending = "gif"
+        elif image_type == 'gif':
+            file_ending = 'gif'
         else:
             # any not "web-safe" image format we try to convert to jpg
             im = Image.open(image)
             new_image = BytesIO()
-            file_ending = "jpg"
-            im.save(new_image, "JPEG")
+            file_ending = 'jpg'
+            im.save(new_image, 'JPEG')
             new_image.seek(0)
             image = new_image
-        filename = u"%s.%s" % (uuid.uuid4(), file_ending)
+        filename = u'%s.%s' % (uuid.uuid4(), file_ending)
         # transform image into a cms plugin
         image_plugin = img_data_to_plugin(
             filename, image, parent_plugin=plugin, width=width, height=height
@@ -140,9 +141,9 @@ def extract_images(data, plugin):
 
 
 def img_data_to_plugin(filename, image, parent_plugin, width=None, height=None):
-    func_name = settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[-1]
+    func_name = settings.TEXT_SAVE_IMAGE_FUNCTION.split('.')[-1]
     module = __import__(
-        ".".join(settings.TEXT_SAVE_IMAGE_FUNCTION.split(".")[:-1]), fromlist=[func_name]
+        '.'.join(settings.TEXT_SAVE_IMAGE_FUNCTION.split('.')[:-1]), fromlist=[func_name]
     )
     func = getattr(module, func_name)
     return func(filename, image, parent_plugin, width=width, height=height)

@@ -1,60 +1,68 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Jelena <jelena.kutalovskaja@gmail.com>, 2014
-# Matas Dailyda <matas@dailyda.com>, 2015
+# Angelo Dini <angelo.dini@divio.ch>, 2019
+# Matas Dailyda <matas@dailyda.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: django-cms\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 16:37+0100\n"
-"PO-Revision-Date: 2015-02-23 16:41+0000\n"
-"Last-Translator: Matas Dailyda <matas@dailyda.com>\n"
-"Language-Team: Lithuanian (http://www.transifex.com/divio/django-cms/language/lt/)\n"
+"POT-Creation-Date: 2019-01-24 10:13+0100\n"
+"PO-Revision-Date: 2019-01-23 16:28+0000\n"
+"Last-Translator: Matas Dailyda <matas@dailyda.com>, 2019\n"
+"Language-Team: Lithuanian (https://www.transifex.com/divio/teams/58664/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
-#: cms_plugins.py:13
-msgid "Text"
-msgstr "Tekstas"
+#: cms_plugins.py:314 cms_plugins.py:333
+msgid "You do not have permission to add a plugin."
+msgstr ""
 
-#: models.py:12
+#: cms_plugins.py:386
+msgid "Unable to process your request. Invalid token."
+msgstr "Negalima apdoroti jūsų užklausos. Netinkama žymė."
+
+#: cms_plugins.py:400 cms_plugins.py:432
+msgid "Unable to process your request."
+msgstr "Negalima apdoroti jūsų užklausos. "
+
+#: forms.py:70
+msgid "Can't delete a saved plugin."
+msgstr "Negalima pašalinti išsaugoto įskiepio."
+
+#: models.py:43
 msgid "body"
 msgstr "turinys"
 
+#: settings.py:38
+msgid "Text"
+msgstr "Tekstas"
+
+#: settings.py:39
+msgid "Generic"
+msgstr "Bendras"
+
+#: templates/cms/plugins/widgets/ckeditor.html:25
 #: templates/cms/plugins/widgets/ckeditor.html:28
-msgid "Please select a plugin type."
-msgstr "Pasirinkite įskiepo tipą."
+msgid "CMS Plugins"
+msgstr "TVS įskiepiai"
 
-#: templates/cms/plugins/widgets/ckeditor.html:34
-msgid "Text editor does not support inserting objects."
-msgstr "Teksto redaktorius nepalaiko objektų iterpimo."
+#: templates/cms/plugins/widgets/ckeditor.html:26
+msgid "Add CMS Plugin"
+msgstr "Pridėti TVS įskiepį"
 
-#: templates/cms/plugins/widgets/ckeditor.html:46
-msgid "Text editor does not support editing objects."
-msgstr "Teksto redaktorius nepalaiko objektų redagavimo."
+#: templates/cms/plugins/widgets/ckeditor.html:27
+msgid "Edit CMS Plugin"
+msgstr "Redaguotis TVS įskiepį"
 
-#: templates/cms/plugins/widgets/ckeditor.html:51
-msgid "No object selected."
-msgstr "Nėra pasirinktų objektų."
-
-#: templates/cms/plugins/widgets/ckeditor.html:55
-msgid "Not a plugin object"
-msgstr "Ne įskiepo objektas"
-
-#: templates/cms/plugins/widgets/ckeditor.html:67
-msgid "Available Plugins"
-msgstr "Galimi įskiepai"
-
-#: templates/cms/plugins/widgets/ckeditor.html:70
-msgid "Insert plugin"
-msgstr "Įterpti įskiepą"
-
-#: templates/cms/plugins/widgets/ckeditor.html:71
-msgid "Edit selected plugin"
-msgstr "Redaguoti pasirinktą iskiepą"
+#: templates/cms/plugins/widgets/ckeditor.html:33
+msgid "Standard Plugins"
+msgstr "Standartiniai įskiepiai"

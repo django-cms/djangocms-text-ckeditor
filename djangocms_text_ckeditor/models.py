@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
-from cms.models import CMSPlugin
+from __future__ import unicode_literals
+
 from django.db import models
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
+from cms.models import CMSPlugin
+
 from . import settings
 from .html import clean_html, extract_images
-from .utils import plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
+from .utils import (
+    plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag,
+    replace_plugin_tags,
+)
+
 
 try:
     from softhyphen.html import hyphenate
@@ -19,7 +26,9 @@ except ImportError:
 
 @python_2_unicode_compatible
 class AbstractText(CMSPlugin):
-    """Abstract Text Plugin Class"""
+    """
+    Abstract Text Plugin Class
+    """
 
     # Add an app namespace to related_name to avoid field name clashes
     # with any other plugins that have a field with the same name as the
@@ -31,7 +40,7 @@ class AbstractText(CMSPlugin):
         related_name='%(app_label)s_%(class)s',
         parent_link=True,
     )
-    body = models.TextField(_("body"))
+    body = models.TextField(_('body'))
     search_fields = ('body',)
 
     # This property is deprecated. And will be removed in a future release.

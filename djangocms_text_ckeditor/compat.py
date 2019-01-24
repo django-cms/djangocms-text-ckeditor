@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from distutils.version import LooseVersion
 
 import cms
+
 
 cms_version = LooseVersion(cms.__version__)
 

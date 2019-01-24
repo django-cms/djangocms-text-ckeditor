@@ -1,14 +1,21 @@
-djangocms-text-ckeditor
-=======================
+========================
+django CMS Text CKEditor
+========================
 
-Text Plugin for django-cms with CKEditor.
+|pypi| |build| |coverage|
 
-The latest version of this package supports:
+CKEditor is a ready-for-use HTML text editor designed to simplify web content
+creation. It's a WYSIWYG editor that brings common word processor features
+directly to your web pages. Enhance your website experience with our community
+maintained editor. This package aims to integrate CKEditor into django CMS as
+a text plugin.
 
-* Django >= 1.11
-* django CMS >= 3.4.5
+This addon is compatible with `Divio Cloud <http://divio.com>`_ and is also available on the
+`django CMS Marketplace <https://marketplace.django-cms.org/en/addons/browse/djangocms-text-ckeditor/>`_
+for easy installation.
 
 .. WARNING::
+
    - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
    - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x,<3.5.1 (e.g.: version 3.1.0).
    - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
@@ -17,27 +24,60 @@ The latest version of this package supports:
    - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
    - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
 
+.. image:: preview.gif
+
+
+Contributing
+============
+
+This is a an open-source project. We'll be delighted to receive your
+feedback in the form of issues and pull requests. Before submitting your
+pull request, please review our `contribution guidelines
+<http://docs.django-cms.org/en/latest/contributing/index.html>`_.
+
+We're grateful to all contributors who have helped create and maintain this package.
+Contributors are listed at the `contributors <https://github.com/divio/djangocms-text-ckeditor/graphs/contributors>`_
+section.
+
+One of the easiest contributions you can make is helping to translate this addon on
+`Transifex <https://www.transifex.com/projects/p/djangocms-text-ckeditor/>`_.
+
+
+Documentation
+=============
+
+See ``REQUIREMENTS`` in the `setup.py <https://github.com/divio/djangocms-text-ckeditor/blob/master/setup.py>`_
+file for additional dependencies:
+
+|python| |django| |djangocms|
+
+The current integrated Version of CKEditor is: **4.7.3**
+
+For a full documentation visit: http://ckeditor.com/
+
 
 Installation
 ------------
 
 This plugin requires `django CMS` 3.4.5 or higher to be properly installed.
 
-* In your projects `virtualenv`, run ``pip install djangocms-text-ckeditor``.
-* Add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS`` (the order does not matter).
-* Run ``manage.py migrate djangocms_text_ckeditor``.
+For a manual install:
+
+* run ``pip install djangocms-text-ckeditor``
+* add ``djangocms_text_ckeditor`` to your ``INSTALLED_APPS``
+* run ``python manage.py migrate djangocms_text_ckeditor``
 
 
 Upgrading from ``cms.plugins.text``
------------------------------------
+***********************************
 
-* Remove ``cms.plugins.text`` from ``INSTALLED_APPS``
-* Add ``djangocms_text_ckeditor`` to ``INSTALLED_APPS``
-* Run ``python manage.py migrate djangocms_text_ckeditor 0001 --fake``
+* remove ``cms.plugins.text`` from ``INSTALLED_APPS``
+* add ``djangocms_text_ckeditor`` to ``INSTALLED_APPS``
+* run ``python manage.py migrate djangocms_text_ckeditor 0001 --fake``
 
 
-Usage
------
+Configuration
+-------------
 
 Default content in Placeholder
 ******************************
@@ -83,6 +123,7 @@ inserted order of chidren. For example::
 
 .. _CMS_PLACEHOLDER_CONF: http://docs.django-cms.org/en/latest/how_to/placeholders.html?highlight=cms_placeholder_conf
 
+
 CKEDITOR_SETTINGS
 *****************
 
@@ -95,6 +136,7 @@ You can override the setting ``CKEDITOR_SETTINGS`` in your settings.py::
     }
 
 This is the default dict that holds all **CKEditor** settings.
+
 
 Customizing plugin editor
 #########################
@@ -110,6 +152,7 @@ To customize the plugin editor, use `toolbar_CMS` attribute, as in::
         ],
         'skin': 'moono-lisa',
     }
+
 
 Customizing HTMLField editor
 ############################
@@ -130,7 +173,6 @@ models, use `toolbar_HTMLField` attribute::
 
 You can further customize each `HTMLField` field by using different
 configuration parameter in your settings::
-
 
     models.py
 
@@ -157,7 +199,6 @@ configuration parameter in your settings::
             ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
         ]
     }
-
 
 #. Add `configuration='MYSETTING'` to the `HTMLField` usage(s) you want to
    customize;
@@ -220,14 +261,6 @@ Have a look at the function ``create_picture_plugin`` for details.
 To completely disable the feature, set ``TEXT_SAVE_IMAGE_FUNCTION = None``.
 
 
-Translations
-------------
-
-If you want to help translate the plugin please do it on transifex:
-
-https://www.transifex.com/projects/p/django-cms/resource/djangocms-text-ckeditor/
-
-
 Usage as a model field
 ----------------------
 
@@ -264,6 +297,7 @@ In case you already installed ``django-softhyphen`` but do not want to soft hyph
 
 .. _soft-hyphen: http://www.w3.org/TR/html4/struct/text.html#h-9.3.3
 .. _django-softhyphen: https://github.com/datadesk/django-softhyphen
+
 
 Extending the plugin
 --------------------
@@ -317,6 +351,7 @@ You can further `customize your plugin`_ as other plugins.
 
 .. _customize your plugin: http://docs.django-cms.org/en/latest/how_to/custom_plugins.html
 
+
 Adding plugins to the "CMS Plugins" dropdown
 --------------------------------------------
 
@@ -338,6 +373,7 @@ That way, if you have many `text_enabled`-plugins, it can display a hint about i
 For more information about extending the CMS with plugins, read `django-cms doc`_ on how to do this.
 
 .. _django-cms doc: http://docs.django-cms.org/en/latest/reference/plugins.html#cms.plugin_base.CMSPluginBase.text_enabled
+
 
 Configurable sanitizer
 ----------------------
@@ -385,15 +421,16 @@ See the `html5lib documentation`_ for further information.
 .. _html5lib: https://pypi.python.org/pypi/html5lib
 .. _html5lib documentation: https://code.google.com/p/html5lib/wiki/UserDocumentation#Sanitizing_Tokenizer
 
+
 Search
 ------
 
-djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldryn/aldryn-search>`_ to make text content using Haystack.
+djangocms-text-ckeditor works well with `aldryn-search <https://github.com/aldryn/aldryn-search>`_
+to make text content using Haystack.
 
-About CKEditor
---------------
 
-The current integrated Version of CKeditor is **4.7.3**. For a full documentation visit: http://ckeditor.com/
+Development
+===========
 
 Building the JavaScript
 -----------------------
@@ -405,8 +442,35 @@ dependencies with ``npm install`` and then to run ``gulp bundle``.
 
 This command also updates the file name loaded based on the file contents.
 
+
 Updating the CKEditor
 ---------------------
 
 Make sure to use the url in `build config
 <https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.
+
+
+Running Tests
+-------------
+
+You can run tests by executing::
+
+    virtualenv env
+    source env/bin/activate
+    pip install -r tests/requirements.txt
+    python setup.py test
+
+
+.. |pypi| image:: https://badge.fury.io/py/djangocms-text-ckeditor.svg
+    :target: http://badge.fury.io/py/djangocms-text-ckeditor
+.. |build| image:: https://travis-ci.org/divio/djangocms-text-ckeditor.svg?branch=master
+    :target: https://travis-ci.org/divio/djangocms-text-ckeditor
+.. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
+
+.. |python| image:: https://img.shields.io/badge/python-2.7%20%7C%203.4+-blue.svg
+    :target: https://pypi.org/project/djangocms-text-ckeditor/
+.. |django| image:: https://img.shields.io/badge/django-1.11%20%7C%202.0%20%7C%202.1-blue.svg
+    :target: https://www.djangoproject.com/
+.. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.4%2B-blue.svg
+    :target: https://www.django-cms.org/

@@ -9,28 +9,32 @@ matrix:
     - python: 3.5
       env: TOX_ENV='isort'
       # Django 1.11
-    - python: 3.5
-      env: DJANGO='dj111' CMS='cms36' FE=1
     - python: 2.7
-      env: DJANGO='dj111' CMS='cms36' FE=1
-    - python: 3.5
-      env: DJANGO='dj111' CMS='cms35' FE=1
-    - python: 2.7
+      env: DJANGO='dj111' CMS='cms34' FE=1
+    - python: 3.4
       env: DJANGO='dj111' CMS='cms35' FE=1
     - python: 3.5
-      env: DJANGO='dj111' CMS='cms34'
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms34'
-    # Django 2.0
-    - python: 3.5
-      env: DJANGO='dj20' CMS='cms36'
-    - python: 3.5
-      env: DJANGO='dj20' CMS='cms36' FE=1
+      env: DJANGO='dj111' CMS='cms36' FE=1
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms37' FE=1
+      dist: xenial
+      sudo: true
     # Django 2.1
-    - python: 3.5
-      env: DJANGO='dj21' CMS='cms36'
-    - python: 3.5
+    - python: 3.6
       env: DJANGO='dj21' CMS='cms36' FE=1
+    - python: 3.6
+      env: DJANGO='dj21' CMS='cms37' FE=1
+    - python: 3.7
+      env: DJANGO='dj22' CMS='cms37' FE=1
+      dist: xenial
+      sudo: true
+    # Django 2.2
+    - python: 3.6
+      env: DJANGO='dj22' CMS='cms37' FE=1
+    - python: 3.7
+      env: DJANGO='dj22' CMS='cms37' FE=1
+      dist: xenial
+      sudo: true
 
 before_script:
   - pip install coverage isort tox
@@ -38,6 +42,7 @@ before_script:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
   - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
   - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi
   - if [ "$FE" == 1 ]; then npm config set spin false; fi
@@ -52,6 +57,7 @@ install:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
   - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
   - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
 

@@ -6,7 +6,7 @@ Changelog
 3.8.0 (unreleased)
 ==================
 
-* Introduced support for CMS 3.7 and Django 2.2
+* Added support for Django 2.2 and django CMS 3.7
 * Removed support for Django 2.0
 * Extended test matrix
 * Added isort and adapted imports

@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-try:
-    from urllib.parse import urljoin
-except ImportError:
-    # Python 2
-    from urlparse import urljoin
 
 from django.conf import settings
+from django.templatetags.static import static
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -32,7 +28,7 @@ TEXT_ADDITIONAL_PROTOCOLS = getattr(settings, 'TEXT_ADDITIONAL_PROTOCOLS', ())
 TEXT_CKEDITOR_CONFIGURATION = getattr(settings, 'TEXT_CKEDITOR_CONFIGURATION', None)
 TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
 TEXT_CKEDITOR_BASE_PATH = getattr(
-    settings, 'TEXT_CKEDITOR_BASE_PATH', urljoin(settings.STATIC_URL, 'djangocms_text_ckeditor/ckeditor/')
+    settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/')
 )
 TEXT_AUTO_HYPHENATE = getattr(settings, 'TEXT_AUTO_HYPHENATE', True)
 TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _("Text"))

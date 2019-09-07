@@ -27,6 +27,8 @@ TEXT_ADDITIONAL_ATTRIBUTES = getattr(settings, 'TEXT_ADDITIONAL_ATTRIBUTES', ())
 TEXT_ADDITIONAL_PROTOCOLS = getattr(settings, 'TEXT_ADDITIONAL_PROTOCOLS', ())
 TEXT_CKEDITOR_CONFIGURATION = getattr(settings, 'TEXT_CKEDITOR_CONFIGURATION', None)
 TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
+# This would make sure correct urls are created for
+# when static files are hosted on django and on a CDN. Old code was working fine for Django but not for CDNs.
 TEXT_CKEDITOR_BASE_PATH = getattr(
     settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/')
 )

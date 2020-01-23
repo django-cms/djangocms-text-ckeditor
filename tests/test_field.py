@@ -3,10 +3,10 @@ from django.template import Context, Template
 from django.utils.safestring import SafeData
 
 from djangocms_helper.base_test import BaseTestCase
-
-from djangocms_text_ckeditor.fields import HTMLFormField
 from tests.test_app.forms import SimpleTextForm
 from tests.test_app.models import SimpleText
+
+from djangocms_text_ckeditor.fields import HTMLFormField
 
 
 class HtmlFieldTestCase(BaseTestCase):

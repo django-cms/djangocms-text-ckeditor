@@ -470,7 +470,7 @@ You can run tests by executing::
 
 .. |python| image:: https://img.shields.io/badge/python-2.7%20%7C%203.4+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/
-.. |django| image:: https://img.shields.io/badge/django-1.11%20%7C%202.1%20%7C%202.2-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-1.11%20%7C%202.2%20%7C%203.0-blue.svg
     :target: https://www.djangoproject.com/
 .. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.4%2B-blue.svg
     :target: https://www.django-cms.org/

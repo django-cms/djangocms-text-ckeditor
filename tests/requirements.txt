@@ -6,7 +6,7 @@ django-polymorphic>=2.0.3
 Pillow
 html5lib>=0.999999999
 # other requirements
-djangocms-helper
+django-app-helper
 tox
 coverage
 

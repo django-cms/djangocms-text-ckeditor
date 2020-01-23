@@ -4,10 +4,9 @@ from django.template import engines
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
+from tests.test_app.models import DummyLink, DummySpacer
+
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from tests.test_app.models import (
-    DummyLink, DummySpacer,
-)
 
 
 @plugin_pool.register_plugin

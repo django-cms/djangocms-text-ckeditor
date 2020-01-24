@@ -8,6 +8,7 @@ next (2020-??-??)
 
 * Updated setup.py to use html5lib>=1.0.1
 * Updated CKEditor to 4.13.1
+* Drop support for Python-2.7 and Python-3.4
 
 
 3.8.0 (2019-05-23)

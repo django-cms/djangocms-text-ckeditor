@@ -3,6 +3,13 @@ Changelog
 =========
 
 
+next (2020-??-??)
+==================
+
+* Updated setup.py to use html5lib>=1.0.1
+* Updated CKEditor to 4.13.1
+
+
 3.8.0 (2019-05-23)
 ==================
 

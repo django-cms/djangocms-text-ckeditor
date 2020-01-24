@@ -8,6 +8,7 @@ Changelog
 
 * Added support for Django 3.0
 * Added support for Python 3.8
+* Removed Aldryn Boilerplate support
 
 
 3.8.0 (2019-05-23)

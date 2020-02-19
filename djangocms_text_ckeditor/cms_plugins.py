@@ -16,7 +16,6 @@ from django.http import (
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse
-from django.utils import six
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
@@ -29,6 +28,8 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
+
+from six import text_type
 
 from . import settings
 from .forms import (
@@ -347,7 +348,7 @@ class TextPlugin(CMSPluginBase):
         )
 
         query = request.GET.copy()
-        query['plugin'] = six.text_type(plugin.pk)
+        query['plugin'] = text_type(plugin.pk)
 
         success_url = admin_reverse('cms_page_add_plugin')
         # Because we've created the cmsplugin record

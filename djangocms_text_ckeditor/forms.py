@@ -83,6 +83,8 @@ class DeleteOnCancelForm(forms.Form):
             excluded_plugins = []
 
         queryset = self.text_plugin.get_descendants()
+        if not queryset.exists():
+            queryset = CMSPlugin.objects.all()
 
         if excluded_plugins:
             queryset = queryset.exclude(pk__in=excluded_plugins)

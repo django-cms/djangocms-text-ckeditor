@@ -258,6 +258,7 @@ class TextPlugin(CMSPluginBase):
             action_token=action_token,
             delete_on_cancel=delete_text_on_cancel,
         )
+
         return widget
 
     def get_form_class(self, request, plugins, plugin):

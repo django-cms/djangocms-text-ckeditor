@@ -20,7 +20,7 @@ casper.test.tearDown(function (done) {
 
 casper.test.begin('CKEditor loads correctly in the CMS wizard and TextPlugin', function (test) {
     casper
-        .start(globals.editUrl)
+        .start(globals.editUrl + '=True')
         // wait till wizard modal show up automatically (since we don't have any pages)
         .waitUntilVisible('.cms-modal', function() {
             // switch to modal
@@ -57,6 +57,9 @@ casper.test.begin('CKEditor loads correctly in the CMS wizard and TextPlugin', f
             });
         })
         .waitForResource(/cms_wizard\/create/)
+        .then(function() {
+            this.click('.cms-btn-switch-edit')
+        })
         .waitForSelector('.cms-ready', function() {
             test.assertSelectorHasText(
                 '.cms-plugin',
@@ -125,7 +128,7 @@ casper.test.begin('CKEditor loads correctly in HTMLField', function (test) {
             test.assertSelectorHasText('.success', 'The pizza "Pizza object" was added successfully.', 'Pizza added');
         })
         .thenOpen(globals.baseUrl + 'admin/test_app/pizza/')
-        .then(function () {
+        .waitForSelector('#result_list', function() {
             this.clickLabel('Pizza object');
         })
         .waitForSelector('#pizza_form', function () {

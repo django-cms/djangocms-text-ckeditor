@@ -34,6 +34,9 @@ class Pizza(models.Model):
     description = HTMLField()
     allergens = HTMLField(blank=True)
 
+    def __str__(self):
+        return 'Pizza object'
+
 
 class Topping(models.Model):
     name = models.CharField(max_length=255)

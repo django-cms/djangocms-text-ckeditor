@@ -5,8 +5,9 @@ import re
 import unittest
 
 from cms.api import add_plugin, create_page, create_title
-from cms.models import CMSPlugin, Page, Title
+from cms.models import CMSPlugin, Page, PageContent
 from cms.utils.urlutils import admin_reverse
+import django
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
@@ -98,7 +99,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def _give_cms_permissions(self, user):
         for perm_type in ['add', 'change', 'delete']:
-            for model in [Page, Title]:
+            for model in [Page]:
                 self._give_permission(user, model, perm_type)
 
     def get_page_admin(self):

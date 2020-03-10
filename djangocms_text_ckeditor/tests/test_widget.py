@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from cms.api import add_plugin, create_page
 
+import django
+
 from djangocms_text_ckeditor import html, settings
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
@@ -36,7 +38,6 @@ class WidgetTestCase(BaseTestCase):
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')
         add_plugin(page.get_placeholders('en').get(slot='content'), 'TextPlugin', 'en', body="Lorem ipsum")
-        page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, "Lorem ipsum")
 
@@ -50,7 +51,6 @@ class WidgetTestCase(BaseTestCase):
         )
         plugin.body = '%s %s' % (plugin.body, plugin_to_tag(pic_plugin))
         plugin.save()
-        page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, 'Lorem ipsum')
         self.assertContains(response, '<img src="/media/')
@@ -59,7 +59,6 @@ class WidgetTestCase(BaseTestCase):
         page = create_page(title='home', template='page.html', language='en')
         add_plugin(page.get_placeholders('en').get(slot='content'), 'TextPlugin', 'en', body='some text')
         language = 'en'
-        page.publish(language)
         url = page.get_absolute_url(language)
         response = self.client.get(url)
         self.assertContains(response, "some text")
@@ -71,7 +70,6 @@ class WidgetTestCase(BaseTestCase):
             body='<span data-one="1" data-two="2">some text</span>'
         )
         language = 'en'
-        page.publish(language)
         url = page.get_absolute_url(language)
         response = self.client.get(url)
         self.assertContains(response, 'data-one="1"')
@@ -86,7 +84,6 @@ class WidgetTestCase(BaseTestCase):
             body='<span data-one="1" data-two="2">some text</span>'
         )
         language = 'en'
-        page.publish(language)
         url = page.get_absolute_url(language)
         response = self.client.get(url)
         self.assertContains(response, '<span>some text</span>')

@@ -6,12 +6,12 @@ sudo: false
 
 python:
   - 3.5
-  - 2.7
 
 env:
   matrix:
   - DJANGO='dj111' CMS='cms40' FE=1
   - DJANGO='dj20' CMS='cms40' FE=1
+  - DJANGO='dj22' CMS='cms40' FE=1
 
 before_script:
   - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi
@@ -24,9 +24,6 @@ before_script:
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox>=1.8 coveralls
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PYVER=py27; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then export PYVER=py33; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PYVER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PYVER=py35; fi"
   - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
 

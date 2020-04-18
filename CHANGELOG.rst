@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Allow to style WYSIWYG content based on parent plugins, by adding
+``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
 
 3.9.0 (2020-02-20)
 ==================

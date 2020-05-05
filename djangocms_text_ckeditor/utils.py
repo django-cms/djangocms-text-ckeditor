@@ -7,12 +7,13 @@ from functools import wraps
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
-from django.utils.decorators import available_attrs
 from django.utils.functional import LazyObject
 
 from cms.models import CMSPlugin
 
 from classytags.utils import flatten_context
+
+from .compat import available_attrs
 
 
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'

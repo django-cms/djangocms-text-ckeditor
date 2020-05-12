@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from cms.api import add_plugin, create_page
 
-import django
-
 from djangocms_text_ckeditor import html, settings
 from djangocms_text_ckeditor.utils import plugin_to_tag
 

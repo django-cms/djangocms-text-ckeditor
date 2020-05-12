@@ -64,8 +64,6 @@ class TextEditorWidget(forms.Textarea):
                 'all': ('djangocms_text_ckeditor/css/cms.ckeditor.css',),
             },
             js=(
-                'admin/js/vendor/jquery/jquery.min.js',
-                'admin/js/jquery.init.js',
                 static_with_version('cms/js/dist/bundle.admin.base.min.js'),
                 static(PATH_TO_JS),
             )

@@ -43,7 +43,7 @@ class HTMLField(models.TextField):
         self.configuration = kwargs.pop('configuration', None)
         super(HTMLField, self).__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return value
         return mark_safe(value)

@@ -4,16 +4,35 @@ language: python
 
 sudo: false
 
-python:
-  - 3.5
-
-env:
-  matrix:
-  - DJANGO='dj111' CMS='cms40' FE=1
-  - DJANGO='dj20' CMS='cms40' FE=1
-  - DJANGO='dj22' CMS='cms40' FE=1
+matrix:
+  include:
+    - python: 3.5
+      env: TOX_ENV='flake8'
+    - python: 3.5
+      env: TOX_ENV='isort'
+      # Django 1.11
+    - python: 3.5
+      env: DJANGO='dj111' CMS='cms40' FE=1
+    # Django 2.1
+    - python: 3.6
+      env: DJANGO='dj21' CMS='cms40' FE=1
+    # Django 2.2
+    - python: 3.6
+      env: DJANGO='dj22' CMS='cms40' FE=1
+    - python: 3.7
+      env: DJANGO='dj22' CMS='cms40' FE=1
+      dist: xenial
+      sudo: true
+    - python: 3.8
+      env: DJANGO='dj22' CMS='cms40'
 
 before_script:
+  - pip install coverage isort tox
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi"
+  - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
   - if [ "$FE" == 1 ]; then nvm install 8 && nvm use 8; fi
   - if [ "$FE" == 1 ]; then npm config set spin false; fi
   - if [ "$FE" == 1 ]; then npm install -g npm; fi
@@ -21,13 +40,16 @@ before_script:
   - if [ "$FE" == 1 ]; then npm install -g codeclimate-test-reporter; fi
   - if [ "$FE" == 1 ]; then npm ci; fi
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox>=1.8 coveralls
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PYVER=py35; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
+  - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
   - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
 
-# command to run tests, e.g. python setup.py test
-script: COMMAND='coverage run' tox -e"$PYVER-$DJANGO-$CMS$FE_STR",pep8
+script:
+  - tox -e $TOX_ENV
 
-after_success: coveralls
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -125,11 +125,12 @@ casper.test.begin('CKEditor loads correctly in HTMLField', function (test) {
             this.click('input[type=submit]');
         })
         .waitForSelector('.success', function () {
-            test.assertSelectorHasText('.success', 'The pizza "Pizza object" was added successfully.', 'Pizza added');
+            test.assertSelectorHasText('.success', 'was added successfully.', 'Pizza added');
+            test.assertSelectorHasText('.success', 'Pizza object', 'Pizza added');
         })
         .thenOpen(globals.baseUrl + 'admin/test_app/pizza/')
         .waitForSelector('#result_list', function() {
-            this.clickLabel('Pizza object');
+            this.click(xPath('//*[contains(text(), \'Pizza object\')]'));
         })
         .waitForSelector('#pizza_form', function () {
             test.assertEval(function () {
@@ -148,7 +149,9 @@ casper.test.begin('CKEditor loads correctly in HTMLField', function (test) {
         });
 });
 
-// Fails because of casperjs javascript error that occurs after django 2.2.1
+// NOTE: Disabled because when PizzaAdmin uses a collapsed
+//       class then the order of javascript libs is incorrect.
+//       Fails because of casperjs javascript error that occurs after django 2.2.1
 // casper.test.begin('CKEditor loads correctly in collapsed fieldset', function (test) {
 //     casper
 //         .start(globals.baseUrl + 'admin/test_app/pizza/add')
@@ -243,11 +246,12 @@ casper.test.begin('CKEditor loads correctly in an inline', function (test) {
             this.click('input[type=submit]');
         })
         .waitForSelector('.success', function () {
-            test.assertSelectorHasText('.success', 'The pizza "Pizza object" was added successfully.', 'Pizza added');
+            test.assertSelectorHasText('.success', 'was added successfully.', 'Pizza added');
+            test.assertSelectorHasText('.success', 'Pizza object', 'Pizza added');
         })
         .thenOpen(globals.baseUrl + 'admin/test_app/pizza/')
         .then(function () {
-            this.clickLabel('Pizza object');
+            this.click(xPath('//*[contains(text(), \'Pizza object\')]'));
         })
         .waitForSelector('#pizza_form', function () {
             test.assertEval(function () {

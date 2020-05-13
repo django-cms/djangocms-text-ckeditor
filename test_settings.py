@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from tempfile import mkdtemp
 import os
 import sys
+from tempfile import mkdtemp
 
 port = 8000
 
 for arg in sys.argv:
     if arg.startswith('--port='):
         port = arg.split('=')[1]
+
 
 def gettext(s):
     return s
@@ -18,13 +19,7 @@ class DisableMigrations(dict):
         return True
 
     def __getitem__(self, item):
-        from distutils.version import LooseVersion
-        import django
-        DJANGO_1_9 = LooseVersion(django.get_version()) < LooseVersion('1.10')
-        if DJANGO_1_9:
-            return 'notmigrations'
-        else:
-            return None
+        return None
 
 
 HELPER_SETTINGS = {
@@ -115,13 +110,16 @@ HELPER_SETTINGS = {
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
 
+
 def _helper_patch(*args, **kwargs):
     from django.core.management import call_command
     call_command('migrate', run_syncdb=True)
 
+
 def test():
     from djangocms_helper import runner
     runner.cms('djangocms_text_ckeditor')
+
 
 def run():
     from djangocms_helper import runner
@@ -135,6 +133,7 @@ def run():
     # we use '.runner()', not '.cms()' nor '.run()' because it does not
     # add 'test' argument implicitly
     runner.runner([sys.argv[0], 'cms', '--cms', 'server', '--bind', '0.0.0.0', '--port', str(port)])
+
 
 if __name__ == "__main__":
     run()

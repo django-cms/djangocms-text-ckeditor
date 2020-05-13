@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Topping, Pizza
 
 
@@ -13,7 +14,9 @@ class PizzaAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
         ('Advanced', {
-            'classes': ('collapse',),
+            # NOTE: Disabled because when PizzaAdmin uses a collapsed
+            # class then the order of javascript libs is incorrect.
+            # 'classes': ('collapse',),
             'fields': ('allergens',)
         }),
     )

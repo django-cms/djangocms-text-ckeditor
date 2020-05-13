@@ -4,10 +4,6 @@ import json
 import re
 import unittest
 
-from cms.api import add_plugin, create_page, create_title
-from cms.models import CMSPlugin, Page, PageContent
-from cms.utils.urlutils import admin_reverse
-import django
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
@@ -15,6 +11,20 @@ from django.template import RequestContext
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
+
+from cms.api import add_plugin, create_page, create_title
+from cms.models import CMSPlugin, Page
+from cms.utils.urlutils import admin_reverse
+
+from djangocms_text_ckeditor.cms_plugins import TextPlugin
+from djangocms_text_ckeditor.models import Text
+from djangocms_text_ckeditor.utils import (
+    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
+    plugin_to_tag,
+)
+
+from .base import BaseTestCase
+
 
 try:
     from djangocms_transfer.exporter import export_page
@@ -27,15 +37,6 @@ try:
     HAS_DJANGOCMS_TRANSLATIONS = True
 except ImportError:
     HAS_DJANGOCMS_TRANSLATIONS = False
-
-from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from djangocms_text_ckeditor.models import Text
-from djangocms_text_ckeditor.utils import (
-    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_to_tag,
-)
-
-from .base import BaseTestCase
 
 
 class PluginActionsTestCase(BaseTestCase):
@@ -113,7 +114,7 @@ class PluginActionsTestCase(BaseTestCase):
         url = urlunquote(response.url)
         # Ideal case, this looks like:
         # /en/admin/cms/page/edit-plugin/1/
-        return re.findall('\d+', url)[0]
+        return re.findall('\d+', url)[0]  # noqa
 
     def test_add_and_edit_plugin(self):
         """

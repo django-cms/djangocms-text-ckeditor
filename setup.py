@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup
+
 from djangocms_text_ckeditor import __version__
 
 
 INSTALL_REQUIRES = [
-    'django-cms>=3.3.0',
+    'django-cms',
     'html5lib>=0.999999999',
     'Pillow',
 ]
@@ -21,15 +22,16 @@ CLASSIFIERS = [
     'Topic :: Communications',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Message Boards',
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.3',
-    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
     'Framework :: Django',
-    'Framework :: Django :: 1.8',
-    'Framework :: Django :: 1.9',
-    'Framework :: Django :: 1.10',
     'Framework :: Django :: 1.11',
+    'Framework :: Django :: 2.0',
+    'Framework :: Django :: 2.1',
+    'Framework :: Django :: 2.2',
 ]
 
 setup(

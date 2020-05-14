@@ -1,6 +1,5 @@
 include LICENSE.txt
 include README.rst
-include legal.txt
 recursive-include djangocms_text_ckeditor/locale *
 recursive-include djangocms_text_ckeditor/static *
 recursive-include djangocms_text_ckeditor/templates *

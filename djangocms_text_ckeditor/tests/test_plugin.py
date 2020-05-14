@@ -19,8 +19,8 @@ from cms.utils.urlutils import admin_reverse
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
-    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_to_tag,
+    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html,
+    plugin_tags_to_id_list, plugin_to_tag,
 )
 
 from .base import BaseTestCase

@@ -4,4 +4,4 @@ include legal.txt
 recursive-include djangocms_text_ckeditor/locale *
 recursive-include djangocms_text_ckeditor/static *
 recursive-include djangocms_text_ckeditor/templates *
-recursive-exclude * *.pyc
+recursive-exclude * *.py[co]

@@ -107,7 +107,7 @@ def _plugin_tags_to_html(text, output_func):
             return u''
         else:
             obj._render_meta.text_enabled = True
-            return output_func(obj, m)
+            return output_func(obj, m).strip()
     return OBJ_ADMIN_RE.sub(_render_tag, text)
 
 

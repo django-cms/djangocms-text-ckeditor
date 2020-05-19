@@ -998,7 +998,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Resets all input values in the dialog.
          *
-         *        dialogObj.reset();
+		 *		dialogObj.reset();
          *
          * @method
          * @chainable
@@ -1020,10 +1020,10 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
          * of the UI elements, with the arguments passed through it.
          * It is usually being called when the dialog is opened, to put the initial value inside the field.
          *
-         *        dialogObj.setupContent();
+		 *		dialogObj.setupContent();
          *
-         *        var timestamp = ( new Date() ).valueOf();
-         *        dialogObj.setupContent( timestamp );
+		 *		var timestamp = ( new Date() ).valueOf();
+		 *		dialogObj.setupContent( timestamp );
          */
         setupContent: function() {
             var args = arguments;
@@ -1038,10 +1038,10 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
          * of the UI elements, with the arguments passed through it.
          * It is usually being called when the user confirms the dialog, to process the values.
          *
-         *        dialogObj.commitContent();
+		 *		dialogObj.commitContent();
          *
-         *        var timestamp = ( new Date() ).valueOf();
-         *        dialogObj.commitContent( timestamp );
+		 *		var timestamp = ( new Date() ).valueOf();
+		 *		dialogObj.commitContent( timestamp );
          */
         commitContent: function() {
             var args = arguments;
@@ -1058,7 +1058,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Hides the dialog box.
          *
-         *        dialogObj.hide();
+		 *		dialogObj.hide();
          */
         hide: function() {
             if ( !this.parts.dialog.isVisible() )
@@ -1209,7 +1209,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Activates a tab page in the dialog by its id.
          *
-         *        dialogObj.selectPage( 'tab_1' );
+		 *		dialogObj.selectPage( 'tab_1' );
          *
          * @param {String} id The id of the dialog tab to be activated.
          */
@@ -1266,7 +1266,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Hides a page's tab away from the dialog.
          *
-         *        dialog.hidePage( 'tab_3' );
+		 *		dialog.hidePage( 'tab_3' );
          *
          * @param {String} id The page's Id.
          */
@@ -1286,7 +1286,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Unhides a page's tab.
          *
-         *        dialog.showPage( 'tab_2' );
+		 *		dialog.showPage( 'tab_2' );
          *
          * @param {String} id The page's Id.
          */
@@ -1302,8 +1302,8 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the root DOM element of the dialog.
          *
-         *        var dialogElement = dialogObj.getElement().getFirst();
-         *        dialogElement.setStyle( 'padding', '5px' );
+		 *		var dialogElement = dialogObj.getElement().getFirst();
+		 *		dialogElement.setStyle( 'padding', '5px' );
          *
          * @returns {CKEDITOR.dom.element} The `<span>` element containing this dialog.
          */
@@ -1325,7 +1325,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets a dialog UI element object from a dialog page.
          *
-         *        dialogObj.getContentElement( 'tabId', 'elementId' ).setValue( 'Example' );
+		 *		dialogObj.getContentElement( 'tabId', 'elementId' ).setValue( 'Example' );
          *
          * @param {String} pageId id of dialog page.
          * @param {String} elementId id of UI element.
@@ -1339,7 +1339,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the value of a dialog UI element.
          *
-         *        alert( dialogObj.getValueOf( 'tabId', 'elementId' ) );
+		 *		alert( dialogObj.getValueOf( 'tabId', 'elementId' ) );
          *
          * @param {String} pageId id of dialog page.
          * @param {String} elementId id of UI element.
@@ -1352,7 +1352,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Sets the value of a dialog UI element.
          *
-         *        dialogObj.setValueOf( 'tabId', 'elementId', 'Example' );
+		 *		dialogObj.setValueOf( 'tabId', 'elementId', 'Example' );
          *
          * @param {String} pageId id of the dialog page.
          * @param {String} elementId id of the UI element.
@@ -1365,7 +1365,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the UI element of a button in the dialog's button row.
          *
-         *        @returns {CKEDITOR.ui.dialog.button} The button object.
+		 *		@returns {CKEDITOR.ui.dialog.button} The button object.
          *
          * @param {String} id The id of the button.
          */
@@ -1501,66 +1501,66 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Registers a dialog.
          *
-         *        // Full sample plugin, which does not only register a dialog window but also adds an item to the context menu.
-         *        // To open the dialog window, choose "Open dialog" in the context menu.
-         *        CKEDITOR.plugins.add( 'myplugin', {
-         *            init: function( editor ) {
-         *                editor.addCommand( 'mydialog',new CKEDITOR.dialogCommand( 'mydialog' ) );
+		 *		// Full sample plugin, which does not only register a dialog window but also adds an item to the context menu.
+		 *		// To open the dialog window, choose "Open dialog" in the context menu.
+		 *		CKEDITOR.plugins.add( 'myplugin', {
+		 *			init: function( editor ) {
+		 *				editor.addCommand( 'mydialog',new CKEDITOR.dialogCommand( 'mydialog' ) );
          *
-         *                if ( editor.contextMenu ) {
-         *                    editor.addMenuGroup( 'mygroup', 10 );
-         *                    editor.addMenuItem( 'My Dialog', {
-         *                        label: 'Open dialog',
-         *                        command: 'mydialog',
-         *                        group: 'mygroup'
-         *                    } );
-         *                    editor.contextMenu.addListener( function( element ) {
-         *                        return { 'My Dialog': CKEDITOR.TRISTATE_OFF };
-         *                    } );
-         *                }
+		 *				if ( editor.contextMenu ) {
+		 *					editor.addMenuGroup( 'mygroup', 10 );
+		 *					editor.addMenuItem( 'My Dialog', {
+		 *						label: 'Open dialog',
+		 *						command: 'mydialog',
+		 *						group: 'mygroup'
+		 *					} );
+		 *					editor.contextMenu.addListener( function( element ) {
+		 *						return { 'My Dialog': CKEDITOR.TRISTATE_OFF };
+		 *					} );
+		 *				}
          *
-         *                CKEDITOR.dialog.add( 'mydialog', function( api ) {
-         *                    // CKEDITOR.dialog.definition
-         *                    var dialogDefinition = {
-         *                        title: 'Sample dialog',
-         *                        minWidth: 390,
-         *                        minHeight: 130,
-         *                        contents: [
-         *                            {
-         *                                id: 'tab1',
-         *                                label: 'Label',
-         *                                title: 'Title',
-         *                                expand: true,
-         *                                padding: 0,
-         *                                elements: [
-         *                                    {
-         *                                        type: 'html',
-         *                                        html: '<p>This is some sample HTML content.</p>'
-         *                                    },
-         *                                    {
-         *                                        type: 'textarea',
-         *                                        id: 'textareaId',
-         *                                        rows: 4,
-         *                                        cols: 40
-         *                                    }
-         *                                ]
-         *                            }
-         *                        ],
-         *                        buttons: [ CKEDITOR.dialog.okButton, CKEDITOR.dialog.cancelButton ],
-         *                        onOk: function() {
-         *                            // "this" is now a CKEDITOR.dialog object.
-         *                            // Accessing dialog elements:
-         *                            var textareaObj = this.getContentElement( 'tab1', 'textareaId' );
-         *                            alert( "You have entered: " + textareaObj.getValue() );
-         *                        }
-         *                    };
+		 *				CKEDITOR.dialog.add( 'mydialog', function( api ) {
+		 *					// CKEDITOR.dialog.definition
+		 *					var dialogDefinition = {
+		 *						title: 'Sample dialog',
+		 *						minWidth: 390,
+		 *						minHeight: 130,
+		 *						contents: [
+		 *							{
+		 *								id: 'tab1',
+		 *								label: 'Label',
+		 *								title: 'Title',
+		 *								expand: true,
+		 *								padding: 0,
+		 *								elements: [
+		 *									{
+		 *										type: 'html',
+		 *										html: '<p>This is some sample HTML content.</p>'
+		 *									},
+		 *									{
+		 *										type: 'textarea',
+		 *										id: 'textareaId',
+		 *										rows: 4,
+		 *										cols: 40
+		 *									}
+		 *								]
+		 *							}
+		 *						],
+		 *						buttons: [ CKEDITOR.dialog.okButton, CKEDITOR.dialog.cancelButton ],
+		 *						onOk: function() {
+		 *							// "this" is now a CKEDITOR.dialog object.
+		 *							// Accessing dialog elements:
+		 *							var textareaObj = this.getContentElement( 'tab1', 'textareaId' );
+		 *							alert( "You have entered: " + textareaObj.getValue() );
+		 *						}
+		 *					};
          *
-         *                    return dialogDefinition;
-         *                } );
-         *            }
-         *        } );
+		 *					return dialogDefinition;
+		 *				} );
+		 *			}
+		 *		} );
          *
-         *        CKEDITOR.replace( 'editor1', { extraPlugins: 'myplugin' } );
+		 *		CKEDITOR.replace( 'editor1', { extraPlugins: 'myplugin' } );
          *
          * @static
          * @param {String} name The dialog's name.
@@ -1762,11 +1762,11 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
      * This class is not really part of the API. It is the `definition` property value
      * passed to `dialogDefinition` event handlers.
      *
-     *        CKEDITOR.on( 'dialogDefinition', function( evt ) {
-     *            var definition = evt.data.definition;
-     *            var content = definition.getContents( 'page1' );
-     *             // ...
-     *        } );
+	 *		CKEDITOR.on( 'dialogDefinition', function( evt ) {
+	 *			var definition = evt.data.definition;
+	 *			var content = definition.getContents( 'page1' );
+	 * 			// ...
+	 *		} );
      *
      * @private
      * @class CKEDITOR.dialog.definitionObject
@@ -1863,12 +1863,12 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
      * objects representing content pages inside the
      * CKEDITOR.dialog.definitionObject.
      *
-     *        CKEDITOR.on( 'dialogDefinition', function( evt ) {
-     *            var definition = evt.data.definition;
-     *            var content = definition.getContents( 'page1' );
-     *            content.remove( 'textInput1' );
-     *            // ...
-     *        } );
+	 *		CKEDITOR.on( 'dialogDefinition', function( evt ) {
+	 *			var definition = evt.data.definition;
+	 *			var content = definition.getContents( 'page1' );
+	 *			content.remove( 'textInput1' );
+	 *			// ...
+	 *		} );
      *
      * @private
      * @class CKEDITOR.dialog.definition.contentObject
@@ -2670,7 +2670,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the root DOM element of this dialog UI object.
          *
-         *        uiElement.getElement().hide();
+		 *		uiElement.getElement().hide();
          *
          * @returns {CKEDITOR.dom.element} Root DOM element of UI object.
          */
@@ -2685,7 +2685,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
          * be overrided in child classes where the input element isn't the root
          * element.
          *
-         *        var rawValue = textInput.getInputElement().$.value;
+		 *		var rawValue = textInput.getInputElement().$.value;
          *
          * @returns {CKEDITOR.dom.element} The element where the user input values.
          */
@@ -2696,7 +2696,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the parent dialog object containing this UI element.
          *
-         *        var dialog = uiElement.getDialog();
+		 *		var dialog = uiElement.getDialog();
          *
          * @returns {CKEDITOR.dialog} Parent dialog object.
          */
@@ -2707,7 +2707,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Sets the value of this dialog UI object.
          *
-         *        uiElement.setValue( 'Dingo' );
+		 *		uiElement.setValue( 'Dingo' );
          *
          * @chainable
          * @param {Object} value The new value.
@@ -2722,7 +2722,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets the current value of this dialog UI object.
          *
-         *        var myValue = uiElement.getValue();
+		 *		var myValue = uiElement.getValue();
          *
          * @returns {Object} The current value.
          */
@@ -2733,8 +2733,8 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Tells whether the UI object's value has changed.
          *
-         *        if ( uiElement.isChanged() )
-         *            confirm( 'Value changed! Continue?' );
+		 *		if ( uiElement.isChanged() )
+		 *			confirm( 'Value changed! Continue?' );
          *
          * @returns {Boolean} `true` if changed, `false` if not changed.
          */
@@ -2746,10 +2746,10 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Selects the parent tab of this element. Usually called by focus() or overridden focus() methods.
          *
-         *        focus : function() {
-         *            this.selectParentTab();
-         *            // do something else.
-         *        }
+		 *		focus : function() {
+		 *			this.selectParentTab();
+		 *			// do something else.
+		 *		}
          *
          * @chainable
          */
@@ -2775,7 +2775,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Puts the focus to the UI object. Switches tabs if the UI object isn't in the active tab page.
          *
-         *        uiElement.focus();
+		 *		uiElement.focus();
          *
          * @chainable
          */
@@ -2836,13 +2836,13 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
          * 2. `onShow` - Called whenever the element's parent dialog opens.
          * 3. `onHide` - Called whenever the element's parent dialog closes.
          *
-         *        // This connects the 'click' event in CKEDITOR.ui.dialog.button to onClick
-         *        // handlers in the UI element's definitions.
-         *        CKEDITOR.ui.dialog.button.eventProcessors = CKEDITOR.tools.extend( {},
-         *            CKEDITOR.ui.dialog.uiElement.prototype.eventProcessors,
-         *            { onClick : function( dialog, func ) { this.on( 'click', func ); } },
-         *            true
-         *        );
+		 *		// This connects the 'click' event in CKEDITOR.ui.dialog.button to onClick
+		 *		// handlers in the UI element's definitions.
+		 *		CKEDITOR.ui.dialog.button.eventProcessors = CKEDITOR.tools.extend( {},
+		 *			CKEDITOR.ui.dialog.uiElement.prototype.eventProcessors,
+		 *			{ onClick : function( dialog, func ) { this.on( 'click', func ); } },
+		 *			true
+		 *		);
          *
          * @property {Object}
          */
@@ -2944,8 +2944,8 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Gets a child UI element inside this container.
          *
-         *        var checkbox = hbox.getChild( [0,1] );
-         *        checkbox.setValue( true );
+		 *		var checkbox = hbox.getChild( [0,1] );
+		 *		checkbox.setValue( true );
          *
          * @param {Array/Number} indices An array or a single number to indicate the child's
          * position in the container's descendant tree. Omit to get all the children in an array.
@@ -2995,8 +2995,8 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
     /**
      * Generic dialog command. It opens a specific dialog when executed.
      *
-     *        // Register the "link" command, which opens the "link" dialog.
-     *        editor.addCommand( 'link', new CKEDITOR.dialogCommand( 'link' ) );
+	 *		// Register the "link" command, which opens the "link" dialog.
+	 *		editor.addCommand( 'link', new CKEDITOR.dialogCommand( 'link' ) );
      *
      * @class
      * @constructor Creates a dialogCommand class instance.
@@ -3163,7 +3163,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
         /**
          * Loads and opens a registered dialog.
          *
-         *        CKEDITOR.instances.editor1.openDialog( 'smiley' );
+		 *		CKEDITOR.instances.editor1.openDialog( 'smiley' );
          *
          * @member CKEDITOR.editor
          * @param {String} dialogName The registered name of the dialog.
@@ -3231,7 +3231,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
 /**
  * The color of the dialog background cover. It should be a valid CSS color string.
  *
- *        config.dialog_backgroundCoverColor = 'rgb(255, 254, 253)';
+ *		config.dialog_backgroundCoverColor = 'rgb(255, 254, 253)';
  *
  * @cfg {String} [dialog_backgroundCoverColor='white']
  * @member CKEDITOR.config
@@ -3241,7 +3241,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * The opacity of the dialog background cover. It should be a number within the
  * range `[0.0, 1.0]`.
  *
- *        config.dialog_backgroundCoverOpacity = 0.7;
+ *		config.dialog_backgroundCoverOpacity = 0.7;
  *
  * @cfg {Number} [dialog_backgroundCoverOpacity=0.5]
  * @member CKEDITOR.config
@@ -3250,7 +3250,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
 /**
  * If the dialog has more than one tab, put focus into the first tab as soon as dialog is opened.
  *
- *        config.dialog_startupFocusTab = true;
+ *		config.dialog_startupFocusTab = true;
  *
  * @cfg {Boolean} [dialog_startupFocusTab=false]
  * @member CKEDITOR.config
@@ -3260,7 +3260,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * The distance of magnetic borders used in moving and resizing dialogs,
  * measured in pixels.
  *
- *        config.dialog_magnetDistance = 30;
+ *		config.dialog_magnetDistance = 30;
  *
  * @cfg {Number} [dialog_magnetDistance=20]
  * @member CKEDITOR.config
@@ -3275,7 +3275,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  *
  * Example:
  *
- *        config.dialog_buttonsOrder = 'rtl';
+ *		config.dialog_buttonsOrder = 'rtl';
  *
  * @since 3.5
  * @cfg {String} [dialog_buttonsOrder='OS']
@@ -3292,7 +3292,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * **Note:** Be cautious when specifying dialog tabs that are mandatory,
  * like `'info'`, dialog functionality might be broken because of this!
  *
- *        config.removeDialogTabs = 'flash:advanced;image:Link';
+ *		config.removeDialogTabs = 'flash:advanced;image:Link';
  *
  * @since 3.5
  * @cfg {String} [removeDialogTabs='']
@@ -3303,7 +3303,7 @@ CKEDITOR.plugins.add( 'cmsdialog', {
  * Tells if user should not be asked to confirm close, if any dialog field was modified.
  * By default it is set to `false` meaning that the confirmation dialog will be shown.
  *
- *        config.dialog_noConfirmCancel = true;
+ *		config.dialog_noConfirmCancel = true;
  *
  * @since 4.3
  * @cfg {Boolean} [dialog_noConfirmCancel=false]

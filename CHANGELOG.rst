@@ -3,6 +3,12 @@ Changelog
 =========
 
 
+3.9.1 (2020-05-20)
+==================
+
+* Fix compatibility issue with Django-3.0 in ``Field.from_db_value()``.
+
+
 3.9.0 (2020-02-20)
 ==================
 

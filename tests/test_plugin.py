@@ -579,8 +579,7 @@ class PluginActionsTestCase(BaseTestCase):
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
-            self.assertEqual(response.status_code, 403)
-            self.assertEqual(force_text(response.content), '<h1>403 Forbidden</h1>')
+            self.assertContains(response, '<h1>403 Forbidden</h1>', status_code=403, html=True)
 
     def test_render_child_plugin_token_validation(self):
         """

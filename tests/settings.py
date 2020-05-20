@@ -120,17 +120,17 @@ def _helper_patch(*args, **kwargs):
 
 
 def test():
-    from djangocms_helper import runner
+    from app_helper import runner
     runner.cms('djangocms_text_ckeditor')
 
 
 def run():
-    from djangocms_helper import runner
-    from djangocms_helper import utils
+    from app_helper import runner
+    from app_helper import utils
 
     os.environ.setdefault('DATABASE_URL', 'sqlite://localhost/testdb.sqlite')
 
-    # Patch djangocms_helper to create tables
+    # Patch app_helper to create tables
     utils._create_db = _helper_patch
 
     # we use '.runner()', not '.cms()' nor '.run()' because it does not

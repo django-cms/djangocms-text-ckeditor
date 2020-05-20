@@ -21,16 +21,12 @@ class Form(forms.BaseForm):
         return data
 
     def to_settings(self, data, settings):
-        # boilerplate must provide /static/js/modules/ckeditor.wysiwyg.js and /static/css/base.css
         CKEDITOR_SETTINGS = {
             'height': 300,
             'language': '{{ language }}',
             'toolbar': 'CMS',
             'skin': 'moono-lisa',
         }
-
-        # This could fail if aldryn-django-cms has not been configured yet.
-        boilerplate_name = settings['ALDRYN_BOILERPLATE_NAME']
 
         if data.get('content_css'):
             CKEDITOR_SETTINGS['contentsCss'] = data['content_css']
@@ -39,8 +35,6 @@ class Form(forms.BaseForm):
 
         if data.get('style_set'):
             style_set = data['style_set']
-        elif boilerplate_name == 'bootstrap3':
-            style_set = '/static/js/addons/ckeditor.wysiwyg.js'
         else:
             style_set = ''
 

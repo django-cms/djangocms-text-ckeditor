@@ -115,7 +115,7 @@ class PluginActionsTestCase(BaseTestCase):
         url = urlunquote(response.url)
         # Ideal case, this looks like:
         # /en/admin/cms/page/edit-plugin/1/
-        return re.findall('\d+', url)[0]  # noqa
+        return re.findall(r'\d+', url)[0]
 
     def test_add_and_edit_plugin(self):
         """
@@ -579,8 +579,7 @@ class PluginActionsTestCase(BaseTestCase):
             endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
             response = self.client.get(endpoint)
 
-            self.assertEqual(response.status_code, 403)
-            self.assertEqual(force_text(response.content), '<h1>403 Forbidden</h1>')
+            self.assertContains(response, '<h1>403 Forbidden</h1>', status_code=403, html=True)
 
     def test_render_child_plugin_token_validation(self):
         """

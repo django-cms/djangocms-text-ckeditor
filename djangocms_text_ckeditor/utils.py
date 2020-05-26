@@ -4,13 +4,16 @@ import re
 from collections import OrderedDict
 from functools import wraps
 
-from classytags.utils import flatten_context
-from cms.models import CMSPlugin
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
 from django.utils.decorators import available_attrs
 from django.utils.functional import LazyObject
+
+from cms.models import CMSPlugin
+
+from classytags.utils import flatten_context
+
 
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'
 OBJ_ADMIN_WITH_CONTENT_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>(?P<content>.*?)</cms-plugin>'

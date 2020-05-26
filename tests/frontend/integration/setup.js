@@ -2,7 +2,7 @@
 // Init all settings and event handlers on suite start
 'use strict';
 
-require('./../casperjs.conf').init();
+require('../casperjs.conf').init();
 
 require('./handlers/pageErrors').bind();
 require('./handlers/loadFailures').bind();

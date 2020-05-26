@@ -81,7 +81,7 @@ gulp.task('tests:integration', integrationTests({
     pathToTests: PROJECT_PATH.tests,
     argv: argv,
     dbPath: 'testdb.sqlite',
-    serverCommand: 'test_settings.py',
+    serverCommand: 'tests/settings.py',
     logger: console.log.bind(console), // eslint-disable-line no-console
     waitForMigrations: 10,
     pathToCasper: pathToCasper

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 
-from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings
+
+from cms.models.pluginmodel import CMSPlugin
 
 
 def create_picture_plugin(filename, file, parent_plugin, **kwargs):

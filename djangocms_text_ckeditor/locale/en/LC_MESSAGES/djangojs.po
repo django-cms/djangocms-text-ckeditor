@@ -16,36 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "You do not have permission to add a plugin"
-msgstr ""
-
-msgid "Unable to process your request. Invalid token."
-msgstr ""
-
-msgid "Unable to process your request."
-msgstr ""
-
-msgid "Can't delete a saved plugin."
-msgstr ""
-
-msgid "body"
-msgstr ""
-
-msgid "Text"
-msgstr ""
-
-msgid "Generic"
-msgstr ""
-
-msgid "CMS Plugins"
-msgstr ""
-
-msgid "Add CMS Plugin"
-msgstr ""
-
-msgid "Edit CMS Plugin"
-msgstr ""
-
-msgid "Standard Plugins"
+msgid "100%"
 msgstr ""

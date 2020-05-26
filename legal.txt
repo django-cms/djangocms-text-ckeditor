@@ -1,1 +1,0 @@
-The included ckeditor source code located in 'djangocms_text_ckeditor/static/ckeditor' falls under Mozilla Public License.

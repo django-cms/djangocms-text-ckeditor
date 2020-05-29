@@ -404,36 +404,34 @@
                 if (!that.options.delete_on_cancel && !that.unsaved_child_plugins.length) {
                     return;
                 }
-                if (that.unsaved_child_plugins.length) {
-                    e.preventDefault();
-                    CMS.API.Toolbar.showLoader();
-                    var data = {
-                        token: that.options.action_token
-                    };
+                e.preventDefault();
+                CMS.API.Toolbar.showLoader();
+                var data = {
+                    token: that.options.action_token
+                };
 
-                    if (!that.options.delete_on_cancel) {
-                        data.child_plugins = that.unsaved_child_plugins;
-                    }
-
-                    $.ajax({
-                        method: 'POST',
-                        url: that.options.cancel_plugin_url,
-                        data: data,
-                        // use 'child_plugins' instead of default 'child_plugins[]'
-                        traditional: true
-                    }).done(function () {
-                        CMS.API.Helpers.removeEventListener(
-                            'modal-close.text-plugin.text-plugin-' + that.options.plugin_id
-                        );
-                        opts.instance.close();
-                    }).fail(function (res) {
-                        CMS.API.Messages.open({
-                            message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
-                            delay: 0,
-                            error: true
-                        });
-                    });
+                if (!that.options.delete_on_cancel) {
+                    data.child_plugins = that.unsaved_child_plugins;
                 }
+
+                $.ajax({
+                    method: 'POST',
+                    url: that.options.cancel_plugin_url,
+                    data: data,
+                    // use 'child_plugins' instead of default 'child_plugins[]'
+                    traditional: true
+                }).done(function () {
+                    CMS.API.Helpers.removeEventListener(
+                        'modal-close.text-plugin.text-plugin-' + that.options.plugin_id
+                    );
+                    opts.instance.close();
+                }).fail(function (res) {
+                    CMS.API.Messages.open({
+                        message: res.responseText + ' | ' + res.status + ' ' + res.statusText,
+                        delay: 0,
+                        error: true
+                    });
+                });
             };
 
             CMS.API.Helpers.addEventListener(

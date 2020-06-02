@@ -314,6 +314,85 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_2.pk)
             self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=child_plugin_3.pk)
 
+    def test_add_and_cancel_plugin_on_failed_cancellation(self):
+        """
+        Cancelling a text plugin that doesn't successfully cancel does not leave the page
+        in a corrupt state and reuses the previously created plugin
+        """
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
+
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, 302)
+
+        # Point to the newly created text plugin
+        text_plugin_pk = self.get_plugin_id_from_response(response)
+
+        # Assert "ghost" plugin has been created
+        self.assertObjectExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
+        # Assert "real" plugin was never created
+        self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
+
+        # Simulating that the cancellation never succeeded and try to re-add plugin in the same position
+        with self.login_user_context(self.get_superuser()):
+            retry_response = self.client.get(endpoint)
+
+        self.assertEqual(retry_response.status_code, 302)
+
+        # Point to the reused text plugin
+        retry_text_plugin_pk = self.get_plugin_id_from_response(retry_response)
+
+        # Assert "ghost" plugin is reused as long as there was no Text contents
+        self.assertEqual(text_plugin_pk, retry_text_plugin_pk)
+        # Assert "ghost" plugin has been created
+        self.assertObjectExist(CMSPlugin.objects.all(), pk=retry_text_plugin_pk)
+        # Assert "real" plugin was never created
+        self.assertObjectDoesNotExist(Text.objects.all(), pk=retry_text_plugin_pk)
+
+    def test_add_and_cancel_plugin_when_plugin_position_is_taken(self):
+        """
+        A text plugin that already exists in a position returns an error that the plugin
+        position is populated and conflicts i.e. a plugin cannot be created
+        """
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
+
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, 302)
+
+        # Point to the newly created text plugin
+        add_url = response.url
+        text_plugin_pk = self.get_plugin_id_from_response(response)
+        cms_plugin = CMSPlugin.objects.get(pk=text_plugin_pk)
+
+        with self.login_user_context(self.get_superuser()):
+            data = {'body': "Hello world"}
+            response = self.client.post(add_url, data)
+
+        self.assertEqual(response.status_code, 200)
+
+        # Assert "ghost" plugin has been created
+        self.assertObjectExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
+        # Assert "real" plugin has been created
+        self.assertObjectExist(Text.objects.all(), pk=text_plugin_pk)
+
+        # Try and add the same plugin again
+        with self.login_user_context(self.get_superuser()):
+            readd_response = self.client.get(endpoint)
+
+        # Adding a plugin in the same location is not allowed
+        self.assertEqual(readd_response.status_code, 400)
+        self.assertEqual(readd_response.content, b"A plugin already exists in the placeholder position")
+
+
     def test_action_token_per_session(self):
         # Assert that a cancel token for the same plugin
         # is different per user session.

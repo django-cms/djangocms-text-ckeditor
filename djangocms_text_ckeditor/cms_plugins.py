@@ -340,13 +340,19 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        plugin = CMSPlugin.objects.create(
+        plugin, created = CMSPlugin.objects.get_or_create(
             language=data['plugin_language'],
             plugin_type=data['plugin_type'],
             position=data['position'],
             placeholder=data['placeholder_id'],
             parent=data.get('plugin_parent'),
         )
+
+        # We can't override a plugn that already has content
+        # A ghost plugin could exist in the position we are trying to use
+        # and not be bound, in that case we can reuse it to add content to
+        if not created and plugin.get_bound_plugin():
+            return HttpResponseBadRequest("A Plugin already exists in that position")
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

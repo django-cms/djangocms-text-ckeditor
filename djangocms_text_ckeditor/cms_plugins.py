@@ -6,7 +6,7 @@ import re
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
@@ -351,8 +351,13 @@ class TextPlugin(CMSPluginBase):
         # We can't override a plugn that already has content
         # A ghost plugin could exist in the position we are trying to use
         # and not be bound, in that case we can reuse it to add content to
-        if not created and plugin.get_bound_plugin():
-            return HttpResponseBadRequest("A Plugin already exists in that position")
+        if not created:
+            try:
+                plugin.get_bound_plugin()
+            except ObjectDoesNotExist:
+                pass
+            else:
+                return HttpResponseBadRequest("A Plugin already exists in that position")
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

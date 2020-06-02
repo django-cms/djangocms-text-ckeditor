@@ -348,16 +348,18 @@ class TextPlugin(CMSPluginBase):
             parent=data.get('plugin_parent'),
         )
 
-        # We can't override a plugn that already has content
         # A ghost plugin could exist in the position we are trying to use
-        # and not be bound, in that case we can reuse it to add content to
+        # and not be bound with any contents, this can occur if the cancel failed
+        # in that case we can reuse the old ghost to add content to,
+        # we can't override a plugin that already has content
         if not created:
             try:
                 plugin.get_bound_plugin()
             except ObjectDoesNotExist:
                 pass
             else:
-                return HttpResponseBadRequest("A Plugin already exists in that position")
+                message = ugettext("A plugin already exists in the placeholder position")
+                return HttpResponseBadRequest(message)
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

@@ -348,6 +348,14 @@ class TextPlugin(CMSPluginBase):
             parent=data.get('plugin_parent'),
         )
 
+
+
+        # FIXME: Note to self: Look at how the plugin position is set, if it is calculated by looking at the
+        #  structure mode it should be smarter and look ahead to see if the position is taken!
+        #   Maybe add a management command to remove / clean all ghosts for future
+
+
+
         # A ghost plugin could exist in the position we are trying to use
         # and not be bound with any contents, this can occur if the cancel failed
         # in that case we can reuse the old ghost to add content to,

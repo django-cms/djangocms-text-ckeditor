@@ -371,7 +371,7 @@ class PluginActionsTestCase(BaseTestCase):
         # Point to the newly created text plugin
         add_url = response.url
         text_plugin_pk = self.get_plugin_id_from_response(response)
-        cms_plugin = CMSPlugin.objects.get(pk=text_plugin_pk)
+        CMSPlugin.objects.get(pk=text_plugin_pk)
 
         with self.login_user_context(self.get_superuser()):
             data = {'body': "Hello world"}
@@ -391,7 +391,6 @@ class PluginActionsTestCase(BaseTestCase):
         # Adding a plugin in the same location is not allowed
         self.assertEqual(readd_response.status_code, 400)
         self.assertEqual(readd_response.content, b"A plugin already exists in the placeholder position")
-
 
     def test_action_token_per_session(self):
         # Assert that a cancel token for the same plugin

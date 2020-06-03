@@ -6,7 +6,9 @@ from distutils.version import LooseVersion
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
+from django.core.exceptions import (
+    ObjectDoesNotExist, PermissionDenied, ValidationError,
+)
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
@@ -346,14 +348,6 @@ class TextPlugin(CMSPluginBase):
             placeholder=data['placeholder_id'],
             parent=data.get('plugin_parent'),
         )
-
-
-
-        # FIXME: Note to self: Look at how the plugin position is set, if it is calculated by looking at the
-        #  structure mode it should be smarter and look ahead to see if the position is taken!
-        #   Maybe add a management command to remove / clean all ghosts for future
-
-
 
         # A ghost plugin could exist in the position we are trying to use
         # and not be bound with any contents, this can occur if the cancel failed

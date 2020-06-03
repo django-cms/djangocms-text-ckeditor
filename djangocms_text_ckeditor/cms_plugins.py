@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from distutils.version import LooseVersion
 import json
 import re
+from distutils.version import LooseVersion
 
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
@@ -10,7 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, Validat
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
-    Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect,
+    Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
+    HttpResponseRedirect,
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
@@ -30,17 +31,15 @@ from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 
 from . import settings
-from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
+from .forms import (
+    ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm,
+)
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN,
-    _plugin_tags_to_html,
-    plugin_tags_to_admin_html,
-    plugin_tags_to_id_list,
-    plugin_tags_to_user_html,
-    random_comment_exempt,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html,
+    plugin_tags_to_admin_html, plugin_tags_to_id_list,
+    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt,
     replace_plugin_tags,
-    plugin_to_tag,
 )
 from .widgets import TextEditorWidget
 

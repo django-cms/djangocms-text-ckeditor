@@ -1,60 +1,55 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Jiří Vírava <appukonrad@gmail.com>, 2013
-# Jakub Dorňák <jdornak@redhat.com>, 2013
+# Angelo Dini <angelo.dini@divio.ch>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: django-cms\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 16:37+0100\n"
-"PO-Revision-Date: 2013-11-18 16:00+0000\n"
-"Last-Translator: Jakub Dorňák <jdornak@redhat.com>\n"
-"Language-Team: Czech (http://www.transifex.com/divio/django-cms/language/cs/)\n"
+"POT-Creation-Date: 2020-05-14 14:25+0100\n"
+"PO-Revision-Date: 2019-01-23 16:28+0000\n"
+"Last-Translator: Angelo Dini <angelo.dini@divio.ch>, 2019\n"
+"Language-Team: Czech (https://www.transifex.com/divio/teams/58664/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: cms_plugins.py:13
-msgid "Text"
-msgstr "Text"
+msgid "You do not have permission to add a plugin"
+msgstr ""
 
-#: models.py:12
+msgid "Unable to process your request. Invalid token."
+msgstr ""
+
+msgid "Unable to process your request."
+msgstr ""
+
+msgid "Can't delete a saved plugin."
+msgstr ""
+
 msgid "body"
 msgstr "tělo"
 
-#: templates/cms/plugins/widgets/ckeditor.html:28
-msgid "Please select a plugin type."
-msgstr "Prosím zvolte typ obsahu"
+msgid "Text"
+msgstr "Text"
 
-#: templates/cms/plugins/widgets/ckeditor.html:34
-msgid "Text editor does not support inserting objects."
-msgstr "Textový editor nepodporuje vkládání objektů."
+msgid "Generic"
+msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:46
-msgid "Text editor does not support editing objects."
-msgstr "Textový editor nepodporuje editaci objektů."
+msgid "CMS Plugins"
+msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:51
-msgid "No object selected."
-msgstr "Nebyl zvolen žádný objekt."
+msgid "Add CMS Plugin"
+msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:55
-msgid "Not a plugin object"
-msgstr "Žádný objekt zásuvného modulu"
+msgid "Edit CMS Plugin"
+msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:67
-msgid "Available Plugins"
-msgstr "Dostupné typy obsahu"
-
-#: templates/cms/plugins/widgets/ckeditor.html:70
-msgid "Insert plugin"
-msgstr "Vložit položku obsahu"
-
-#: templates/cms/plugins/widgets/ckeditor.html:71
-msgid "Edit selected plugin"
-msgstr "Upravit zvolenou položku obsahu"
+msgid "Standard Plugins"
+msgstr ""

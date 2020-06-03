@@ -357,9 +357,11 @@ class TextPlugin(CMSPluginBase):
             try:
                 plugin.get_bound_plugin()
             except ObjectDoesNotExist:
+                # A "ghost" plugin exists and can be reused because it has no contents
                 pass
             else:
-                message = ugettext("A plugin already exists in the placeholder position")
+                # A plugin already exists with content in the same position
+                message = ugettext("A text plugin with content already exists in that placeholder position")
                 return HttpResponseBadRequest(message)
 
         query = request.GET.copy()

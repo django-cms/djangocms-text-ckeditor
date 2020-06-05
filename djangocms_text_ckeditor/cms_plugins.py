@@ -26,7 +26,7 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
 import cms
-from cms.models import CMSPlugin, Placeholder
+from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
@@ -298,7 +298,7 @@ class TextPlugin(CMSPluginBase):
         If any "ghost" plugins are left behind by a failed cancellation
         the creation of a new plugin can be blocked by the fact that a new plugin is
         trying to use the same position, to fix this we can clean any existing orphns
-        and recalculate the placeholders positions
+        and recalculate the placeholder plugins positions
         """
         has_ophans = False
         placeholder_plugins = CMSPlugin.objects.filter(
@@ -316,7 +316,7 @@ class TextPlugin(CMSPluginBase):
 
         if has_ophans:
             # The positions are compromised, recalculate them
-            placeholder._recalculate_plugin_positions(language=data['plugin_language'])
+            placeholder._recalculate_plugin_positions(language=language)
 
     @xframe_options_sameorigin
     def add_view(self, request, form_url='', extra_context=None):
@@ -374,7 +374,7 @@ class TextPlugin(CMSPluginBase):
                 placeholder=data['placeholder_id'],
                 parent=data.get('plugin_parent'),
             )
-        except IntegrityError as error:
+        except IntegrityError:
             # Failed deletion of a ghost plugin in the placeholder
             # means the position that we are trying to use is incorrect
             # because ghost plugins may still exist

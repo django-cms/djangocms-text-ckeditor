@@ -9,7 +9,7 @@ from django.core import signing
 from django.core.exceptions import (
     ObjectDoesNotExist, PermissionDenied, ValidationError,
 )
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.forms.fields import CharField
 from django.http import (
     Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
@@ -26,7 +26,7 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
 import cms
-from cms.models import CMSPlugin
+from cms.models import CMSPlugin, Placeholder
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
@@ -293,6 +293,31 @@ class TextPlugin(CMSPluginBase):
                 super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
+    def _clean_orphaned_ghosts(self, language, placeholder, plugin_type="TextPlugin"):
+        """
+        If any "ghost" plugins are left behind by a failed cancellation
+        the creation of a new plugin can be blocked by the fact that a new plugin is
+        trying to use the same position, to fix this we can clean any existing orphns
+        and recalculate the placeholders positions
+        """
+        has_ophans = False
+        placeholder_plugins = CMSPlugin.objects.filter(
+            language=language,
+            plugin_type=plugin_type,
+            placeholder=placeholder,
+        )
+
+        for plugin in placeholder_plugins:
+            try:
+                plugin.get_bound_plugin()
+            except ObjectDoesNotExist:
+                has_ophans = True
+                plugin.delete()
+
+        if has_ophans:
+            # The positions are compromised, recalculate them
+            placeholder._recalculate_plugin_positions(language=data['plugin_language'])
+
     @xframe_options_sameorigin
     def add_view(self, request, form_url='', extra_context=None):
         if 'plugin' in request.GET:
@@ -341,28 +366,27 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        plugin, created = CMSPlugin.objects.get_or_create(
-            language=data['plugin_language'],
-            plugin_type=data['plugin_type'],
-            position=data['position'],
-            placeholder=data['placeholder_id'],
-            parent=data.get('plugin_parent'),
-        )
+        try:
+            plugin = CMSPlugin.objects.create(
+                language=data['plugin_language'],
+                plugin_type=data['plugin_type'],
+                position=data['position'],
+                placeholder=data['placeholder_id'],
+                parent=data.get('plugin_parent'),
+            )
+        except IntegrityError as error:
+            # Failed deletion of a ghost plugin in the placeholder
+            # means the position that we are trying to use is incorrect
+            # because ghost plugins may still exist
+            self._clean_orphaned_ghosts(data['plugin_language'], data['placeholder_id'])
 
-        # A ghost plugin could exist in the position we are trying to use
-        # and not be bound with any contents, this can occur if the cancel failed
-        # in that case we can reuse the old ghost to add content to,
-        # we can't override a plugin that already has content
-        if not created:
-            try:
-                plugin.get_bound_plugin()
-            except ObjectDoesNotExist:
-                # A "ghost" plugin exists and can be reused because it has no contents
-                pass
-            else:
-                # A plugin already exists with content in the same position
-                message = ugettext("A text plugin with content already exists in that placeholder position")
-                return HttpResponseBadRequest(message)
+            plugin = CMSPlugin.objects.create(
+                language=data['plugin_language'],
+                plugin_type=data['plugin_type'],
+                position=data['position'],
+                placeholder=data['placeholder_id'],
+                parent=data.get('plugin_parent'),
+            )
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

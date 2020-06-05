@@ -7,6 +7,7 @@ import unittest
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
+from django.db import IntegrityError, transaction
 from django.template import RequestContext
 from django.utils.encoding import force_text
 from django.utils.html import escape
@@ -338,6 +339,8 @@ class PluginActionsTestCase(BaseTestCase):
         self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
 
         # Simulating that the cancellation never succeeded and try to re-add plugin in the same position
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
+
         with self.login_user_context(self.get_superuser()):
             retry_response = self.client.get(endpoint)
 
@@ -367,57 +370,46 @@ class PluginActionsTestCase(BaseTestCase):
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
+        # 2 Successes, position 1 and 2
+        add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+        add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
+
+        # 1 Failure, position 3
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
-
-        # 2 Successes
-        add_plugin(
-            simple_placeholder,
-            "TextPlugin",
-            "en",
-            body="I'm the first",
-        )
-        add_plugin(
-            simple_placeholder,
-            "TextPlugin",
-            "en",
-            body="I'm the first",
-        )
-
-        # 2 Failures
         with self.login_user_context(self.get_superuser()):
             fail_1_response = self.client.get(endpoint)
-            fail_2_response = self.client.get(endpoint)
-            fail_3_response = self.client.get(endpoint)
-            fail_4_response = self.client.get(endpoint)
 
-        self.assertEqual(fail_1_response.status_code, 302)
-        self.assertEqual(fail_2_response.status_code, 302)
-        self.assertEqual(fail_3_response.status_code, 302)
-        self.assertEqual(fail_4_response.status_code, 302)
+        # 1 Success, position 4
+        add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
 
-        # Point to the newly created text plugin
-        text_plugin_pk = self.get_plugin_id_from_response(response)
+        # We simulate the fact that the FE can only count actual plugins and the 3rd is a ghost,
+        # The value calculated would be 3 actual plugins so the next position is 4, we know that 4 is actually
+        # populated in this test which is what we need
+        endpoint.replace("plugin_position=3", "plugin_position=4")
 
-        # Assert "ghost" plugin has been created
-        self.assertObjectExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
-        # Assert "real" plugin was never created
-        self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
+        self.assertEqual(CMSPlugin.objects.all().count(), 4)
 
-        # Simulating that the cancellation never succeeded and try to re-add plugin in the same position
         with self.login_user_context(self.get_superuser()):
-            retry_response = self.client.get(endpoint)
+            response = self.client.get(endpoint)
 
-        self.assertEqual(retry_response.status_code, 302)
-
-        # Point to the reused text plugin
-        retry_text_plugin_pk = self.get_plugin_id_from_response(retry_response)
-
-        # Assert "ghost" plugin is reused as long as there was no Text contents
-        self.assertEqual(text_plugin_pk, retry_text_plugin_pk)
-        # Assert "ghost" plugin has been created
-        self.assertObjectExist(CMSPlugin.objects.all(), pk=retry_text_plugin_pk)
-        # Assert "real" plugin was never created
-        self.assertObjectDoesNotExist(Text.objects.all(), pk=retry_text_plugin_pk)
+        self.assertEqual(response.status_code, 200)
+        # 1 should have been deleted and a new one added!
+        self.assertEqual(CMSPlugin.objects.all().count(), 4)
 
     def test_add_and_cancel_plugin_when_plugin_position_is_taken(self):
         """
@@ -426,37 +418,29 @@ class PluginActionsTestCase(BaseTestCase):
         """
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
-
+        # Add a plugin
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
+        original_plugin = add_plugin(
+            simple_placeholder,
+            "TextPlugin",
+            "en",
+            body="I'm the first",
+        )
 
-        with self.login_user_context(self.get_superuser()):
-            response = self.client.get(endpoint)
-
-        self.assertEqual(response.status_code, 302)
-
-        # Point to the newly created text plugin
-        add_url = response.url
-        text_plugin_pk = self.get_plugin_id_from_response(response)
-        CMSPlugin.objects.get(pk=text_plugin_pk)
-
-        with self.login_user_context(self.get_superuser()):
-            data = {'body': "Hello world"}
-            response = self.client.post(add_url, data)
-
-        self.assertEqual(response.status_code, 200)
-
-        # Assert "ghost" plugin has been created
-        self.assertObjectExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
-        # Assert "real" plugin has been created
-        self.assertObjectExist(Text.objects.all(), pk=text_plugin_pk)
+        # Ensure the positions of the new plugin and the endpoint to add another are the same
+        self.assertEqual(original_plugin.position, 1)
+        self.assertTrue("plugin_position=1" in endpoint)
 
         # Try and add the same plugin again
-        with self.login_user_context(self.get_superuser()):
-            readd_response = self.client.get(endpoint)
-
         # Adding a plugin in the same location is not allowed
-        self.assertEqual(readd_response.status_code, 400)
-        self.assertEqual(readd_response.content, b"A plugin already exists in the placeholder position")
+        with self.login_user_context(self.get_superuser()):
+
+            with self.assertRaises(Exception) as error:
+                with transaction.atomic():
+                    readd_response = self.client.get(endpoint)
+
+        # FIXME: Breaks because the code catches and integrity and then allows one to be thrown again!
+        self.assertEqual(IntegrityError, type(error.exception))
 
     def test_action_token_per_session(self):
         # Assert that a cancel token for the same plugin

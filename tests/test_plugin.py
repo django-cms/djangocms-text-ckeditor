@@ -319,7 +319,7 @@ class PluginActionsTestCase(BaseTestCase):
     def test_add_and_cancel_plugin_on_failed_cancellation(self):
         """
         Cancelling a text plugin that doesn't successfully cancel does not leave the page
-        in a corrupt state and does nto reuse any existing "ghost" plugins.
+        in a corrupt state and does not reuse any existing "ghost" plugins.
         """
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
@@ -350,6 +350,8 @@ class PluginActionsTestCase(BaseTestCase):
 
         # Assert abandoned "ghost" plugin and the new plugin are not the same
         self.assertNotEqual(text_plugin_pk, retry_text_plugin_pk)
+        # Assert existing "ghost" plugin no longer exists
+        self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
         # Assert a new "ghost" plugin has been created
         self.assertObjectExist(CMSPlugin.objects.all(), pk=retry_text_plugin_pk)
         # Assert "real" plugin was never created
@@ -371,9 +373,11 @@ class PluginActionsTestCase(BaseTestCase):
 
         2 Success plugins of TextPlugin
         1 Failed cancellation plugin  (orphan ghost)
-        1 Success plugins of TextPlugin
+        1 Success plugin of TextPlugin
 
-        The position should be 5 but in reality the count is done by the FE which is not aware of the orphans
+        The next position should be 5 but in reality the count is done by the FE which is not aware of the orphaned
+        ghosts so it will actually be 4 and a plugin exists here so there is nothing that we can do unless we clean any
+        orphaned ghosts that have been left behind
         """
         simple_page = create_page('test page', 'page.html', u'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
@@ -408,7 +412,7 @@ class PluginActionsTestCase(BaseTestCase):
         # We simulate the fact that the FE can only count actual plugins and the 3rd is a ghost,
         # The value calculated would be 3 actual plugins so the next position is 4, we know that 4 is actually
         # populated in this test which is what we need to check i.e. the "ghost" in position 3 is cleaned up
-        # leaving position 4 available
+        # and recalculated leaving position 4 available
         endpoint = endpoint.replace("plugin_position=3", "plugin_position=4")
 
         self.assertEqual(CMSPlugin.objects.all().count(), 4)
@@ -417,7 +421,7 @@ class PluginActionsTestCase(BaseTestCase):
             response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, 302)
-        # 1 should have been deleted and a new one added!
+        # The orphaned plugin in position 3 should have been deleted and a new plugin added!
         self.assertEqual(CMSPlugin.objects.all().count(), 4)
 
     def test_add_and_cancel_plugin_when_plugin_position_is_taken(self):
@@ -448,7 +452,11 @@ class PluginActionsTestCase(BaseTestCase):
             with self.assertRaises(Exception) as error:
                 self.client.get(endpoint)
 
+        # An error should be thrown because there is nothing that we can do to rectify this issue
         self.assertEqual(IntegrityError, type(error.exception))
+        # Only one plugin still exists
+        self.assertEqual(CMSPlugin.objects.all().count(), 1)
+        self.assertObjectExist(Text.objects.all(), pk=original_plugin.pk)
 
     def test_action_token_per_session(self):
         # Assert that a cancel token for the same plugin

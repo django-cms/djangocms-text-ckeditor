@@ -387,7 +387,7 @@ class PluginActionsTestCase(BaseTestCase):
         # 1 Failure, position 3
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
         with self.login_user_context(self.get_superuser()):
-            fail_1_response = self.client.get(endpoint)
+            self.client.get(endpoint)
 
         # 1 Success, position 4
         add_plugin(
@@ -437,7 +437,7 @@ class PluginActionsTestCase(BaseTestCase):
 
             with self.assertRaises(Exception) as error:
                 with transaction.atomic():
-                    readd_response = self.client.get(endpoint)
+                    self.client.get(endpoint)
 
         # FIXME: Breaks because the code catches and integrity and then allows one to be thrown again!
         self.assertEqual(IntegrityError, type(error.exception))

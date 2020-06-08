@@ -366,27 +366,31 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        try:
-            plugin = CMSPlugin.objects.create(
-                language=data['plugin_language'],
-                plugin_type=data['plugin_type'],
-                position=data['position'],
-                placeholder=data['placeholder_id'],
-                parent=data.get('plugin_parent'),
-            )
-        except IntegrityError:
-            # Failed deletion of a ghost plugin in the placeholder
-            # means the position that we are trying to use is incorrect
-            # because ghost plugins may still exist
-            self._clean_orphaned_ghosts(data['plugin_language'], data['placeholder_id'])
 
-            plugin = CMSPlugin.objects.create(
-                language=data['plugin_language'],
-                plugin_type=data['plugin_type'],
-                position=data['position'],
-                placeholder=data['placeholder_id'],
-                parent=data.get('plugin_parent'),
-            )
+        # _create_ghost_plugin(data)
+        try:
+            with transaction.atomic():
+                plugin = CMSPlugin.objects.create(
+                    language=data['plugin_language'],
+                    plugin_type=data['plugin_type'],
+                    position=data['position'],
+                    placeholder=data['placeholder_id'],
+                    parent=data.get('plugin_parent'),
+                )
+        except IntegrityError:
+            with transaction.atomic():
+                # Failed deletion of a ghost plugin in the placeholder
+                # means the position that we are trying to use is incorrect
+                # because ghost plugins may still exist
+                self._clean_orphaned_ghosts(data['plugin_language'], data['placeholder_id'])
+
+                plugin = CMSPlugin.objects.create(
+                    language=data['plugin_language'],
+                    plugin_type=data['plugin_type'],
+                    position=data['position'],
+                    placeholder=data['placeholder_id'],
+                    parent=data.get('plugin_parent'),
+                )
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

@@ -297,10 +297,10 @@ class TextPlugin(CMSPluginBase):
         """
         If any "ghost" plugins are left behind by a failed cancellation
         the creation of a new plugin can be blocked by the fact that a new plugin is
-        trying to use the same position, to fix this we can clean any existing orphns
+        trying to use the same position, to fix this we can clean any existing orphans
         and recalculate the placeholder plugins positions
         """
-        has_ophans = False
+        has_orphans = False
         placeholder_plugins = CMSPlugin.objects.filter(
             language=language,
             plugin_type=plugin_type,
@@ -311,10 +311,10 @@ class TextPlugin(CMSPluginBase):
             try:
                 plugin.get_bound_plugin()
             except ObjectDoesNotExist:
-                has_ophans = True
+                has_orphans = True
                 plugin.delete()
 
-        if has_ophans:
+        if has_orphans:
             # The positions are compromised, recalculate them
             placeholder._recalculate_plugin_positions(language=language)
 

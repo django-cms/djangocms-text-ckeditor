@@ -115,7 +115,7 @@ class PluginActionsTestCase(BaseTestCase):
     def get_plugin_id_from_response(self, response):
         url = parse_qs(response.url)
         # Ideal case, this looks like:
-        # /en/admin/cms/page/edit-plugin/1/
+        # /en/admin/cms/placeholder/edit-plugin/?.....&plugin=1
         return url.get('plugin')[0] # noqa
 
     def test_add_and_edit_plugin(self):

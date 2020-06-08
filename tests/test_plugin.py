@@ -339,8 +339,6 @@ class PluginActionsTestCase(BaseTestCase):
         self.assertObjectDoesNotExist(Text.objects.all(), pk=text_plugin_pk)
 
         # Simulating that the cancellation never succeeded and try to re-add plugin in the same position
-        endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
-
         with self.login_user_context(self.get_superuser()):
             retry_response = self.client.get(endpoint)
 

@@ -293,7 +293,7 @@ class TextPlugin(CMSPluginBase):
                 super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
-    def _clean_orphaned_ghosts(self, language, placeholder, plugin_type="TextPlugin"):
+    def _clean_orphaned_ghost_plugins(self, language, placeholder, plugin_type="TextPlugin"):
         """
         If any "ghost" plugins are left behind by a failed cancellation
         the creation of a new plugin can be blocked by the fact that a new plugin is
@@ -337,7 +337,7 @@ class TextPlugin(CMSPluginBase):
                 # Failed deletion of a ghost plugin in the placeholder
                 # could mean the position that we are trying to use is incorrect
                 # because ghost plugins may still exist, try and clean them
-                self._clean_orphaned_ghosts(data['plugin_language'], data['placeholder_id'])
+                self._clean_orphaned_ghost_plugins(data['plugin_language'], data['placeholder_id'])
                 # We can now try adding the plugin again, if this fails then something else is wrong
                 # and the failure should throw the Integrity error, or any other error now occurring
                 plugin = CMSPlugin.objects.create(

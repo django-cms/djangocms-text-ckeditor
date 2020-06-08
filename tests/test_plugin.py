@@ -440,7 +440,6 @@ class PluginActionsTestCase(BaseTestCase):
         self.assertEqual(original_plugin.position, 1)
         self.assertTrue("plugin_position=1" in endpoint)
 
-
         # Try and add the same plugin again
         # Adding a plugin in the same location is not allowed
         # Because it already exists and has contents i.e. it's not am orphaned "ghost"

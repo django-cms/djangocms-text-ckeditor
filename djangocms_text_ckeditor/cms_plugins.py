@@ -6,8 +6,10 @@ from distutils.version import LooseVersion
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.db import transaction
+from django.core.exceptions import (
+    ObjectDoesNotExist, PermissionDenied, ValidationError,
+)
+from django.db import IntegrityError, transaction
 from django.forms.fields import CharField
 from django.http import (
     Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
@@ -291,6 +293,62 @@ class TextPlugin(CMSPluginBase):
                 super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
+    def _clean_orphaned_ghost_plugins(self, language, placeholder, plugin_type="TextPlugin"):
+        """
+        If any "ghost" plugins are left behind by a failed cancellation
+        the creation of a new plugin can be blocked by the fact that a new plugin is
+        trying to use the same position, to fix this we can clean any existing orphans
+        and recalculate the placeholder plugins positions
+        """
+        has_orphans = False
+        placeholder_plugins = CMSPlugin.objects.filter(
+            language=language,
+            plugin_type=plugin_type,
+            placeholder=placeholder,
+        )
+
+        for plugin in placeholder_plugins:
+            try:
+                plugin.get_bound_plugin()
+            except ObjectDoesNotExist:
+                has_orphans = True
+                plugin.delete()
+
+        if has_orphans:
+            # The positions are compromised, recalculate them
+            placeholder._recalculate_plugin_positions(language=language)
+
+    def _create_ghost_plugin(self, data):
+        """
+        Try and create a "ghost" plugin to be able to attach child plugins.
+        In the even that orphaned ghost plugins exist they must be cleaned!
+        """
+        try:
+            with transaction.atomic():
+                plugin = CMSPlugin.objects.create(
+                    language=data['plugin_language'],
+                    plugin_type=data['plugin_type'],
+                    position=data['position'],
+                    placeholder=data['placeholder_id'],
+                    parent=data.get('plugin_parent'),
+                )
+        except IntegrityError:
+            with transaction.atomic():
+                # Failed deletion of a ghost plugin in the placeholder
+                # could mean the position that we are trying to use is incorrect
+                # because ghost plugins may still exist, try and clean them
+                self._clean_orphaned_ghost_plugins(data['plugin_language'], data['placeholder_id'])
+                # We can now try adding the plugin again, if this fails then something else is wrong
+                # and the failure should throw the Integrity error, or any other error now occurring
+                plugin = CMSPlugin.objects.create(
+                    language=data['plugin_language'],
+                    plugin_type=data['plugin_type'],
+                    position=data['position'],
+                    placeholder=data['placeholder_id'],
+                    parent=data.get('plugin_parent'),
+                )
+        return plugin
+
     @xframe_options_sameorigin
     def add_view(self, request, form_url='', extra_context=None):
         if 'plugin' in request.GET:
@@ -339,13 +397,7 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        plugin = CMSPlugin.objects.create(
-            language=data['plugin_language'],
-            plugin_type=data['plugin_type'],
-            position=data['position'],
-            placeholder=data['placeholder_id'],
-            parent=data.get('plugin_parent'),
-        )
+        plugin = self._create_ghost_plugin(data)
 
         query = request.GET.copy()
         query['plugin'] = six.text_type(plugin.pk)

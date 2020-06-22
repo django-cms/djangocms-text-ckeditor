@@ -293,7 +293,7 @@ class TextPlugin(CMSPluginBase):
                 super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
-    def _clean_orphaned_ghost_plugins(self, language, placeholder, plugin_type="TextPlugin"):
+    def _clean_orphaned_ghost_plugins(self, language, placeholder):
         """
         If any "ghost" plugins are left behind by a failed cancellation
         the creation of a new plugin can be blocked by the fact that a new plugin is
@@ -303,7 +303,6 @@ class TextPlugin(CMSPluginBase):
         has_orphans = False
         placeholder_plugins = CMSPlugin.objects.filter(
             language=language,
-            plugin_type=plugin_type,
             placeholder=placeholder,
         )
 

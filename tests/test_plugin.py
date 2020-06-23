@@ -26,7 +26,7 @@ from djangocms_text_ckeditor.utils import (
 )
 
 from .base import BaseTestCase
-
+from .test_app.models import ExtendedText
 
 try:
     from djangocms_transfer.exporter import export_page
@@ -423,6 +423,56 @@ class PluginActionsTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 302)
         # The orphaned plugin in position 3 should have been deleted and a new plugin added!
         self.assertEqual(CMSPlugin.objects.all().count(), 4)
+
+    def test_add_and_cancel_custom_text_plugin_on_failed_cancellation(self):
+        """
+        Cancelling a custom text plugin that doesn't successfully cancel does not leave the page
+        in a corrupt state and does not reuse any existing "ghost" plugins.
+        """
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
+
+        endpoint = self.get_add_plugin_uri(simple_placeholder, 'ExtendedTextPlugin')
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, 302)
+
+        # Point to the newly created text plugin
+        text_plugin_pk = self.get_plugin_id_from_response(response)
+
+        # Assert "ghost" plugin has been created
+        self.assertObjectExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
+        # Assert "real" plugin was never created
+        self.assertObjectDoesNotExist(ExtendedText.objects.all(), pk=text_plugin_pk)
+
+        # Simulating that the cancellation never succeeded and try to re-add plugin in the same position
+        # This should force a clean on any existing ghosts
+        with self.login_user_context(self.get_superuser()):
+            retry_response = self.client.get(endpoint)
+
+        self.assertEqual(retry_response.status_code, 302)
+
+        retry_text_plugin_pk = self.get_plugin_id_from_response(retry_response)
+
+        # Assert abandoned "ghost" plugin and the new plugin are not the same
+        self.assertNotEqual(text_plugin_pk, retry_text_plugin_pk)
+        # Assert existing "ghost" plugin no longer exists
+        self.assertObjectDoesNotExist(CMSPlugin.objects.all(), pk=text_plugin_pk)
+        # Assert a new "ghost" plugin has been created
+        self.assertObjectExist(CMSPlugin.objects.all(), pk=retry_text_plugin_pk)
+        # Assert "real" plugin was never created
+        self.assertObjectDoesNotExist(ExtendedText.objects.all(), pk=retry_text_plugin_pk)
+
+        # The retry "ghost" can be used still after an unsuccessful cancellation previously
+        with self.login_user_context(self.get_superuser()):
+            data = {'body': "Hello world", 'title': "Some text"}
+            add_data_response = self.client.post(retry_response.url, data)
+
+        self.assertEqual(add_data_response.status_code, 200)
+        # Assert "real" plugin is now created
+        self.assertObjectExist(ExtendedText.objects.all(), pk=retry_text_plugin_pk)
 
     def test_add_and_cancel_plugin_when_plugin_position_is_taken(self):
         """

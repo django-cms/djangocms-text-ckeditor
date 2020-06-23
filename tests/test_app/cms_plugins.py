@@ -4,7 +4,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from tests.test_app.models import DummyLink, DummySpacer
+from tests.test_app.models import DummyLink, DummySpacer, ExtendedText
 
 
 @plugin_pool.register_plugin
@@ -25,6 +25,8 @@ class SekizaiPlugin(CMSPluginBase):
 @plugin_pool.register_plugin
 class ExtendedTextPlugin(TextPlugin):
     name = 'Extended'
+    model = ExtendedText
+    text_enabled = True
 
 
 @plugin_pool.register_plugin

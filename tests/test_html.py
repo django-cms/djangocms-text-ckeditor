@@ -82,7 +82,7 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
         old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
         settings.TEXT_HTML_SANITIZE = True
         parser = html._get_default_parser()
-        
+
         original = '<span test-attr="2">foo</span>'
         cleaned = html.clean_html(
             original,
@@ -98,7 +98,7 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
         old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
         settings.TEXT_HTML_SANITIZE = False
         parser = html._get_default_parser()
-        
+
         original = '<span test-attr="2">foo</span>'
         cleaned = html.clean_html(
             original,

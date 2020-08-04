@@ -64,8 +64,12 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     else:
         dom_tree = parser.parseFragment(data)
     walker = treewalkers.getTreeWalker('dom')
-    kwargs = _filter_kwargs()
-    stream = TextSanitizer(walker(dom_tree), **kwargs)
+    stream = walker(dom_tree)
+
+    if settings.TEXT_HTML_SANITIZE:
+        kwargs = _filter_kwargs()
+        stream = TextSanitizer(stream, **kwargs)
+
     s = serializer.HTMLSerializer(
         omit_optional_tags=False,
         quote_attr_values='always',

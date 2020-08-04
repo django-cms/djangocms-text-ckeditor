@@ -3,11 +3,12 @@ Changelog
 =========
 
 
-next
-====
+3.10.0 (2020-08-04)
+===================
 
-* Upgrade to CKeditor version 4.14.0
+* Upgrade to CKeditor version 4.14.0.
 * Replace icon for CMS plugins with nicer looking SVG puzzle piece.
+* Prevent ``clean_html`` from sanitizing when TEXT_HTML_SANITIZE is False.
 
 
 3.9.1 (2020-05-20)

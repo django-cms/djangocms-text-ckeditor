@@ -75,7 +75,7 @@
 
                 // add additional plugins (autoloads plugins.js)
                 CKEDITOR.skin.addIcon('cmsplugins', settings.static_url +
-                    '/ckeditor_plugins/cmsplugins/icons/cmsplugins.png');
+                    '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg');
 
                 // render ckeditor
                 this.editor = CKEDITOR.replace(container, this.options);

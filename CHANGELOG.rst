@@ -3,6 +3,13 @@ Changelog
 =========
 
 
+next
+====
+
+* Upgrade to CKeditor version 4.14.0
+* Replace icon for CMS plugins with nicer looking SVG puzzle piece.
+
+
 3.9.1 (2020-05-20)
 ==================
 

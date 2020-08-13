@@ -2,7 +2,7 @@
 import os
 import re
 from collections import OrderedDict
-from functools import wraps, WRAPPER_ASSIGNMENTS
+from functools import WRAPPER_ASSIGNMENTS, wraps
 
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape

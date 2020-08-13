@@ -4,13 +4,13 @@ import io
 import re
 import uuid
 
+from django.utils.module_loading import import_string
+
 import html5lib
 from html5lib import serializer, treebuilders, treewalkers
 from html5lib.constants import namespaces
 from html5lib.filters import sanitizer
 from PIL import Image
-
-from django.utils.module_loading import import_string
 
 from . import settings
 from .sanitizer import TextSanitizer

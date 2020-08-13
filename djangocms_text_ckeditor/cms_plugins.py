@@ -14,7 +14,7 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.urls import reverse, re_path
+from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext

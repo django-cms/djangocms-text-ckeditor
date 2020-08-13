@@ -125,8 +125,7 @@ def test():
 
 
 def run():
-    from app_helper import runner
-    from app_helper import utils
+    from app_helper import runner, utils
 
     os.environ.setdefault('DATABASE_URL', 'sqlite://localhost/testdb.sqlite')
 

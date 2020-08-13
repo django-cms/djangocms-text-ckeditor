@@ -23,7 +23,7 @@ class TextEditorWidget(forms.Textarea):
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
                  cancel_url=None, render_plugin_url=None, action_token=None,
-                 delete_on_cancel=False):
+                 delete_on_cancel=False, body_css_classes=''):
         """
         Create a widget for editing text + plugins.
 
@@ -56,6 +56,7 @@ class TextEditorWidget(forms.Textarea):
         self.render_plugin_url = render_plugin_url
         self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
+        self.body_css_classes = body_css_classes
 
     @property
     def media(self):
@@ -88,6 +89,8 @@ class TextEditorWidget(forms.Textarea):
         # value or fallback to HTMLField
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
+
+        configuration['bodyClass'] = self.body_css_classes
 
         config = json.dumps(configuration, cls=DjangoJSONEncoder)
         context = {

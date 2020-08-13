@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from html5lib.filters import sanitizer
 
 

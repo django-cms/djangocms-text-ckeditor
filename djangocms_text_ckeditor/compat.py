@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def get_page_placeholders(page, language=None):
     try:
         # cms 3.6 compat

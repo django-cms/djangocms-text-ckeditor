@@ -10,22 +10,22 @@ matrix:
       env: TOX_ENV='isort'
     # Django 2.2
     - python: 3.5
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22' CMS='cms37' FE=1
     - python: 3.6
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22' CMS='cms37' FE=1
     - python: 3.7
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22' CMS='cms37' FE=1
     - python: 3.8
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22' CMS='cms37' FE=1
     # Django 3.0, always run the lowest supported version
     - python: 3.6
-      env: DJANGO='dj30' CMS='cms37'
+      env: DJANGO='dj30' CMS='cms37' FE=1
     # Django 3.1, always run the lowest supported version
     - python: 3.6
-      env: DJANGO='dj31' CMS='cms38'
+      env: DJANGO='dj31' CMS='cms38' FE=1
   allow_failures:
     - python: 3.6
-      env: DJANGO='dj31' CMS='cms38'
+      env: DJANGO='dj31' CMS='cms38' FE=1
 
 install:
   - pip install coverage isort tox
@@ -34,12 +34,11 @@ install:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi"
   - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
-  - "if [[ $FE == 1 ]]; then export FE_STR='-fe'; fi"
   - "if [[ $FE == 1 ]]; then nvm install 8 && nvm use 8; fi"
   - "if [[ $FE == 1 ]]; then npm config set spin false; fi"
   - "if [[ $FE == 1 ]]; then npm install -g npm; fi"
   - "if [[ $FE == 1 ]]; then npm install -g gulp@3.9.0; fi"
-  - "if [[ $FE == 1 ]]; then npm install -g codeclimate-test-reporter; fi"
+  - "if [[ $FE == 1 ]]; then npm install -g codecov; fi"
   - "if [[ $FE == 1 ]]; then npm ci; fi"
 
 script:

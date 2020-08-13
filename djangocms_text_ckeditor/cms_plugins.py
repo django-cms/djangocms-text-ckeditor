@@ -3,7 +3,6 @@ import json
 import re
 from distutils.version import LooseVersion
 
-from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -15,7 +14,7 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.urls import reverse
+from django.urls import reverse, re_path
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext
@@ -28,8 +27,6 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
-
-from six import text_type
 
 from . import settings
 from .forms import (
@@ -378,7 +375,7 @@ class TextPlugin(CMSPluginBase):
         )
 
         query = request.GET.copy()
-        query['plugin'] = text_type(plugin.pk)
+        query['plugin'] = str(plugin.pk)
 
         success_url = admin_reverse('cms_page_add_plugin')
         # Because we've created the cmsplugin record
@@ -389,7 +386,7 @@ class TextPlugin(CMSPluginBase):
     def get_plugin_urls(self):
         def pattern(regex, func):
             name = self.get_admin_url_name(func.__name__)
-            return url(regex, func, name=name)
+            return re_path(regex, func, name=name)
 
         url_patterns = [
             pattern(r'^render-plugin/$', self.render_plugin),

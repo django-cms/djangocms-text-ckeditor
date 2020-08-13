@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import base64
+import io
 import re
 import uuid
-
-from django.utils.module_loading import import_string
 
 import html5lib
 from html5lib import serializer, treebuilders, treewalkers
 from html5lib.constants import namespaces
 from html5lib.filters import sanitizer
 from PIL import Image
-from six import BytesIO
+
+from django.utils.module_loading import import_string
 
 from . import settings
 from .sanitizer import TextSanitizer
@@ -112,7 +112,7 @@ def extract_images(data, plugin):
         except IndexError:
             # No image type specified -- will convert to jpg below if it's valid image data
             image_type = ''
-        image = BytesIO(image_data)
+        image = io.BytesIO(image_data)
         # genarate filename and normalize image format
         if image_type == 'jpg' or image_type == 'jpeg':
             file_ending = 'jpg'
@@ -123,7 +123,7 @@ def extract_images(data, plugin):
         else:
             # any not "web-safe" image format we try to convert to jpg
             im = Image.open(image)
-            new_image = BytesIO()
+            new_image = io.BytesIO()
             file_ending = 'jpg'
             im.save(new_image, 'JPEG')
             new_image.seek(0)

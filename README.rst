@@ -16,13 +16,8 @@ for easy installation.
 
 .. WARNING::
 
-   - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
-   - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x,<3.5.1 (e.g.: version 3.1.0).
-   - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
-   - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
-   - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
-   - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
-   - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
+   - For django CMS 3.8.x+ use ``djangocms-text-ckeditor`` >= 4.x.x (e.g.: version 4.0.0).
+   - For django CMS 3.4.x+ use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
 
 .. image:: preview.gif
 
@@ -472,9 +467,9 @@ You can run tests by executing::
 .. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
 
-.. |python| image:: https://img.shields.io/badge/python-2.7%20%7C%203.4+-blue.svg
+.. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/
-.. |django| image:: https://img.shields.io/badge/django-1.11%20%7C%202.2%20%7C%203.0-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-2.2,%203.0,%203.1-blue.svg
     :target: https://www.djangoproject.com/
-.. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.4%2B-blue.svg
+.. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
     :target: https://www.django-cms.org/

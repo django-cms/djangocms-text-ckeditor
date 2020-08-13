@@ -845,7 +845,7 @@ class PluginActionsTestCase(BaseTestCase):
 )
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
     def setUp(self):
-        super(DjangoCMSTranslationsIntegrationTestCase, self).setUp()
+        super().setUp()
         self.page = create_page('test page', 'page.html', 'en', published=True)
         self.placeholder = get_page_placeholders(self.page, 'en').get(slot='content')
 

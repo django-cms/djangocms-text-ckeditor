@@ -342,7 +342,7 @@ to render out all child plugins located in the ``body`` field. For example::
                 'name': instance.name,
             })
             # Other custom render code you may have
-        return super(MyTextPlugin, self).render(context, instance, placeholder)
+        return super().render(context, instance, placeholder)
 
     plugin_pool.register_plugin(MyTextPlugin)
 

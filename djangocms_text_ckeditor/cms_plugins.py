@@ -315,7 +315,7 @@ class TextPlugin(CMSPluginBase):
 
                 if rendered_text:
                     initial['body'] = rendered_text
-                super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
+                super().__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
     @xframe_options_sameorigin
@@ -329,7 +329,7 @@ class TextPlugin(CMSPluginBase):
             # and so a "ghost" plugin instance is left over.
             # The instance is a record that points to the Text plugin
             # but is not a real text plugin instance.
-            return super(TextPlugin, self).add_view(
+            return super().add_view(
                 request, form_url, extra_context
             )
 
@@ -505,7 +505,7 @@ class TextPlugin(CMSPluginBase):
             plugin=plugin,
         )
         kwargs['form'] = form  # override standard form
-        return super(TextPlugin, self).get_form(request, obj, **kwargs)
+        return super().get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
         context.update({
@@ -532,7 +532,7 @@ class TextPlugin(CMSPluginBase):
                 value = getattr(self.cms_plugin_instance, field.name)
                 setattr(obj, field.name, value)
 
-        super(TextPlugin, self).save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
         # This must come after calling save
         # If `clean_plugins()` deletes child plugins, django-treebeard will call
         # save() again on the Text instance (aka obj in this context) to update mptt values (numchild, etc).

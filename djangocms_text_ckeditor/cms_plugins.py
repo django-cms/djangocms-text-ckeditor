@@ -16,7 +16,7 @@ from django.template import RequestContext
 from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
@@ -338,7 +338,7 @@ class TextPlugin(CMSPluginBase):
             # This is NOT the normal workflow because we create a plugin
             # on GET request to the /add/ endpoint and so we bypass
             # django's add_view, thus bypassing permission check.
-            message = ugettext('You do not have permission to add a plugin.')
+            message = gettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
 
         try:
@@ -357,7 +357,7 @@ class TextPlugin(CMSPluginBase):
             }
 
         except PermissionDenied:
-            message = ugettext('You do not have permission to add a plugin.')
+            message = gettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
@@ -410,7 +410,7 @@ class TextPlugin(CMSPluginBase):
 
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
-        message = ugettext('Unable to process your request. Invalid token.')
+        message = gettext('Unable to process your request. Invalid token.')
         raise ValidationError(message=force_text(message))
 
     @random_comment_exempt
@@ -424,7 +424,7 @@ class TextPlugin(CMSPluginBase):
         form = RenderPluginForm(request.GET, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext('Unable to process your request.')
+            message = gettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -456,7 +456,7 @@ class TextPlugin(CMSPluginBase):
         form = DeleteOnCancelForm(request.POST, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext('Unable to process your request.')
+            message = gettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()

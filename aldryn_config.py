@@ -12,7 +12,7 @@ class Form(forms.BaseForm):
     )
 
     def clean(self):
-        data = super().clean()
+        data = super(Form, self).clean()
 
         if data.get('content_css'):
             files = data['content_css'].split(',')

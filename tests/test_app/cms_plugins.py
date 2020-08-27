@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from cms.models import CMSPlugin
+from cms.utils.plugins import get_plugin_model
 from django.template import engines
 
 from cms.plugin_base import CMSPluginBase
@@ -39,3 +41,29 @@ class DummyLinkPlugin(CMSPluginBase):
 class DummySpacerPlugin(CMSPluginBase):
     render_plugin = False
     model = DummySpacer
+
+
+@plugin_pool.register_plugin
+class DummyParentPlugin(CMSPluginBase):
+    render_template = 'test_app/dummy_parent_plugin.html'
+    model = DummyLink
+    allow_children = True
+
+    _ckeditor_body_class = 'parent-plugin-css-class'
+    _ckeditor_body_class_label_trigger = 'parent link label'
+
+    @classmethod
+    def get_child_ckeditor_body_css_class(cls, plugin: CMSPlugin) -> str:
+        plugin_model = get_plugin_model(plugin.plugin_type)
+        plugin_instance = plugin_model.objects.get(pk=plugin.pk)
+        if plugin_instance.label == cls._ckeditor_body_class_label_trigger:
+            return cls._ckeditor_body_class
+        else:
+            return ''
+
+
+@plugin_pool.register_plugin
+class DummyChildPlugin(CMSPluginBase):
+    render_template = 'test_app/dummy_child_plugin.html'
+    child_ckeditor_body_css_class = 'child-plugin-css-class'
+    allow_children = True

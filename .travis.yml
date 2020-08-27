@@ -9,8 +9,6 @@ matrix:
     - python: 3.5
       env: TOX_ENV='isort'
       # Django 1.11
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms34' FE=1
     - python: 3.4
       env: DJANGO='dj111' CMS='cms35' FE=1
     - python: 3.5
@@ -41,7 +39,6 @@ matrix:
 
 before_script:
   - pip install coverage isort tox
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
@@ -57,7 +54,6 @@ before_script:
 
 install:
   - pip install -U tox>=1.8 coveralls
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"

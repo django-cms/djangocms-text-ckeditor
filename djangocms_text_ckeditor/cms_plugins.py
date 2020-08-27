@@ -254,8 +254,38 @@ class TextPlugin(CMSPluginBase):
             cancel_url=cancel_url,
             action_token=action_token,
             delete_on_cancel=delete_text_on_cancel,
+            body_css_classes=self._get_body_css_classes_from_parent_plugins(plugin),
         )
         return widget
+
+    def _get_body_css_classes_from_parent_plugins(
+        self, plugin_instance: CMSPlugin, css_classes: str = '',
+    ) -> str:
+        """
+        Recursion that collects CMSPluginBase.child_ckeditor_body_css_class attribute values,
+        it allows to style content within WYSIWYG iframe <body> based on its parent plugins.
+        """
+        parent_current = plugin_instance.parent
+        if parent_current:
+
+            for plugin_name, plugin_class in plugin_pool.plugins.items():
+                is_current_parent_found = plugin_name == parent_current.plugin_type
+                if is_current_parent_found:
+                    body_css_class = ''
+                    if getattr(plugin_class, 'child_ckeditor_body_css_class', False):
+                        body_css_class = plugin_class.child_ckeditor_body_css_class
+                    if getattr(plugin_class, 'get_child_ckeditor_body_css_class', False):
+                        body_css_class = plugin_class.get_child_ckeditor_body_css_class(parent_current)
+
+                    if body_css_class and (body_css_class not in css_classes):
+                        css_classes += ' ' + body_css_class
+
+            css_classes_collected = self._get_body_css_classes_from_parent_plugins(
+                parent_current, css_classes,
+            )
+            if css_classes_collected not in css_classes:
+                css_classes += css_classes_collected
+        return css_classes
 
     def get_form_class(self, request, plugins, plugin):
         """

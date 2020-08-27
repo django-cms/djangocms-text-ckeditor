@@ -23,6 +23,8 @@ from djangocms_text_ckeditor.utils import (
     _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html,
     plugin_tags_to_id_list, plugin_to_tag,
 )
+from tests.test_app.cms_plugins import DummyChildPlugin
+from tests.test_app.cms_plugins import DummyParentPlugin
 
 from .base import BaseTestCase
 
@@ -634,6 +636,36 @@ class PluginActionsTestCase(BaseTestCase):
 
             self.assertEqual(response.status_code, 400)
             self.assertEqual(force_text(response.content), 'Unable to process your request.')
+
+    def test_custom_ckeditor_body_css_classes(self):
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+
+        parent_plugin = add_plugin(
+            simple_placeholder,
+            DummyParentPlugin,
+            'en',
+            label=DummyParentPlugin._ckeditor_body_class_label_trigger,
+        )
+        child_plugin = add_plugin(
+            simple_placeholder,
+            DummyChildPlugin,
+            'en',
+            target=parent_plugin,
+        )
+        text_plugin = add_plugin(
+            simple_placeholder,
+            'TextPlugin',
+            'en',
+            body="Content",
+            target=child_plugin,
+        )
+
+        with self.login_user_context(self.get_superuser()):
+            change_endpoint = self.get_change_plugin_uri(text_plugin)
+            response = self.client.get(change_endpoint)
+            self.assertContains(response, DummyParentPlugin._ckeditor_body_class)
+            self.assertContains(response, DummyChildPlugin.child_ckeditor_body_css_class)
 
     def test_render_plugin(self):
         simple_page = create_page('test page', 'page.html', u'en')

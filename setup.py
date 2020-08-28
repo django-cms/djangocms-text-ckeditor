@@ -6,7 +6,6 @@ from djangocms_text_ckeditor import __version__
 
 
 REQUIREMENTS = [
-    'Django<3.1',
     'django-cms>=3.4.5',
     'html5lib>=0.999999999',
     'Pillow',

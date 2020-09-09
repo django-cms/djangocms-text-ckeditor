@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.contrib.admin import widgets as admin_widgets
 from django.db import models
 from django.forms.fields import CharField
@@ -20,10 +19,10 @@ class HTMLFormField(CharField):
         else:
             widget = None
         kwargs.setdefault('widget', widget)
-        super(HTMLFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self, value):
-        value = super(HTMLFormField, self).clean(value)
+        value = super().clean(value)
         clean_value = clean_html(value, full=False)
 
         # We `mark_safe` here (as well as in the correct places) because Django
@@ -41,7 +40,7 @@ class HTMLField(models.TextField):
         # This allows widget configuration customization
         # from the model definition
         self.configuration = kwargs.pop('configuration', None)
-        super(HTMLField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def from_db_value(self, value, expression, connection, context=None):
         if value is None:
@@ -74,10 +73,10 @@ class HTMLField(models.TextField):
         # override the admin widget
         if defaults['widget'] == admin_widgets.AdminTextareaWidget:
             defaults['widget'] = widget
-        return super(HTMLField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def clean(self, value, model_instance):
         # This needs to be marked safe as well because the form field's
         # clean method is not called on model.full_clean()
-        value = super(HTMLField, self).clean(value, model_instance)
+        value = super().clean(value, model_instance)
         return mark_safe(clean_html(value, full=False))

@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from django.conf import settings
 from django.templatetags.static import static
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 # See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html

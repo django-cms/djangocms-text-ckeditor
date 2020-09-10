@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import copy
 import json
 import re
@@ -16,6 +15,8 @@ from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
 from cms.utils.urlutils import admin_reverse
 
+from tests.test_app.cms_plugins import DummyChildPlugin, DummyParentPlugin
+
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.compat import get_page_placeholders
 from djangocms_text_ckeditor.models import Text
@@ -23,8 +24,6 @@ from djangocms_text_ckeditor.utils import (
     _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html,
     plugin_tags_to_id_list, plugin_to_tag,
 )
-from tests.test_app.cms_plugins import DummyChildPlugin
-from tests.test_app.cms_plugins import DummyParentPlugin
 
 from .base import BaseTestCase
 
@@ -845,7 +844,7 @@ class PluginActionsTestCase(BaseTestCase):
 )
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
     def setUp(self):
-        super(DjangoCMSTranslationsIntegrationTestCase, self).setUp()
+        super().setUp()
         self.page = create_page('test page', 'page.html', 'en', published=True)
         self.placeholder = get_page_placeholders(self.page, 'en').get(slot='content')
 

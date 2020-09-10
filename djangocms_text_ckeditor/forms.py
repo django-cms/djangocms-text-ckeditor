@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 from django import forms
 from django.core import signing
 from django.core.signing import BadSignature
 from django.forms.models import ModelForm
 from django.template import RequestContext
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from cms.models import CMSPlugin
 
@@ -35,7 +34,7 @@ class RenderPluginForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.text_plugin = kwargs.pop('text_plugin')
-        super(RenderPluginForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['plugin'].queryset = self.get_child_plugins()
 
     def get_child_plugins(self):
@@ -57,7 +56,7 @@ class DeleteOnCancelForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.text_plugin = kwargs.pop('text_plugin')
-        super(DeleteOnCancelForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['child_plugins'].queryset = self.get_child_plugins()
 
     def clean(self):
@@ -67,7 +66,7 @@ class DeleteOnCancelForm(forms.Form):
             # This check prevents users from using a cancel token
             # to delete just any text plugin.
             # Only non-saved text plugins can be deleted.
-            message = ugettext("Can't delete a saved plugin.")
+            message = gettext("Can't delete a saved plugin.")
             raise forms.ValidationError(message, code='invalid')
         return self.cleaned_data
 

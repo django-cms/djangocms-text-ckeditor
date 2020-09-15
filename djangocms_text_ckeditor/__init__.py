@@ -16,6 +16,6 @@ Release logic:
 10. python setup.py sdist
 11. twine upload dist/djangocms-text-ckeditor-{new_version_number}.tar.gz
 """
-__version__ = '3.10.0'
+__version__ = '4.0.0'
 
 default_app_config = 'djangocms_text_ckeditor.apps.TextCkeditorConfig'

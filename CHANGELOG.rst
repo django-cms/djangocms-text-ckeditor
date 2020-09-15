@@ -2,7 +2,8 @@
 Changelog
 =========
 
-4.0.0 (unreleased)
+
+4.0.0 (2020-09-15)
 ==================
 
 * Added support for Django 3.1
@@ -11,6 +12,7 @@ Changelog
 * Ensure that correct urls are generated when static files are hosted on a CDN
 * Allow to style WYSIWYG content based on parent plugins, by adding
 ``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
+* Upgrade to CKeditor version to 4.14.1
 
 
 3.10.0 (2020-08-04)

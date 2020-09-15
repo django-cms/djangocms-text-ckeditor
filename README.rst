@@ -232,8 +232,8 @@ to note:
   enabled plugins - this messes up inline preview.
 
 - If you're adding a Text Plugin as a child inside another plugin and want to style it
-conditionally based on the parent - you can add ``CMSPluginBase.child_ckeditor_body_css_class``
-attribute to the parent class.
+  conditionally based on the parent - you can add ``CMSPluginBase.child_ckeditor_body_css_class``
+  attribute to the parent class.
 
 .. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
 .. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73

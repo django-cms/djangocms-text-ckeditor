@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models
 from django.utils.encoding import force_text
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cms.models import CMSPlugin
-
-from six import python_2_unicode_compatible
 
 from . import settings
 from .html import clean_html, extract_images
@@ -26,7 +21,6 @@ except ImportError:
         return t
 
 
-@python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """
     Abstract Text Plugin Class
@@ -56,14 +50,14 @@ class AbstractText(CMSPlugin):
         return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
 
     def __init__(self, *args, **kwargs):
-        super(AbstractText, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.body = force_text(self.body)
 
     def clean(self):
         self.body = plugin_tags_to_db(self.body)
 
     def save(self, *args, **kwargs):
-        super(AbstractText, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         body = self.body
         body = extract_images(body, self)
         body = clean_html(body, full=False)
@@ -77,7 +71,7 @@ class AbstractText(CMSPlugin):
         # this 2nd save() call is internal and should be
         # fully managed by us.
         # think of it as an update() vs save()
-        super(AbstractText, self).save(update_fields=('body',))
+        super().save(update_fields=('body',))
 
     def clean_plugins(self):
         ids = self._get_inline_plugin_ids()

@@ -16,13 +16,8 @@ for easy installation.
 
 .. WARNING::
 
-   - For django CMS 3.4.x use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
-   - For django CMS 3.3.x use ``djangocms-text-ckeditor`` >= 3.1.x,<3.5.1 (e.g.: version 3.1.0).
-   - For django CMS 3.2.x use ``djangocms-text-ckeditor`` <= 2.9.x (e.g.: version 2.9.3).
-   - For django CMS 3.0 and 3.1 use ``djangocms-text-ckeditor`` <= 2.7 (e.g.: version 2.7.0).
-   - For django CMS 2.3 and 2.4 use the ``djangocms-text-ckeditor`` 1.x releases (e.g.: version 1.0.10).
-   - For Django 1.4 and 1.5 use ``djangocms-text-ckeditor`` < 2.7.
-   - ``cms.plugins.text`` and ``djangocms-text-ckeditor`` can't be used at the same time.
+   - For django CMS 3.8.x+ use ``djangocms-text-ckeditor`` >= 4.x.x (e.g.: version 4.0.0).
+   - For django CMS 3.4.x+ use ``djangocms-text-ckeditor`` >= 3.2.x (e.g.: version 3.2.1).
 
 .. image:: preview.gif
 
@@ -236,6 +231,10 @@ to note:
 - Important note: please avoid html tags in ``__str__`` representation of text
   enabled plugins - this messes up inline preview.
 
+- If you're adding a Text Plugin as a child inside another plugin and want to style it
+  conditionally based on the parent - you can add ``CMSPluginBase.child_ckeditor_body_css_class``
+  attribute to the parent class.
+
 .. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
 .. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
 .. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
@@ -343,7 +342,7 @@ to render out all child plugins located in the ``body`` field. For example::
                 'name': instance.name,
             })
             # Other custom render code you may have
-        return super(MyTextPlugin, self).render(context, instance, placeholder)
+        return super().render(context, instance, placeholder)
 
     plugin_pool.register_plugin(MyTextPlugin)
 
@@ -468,9 +467,9 @@ You can run tests by executing::
 .. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
 
-.. |python| image:: https://img.shields.io/badge/python-2.7%20%7C%203.4+-blue.svg
+.. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/
-.. |django| image:: https://img.shields.io/badge/django-1.11%20%7C%202.2%20%7C%203.0-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-2.2,%203.0,%203.1-blue.svg
     :target: https://www.djangoproject.com/
-.. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.4%2B-blue.svg
+.. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
     :target: https://www.django-cms.org/

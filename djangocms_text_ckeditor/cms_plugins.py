@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import json
 import re
 from distutils.version import LooseVersion
 
-from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -15,10 +13,10 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.urls import reverse
+from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
@@ -28,8 +26,6 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
-
-from six import text_type
 
 from . import settings
 from .forms import (
@@ -254,8 +250,38 @@ class TextPlugin(CMSPluginBase):
             cancel_url=cancel_url,
             action_token=action_token,
             delete_on_cancel=delete_text_on_cancel,
+            body_css_classes=self._get_body_css_classes_from_parent_plugins(plugin),
         )
         return widget
+
+    def _get_body_css_classes_from_parent_plugins(
+        self, plugin_instance: CMSPlugin, css_classes: str = '',
+    ) -> str:
+        """
+        Recursion that collects CMSPluginBase.child_ckeditor_body_css_class attribute values,
+        it allows to style content within WYSIWYG iframe <body> based on its parent plugins.
+        """
+        parent_current = plugin_instance.parent
+        if parent_current:
+
+            for plugin_name, plugin_class in plugin_pool.plugins.items():
+                is_current_parent_found = plugin_name == parent_current.plugin_type
+                if is_current_parent_found:
+                    body_css_class = ''
+                    if getattr(plugin_class, 'child_ckeditor_body_css_class', False):
+                        body_css_class = plugin_class.child_ckeditor_body_css_class
+                    if getattr(plugin_class, 'get_child_ckeditor_body_css_class', False):
+                        body_css_class = plugin_class.get_child_ckeditor_body_css_class(parent_current)
+
+                    if body_css_class and (body_css_class not in css_classes):
+                        css_classes += ' ' + body_css_class
+
+            css_classes_collected = self._get_body_css_classes_from_parent_plugins(
+                parent_current, css_classes,
+            )
+            if css_classes_collected not in css_classes:
+                css_classes += css_classes_collected
+        return css_classes
 
     def get_form_class(self, request, plugins, plugin):
         """
@@ -288,7 +314,7 @@ class TextPlugin(CMSPluginBase):
 
                 if rendered_text:
                     initial['body'] = rendered_text
-                super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
+                super().__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
     @xframe_options_sameorigin
@@ -302,7 +328,7 @@ class TextPlugin(CMSPluginBase):
             # and so a "ghost" plugin instance is left over.
             # The instance is a record that points to the Text plugin
             # but is not a real text plugin instance.
-            return super(TextPlugin, self).add_view(
+            return super().add_view(
                 request, form_url, extra_context
             )
 
@@ -312,7 +338,7 @@ class TextPlugin(CMSPluginBase):
             # This is NOT the normal workflow because we create a plugin
             # on GET request to the /add/ endpoint and so we bypass
             # django's add_view, thus bypassing permission check.
-            message = ugettext('You do not have permission to add a plugin.')
+            message = gettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
 
         try:
@@ -331,7 +357,7 @@ class TextPlugin(CMSPluginBase):
             }
 
         except PermissionDenied:
-            message = ugettext('You do not have permission to add a plugin.')
+            message = gettext('You do not have permission to add a plugin.')
             return HttpResponseForbidden(force_text(message))
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
@@ -348,7 +374,7 @@ class TextPlugin(CMSPluginBase):
         )
 
         query = request.GET.copy()
-        query['plugin'] = text_type(plugin.pk)
+        query['plugin'] = str(plugin.pk)
 
         success_url = admin_reverse('cms_page_add_plugin')
         # Because we've created the cmsplugin record
@@ -359,7 +385,7 @@ class TextPlugin(CMSPluginBase):
     def get_plugin_urls(self):
         def pattern(regex, func):
             name = self.get_admin_url_name(func.__name__)
-            return url(regex, func, name=name)
+            return re_path(regex, func, name=name)
 
         url_patterns = [
             pattern(r'^render-plugin/$', self.render_plugin),
@@ -384,7 +410,7 @@ class TextPlugin(CMSPluginBase):
 
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
-        message = ugettext('Unable to process your request. Invalid token.')
+        message = gettext('Unable to process your request. Invalid token.')
         raise ValidationError(message=force_text(message))
 
     @random_comment_exempt
@@ -398,7 +424,7 @@ class TextPlugin(CMSPluginBase):
         form = RenderPluginForm(request.GET, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext('Unable to process your request.')
+            message = gettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -430,7 +456,7 @@ class TextPlugin(CMSPluginBase):
         form = DeleteOnCancelForm(request.POST, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext('Unable to process your request.')
+            message = gettext('Unable to process your request.')
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -478,7 +504,7 @@ class TextPlugin(CMSPluginBase):
             plugin=plugin,
         )
         kwargs['form'] = form  # override standard form
-        return super(TextPlugin, self).get_form(request, obj, **kwargs)
+        return super().get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
         context.update({
@@ -505,7 +531,7 @@ class TextPlugin(CMSPluginBase):
                 value = getattr(self.cms_plugin_instance, field.name)
                 setattr(obj, field.name, value)
 
-        super(TextPlugin, self).save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
         # This must come after calling save
         # If `clean_plugins()` deletes child plugins, django-treebeard will call
         # save() again on the Text instance (aka obj in this context) to update mptt values (numchild, etc).

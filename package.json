@@ -2,7 +2,11 @@
   "name": "djangocms-text-ckeditor",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
   },
   "repository": {
     "type": "git",
@@ -17,7 +21,7 @@
   "devDependencies": {
     "del": "^2.2.2",
     "djangocms-casper-helpers": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^2.1.0",
     "gulp-filter": "^4.0.0",

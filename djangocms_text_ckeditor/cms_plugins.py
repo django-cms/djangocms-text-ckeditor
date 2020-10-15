@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
@@ -339,7 +339,7 @@ class TextPlugin(CMSPluginBase):
             # on GET request to the /add/ endpoint and so we bypass
             # django's add_view, thus bypassing permission check.
             message = gettext('You do not have permission to add a plugin.')
-            return HttpResponseForbidden(force_text(message))
+            return HttpResponseForbidden(force_str(message))
 
         try:
             # CMS 3.3 compatibility
@@ -358,7 +358,7 @@ class TextPlugin(CMSPluginBase):
 
         except PermissionDenied:
             message = gettext('You do not have permission to add a plugin.')
-            return HttpResponseForbidden(force_text(message))
+            return HttpResponseForbidden(force_str(message))
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
 
@@ -411,7 +411,7 @@ class TextPlugin(CMSPluginBase):
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
         message = gettext('Unable to process your request. Invalid token.')
-        raise ValidationError(message=force_text(message))
+        raise ValidationError(message=force_str(message))
 
     @random_comment_exempt
     @xframe_options_sameorigin
@@ -539,7 +539,7 @@ class TextPlugin(CMSPluginBase):
         obj.clean_plugins()
 
     def get_action_token(self, request, obj):
-        plugin_id = force_text(obj.pk)
+        plugin_id = force_str(obj.pk)
         # salt is different for every user
         signer = signing.Signer(salt=request.session.session_key)
         return signer.sign(plugin_id)

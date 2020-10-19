@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
 from django.template import RequestContext
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.http import urlencode, urlunquote
 
@@ -496,7 +496,7 @@ class PluginActionsTestCase(BaseTestCase):
                 admin=True,
             )
 
-            self.assertEqual(force_text(response.content), rendered_child_plugin)
+            self.assertEqual(force_str(response.content), rendered_child_plugin)
 
         child_plugin = self._add_child_plugin(text_plugin, plugin_type='PreviewDisabledPlugin')
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin)
@@ -518,7 +518,7 @@ class PluginActionsTestCase(BaseTestCase):
                                      'id="3"><span>Preview is disabled for this plugin</span>'
                                      '</cms-plugin>')
 
-            self.assertEqual(force_text(response.content), rendered_child_plugin)
+            self.assertEqual(force_str(response.content), rendered_child_plugin)
 
     def test_render_child_plugin_endpoint_calls_context_processors(self):
         simple_page = create_page('test page', 'page.html', u'en')
@@ -554,7 +554,7 @@ class PluginActionsTestCase(BaseTestCase):
                 admin=True,
             )
 
-            self.assertEqual(force_text(response.content), rendered_child_plugin)
+            self.assertEqual(force_str(response.content), rendered_child_plugin)
 
     def test_render_child_plugin_permissions(self):
         """
@@ -614,7 +614,7 @@ class PluginActionsTestCase(BaseTestCase):
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(force_text(response.content), 'Unable to process your request. Invalid token.')
+            self.assertEqual(force_str(response.content), 'Unable to process your request. Invalid token.')
 
         text_plugin_2 = add_plugin(
             simple_placeholder,
@@ -634,7 +634,7 @@ class PluginActionsTestCase(BaseTestCase):
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(force_text(response.content), 'Unable to process your request.')
+            self.assertEqual(force_str(response.content), 'Unable to process your request.')
 
     def test_custom_ckeditor_body_css_classes(self):
         simple_page = create_page('test page', 'page.html', u'en')

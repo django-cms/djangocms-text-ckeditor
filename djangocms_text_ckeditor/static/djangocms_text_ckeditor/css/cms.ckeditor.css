@@ -7,6 +7,11 @@
     width: 100% !important;
 }
 
+/* Force editor to have nice 10px padding and overwrite any custom padding */
+body.cke_editable{
+    padding: 10px !important;
+}
+
 /* special case when inside a text plugin */
 .djangocms_text_ckeditor-text .form-row label {
     display: none !important;

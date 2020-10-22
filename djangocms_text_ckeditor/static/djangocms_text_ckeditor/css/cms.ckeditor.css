@@ -83,7 +83,7 @@
 /* scrollable dropdowns on touch */
 .cke_panel {
     overflow-y: auto !important;
-    height: auto !important;
+    /* height: auto !important; */ 
     max-height: 300px !important;
 
     -webkit-overflow-scrolling: touch !important;

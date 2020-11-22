@@ -462,10 +462,10 @@ You can run tests by executing::
 
 .. |pypi| image:: https://badge.fury.io/py/djangocms-text-ckeditor.svg
     :target: http://badge.fury.io/py/djangocms-text-ckeditor
-.. |build| image:: https://travis-ci.org/divio/djangocms-text-ckeditor.svg?branch=master
-    :target: https://travis-ci.org/divio/djangocms-text-ckeditor
-.. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
+.. |build| image:: https://travis-ci.org/django-cms/djangocms-text-ckeditor.svg?branch=master
+    :target: https://travis-ci.org/django-cms/djangocms-text-ckeditor
+.. |coverage| image:: https://codecov.io/gh/django-cms/djangocms-text-ckeditor/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/django-cms/djangocms-text-ckeditor
 
 .. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/

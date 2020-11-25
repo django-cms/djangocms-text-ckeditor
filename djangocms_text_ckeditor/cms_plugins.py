@@ -320,8 +320,6 @@ class TextPlugin(CMSPluginBase):
                 offset=last_position,
             )
 
-        # We can now try adding the plugin again, if this fails then something else is wrong
-        # and the failure should throw the Integrity error, or any other error now occurring
         plugin = CMSPlugin.objects.create(
             language=language,
             plugin_type=plugin_type,

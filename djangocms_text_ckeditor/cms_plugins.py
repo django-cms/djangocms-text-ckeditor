@@ -7,9 +7,9 @@ from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import (
-    ObjectDoesNotExist, PermissionDenied, ValidationError,
+    PermissionDenied, ValidationError,
 )
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (
     Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
@@ -293,59 +293,48 @@ class TextPlugin(CMSPluginBase):
                 super(TextPluginForm, self).__init__(*args, initial=initial, **kwargs)
         return TextPluginForm
 
-    def _clean_orphaned_ghost_plugins(self, language, placeholder):
-        """
-        If any "ghost" plugins are left behind by a failed cancellation
-        the creation of a new plugin can be blocked by the fact that a new plugin is
-        trying to use the same position, to fix this we can clean any existing orphans
-        and recalculate the placeholder plugins positions
-        """
-        has_orphans = False
-        placeholder_plugins = CMSPlugin.objects.filter(
-            language=language,
-            placeholder=placeholder,
-        )
-
-        for plugin in placeholder_plugins:
-            try:
-                plugin.get_bound_plugin()
-            except ObjectDoesNotExist:
-                has_orphans = True
-                plugin.delete()
-
-        if has_orphans:
-            # The positions are compromised, recalculate them
-            placeholder._recalculate_plugin_positions(language=language)
-
     def _create_ghost_plugin(self, data):
         """
         Try and create a "ghost" plugin to be able to attach child plugins.
-        In the even that orphaned ghost plugins exist they must be cleaned!
+        A ghost plugin temporarily creates a plugin to allow children to be
+        created in the editor. Because it is an invisible plugin we have to replicate
+        the CMS plugin tree internals to make space for a ghost that is added in the
+        start or the middle of a placeholders plugin tree.
         """
-        try:
-            with transaction.atomic():
-                plugin = CMSPlugin.objects.create(
-                    language=data['plugin_language'],
-                    plugin_type=data['plugin_type'],
-                    position=data['position'],
-                    placeholder=data['placeholder_id'],
-                    parent=data.get('plugin_parent'),
-                )
-        except IntegrityError:
-            with transaction.atomic():
-                # Failed deletion of a ghost plugin in the placeholder
-                # could mean the position that we are trying to use is incorrect
-                # because ghost plugins may still exist, try and clean them
-                self._clean_orphaned_ghost_plugins(data['plugin_language'], data['placeholder_id'])
-                # We can now try adding the plugin again, if this fails then something else is wrong
-                # and the failure should throw the Integrity error, or any other error now occurring
-                plugin = CMSPlugin.objects.create(
-                    language=data['plugin_language'],
-                    plugin_type=data['plugin_type'],
-                    position=data['position'],
-                    placeholder=data['placeholder_id'],
-                    parent=data.get('plugin_parent'),
-                )
+        placeholder = data['placeholder_id']
+        language = data['plugin_language']
+        position = data['position']
+        plugin_type = data['plugin_type']
+        plugin_parent = data.get('plugin_parent')
+
+        last_position = placeholder.get_last_plugin_position(language) or 0
+        # A shift is only needed if the distance between the new plugin
+        # and the last plugin is greater than 1 position.
+        needs_shift = (position - last_position) < 1
+
+        if needs_shift:
+            # shift to the right to make space for the new ghost plugin
+            placeholder._shift_plugin_positions(
+                language,
+                start=position,
+                offset=last_position,
+            )
+
+        # We can now try adding the plugin again, if this fails then something else is wrong
+        # and the failure should throw the Integrity error, or any other error now occurring
+        plugin = CMSPlugin.objects.create(
+            language=language,
+            plugin_type=plugin_type,
+            position=position,
+            placeholder=placeholder,
+            parent=plugin_parent,
+        )
+
+        if needs_shift:
+            # The plugin tree was shifted to the right to make space,
+            # now squash all plugins in the tree to close any holes.
+            placeholder._recalculate_plugin_positions(language=language)
+
         return plugin
 
     @xframe_options_sameorigin

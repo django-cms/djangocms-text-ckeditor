@@ -7,10 +7,12 @@ from django.utils.translation import gettext_lazy as _
 # for all settings
 
 CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
-    'language': '{{ language }}',
+    'language': {
+        'ui': '{{ language }}',
+        'content': '{{ language }}'
+    },
     'toolbar': 'CMS',
     'skin': 'moono-lisa',
-    'toolbarCanCollapse': False,
 })
 
 INSTALLED_APPS = getattr(settings, 'INSTALLED_APPS', [])

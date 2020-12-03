@@ -1,9 +1,10 @@
 {
   "name": "djangocms-text-ckeditor",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npx npm-force-resolutions"
+    "preinstall": "npx npm-force-resolutions",
+    "build": "webpack --mode development"
   },
   "resolutions": {
     "graceful-fs": "^4.2.4"
@@ -18,21 +19,28 @@
     "url": "https://github.com/divio/djangocms-text-ckeditor/issues"
   },
   "homepage": "https://github.com/divio/djangocms-text-ckeditor#readme",
-  "devDependencies": {
-    "del": "^2.2.2",
-    "djangocms-casper-helpers": "^3.0.0",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-eslint": "^2.1.0",
-    "gulp-filter": "^4.0.0",
-    "gulp-if": "^2.0.1",
-    "gulp-plumber": "^1.1.0",
-    "gulp-replace": "^0.5.4",
-    "gulp-rev": "^7.1.2",
-    "gulp-rev-replace": "^0.4.3",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^2.0.0",
-    "minimist": "^1.2.0",
-    "run-sequence": "^1.2.2"
+  "dependencies": {
+    "@ckeditor/ckeditor5-adapter-ckfinder": "^23.1.0",
+    "@ckeditor/ckeditor5-alignment": "^23.1.0",
+    "@ckeditor/ckeditor5-autoformat": "^23.1.0",
+    "@ckeditor/ckeditor5-basic-styles": "^23.1.0",
+    "@ckeditor/ckeditor5-block-quote": "^23.1.0",
+    "@ckeditor/ckeditor5-build-classic": "^23.1.0",
+    "@ckeditor/ckeditor5-dev-utils": "^23.6.1",
+    "@ckeditor/ckeditor5-easy-image": "^23.1.0",
+    "@ckeditor/ckeditor5-editor-classic": "^23.1.0",
+    "@ckeditor/ckeditor5-essentials": "^23.1.0",
+    "@ckeditor/ckeditor5-heading": "^23.1.0",
+    "@ckeditor/ckeditor5-image": "^23.1.0",
+    "@ckeditor/ckeditor5-link": "^23.1.0",
+    "@ckeditor/ckeditor5-list": "^23.1.0",
+    "@ckeditor/ckeditor5-paragraph": "^23.1.0",
+    "@ckeditor/ckeditor5-theme-lark": "^23.1.0",
+    "postcss-loader": "^3.0.0",
+    "raw-loader": "^3.1.0",
+    "style-loader": "^1.3.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "yarn": "^1.22.10"
   }
 }

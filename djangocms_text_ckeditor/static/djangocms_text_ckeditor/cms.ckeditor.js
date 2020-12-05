@@ -1,21 +1,5 @@
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
-import UploadAdapterPlugin from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
-import AutoformatPlugin from '@ckeditor/ckeditor5-autoformat/src/autoformat';
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote';
-import EasyImagePlugin from '@ckeditor/ckeditor5-easy-image/src/easyimage';
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
-import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
-import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle';
-import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
-import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
-import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-
+import {classic_config, migrating_options} from './settings.ckeditor'
 
 (function ($) {
     window.CKEDITOR_BASEPATH = $('[data-ckeditor-basepath]').attr('data-ckeditor-basepath');
@@ -28,50 +12,7 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
      */
     CMS.CKEditor = {
 
-        options: {
-            // ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
-            language: {
-                ui: 'en',
-                content: 'en'
-            },
-            skin: 'moono-lisa',
-            toolbar_CMS: [
-                ['Undo', 'Redo'],
-                ['cmsplugins', 'cmswidget', '-', 'ShowBlocks'],
-                ['Format', 'Styles'],
-                ['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
-                ['Scayt'],
-                ['Maximize', ''],
-                '/',
-                ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
-                ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-                ['HorizontalRule'],
-                ['NumberedList', 'BulletedList'],
-                ['Outdent', 'Indent', '-', 'Blockquote', '-', 'Link', 'Unlink', '-', 'Table'],
-                ['Source']
-            ],      
-            toolbar_HTMLField: [
-                ['Undo', 'Redo'],
-                ['ShowBlocks'],
-                ['Format', 'Styles'],
-                ['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
-                ['Scayt'],
-                ['Maximize', ''],
-                '/',
-                ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
-                ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-                ['HorizontalRule'],
-                ['Link', 'Unlink'],
-                ['NumberedList', 'BulletedList'],
-                ['Outdent', 'Indent', '-', 'Blockqote', '-', 'Link', 'Unlink', '-', 'Table'],
-                ['Source']
-            ],
-
-            allowedContent: true,
-            //toolbarCanCollapse: false, //TODO for true use Inline or Balloon editors
-            removePlugins: ['resize'],
-            extraPlugins: ''
-        },
+        options: migrating_options,
 
         init: function (container, options, settings) {
                 // this.container = $('#' + container);
@@ -107,49 +48,7 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
                 // render ckeditor
                 
-                this.editor = $('#' + container).length ? ClassicEditor.create( document.querySelector( '#' +  container), {
-                    initialData: '',                    
-                    plugins: [
-                        EssentialsPlugin,
-                        AutoformatPlugin,
-                        BoldPlugin,
-                        ItalicPlugin,
-                        BlockQuotePlugin,
-                        HeadingPlugin,
-                        ImagePlugin,
-                        ImageCaptionPlugin,
-                        ImageStylePlugin,
-                        ImageToolbarPlugin,
-                        EasyImagePlugin,
-                        ImageUploadPlugin,
-                        LinkPlugin,
-                        ListPlugin,
-                        ParagraphPlugin,
-                        UploadAdapterPlugin
-                    ],
-            
-                    // So is the rest of the default configuration.
-                    toolbar: [
-                        'heading',
-                        'bold',
-                        'italic',
-                        'link',
-                        'bulletedList',
-                        'numberedList',
-                        'imageUpload',
-                        'blockQuote',
-                        'undo',
-                        'redo'
-                    ],
-                    image: {
-                        toolbar: [
-                            'imageStyle:full',
-                            'imageStyle:side',
-                            '|',
-                            'imageTextAlternative'
-                        ]
-                    }
-                } ).catch( error => {console.error( error );}) : null;
+                this.editor = $('#' + container).length ? ClassicEditor.create( document.querySelector( '#' +  container),  classic_config).catch( error => {console.error( error );}) : null;
         },
 
         _initAll: function () {

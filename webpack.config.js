@@ -6,7 +6,7 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 module.exports = {
     // https://webpack.js.org/configuration/entry-context/
-    entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/cms.ckeditor.js',
+    entry: ['./djangocms_text_ckeditor/static/djangocms_text_ckeditor/settings.ckeditor.js', './djangocms_text_ckeditor/static/djangocms_text_ckeditor/cms.ckeditor.js'],
 
     // https://webpack.js.org/configuration/output/
     output: {

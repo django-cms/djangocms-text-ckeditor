@@ -9,7 +9,7 @@
     "build:dev": "webpack --mode development",
     "build": "npm-run-all build:dev lint:fix-silent ",
     "start": "echo 'watch onchange'",
-    "test:integration": "run-func tests/frontend/index.js integrationTests integrationConfig",
+    "test:integration": "run-func tests/frontend/index.js runIntegrationTests",
     "test": "npm-run-all lint test:integration"
   },
   "resolutions": {

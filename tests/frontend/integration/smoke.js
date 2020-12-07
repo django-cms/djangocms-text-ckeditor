@@ -1,5 +1,3 @@
-'use strict';
-
 const helpers = require('djangocms-casper-helpers');
 const globals = helpers.settings;
 const casperjs = require('casper');

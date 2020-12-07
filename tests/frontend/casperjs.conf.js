@@ -4,24 +4,24 @@
 // CasperJS options
 
 module.exports = {
-    init: function () {
-        this.viewportSize();
-        this.timeout(20000);
-    },
+	init() {
+		this.viewportSize();
+		this.timeout(20000);
+	},
 
-    viewportSize: function (width, height) {
-        var viewportWidth = width || 1280;
-        var viewportHeight = height || 1024;
+	viewportSize(width, height) {
+		const viewportWidth = width || 1280;
+		const viewportHeight = height || 1024;
 
-        casper.echo('Current viewport size is ' + viewportWidth + 'x' + viewportHeight + '.', 'INFO');
+		casper.echo('Current viewport size is ' + viewportWidth + 'x' + viewportHeight + '.', 'INFO');
 
-        casper.options.viewportSize = {
-            width: viewportWidth,
-            height: viewportHeight
-        };
-    },
+		casper.options.viewportSize = {
+			width: viewportWidth,
+			height: viewportHeight
+		};
+	},
 
-    timeout: function (timeout) {
-        casper.options.waitTimeout = timeout || 10000;
-    }
+	timeout(timeout) {
+		casper.options.waitTimeout = timeout || 10000;
+	}
 };

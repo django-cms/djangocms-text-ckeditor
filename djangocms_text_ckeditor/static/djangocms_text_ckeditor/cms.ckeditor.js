@@ -1,45 +1,47 @@
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import {classic_config, migrating_options} from './settings.ckeditor'
+import {classic_config, migrating_options} from './settings.ckeditor';
 
-document.addEventListener("DOMContentLoaded",function(){
-    window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');
-    
-    /**
+document.addEventListener('DOMContentLoaded', () => {
+	window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');
+
+	/**
      * CMS.CKEditor
      *
      * @description: Adds cms specific plugins to CKEditor
      */
-    CMS.CKEditor = {
+	CMS.CKEditor = {
 
-        options: migrating_options,
+		options: migrating_options,
 
-        init: function (container, options, settings) {
-                this.container = document.getElementById(container)
-                this.container.setAttribute('ckeditor-initialized', true);
-                this.options = Object.assign({}, {
-                    settings: settings,
-                    initialData: '',
-                }, this.options, options);
-                
-                this.editor = this.container ? ClassicEditor.create( document.getElementById(container),  classic_config).catch( error => {console.error( error )}) : null;
-        },
+		init(container, options, settings) {
+			this.container = document.getElementById(container);
+			this.container.setAttribute('ckeditor-initialized', true);
+			this.options = Object.assign({}, {
+				settings,
+				initialData: ''
+			}, this.options, options);
 
-        _initAll: function () {
-            var dynamics = [];
+			this.editor = this.container ? ClassicEditor.create(document.getElementById(container), classic_config).catch(error => {
+				console.error(error);
+			}) : null;
+		},
 
-            window._cmsCKEditors.forEach(function (editorConfig) {
-                var selector = editorConfig[0];
+		_initAll() {
+			const dynamics = [];
 
-                if (selector.match(/__prefix__/)) {
-                    dynamics.push(editorConfig);
-                } else {
-                    CMS.CKEditor.init(editorConfig[0], editorConfig[1], editorConfig[2]);
-                }
-            });
-        }
-    };
+			window._cmsCKEditors.forEach(editorConfig => {
+				const selector = editorConfig[0];
 
-    setTimeout(function init() {
-        CMS.CKEditor._initAll();
-    }, 0);
+				if (selector.match(/__prefix__/)) {
+					dynamics.push(editorConfig);
+				} else {
+					CMS.CKEditor.init(editorConfig[0], editorConfig[1], editorConfig[2]);
+				}
+			});
+		}
+	};
+
+	setTimeout(function init() {
+		CMS.CKEditor._initAll();
+	}, 0);
 });

@@ -41,9 +41,7 @@ before_script:
   - if [ $TOX_ENV == 'frontend' ]; then
     nvm install 8.10.0 && nvm use 8.10.0;
     npm config set spin false;
-    npm install -g npm;
-    npm install -g gulp@3.9.0;
-    npm install;
+    npm ci
     fi
 
 script:

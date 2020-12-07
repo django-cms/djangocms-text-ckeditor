@@ -15,46 +15,46 @@ import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
-export let classic_config = {
-   initialData: '',                    
-   plugins: [
-         EssentialsPlugin,
-         AutoformatPlugin,
-         BoldPlugin,
-         ItalicPlugin,
-         BlockQuotePlugin,
-         HeadingPlugin,
-         ImagePlugin,
-         ImageCaptionPlugin,
-         ImageStylePlugin,
-         ImageToolbarPlugin,
-         EasyImagePlugin,
-         ImageUploadPlugin,
-         LinkPlugin,
-         ListPlugin,
-         ParagraphPlugin,
-         UploadAdapterPlugin
-   ],
+export const classic_config = {
+	initialData: '',
+	plugins: [
+		EssentialsPlugin,
+		AutoformatPlugin,
+		BoldPlugin,
+		ItalicPlugin,
+		BlockQuotePlugin,
+		HeadingPlugin,
+		ImagePlugin,
+		ImageCaptionPlugin,
+		ImageStylePlugin,
+		ImageToolbarPlugin,
+		EasyImagePlugin,
+		ImageUploadPlugin,
+		LinkPlugin,
+		ListPlugin,
+		ParagraphPlugin,
+		UploadAdapterPlugin
+	],
 
-   // So is the rest of the default configuration.
-   toolbar: [
-         'heading',
-         'bold',
-         'italic',
-         'link',
-         'bulletedList',
-         'numberedList',
-         'imageUpload',
-         'blockQuote',
-         'undo',
-         'redo'
-   ],
-   image: {
-         toolbar: [
-            'imageStyle:full',
-            'imageStyle:side',
-            '|',
-            'imageTextAlternative'
-         ]
-   }
-}
+	// So is the rest of the default configuration.
+	toolbar: [
+		'heading',
+		'bold',
+		'italic',
+		'link',
+		'bulletedList',
+		'numberedList',
+		'imageUpload',
+		'blockQuote',
+		'undo',
+		'redo'
+	],
+	image: {
+		toolbar: [
+			'imageStyle:full',
+			'imageStyle:side',
+			'|',
+			'imageTextAlternative'
+		]
+	}
+};

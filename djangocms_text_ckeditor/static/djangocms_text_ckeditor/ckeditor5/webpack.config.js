@@ -1,3 +1,12 @@
+/**
+ * @license Copyright (c) 2014-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+'use strict';
+
+/* eslint-env node */
+
 const path = require( 'path' );
 const webpack = require( 'webpack' );
 const { bundler, styles } = require( '@ckeditor/ckeditor5-dev-utils' );
@@ -7,23 +16,32 @@ const TerserWebpackPlugin = require( 'terser-webpack-plugin' );
 module.exports = {
 	devtool: 'source-map',
 	performance: { hints: false },
-	// Final Step
-// 	entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/cms.ckeditor.js',
-// 	output: {
-// 		path: path.resolve( __dirname, 'dist' ),
-// 		filename: '../djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist/bundle.js'
-//   },		
 
-  // First Step
-	entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/settings.ckeditor.js',
+	entry: path.resolve( __dirname, 'src', 'ckeditor.js' ),
 
 	output: {
 		// The name under which the editor will be exported.
-		library: 'DemoEditor',
-		path: path.resolve(__dirname, 'djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor5/build'),
+		library: 'ClassicEditor',
+
+		path: path.resolve( __dirname, 'build' ),
 		filename: 'ckeditor.js',
 		libraryTarget: 'umd',
 		libraryExport: 'default'
+	},
+
+	optimization: {
+		minimizer: [
+			new TerserWebpackPlugin( {
+				sourceMap: true,
+				terserOptions: {
+					output: {
+						// Preserve CKEditor 5 license comments.
+						comments: /^!/
+					}
+				},
+				extractComments: false
+			} )
+		]
 	},
 
 	plugins: [

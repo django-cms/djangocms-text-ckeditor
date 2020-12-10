@@ -1,5 +1,4 @@
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import {classic_config, migrating_options} from './settings.ckeditor';
+import DemoEditor from './ckeditor5/build/ckeditor';
 
 document.addEventListener('DOMContentLoaded', () => {
 	window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');
@@ -11,17 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
      */
 	CMS.CKEditor = {
 
-		options: migrating_options,
+		options: {},
 
 		init(container, options, settings) {
 			this.container = document.getElementById(container);
-			this.container.setAttribute('ckeditor-initialized', true);
-			this.options = Object.assign({}, {
-				settings,
-				initialData: ''
-			}, this.options, options);
+			// this.container.setAttribute('ckeditor-initialized', true);
+			// this.options = Object.assign({}, {
+			// 	settings,
+			// 	initialData: ''
+			// }, this.options, options);
 
-			this.editor = this.container ? ClassicEditor.create(document.getElementById(container), classic_config).catch(error => {
+			this.editor = this.container ? DemoEditor.create(document.getElementById(container)).catch(error => {
 				console.error(error);
 			}) : null;
 		},

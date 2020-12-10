@@ -1,5 +1,5 @@
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js';
-import Demo from './lib/demo/plugin';
+import Demo from './plugins/demo/plugin';
 
 class Editor extends ClassicEditor {}
 

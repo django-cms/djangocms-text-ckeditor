@@ -1,4 +1,4 @@
-import DemoEditor from './ckeditor5/build/ckeditor';
+import Editor from './build/ckeditor';
 
 document.addEventListener('DOMContentLoaded', () => {
 	window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');

@@ -8,23 +8,23 @@ module.exports = {
 	devtool: 'source-map',
 	performance: { hints: false },
 	// Final Step
-// 	entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/cms.ckeditor.js',
-// 	output: {
-// 		path: path.resolve( __dirname, 'dist' ),
-// 		filename: '../djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist/bundle.js'
-//   },		
+	entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/cms.ckeditor.js',
+	output: {
+		path: path.resolve( __dirname, 'dist' ),
+		filename: '../djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist/bundle.js'
+  },		
 
   // First Step
-	entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/settings.ckeditor.js',
+	// entry: './djangocms_text_ckeditor/static/djangocms_text_ckeditor/settings.ckeditor.js',
 
-	output: {
-		// The name under which the editor will be exported.
-		library: 'DemoEditor',
-		path: path.resolve(__dirname, 'djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor5/build'),
-		filename: 'ckeditor.js',
-		libraryTarget: 'umd',
-		libraryExport: 'default'
-	},
+	// output: {
+	// 	// The name under which the editor will be exported.
+	// 	library: 'DemoEditor',
+	// 	path: path.resolve(__dirname, 'djangocms_text_ckeditor/static/djangocms_text_ckeditor/build'),
+	// 	filename: 'ckeditor.js',
+	// 	libraryTarget: 'umd',
+	// 	libraryExport: 'default'
+	// },
 
 	plugins: [
 		new CKEditorWebpackPlugin( {

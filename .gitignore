@@ -116,8 +116,5 @@ venv.bak/
 
 !djangocms_text_ckeditor/static/djangocms_text_ckeditor/js/dist
 
-#jshint
-.jshintrc
-
 #test_db
 testdb.sqlite

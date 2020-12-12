@@ -1,46 +1,21 @@
-import Editor from './build/ckeditor';
+// TODO: 	window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');
+
+import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
 document.addEventListener('DOMContentLoaded', () => {
-	window.CKEDITOR_BASEPATH = document.querySelector('[data-ckeditor-basepath]').getAttribute('data-ckeditor-basepath');
+ClassicEditor
+    .create( document.querySelector( '.CMS_CKEditor' ), {
+        plugins: [ Paragraph ],
+        toolbar: [ ],
+    } )
+    .then( editor => {
+        console.log( 'Editor was initialized', editor );
 
-	/**
-     * CMS.CKEditor
-     *
-     * @description: Adds cms specific plugins to CKEditor
-     */
-	CMS.CKEditor = {
-
-		options: {},
-
-		init(container, options, settings) {
-			this.container = document.getElementById(container);
-			// this.container.setAttribute('ckeditor-initialized', true);
-			// this.options = Object.assign({}, {
-			// 	settings,
-			// 	initialData: ''
-			// }, this.options, options);
-
-			this.editor = this.container ? DemoEditor.create(document.getElementById(container)).catch(error => {
-				console.error(error);
-			}) : null;
-		},
-
-		_initAll() {
-			const dynamics = [];
-
-			window._cmsCKEditors.forEach(editorConfig => {
-				const selector = editorConfig[0];
-
-				if (selector.match(/__prefix__/)) {
-					dynamics.push(editorConfig);
-				} else {
-					CMS.CKEditor.init(editorConfig[0], editorConfig[1], editorConfig[2]);
-				}
-			});
-		}
-	};
-
-	setTimeout(function init() {
-		CMS.CKEditor._initAll();
-	}, 0);
-});
+        // Expose for playing in the console.
+        window.editor = editor;
+    } )
+    .catch( error => {
+        console.error( error.stack );
+	 } );
+	});

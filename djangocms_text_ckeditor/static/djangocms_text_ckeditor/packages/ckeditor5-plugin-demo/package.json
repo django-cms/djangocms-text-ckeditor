@@ -1,0 +1,83 @@
+{
+  "_args": [
+    [
+      "@ckeditor/ckeditor5-paragraph@24.0.0",
+      "/Users/alexandrukudreaschoff/.pyenv/versions/miniconda3-4.7.12/envs/siora/DEV/os/django-cms-ckeditor5/addons-dev/djangocms-text-ckeditor"
+    ]
+  ],
+  "_development": true,
+  "_from": "@ckeditor/ckeditor5-paragraph@24.0.0",
+  "_id": "@ckeditor/ckeditor5-paragraph@24.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-6+Vic15IYILXhGXXtMjTm1tfDg26rzupO47NT1t0YbTb8kdlb1XdBxjHhZYsBPgLymQOzj5ssBg44SW8oylCLw==",
+  "_location": "/@ckeditor/ckeditor5-paragraph",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@ckeditor/ckeditor5-paragraph@24.0.0",
+    "name": "@ckeditor/ckeditor5-paragraph",
+    "escapedName": "@ckeditor%2fckeditor5-paragraph",
+    "scope": "@ckeditor",
+    "rawSpec": "24.0.0",
+    "saveSpec": null,
+    "fetchSpec": "24.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "/@ckeditor/ckeditor5-heading",
+    "/@ckeditor/ckeditor5-list"
+  ],
+  "_resolved": "https://registry.npmjs.org/@ckeditor/ckeditor5-paragraph/-/ckeditor5-paragraph-24.0.0.tgz",
+  "_spec": "24.0.0",
+  "_where": "/Users/alexandrukudreaschoff/.pyenv/versions/miniconda3-4.7.12/envs/siora/DEV/os/django-cms-ckeditor5/addons-dev/djangocms-text-ckeditor",
+  "author": {
+    "name": "CKSource",
+    "url": "http://cksource.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/ckeditor/ckeditor5/issues"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-core": "^24.0.0",
+    "@ckeditor/ckeditor5-ui": "^24.0.0",
+    "@ckeditor/ckeditor5-utils": "^24.0.0"
+  },
+  "description": "Paragraph feature for CKEditor 5.",
+  "devDependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^24.0.0",
+    "@ckeditor/ckeditor5-clipboard": "^24.0.0",
+    "@ckeditor/ckeditor5-editor-classic": "^24.0.0",
+    "@ckeditor/ckeditor5-engine": "^24.0.0",
+    "@ckeditor/ckeditor5-enter": "^24.0.0",
+    "@ckeditor/ckeditor5-heading": "^24.0.0",
+    "@ckeditor/ckeditor5-link": "^24.0.0",
+    "@ckeditor/ckeditor5-typing": "^24.0.0",
+    "@ckeditor/ckeditor5-undo": "^24.0.0"
+  },
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=5.7.1"
+  },
+  "files": [
+    "lang",
+    "src",
+    "theme"
+  ],
+  "homepage": "https://ckeditor.com/ckeditor-5",
+  "keywords": [
+    "ckeditor",
+    "ckeditor5",
+    "ckeditor 5",
+    "ckeditor5-feature",
+    "ckeditor5-plugin"
+  ],
+  "license": "GPL-2.0-or-later",
+  "name": "@ckeditor/ckeditor5-paragraph",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckeditor/ckeditor5.git",
+    "directory": "packages/ckeditor5-paragraph"
+  },
+  "version": "24.0.0"
+}

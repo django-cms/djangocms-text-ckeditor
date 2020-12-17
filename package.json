@@ -1,5 +1,9 @@
 {
   "name": "djangocms-text-ckeditor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divio/djangocms-text-ckeditor.git"
+  },
   "version": "2.0.0",
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
@@ -18,10 +22,6 @@
   "resolutions": {
     "graceful-fs": "^4.2.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/divio/djangocms-text-ckeditor.git"
-  },
   "author": "",
   "license": "MIT",
   "bugs": {
@@ -29,19 +29,7 @@
   },
   "homepage": "https://github.com/divio/djangocms-text-ckeditor#readme",
   "dependencies": {
-    "@ckeditor/ckeditor5-basic-styles": "^24.0.0",
-    "@ckeditor/ckeditor5-core": "^24.0.0",
-    "@ckeditor/ckeditor5-dev-utils": "^23.6.1",
     "@ckeditor/ckeditor5-editor-classic": "^24.0.0",
-    "@ckeditor/ckeditor5-essentials": "^24.0.0",
-    "@ckeditor/ckeditor5-heading": "^24.0.0",
-    "@ckeditor/ckeditor5-inspector": "^2.2.1",
-    "@ckeditor/ckeditor5-list": "^24.0.0",
-    "@ckeditor/ckeditor5-paragraph": "^24.0.0",
-    "@ckeditor/ckeditor5-theme-lark": "^24.0.0",
-    "@ckeditor/ckeditor5-ui": "^24.0.0",
-    "@ckeditor/ckeditor5-utils": "^24.0.0",
-    "@ckeditor/ckeditor5-widget": "^24.0.0",
     "path": "^0.12.7",
     "raw-loader": "^3.1.0",
     "style-loader": "^1.3.0",
@@ -51,12 +39,29 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^24.0.0",
+    "@ckeditor/ckeditor5-clipboard": "^24.0.0",
+    "@ckeditor/ckeditor5-core": "^24.0.0",
+    "@ckeditor/ckeditor5-dev-utils": "^23.6.1",
+    "@ckeditor/ckeditor5-engine": "^24.0.0",
+    "@ckeditor/ckeditor5-enter": "^24.0.0",
+    "@ckeditor/ckeditor5-essentials": "^24.0.0",
+    "@ckeditor/ckeditor5-heading": "^24.0.0",
+    "@ckeditor/ckeditor5-link": "^24.0.0",
+    "@ckeditor/ckeditor5-list": "^24.0.0",
+    "@ckeditor/ckeditor5-paragraph": "^24.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "^24.0.0",
+    "@ckeditor/ckeditor5-typing": "^24.0.0",
+    "@ckeditor/ckeditor5-ui": "^24.0.0",
+    "@ckeditor/ckeditor5-utils": "^24.0.0",
+    "@ckeditor/ckeditor5-widget": "^24.0.0",
     "css-loader": "^5.0.1",
     "djangocms-casper-helpers": "^4.0.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.2.1",
     "postcss-loader": "^3.0.0",
     "run-func": "^1.0.5",
-    "terser-webpack-plugin": "^5.0.3"
+    "terser-webpack-plugin": "^5.0.3",
+    "undefined": "^0.1.0"
   }
 }

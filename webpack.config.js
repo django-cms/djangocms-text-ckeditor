@@ -1,7 +1,3 @@
-// webpack.config.js
-
-'use strict';
-
 const path = require( 'path' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 const static_path = 'djangocms_text_ckeditor/static/djangocms_text_ckeditor';
@@ -50,5 +46,5 @@ module.exports = {
     devtool: 'source-map',
 
     // By default webpack logs warnings if the bundle is bigger than 200kb.
-    performance: { hints: false }
+    performance: { hints: false },
 };

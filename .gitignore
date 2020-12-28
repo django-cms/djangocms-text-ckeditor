@@ -114,7 +114,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-!djangocms_text_ckeditor/static/djangocms_text_ckeditor/js/dist
+!djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist
 
 #test_db
 testdb.sqlite

@@ -1,0 +1,276 @@
+/* node_modules/@ckeditor/ckeditor5-editor-classic/theme/classiceditor.css */
+.ck.ck-editor {
+  position: relative;
+  & .ck-editor__top .ck-sticky-panel .ck-toolbar {
+    z-index: var(--ck-z-modal);
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-heading/theme/heading.css */
+.ck.ck-heading_heading1 {
+  font-size: 20px;
+}
+.ck.ck-heading_heading2 {
+  font-size: 17px;
+}
+.ck.ck-heading_heading3 {
+  font-size: 14px;
+}
+.ck[class*=ck-heading_heading] {
+  font-weight: bold;
+}
+
+/* node_modules/@ckeditor/ckeditor5-engine/theme/placeholder.css */
+.ck.ck-placeholder,
+.ck .ck-placeholder {
+  &::before {
+    content: attr(data-placeholder);
+    pointer-events: none;
+  }
+}
+.ck.ck-read-only .ck-placeholder {
+  &::before {
+    display: none;
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/panel/stickypanel.css */
+.ck.ck-sticky-panel {
+  & .ck-sticky-panel__content_sticky {
+    z-index: var(--ck-z-modal);
+    position: fixed;
+    top: 0;
+  }
+  & .ck-sticky-panel__content_sticky_bottom-limit {
+    top: auto;
+    position: absolute;
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/mixins/_unselectable.css */
+@define-mixin ck-unselectable { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none }
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/toolbar/toolbar.css */
+.ck.ck-toolbar {
+  @mixin ck-unselectable;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  & > .ck-toolbar__items {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    flex-grow: 1;
+  }
+  & .ck.ck-toolbar__separator {
+    display: inline-block;
+    &:first-child,
+    &:last-child {
+      display: none;
+    }
+  }
+  & .ck-toolbar__line-break {
+    flex-basis: 100%;
+  }
+  &.ck-toolbar_grouping > .ck-toolbar__items {
+    flex-wrap: nowrap;
+  }
+  &.ck-toolbar_vertical > .ck-toolbar__items {
+    flex-direction: column;
+  }
+  &.ck-toolbar_floating > .ck-toolbar__items {
+    flex-wrap: nowrap;
+  }
+  & > .ck.ck-toolbar__grouped-dropdown {
+    & > .ck-dropdown__button .ck-dropdown__arrow {
+      display: none;
+    }
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/dropdown/listdropdown.css */
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/dropdown/toolbardropdown.css */
+:root {
+  --ck-toolbar-dropdown-max-width: 60vw;
+}
+.ck.ck-toolbar-dropdown {
+  & .ck-dropdown__panel {
+    width: max-content;
+    max-width: var(--ck-toolbar-dropdown-max-width);
+    & .ck-button {
+      &:focus {
+        z-index: calc(var(--ck-z-default) + 1);
+      }
+    }
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/editorui/editorui.css */
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/label/label.css */
+.ck.ck-label {
+  display: block;
+}
+.ck.ck-voice-label {
+  display: none;
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/button/switchbutton.css */
+.ck.ck-button.ck-switchbutton {
+  & .ck-button__toggle {
+    display: block;
+    & .ck-button__toggle__inner {
+      display: block;
+    }
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/tooltip/mixins/_tooltip.css */
+@define-mixin ck-tooltip_enabled { & .ck-tooltip { display: block; @media (hover:none) { display: none; } } }
+@define-mixin ck-tooltip_disabled { & .ck-tooltip { display: none; } }
+@define-mixin ck-tooltip_visible { & .ck-tooltip { visibility: visible; opacity: 1; } }
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/dropdown/dropdown.css */
+.ck.ck-dropdown {
+  display: inline-block;
+  position: relative;
+  & .ck-dropdown__arrow {
+    pointer-events: none;
+    z-index: var(--ck-z-default);
+  }
+  & .ck-button.ck-dropdown__button {
+    width: 100%;
+    &.ck-on {
+      @mixin ck-tooltip_disabled;
+    }
+  }
+  & .ck-dropdown__panel {
+    -webkit-backface-visibility: hidden;
+    display: none;
+    z-index: var(--ck-z-modal);
+    position: absolute;
+    &.ck-dropdown__panel-visible {
+      display: inline-block;
+    }
+    &.ck-dropdown__panel_ne,
+    &.ck-dropdown__panel_nw {
+      bottom: 100%;
+    }
+    &.ck-dropdown__panel_se,
+    &.ck-dropdown__panel_sw {
+      top: 100%;
+      bottom: auto;
+    }
+    &.ck-dropdown__panel_ne,
+    &.ck-dropdown__panel_se {
+      left: 0px;
+    }
+    &.ck-dropdown__panel_nw,
+    &.ck-dropdown__panel_sw {
+      right: 0px;
+    }
+  }
+}
+.ck.ck-toolbar .ck-dropdown__panel {
+  z-index: calc(var(--ck-z-modal) + 1);
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/list/list.css */
+.ck.ck-list {
+  @mixin ck-unselectable;
+  display: flex;
+  flex-direction: column;
+  & .ck-list__item,
+  & .ck-list__separator {
+    display: block;
+  }
+  & .ck-list__item > *:focus {
+    position: relative;
+    z-index: var(--ck-z-default);
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/globals/_hidden.css */
+.ck-hidden {
+  display: none !important;
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/globals/_reset.css */
+.ck.ck-reset,
+.ck.ck-reset_all,
+.ck.ck-reset_all * {
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+  position: static;
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/globals/_zindex.css */
+:root {
+  --ck-z-default: 1;
+  --ck-z-modal: calc(var(--ck-z-default) + 999);
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/globals/_transition.css */
+.ck-transitions-disabled,
+.ck-transitions-disabled * {
+  transition: none !important;
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/globals/globals.css */
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/button/button.css */
+.ck.ck-button,
+a.ck.ck-button {
+  @mixin ck-unselectable;
+  @mixin ck-tooltip_enabled;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: left;
+  & .ck-button__label {
+    display: none;
+  }
+  &.ck-button_with-text {
+    & .ck-button__label {
+      display: inline-block;
+    }
+  }
+  &:not(.ck-button_with-text) {
+    justify-content: center;
+  }
+  &:hover {
+    @mixin ck-tooltip_visible;
+  }
+  &:focus:not(:hover) {
+    @mixin ck-tooltip_disabled;
+  }
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/icon/icon.css */
+.ck.ck-icon {
+  vertical-align: middle;
+}
+
+/* node_modules/@ckeditor/ckeditor5-ui/theme/components/tooltip/tooltip.css */
+.ck.ck-tooltip,
+.ck.ck-tooltip .ck-tooltip__text::after {
+  position: absolute;
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+}
+.ck.ck-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  display: none;
+  z-index: var(--ck-z-modal);
+  & .ck-tooltip__text {
+    display: inline-block;
+    &::after {
+      content: "";
+      width: 0;
+      height: 0;
+    }
+  }
+}

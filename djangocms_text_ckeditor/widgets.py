@@ -14,7 +14,7 @@ from cms.utils.urlutils import static_with_version
 from . import settings as text_settings
 
 
-PATH_TO_JS = 'djangocms_text_ckeditor/dist/bundle.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/cms.ckeditor.js'
 
 
 class TextEditorWidget(forms.Textarea):

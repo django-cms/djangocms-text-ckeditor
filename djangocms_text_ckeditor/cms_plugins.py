@@ -6,9 +6,7 @@ from distutils.version import LooseVersion
 from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
-from django.core.exceptions import (
-    PermissionDenied, ValidationError,
-)
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.forms.fields import CharField
 from django.http import (

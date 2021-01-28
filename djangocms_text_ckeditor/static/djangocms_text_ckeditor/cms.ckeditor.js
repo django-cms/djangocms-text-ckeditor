@@ -1,5 +1,5 @@
 
-import ClassicEditor from './dist/bundle';
+import ClassicEditor from 'build.ckeditor';
 import Demo from './packages/ckeditor5-plugin-demo/src/demo';
 
 document.addEventListener('DOMContentLoaded', () => {

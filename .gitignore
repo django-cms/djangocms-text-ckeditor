@@ -17,7 +17,7 @@ dist/
 env/
 
 /~
-/node_modules
+node_modules
 .sass-cache
 *.css.map
 npm-debug.log

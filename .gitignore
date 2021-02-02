@@ -13,12 +13,11 @@
 .settings/
 .tox/
 __pycache__/
-build/
 dist/
 env/
 
 /~
-/node_modules
+node_modules
 .sass-cache
 *.css.map
 npm-debug.log
@@ -78,6 +77,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# history
+.history
+
 # jupyter Notebook
 .ipynb_checkpoints
 
@@ -111,4 +113,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-!djangocms_text_ckeditor/static/djangocms_text_ckeditor/js/dist
+!djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist
+
+#test_db
+testdb.sqlite

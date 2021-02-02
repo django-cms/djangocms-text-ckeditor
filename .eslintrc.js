@@ -31,6 +31,7 @@ module.exports = {
         "no-extra-parens": ["error", "all", {
             "nestedBinaryExpressions": false
         }],
+        "semi": "error",
         "no-extra-semi": 2,
         "no-func-assign": 2,
         "no-inner-declarations": 2,
@@ -176,7 +177,7 @@ module.exports = {
         "operator-assignment": 2,
         "operator-linebreak": [2, "after"],
         "padded-blocks": 0,
-        "quote-props": [2, "consistent-as-needed"],
+        "quote-props": [2, "consistentas-needed"],
         "quotes": [2, "single", "avoid-escape"],
         "require-jsdoc": 2,
         "semi-spacing": [2, {"before": false, "after": true}],
@@ -201,5 +202,9 @@ module.exports = {
         "max-statements": 0,
         "no-bitwise": 2,
         "no-plusplus": 0
+    },
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 6
     }
-}
+};

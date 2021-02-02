@@ -12,7 +12,7 @@
     "lint:fix-silent": "npm run lint --silent -- --fix",
     "build:js": "esbuild djangocms_text_ckeditor/static/djangocms_text_ckeditor/build.ckeditor.js --bundle --loader:.svg=file --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=djangocms_text_ckeditor/static/djangocms_text_ckeditor/dist/bundle.js",
     "build:dev": "npm-run-all build:js",
-    "build:dll": "node node_modules/ckeditor5/scripts/dll/build-dlls.js",
+    "build:dll": "node node_modules/@ckeditor/ckeditor5-dll/scripts/dll/build-dlls.js",
     "build": "npm-run-all build lint:fix-silent ",
     "start": "echo 'watch onchange'",
     "test:integration": "run-func tests/frontend/index.js runIntegrationTests",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-utils": "^24.0.2",
-    "ckeditor5": "https://github.com/ns11/ckeditor5.git#dll-integration",
+    "@ckeditor/ckeditor5-dll": "https://github.com/ns11/ckeditor5.git#dll-integration",
     "css-loader": "^5.0.1",
     "djangocms-casper-helpers": "^4.0.0",
     "esbuild": "^0.8.26",

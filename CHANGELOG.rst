@@ -3,6 +3,13 @@ Changelog
 =========
 
 
+4.0.1 (next)
+============
+
+* Replace all occurences of ``force_text`` by ``force_str``.
+* Fix typo in configuration file for ``toolbar_HTMLField``.
+
+
 4.0.0 (2020-09-15)
 ==================
 

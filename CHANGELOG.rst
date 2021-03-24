@@ -3,8 +3,8 @@ Changelog
 =========
 
 
-4.0.1 (next)
-============
+4.0.1 (2021-03-25)
+==================
 
 * Replace all occurences of ``force_text`` by ``force_str``.
 * Fix typo in configuration file for ``toolbar_HTMLField``.

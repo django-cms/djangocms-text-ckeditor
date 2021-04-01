@@ -14,7 +14,6 @@ jobs:
           dj22_cms38.txt,
           dj30_cms37.txt,
           dj30_cms38.txt,
-          dj31_cms37.txt,
           dj31_cms38.txt,
         ]
         os: [

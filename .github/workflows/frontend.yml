@@ -8,28 +8,12 @@ jobs:
     strategy:
       matrix:
         node-version: [6.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: check nvm location
-      shell: bash -l -eo pipefail {0}
-      run: echo $NVM_DIR
-
-    - name: test nvm command
-      shell: bash -l -eo pipefail {0}
-      run: nvm ls
-
-    - name: Setup nvm
-      run: nvm install 8.10.0 && nvm use 8.10.0
-    - name: Setup npm
-      run: |
-        npm config set spin false
-        npm install -g npm
     - name: Install gulp
       run: npm install -g gulp@3.9.1
     - name: Install dependencies

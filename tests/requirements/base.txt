@@ -3,6 +3,7 @@ django-filer>=1.4.0
 djangocms-picture>=2.1.0
 djangocms-link>=2.2.1
 django-polymorphic>=2.0.3
+django-treebeard>=4.5.1
 Pillow
 html5lib>=0.999999999
 

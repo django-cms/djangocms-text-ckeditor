@@ -15,9 +15,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: nvm install 8.10.0 && nvm use 8.10.0
-    - run: npm config set spin false
-    - run: npm install -g npm
-    - run: npm install -g gulp@3.9.1
-    - run: npm install
-    - run: gulp ci
+    - name: Setup nvm
+      run: nvm install 8.10.0 && nvm use 8.10.0
+    - name: Setup npm
+      run: |
+        npm config set spin false
+        npm install -g npm
+    - name: Install gulp
+      run: npm install -g gulp@3.9.1
+    - name: Install dependencies
+      run: npm install
+    - name: Run gulp
+      run: gulp ci

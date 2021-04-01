@@ -30,12 +30,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
         pip install -r tests/requirements/${{ matrix.requirements-file }}
         python setup.py install
 
     - name: Run tests
-      run: |
-        python setup.py test
-      env:
-        DATABASE_URL: sqlite://localhost/testdb.sqlite
+      run: python setup.py test

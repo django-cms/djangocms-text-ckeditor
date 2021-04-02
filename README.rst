@@ -31,7 +31,7 @@ pull request, please review our `contribution guidelines
 <http://docs.django-cms.org/en/latest/contributing/index.html>`_.
 
 We're grateful to all contributors who have helped create and maintain this package.
-Contributors are listed at the `contributors <https://github.com/divio/djangocms-text-ckeditor/graphs/contributors>`_
+Contributors are listed at the `contributors <https://github.com/django-cms/djangocms-text-ckeditor/graphs/contributors>`_
 section.
 
 One of the easiest contributions you can make is helping to translate this addon on
@@ -41,7 +41,7 @@ One of the easiest contributions you can make is helping to translate this addon
 Documentation
 =============
 
-See ``REQUIREMENTS`` in the `setup.py <https://github.com/divio/djangocms-text-ckeditor/blob/master/setup.py>`_
+See ``REQUIREMENTS`` in the `setup.py <https://github.com/django-cms/djangocms-text-ckeditor/blob/master/setup.py>`_
 file for additional dependencies:
 
 |python| |django| |djangocms|
@@ -235,10 +235,10 @@ to note:
   conditionally based on the parent - you can add ``CMSPluginBase.child_ckeditor_body_css_class``
   attribute to the parent class.
 
-.. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
-.. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
+.. _add styles and js configuration: https://github.com/django-cms/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
+.. _stop CKEditor from removing empty spans: https://github.com/django-cms/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
 .. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
-.. _to contain: https://github.com/divio/djangocms-text-ckeditor/issues/405#issuecomment-276814197
+.. _to contain: https://github.com/django-cms/djangocms-text-ckeditor/issues/405#issuecomment-276814197
 
 
 Drag & Drop Images
@@ -446,7 +446,7 @@ Updating the CKEditor
 ---------------------
 
 Make sure to use the url in `build config
-<https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.
+<https://github.com/django-cms/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.
 
 
 Running Tests
@@ -462,10 +462,10 @@ You can run tests by executing::
 
 .. |pypi| image:: https://badge.fury.io/py/djangocms-text-ckeditor.svg
     :target: http://badge.fury.io/py/djangocms-text-ckeditor
-.. |build| image:: https://travis-ci.org/divio/djangocms-text-ckeditor.svg?branch=master
-    :target: https://travis-ci.org/divio/djangocms-text-ckeditor
-.. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
+.. |build| image:: https://travis-ci.org/django-cms/djangocms-text-ckeditor.svg?branch=master
+    :target: https://travis-ci.org/django-cms/djangocms-text-ckeditor
+.. |coverage| image:: https://codecov.io/gh/django-cms/djangocms-text-ckeditor/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/django-cms/djangocms-text-ckeditor
 
 .. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/

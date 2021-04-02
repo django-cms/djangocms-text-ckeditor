@@ -1,6 +1,6 @@
-name: Unit tests
+name: CodeCov
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   unit-tests:

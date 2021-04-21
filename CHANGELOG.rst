@@ -11,7 +11,7 @@ Changelog
 * Dropped support for Django < 2.2
 * Ensure that correct urls are generated when static files are hosted on a CDN
 * Allow to style WYSIWYG content based on parent plugins, by adding
-``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
+  ``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
 * Upgrade to CKeditor version to 4.14.1
 
 

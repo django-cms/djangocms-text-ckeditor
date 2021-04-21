@@ -5,10 +5,13 @@ djangocms-link>=2.2.1
 django-polymorphic>=2.0.3
 Pillow
 html5lib>=0.999999999
+
 # other requirements
+coverage
+django-treebeard<4.5
 django-app-helper
 tox
-coverage
+wheel
 
 # In order to run skipped tests uncomment the next lines:
 # -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer

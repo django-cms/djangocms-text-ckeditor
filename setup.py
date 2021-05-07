@@ -47,7 +47,7 @@ setup(
     license='BSD',
     description='Text Plugin for django CMS with CKEditor support',
     long_description=open('README.rst').read(),
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,

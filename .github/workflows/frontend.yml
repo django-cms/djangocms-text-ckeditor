@@ -16,9 +16,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install gulp
       run: npm install -g gulp@3.9.1
-    - name: Install global dependencies
-      run: npm install -g codeclimate-test-reporter
     - name: Install dependencies
       run: npm install
-    - name: Run tests
-      run: npm ci
+    - name: Run gulp
+      run: gulp ci

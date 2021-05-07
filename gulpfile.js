@@ -25,7 +25,7 @@ var options = {
 var PROJECT_ROOT = __dirname + '/djangocms_text_ckeditor/static/djangocms_text_ckeditor';
 var PROJECT_PATH = {
     js: PROJECT_ROOT + '/js',
-    tests: __dirname + '/djangocms_text_ckeditor/tests/frontend/'
+    tests: __dirname + '/djangocms_text_ckeditor/tests/frontend'
 };
 
 var PROJECT_PATTERNS = {
@@ -147,4 +147,5 @@ gulp.task('watch', function () {
     gulp.watch(JS_BUNDLE, ['bundle']);
 });
 
+gulp.task('ci', ['lint'/* , 'tests:integration' */]);
 gulp.task('default', ['lint', 'bundle', 'watch']);

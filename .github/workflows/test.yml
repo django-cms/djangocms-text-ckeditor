@@ -9,6 +9,10 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ 3.6, 3.7, 3.8, ]  # latest release minus two
+        requirements-file: [
+            django-1.11.txt,
+            django-2.2.txt,
+        ]
         os: [
           ubuntu-20.04,
         ]
@@ -22,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r tests/requirements.txt
+        pip install -r tests/requirements/${{ matrix.requirements-file }}
         python setup.py install
 
     - name: Run coverage

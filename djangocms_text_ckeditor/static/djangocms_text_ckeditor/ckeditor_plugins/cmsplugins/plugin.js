@@ -70,13 +70,13 @@
             CKEDITOR.on('instanceReady', function () {
                 var widgetInstances = [];
 
-                for (key in editor.widgets.instances) {
+                for (var key in editor.widgets.instances) {
                     if (editor.widgets.instances.hasOwnProperty(key)) {
                         widgetInstances.push(editor.widgets.instances[key]);
                     }
                 }
 
-                that.numberOfChildren = CKEDITOR.tools.array.filter(widgetInstances, function(i) {
+                that.numberOfChildren = CKEDITOR.tools.array.filter(widgetInstances, function (i) {
                     return i.name === 'cms-widget';
                 }).length;
             });

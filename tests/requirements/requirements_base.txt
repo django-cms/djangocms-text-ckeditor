@@ -10,6 +10,8 @@ djangocms-helper<3.0.0
 tox
 coverage
 
+https://github.com/divio/django-cms/archive/release/4.0.x.zip
+
 # In order to run skipped tests uncomment the next lines:
 # -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer
 # -e git+ssh://git@github.com/divio/djangocms-translations.git@master#egg=djangocms-translations

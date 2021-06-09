@@ -3,6 +3,7 @@ from django.utils.encoding import force_str
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
+from cms.utils.copy_plugins import copy_plugins_to
 
 from cms.models import CMSPlugin
 
@@ -80,6 +81,23 @@ class AbstractText(CMSPlugin):
         for plugin in unbound_plugins:
             # delete plugins that are not referenced in the text anymore
             plugin.delete()
+
+    def copy_referenced_plugins(self):
+        referenced_plugins = self.get_referenced_plugins()
+        if referenced_plugins:
+            plugins_ziplist = copy_plugins_to(
+                referenced_plugins,
+                self.placeholder,
+                to_language=self.language,
+                parent_plugin_id=self.id
+            )
+            self.post_copy(self, plugins_ziplist)
+
+    def get_referenced_plugins(self):
+        ids_in_body = set(plugin_tags_to_id_list(self.body))
+        child_plugins_ids = set(self.cmsplugin_set.all().values_list('id', flat=True))
+        referenced_plugins_ids = ids_in_body - child_plugins_ids
+        return CMSPlugin.objects.filter(id__in=referenced_plugins_ids)
 
     def _get_inline_plugin_ids(self):
         return plugin_tags_to_id_list(self.body)

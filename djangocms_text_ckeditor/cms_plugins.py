@@ -537,6 +537,7 @@ class TextPlugin(CMSPluginBase):
         # save() again on the Text instance (aka obj in this context) to update mptt values (numchild, etc).
         # See this ticket for details https://github.com/divio/djangocms-text-ckeditor/issues/212
         obj.clean_plugins()
+        obj.copy_referenced_plugins()
 
     def get_action_token(self, request, obj):
         plugin_id = force_str(obj.pk)

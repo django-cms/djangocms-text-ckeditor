@@ -3,9 +3,9 @@ from django.utils.encoding import force_str
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
-from cms.utils.copy_plugins import copy_plugins_to
 
 from cms.models import CMSPlugin
+from cms.utils.copy_plugins import copy_plugins_to
 
 from . import settings
 from .html import clean_html, extract_images

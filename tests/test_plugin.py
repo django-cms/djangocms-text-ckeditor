@@ -223,6 +223,74 @@ class PluginActionsTestCase(BaseTestCase):
             response = text_plugin_class.delete_on_cancel(request)
             self.assertEqual(response.status_code, 400)
 
+    def test_copy_referenced_plugins(self):
+        """
+        Test that copy+pasting a child plugin between text editors
+        creates proper copies of the child plugin and messes no other data up
+        """
+        simple_page = create_page('test page', 'page.html', u'en')
+        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+
+        def _get_text_plugin_with_children():
+            text_plugin = add_plugin(
+                simple_placeholder,
+                'TextPlugin',
+                'en',
+                body='Text plugin we copy child plugins to'
+            )
+            _add_child_plugins_to_text_plugin(text_plugin)
+            return text_plugin
+
+        def _add_child_plugins_to_text_plugin(text_plugin):
+            child_plugin_1 = add_plugin(
+                simple_placeholder,
+                'PicturePlugin',
+                'en',
+                target=text_plugin,
+                picture=self.create_filer_image_object(),
+                caption_text='Child plugin one',
+            )
+            child_plugin_2 = add_plugin(
+                simple_placeholder,
+                'PicturePlugin',
+                'en',
+                target=text_plugin,
+                picture=self.create_filer_image_object(),
+                caption_text='Child plugin two',
+            )
+            self.add_plugin_to_text(text_plugin, child_plugin_1)
+            self.add_plugin_to_text(text_plugin, child_plugin_2)
+
+        def _copy_child_plugins_from_text(text_plugin_source, text_plugin_destination):
+            for child_plugin in text_plugin_source.cmsplugin_set.all():
+                text_plugin_destination.body += ' ' + plugin_to_tag(child_plugin)
+            text_plugin_destination.save()
+            _run_clean_and_copy(text_plugin_destination)
+
+        def _run_clean_and_copy(text_plugin):
+            text_plugin.clean_plugins()
+            text_plugin.copy_referenced_plugins()
+
+        def _get_common_children_ids(text_plugin_one, text_plugin_two):
+            original_children_ids = set(plugin_tags_to_id_list(text_plugin_one.body))
+            copied_children_ids = set(plugin_tags_to_id_list(text_plugin_two.body))
+            return original_children_ids.intersection(copied_children_ids)
+
+        text_plugin_copy_from = _get_text_plugin_with_children()
+        text_plugin_copy_to = _get_text_plugin_with_children()
+
+        _copy_child_plugins_from_text(text_plugin_copy_from, text_plugin_copy_to)
+        self.assertEqual(text_plugin_copy_from.cmsplugin_set.count(), 2)
+        self.assertEqual(text_plugin_copy_to.cmsplugin_set.count(), 4)
+
+        _run_clean_and_copy(text_plugin_copy_from)
+        _run_clean_and_copy(text_plugin_copy_to)
+        self.assertEqual(text_plugin_copy_from.cmsplugin_set.count(), 2)
+        self.assertEqual(text_plugin_copy_to.cmsplugin_set.count(), 4)
+
+        common_children_ids = _get_common_children_ids(text_plugin_copy_from, text_plugin_copy_to)
+        self.assertFalse(common_children_ids)
+
     def test_add_and_cancel_child_plugin(self):
         """
         Test that you can add a text plugin

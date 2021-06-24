@@ -85,19 +85,24 @@ class AbstractText(CMSPlugin):
     def copy_referenced_plugins(self):
         referenced_plugins = self.get_referenced_plugins()
         if referenced_plugins:
-            plugins_ziplist = copy_plugins_to(
+            plugins_pairs = list(copy_plugins_to(
                 referenced_plugins,
                 self.placeholder,
                 to_language=self.language,
                 parent_plugin_id=self.id
-            )
-            self.post_copy(self, plugins_ziplist)
+            ))
+            self.add_existing_child_plugins_to_pairs(plugins_pairs)
+            self.post_copy(self, plugins_pairs)
 
     def get_referenced_plugins(self):
         ids_in_body = set(plugin_tags_to_id_list(self.body))
         child_plugins_ids = set(self.cmsplugin_set.all().values_list('id', flat=True))
         referenced_plugins_ids = ids_in_body - child_plugins_ids
         return CMSPlugin.objects.filter(id__in=referenced_plugins_ids)
+
+    def add_existing_child_plugins_to_pairs(self, plugins_pairs):
+        for plugin in self.cmsplugin_set.all():
+            plugins_pairs.append((plugin, plugin))
 
     def _get_inline_plugin_ids(self):
         return plugin_tags_to_id_list(self.body)

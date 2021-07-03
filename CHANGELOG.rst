@@ -3,6 +3,32 @@ Changelog
 =========
 
 
+4.0.0 (2020-09-15)
+==================
+
+* Added support for Django 3.1
+* Dropped support for Python 2.7 and Python 3.4
+* Dropped support for Django < 2.2
+* Ensure that correct urls are generated when static files are hosted on a CDN
+* Allow to style WYSIWYG content based on parent plugins, by adding
+  ``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
+* Upgrade to CKeditor version to 4.14.1
+
+
+3.10.0 (2020-08-04)
+===================
+
+* Upgrade to CKeditor version 4.14.0.
+* Replace icon for CMS plugins with nicer looking SVG puzzle piece.
+* Prevent ``clean_html`` from sanitizing when TEXT_HTML_SANITIZE is False.
+
+
+3.9.1 (2020-05-20)
+==================
+
+* Fix compatibility issue with Django-3.0 in ``Field.from_db_value()``.
+
+
 3.9.0 (2020-02-20)
 ==================
 

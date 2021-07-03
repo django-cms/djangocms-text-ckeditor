@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cms.models import CMSPlugin
-
-from six import python_2_unicode_compatible
+from cms.utils.copy_plugins import copy_plugins_to
 
 from . import settings
 from .html import clean_html, extract_images
@@ -26,7 +22,6 @@ except ImportError:
         return t
 
 
-@python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """
     Abstract Text Plugin Class
@@ -56,14 +51,14 @@ class AbstractText(CMSPlugin):
         return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
 
     def __init__(self, *args, **kwargs):
-        super(AbstractText, self).__init__(*args, **kwargs)
-        self.body = force_text(self.body)
+        super().__init__(*args, **kwargs)
+        self.body = force_str(self.body)
 
     def clean(self):
         self.body = plugin_tags_to_db(self.body)
 
     def save(self, *args, **kwargs):
-        super(AbstractText, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         body = self.body
         body = extract_images(body, self)
         body = clean_html(body, full=False)
@@ -77,7 +72,7 @@ class AbstractText(CMSPlugin):
         # this 2nd save() call is internal and should be
         # fully managed by us.
         # think of it as an update() vs save()
-        super(AbstractText, self).save(update_fields=('body',))
+        super().save(update_fields=('body',))
 
     def clean_plugins(self):
         ids = self._get_inline_plugin_ids()
@@ -86,6 +81,28 @@ class AbstractText(CMSPlugin):
         for plugin in unbound_plugins:
             # delete plugins that are not referenced in the text anymore
             plugin.delete()
+
+    def copy_referenced_plugins(self):
+        referenced_plugins = self.get_referenced_plugins()
+        if referenced_plugins:
+            plugins_pairs = list(copy_plugins_to(
+                referenced_plugins,
+                self.placeholder,
+                to_language=self.language,
+                parent_plugin_id=self.id
+            ))
+            self.add_existing_child_plugins_to_pairs(plugins_pairs)
+            self.post_copy(self, plugins_pairs)
+
+    def get_referenced_plugins(self):
+        ids_in_body = set(plugin_tags_to_id_list(self.body))
+        child_plugins_ids = set(self.cmsplugin_set.all().values_list('id', flat=True))
+        referenced_plugins_ids = ids_in_body - child_plugins_ids
+        return CMSPlugin.objects.filter(id__in=referenced_plugins_ids)
+
+    def add_existing_child_plugins_to_pairs(self, plugins_pairs):
+        for plugin in self.cmsplugin_set.all():
+            plugins_pairs.append((plugin, plugin))
 
     def _get_inline_plugin_ids(self):
         return plugin_tags_to_id_list(self.body)

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 import base64
+import io
 import re
 import uuid
 
@@ -10,7 +10,6 @@ from html5lib import serializer, treebuilders, treewalkers
 from html5lib.constants import namespaces
 from html5lib.filters import sanitizer
 from PIL import Image
-from six import BytesIO
 
 from . import settings
 from .sanitizer import TextSanitizer
@@ -64,8 +63,12 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
     else:
         dom_tree = parser.parseFragment(data)
     walker = treewalkers.getTreeWalker('dom')
-    kwargs = _filter_kwargs()
-    stream = TextSanitizer(walker(dom_tree), **kwargs)
+    stream = walker(dom_tree)
+
+    if settings.TEXT_HTML_SANITIZE:
+        kwargs = _filter_kwargs()
+        stream = TextSanitizer(stream, **kwargs)
+
     s = serializer.HTMLSerializer(
         omit_optional_tags=False,
         quote_attr_values='always',
@@ -108,7 +111,7 @@ def extract_images(data, plugin):
         except IndexError:
             # No image type specified -- will convert to jpg below if it's valid image data
             image_type = ''
-        image = BytesIO(image_data)
+        image = io.BytesIO(image_data)
         # genarate filename and normalize image format
         if image_type == 'jpg' or image_type == 'jpeg':
             file_ending = 'jpg'
@@ -119,7 +122,7 @@ def extract_images(data, plugin):
         else:
             # any not "web-safe" image format we try to convert to jpg
             im = Image.open(image)
-            new_image = BytesIO()
+            new_image = io.BytesIO()
             file_ending = 'jpg'
             im.save(new_image, 'JPEG')
             new_image.seek(0)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 from copy import deepcopy
 
@@ -16,14 +15,14 @@ from . import settings as text_settings
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-45a646fecc.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-bb31a8b837.cms.ckeditor.min.js'
 
 
 class TextEditorWidget(forms.Textarea):
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, configuration=None,
                  cancel_url=None, render_plugin_url=None, action_token=None,
-                 delete_on_cancel=False):
+                 delete_on_cancel=False, body_css_classes=''):
         """
         Create a widget for editing text + plugins.
 
@@ -41,7 +40,7 @@ class TextEditorWidget(forms.Textarea):
         attrs.update({
             'data-ckeditor-basepath': text_settings.TEXT_CKEDITOR_BASE_PATH
         })
-        super(TextEditorWidget, self).__init__(attrs)
+        super().__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
         self.placeholder = placeholder
@@ -56,6 +55,7 @@ class TextEditorWidget(forms.Textarea):
         self.render_plugin_url = render_plugin_url
         self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
+        self.body_css_classes = body_css_classes
 
     @property
     def media(self):
@@ -70,7 +70,7 @@ class TextEditorWidget(forms.Textarea):
         )
 
     def render_textarea(self, name, value, attrs=None, renderer=None):
-        return super(TextEditorWidget, self).render(name, value, attrs, renderer)
+        return super().render(name, value, attrs, renderer)
 
     def render_additions(self, name, value, attrs=None, renderer=None):
         # id attribute is always present when rendering a widget
@@ -88,6 +88,8 @@ class TextEditorWidget(forms.Textarea):
         # value or fallback to HTMLField
         else:
             configuration['toolbar'] = configuration.get('toolbar', 'HTMLField')
+
+        configuration['bodyClass'] = self.body_css_classes
 
         config = json.dumps(configuration, cls=DjangoJSONEncoder)
         context = {

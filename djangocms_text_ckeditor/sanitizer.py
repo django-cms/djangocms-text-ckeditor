@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from html5lib.filters import sanitizer
 
 
@@ -20,7 +19,7 @@ class TextSanitizer(sanitizer.Filter):
                 if allow_token_parser().parse(key[1], value) and key not in allowed_attributes:
                     self.allowed_attributes = self.allowed_attributes | frozenset((key,))
                     data_found = True
-        allowed_token_res = super(TextSanitizer, self).allowed_token(token)
+        allowed_token_res = super().allowed_token(token)
         if data_found:
             self.allowed_attributes = allowed_attributes
         return allowed_token_res

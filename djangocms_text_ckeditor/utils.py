@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 import os
 import re
 from collections import OrderedDict
-from functools import wraps
+from functools import WRAPPER_ASSIGNMENTS, wraps
 
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
@@ -12,8 +11,6 @@ from django.utils.functional import LazyObject
 from cms.models import CMSPlugin
 
 from classytags.utils import flatten_context
-
-from .compat import available_attrs
 
 
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'
@@ -52,7 +49,7 @@ def random_comment_exempt(view_func):
         response = view_func(*args, **kwargs)
         response._random_comment_exempt = True
         return response
-    return wraps(view_func, assigned=available_attrs(view_func))(wrapped_view)
+    return wraps(view_func, assigned=WRAPPER_ASSIGNMENTS)(wrapped_view)
 
 
 def plugin_to_tag(obj, content='', admin=False):

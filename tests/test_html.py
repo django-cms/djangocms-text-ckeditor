@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.test import TestCase
 
 from djangocms_text_ckeditor import html, settings
@@ -77,3 +76,35 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
             parser=parser,
         )
         self.assertEqual('<source src="rtmp://testurl.com/">', text)
+
+    def test_clean_html_with_sanitize_enabled(self):
+        old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
+        settings.TEXT_HTML_SANITIZE = True
+        parser = html._get_default_parser()
+
+        original = '<span test-attr="2">foo</span>'
+        cleaned = html.clean_html(
+            original,
+            full=False,
+            parser=parser,
+        )
+        try:
+            self.assertHTMLEqual('<span>foo</span>', cleaned)
+        finally:
+            settings.TEXT_HTML_SANITIZE = old_TEXT_HTML_SANITIZE
+
+    def test_clean_html_with_sanitize_disabled(self):
+        old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
+        settings.TEXT_HTML_SANITIZE = False
+        parser = html._get_default_parser()
+
+        original = '<span test-attr="2">foo</span>'
+        cleaned = html.clean_html(
+            original,
+            full=False,
+            parser=parser,
+        )
+        try:
+            self.assertHTMLEqual(original, cleaned)
+        finally:
+            settings.TEXT_HTML_SANITIZE = old_TEXT_HTML_SANITIZE

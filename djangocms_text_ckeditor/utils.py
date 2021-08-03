@@ -7,10 +7,10 @@ from functools import wraps
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
-from django.utils.decorators import available_attrs
 from django.utils.functional import LazyObject
 
 from cms.models import CMSPlugin
+from cms.utils.compat.dj import available_attrs
 
 from classytags.utils import flatten_context
 

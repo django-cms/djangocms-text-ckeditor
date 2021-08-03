@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import re
+import six
 from distutils.version import LooseVersion
 
 from django.conf.urls import url
@@ -16,7 +17,6 @@ from django.http import (
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse
-from django.utils import six
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext

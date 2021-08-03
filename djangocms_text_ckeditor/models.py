@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.utils.encoding import force_text, python_2_unicode_compatible
+from django.utils.encoding import force_text
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin
+
+from six import python_2_unicode_compatible
 
 from . import settings
 from .html import clean_html, extract_images

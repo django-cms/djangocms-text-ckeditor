@@ -55,7 +55,7 @@ class TextEditorWidget(forms.Textarea):
         self.render_plugin_url = render_plugin_url
         self.action_token = action_token
         self.delete_on_cancel = delete_on_cancel
-        self.body_css_classes = body_css_classes
+        self.body_css_classes = body_css_classes if body_css_classes else self.configuration.get('bodyClass', '')
 
     @property
     def media(self):

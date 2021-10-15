@@ -10,7 +10,7 @@ directly to your web pages. Enhance your website experience with our community
 maintained editor. This package aims to integrate CKEditor into django CMS as
 a text plugin.
 
-This project is endorsed by the `django CMS Association <https://www.django-cms.org/en/about-us/>`_.
+This project is endorsed by the `django CMS Association <https://www.django-cms.org/en/about-us/>`_. Join us on `Slack <https://www.django-cms.org/slack/>`_.
 
 
 .. WARNING::

@@ -13,6 +13,9 @@ django-app-helper
 tox
 wheel
 
+# IMPORTANT: latest easy-thumbnails causes error since it returns with floating point, but the tests are not prepared for this and even the lib
+easy-thumbnails==2.7.1
+
 # In order to run skipped tests uncomment the next lines:
 # -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer
 # -e git+ssh://git@github.com/divio/djangocms-translations.git@master#egg=djangocms-translations

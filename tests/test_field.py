@@ -24,8 +24,8 @@ class FieldTestCase(BaseTestCase):
                                 'src="http://www.w3schools.com"&gt;&lt;/iframe&gt;')
     text_with_script = ('<p>some non malicious text</p> '
                         '<script>alert("Hello! I am an alert box!");</script>')
-    text_with_script_escaped = (u'<p>some non malicious text</p> &lt;script&gt;'
-                                u'alert("Hello! I am an alert box!");&lt;/script&gt;')
+    text_with_script_escaped = ('<p>some non malicious text</p> &lt;script&gt;'
+                                'alert("Hello! I am an alert box!");&lt;/script&gt;')
 
     def test_model_field_text_is_safe(self):
         original = 'Hello <h2>There</h2>'

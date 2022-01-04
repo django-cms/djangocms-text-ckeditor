@@ -69,7 +69,7 @@ def clean_html(data, full=True, parser=DEFAULT_PARSER):
         omit_optional_tags=False,
         quote_attr_values='always',
     )
-    return u''.join(s.serialize(stream))
+    return ''.join(s.serialize(stream))
 
 
 def extract_images(data, plugin):
@@ -123,7 +123,7 @@ def extract_images(data, plugin):
             im.save(new_image, "JPEG")
             new_image.seek(0)
             image = new_image
-        filename = u"%s.%s" % (uuid.uuid4(), file_ending)
+        filename = "%s.%s" % (uuid.uuid4(), file_ending)
         # transform image into a cms plugin
         image_plugin = img_data_to_plugin(
             filename, image, parent_plugin=plugin, width=width, height=height
@@ -134,7 +134,7 @@ def extract_images(data, plugin):
         img.parentNode.replaceChild(parser.parseFragment(new_img_html).childNodes[0], img)
         found = True
     if found:
-        return u''.join([y.toxml() for y in dom.getElementsByTagName('body')[0].childNodes])
+        return ''.join([y.toxml() for y in dom.getElementsByTagName('body')[0].childNodes])
     else:
         return data
 

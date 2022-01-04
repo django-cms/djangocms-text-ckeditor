@@ -120,7 +120,7 @@ class PluginActionsTestCase(BaseTestCase):
         Test that you can add a text plugin
         """
         admin = self.get_superuser()
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
@@ -172,7 +172,7 @@ class PluginActionsTestCase(BaseTestCase):
         """
         Test that you can add a text plugin
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
@@ -225,7 +225,7 @@ class PluginActionsTestCase(BaseTestCase):
         Test that you can add a text plugin
         """
         admin = self.get_superuser()
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
@@ -321,7 +321,7 @@ class PluginActionsTestCase(BaseTestCase):
         This can happen when ghost plugins exist as the django CMS v4 updated plugin position
         logic won't count "ghost" plugins that aren't visually shown!
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         # Add a plugin
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
@@ -365,7 +365,7 @@ class PluginActionsTestCase(BaseTestCase):
     def test_action_token_per_session(self):
         # Assert that a cancel token for the same plugin
         # is different per user session.
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
@@ -388,7 +388,7 @@ class PluginActionsTestCase(BaseTestCase):
         self.assertNotEqual(action_token_1, action_token_2)
 
     def test_add_and_cancel_plugin_permissions(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         endpoint = self.get_add_plugin_uri(simple_placeholder, 'TextPlugin')
@@ -430,7 +430,7 @@ class PluginActionsTestCase(BaseTestCase):
         the child plugins are rendered as their contents passed
         as initial data to the text field.
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
@@ -476,7 +476,7 @@ class PluginActionsTestCase(BaseTestCase):
         No user regardless of permissions can modify the contents
         of a child plugin directly in the text plugin text.
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = add_plugin(
@@ -512,7 +512,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertXMLEqual(text_plugin.body, expected_text)
 
     def test_render_child_plugin_endpoint(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
@@ -567,7 +567,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(force_str(response.content), rendered_child_plugin)
 
     def test_render_child_plugin_endpoint_calls_context_processors(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
@@ -607,7 +607,7 @@ class PluginActionsTestCase(BaseTestCase):
         Users can't render a child plugin without change permissions
         on the placeholder attached object and the text plugin.
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
@@ -634,7 +634,7 @@ class PluginActionsTestCase(BaseTestCase):
         was created in the current session and it's text plugin
         matches the child plugin parent.
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = add_plugin(
             simple_placeholder,
@@ -683,7 +683,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(force_str(response.content), 'Unable to process your request.')
 
     def test_render_plugin(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder)
 
@@ -706,7 +706,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertTrue('LinkPlugin record %d' % i in rendered)
 
     def test_render_extended_plugin(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
         text_plugin = self._add_text_plugin(simple_placeholder, 'ExtendedTextPlugin')
 
@@ -732,7 +732,7 @@ class PluginActionsTestCase(BaseTestCase):
         """
         Test that copying of textplugins replaces references to copied plugins
         """
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin = self._add_text_plugin(simple_placeholder)
@@ -785,7 +785,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(idlist, expected)
 
     def test_copy_plugin_callback(self):
-        simple_page = create_page('test page', 'page.html', u'en')
+        simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = simple_page.get_placeholders('en').get(slot='content')
 
         text_plugin_1 = self._add_text_plugin(simple_placeholder)
@@ -838,7 +838,7 @@ class PluginActionsTestCase(BaseTestCase):
             self.assertEqual(plugin_tags_to_id_list(markup), expected)
 
     def test_text_plugin_xss(self):
-        page = create_page('test page', 'page.html', u'en')
+        page = create_page('test page', 'page.html', 'en')
         placeholder = page.get_placeholders('en').get(slot='content')
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body='body')
         endpoint = self.get_change_plugin_uri(plugin)

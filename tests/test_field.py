@@ -1,4 +1,3 @@
-
 from django.template import Context, Template
 from django.utils.safestring import SafeData
 

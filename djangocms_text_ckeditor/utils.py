@@ -1,4 +1,3 @@
-
 import os
 import re
 from collections import OrderedDict
@@ -66,14 +65,14 @@ def plugin_to_tag(obj, content='', admin=False):
         plugin_class = obj.get_plugin_class()
         preview = getattr(plugin_class, 'text_editor_preview', True)
         plugin_tag = (
-            u'<cms-plugin render-plugin=%(preview)s alt="%(icon_alt)s "'
-            u'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
+            '<cms-plugin render-plugin=%(preview)s alt="%(icon_alt)s "'
+            'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
         )
         plugin_attrs['preview'] = 'true' if preview else 'false'
     else:
         plugin_tag = (
-            u'<cms-plugin alt="%(icon_alt)s "'
-            u'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
+            '<cms-plugin alt="%(icon_alt)s "'
+            'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
         )
     return plugin_tag % plugin_attrs
 
@@ -103,7 +102,7 @@ def _plugin_tags_to_html(text, output_func):
         except KeyError:
             # Object must have been deleted.  It cannot be rendered to
             # end user so just remove it from the HTML altogether
-            return u''
+            return ''
         else:
             obj._render_meta.text_enabled = True
             return output_func(obj, m)
@@ -141,7 +140,7 @@ def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
             # Object must have been deleted.  It cannot be rendered to
             # end user, or edited, so just remove it from the HTML
             # altogether
-            return u''
+            return ''
         return plugin_to_tag(plugin)
     return regex.sub(_replace_tag, text)
 

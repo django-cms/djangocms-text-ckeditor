@@ -1,10 +1,7 @@
-
 import json
 import re
-import six
 from distutils.version import LooseVersion
 
-from django.conf.urls import url
 from django.contrib.admin.utils import unquote
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -16,10 +13,10 @@ from django.http import (
 )
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.urls import reverse
+from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext
+from django.utils.encoding import force_str
+from django.utils.translation import gettext
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
@@ -354,8 +351,8 @@ class TextPlugin(CMSPluginBase):
             # This is NOT the normal workflow because we create a plugin
             # on GET request to the /add/ endpoint and so we bypass
             # django's add_view, thus bypassing permission check.
-            message = ugettext('You do not have permission to add a plugin')
-            return HttpResponseForbidden(force_text(message))
+            message = gettext('You do not have permission to add a plugin')
+            return HttpResponseForbidden(force_str(message))
 
         try:
             # CMS 3.3 compatibility
@@ -373,8 +370,8 @@ class TextPlugin(CMSPluginBase):
             }
 
         except PermissionDenied:
-            message = ugettext('You do not have permission to add a plugin')
-            return HttpResponseForbidden(force_text(message))
+            message = gettext('You do not have permission to add a plugin')
+            return HttpResponseForbidden(force_str(message))
         except ValidationError as error:
             return HttpResponseBadRequest(error.message)
 
@@ -384,7 +381,7 @@ class TextPlugin(CMSPluginBase):
         plugin = self._create_ghost_plugin(data)
 
         query = request.GET.copy()
-        query['plugin'] = six.text_type(plugin.pk)
+        query['plugin'] = str(plugin.pk)
 
         success_url = admin_reverse('cms_placeholder_add_plugin')
         # Because we've created the cmsplugin record
@@ -395,7 +392,7 @@ class TextPlugin(CMSPluginBase):
     def get_plugin_urls(self):
         def pattern(regex, func):
             name = self.get_admin_url_name(func.__name__)
-            return url(regex, func, name=name)
+            return re_path(regex, func, name=name)
 
         url_patterns = [
             pattern(r'^render-plugin/$', self.render_plugin),
@@ -420,8 +417,8 @@ class TextPlugin(CMSPluginBase):
 
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
-        message = ugettext("Unable to process your request. Invalid token.")
-        raise ValidationError(message=force_text(message))
+        message = gettext("Unable to process your request. Invalid token.")
+        raise ValidationError(message=force_str(message))
 
     @random_comment_exempt
     @xframe_options_sameorigin
@@ -434,7 +431,7 @@ class TextPlugin(CMSPluginBase):
         form = RenderPluginForm(request.GET, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext("Unable to process your request.")
+            message = gettext("Unable to process your request.")
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -466,7 +463,7 @@ class TextPlugin(CMSPluginBase):
         form = DeleteOnCancelForm(request.POST, text_plugin=text_plugin)
 
         if not form.is_valid():
-            message = ugettext("Unable to process your request.")
+            message = gettext("Unable to process your request.")
             return HttpResponseBadRequest(message)
 
         plugin_class = text_plugin.get_plugin_class_instance()
@@ -549,7 +546,7 @@ class TextPlugin(CMSPluginBase):
         obj.clean_plugins()
 
     def get_action_token(self, request, obj):
-        plugin_id = force_text(obj.pk)
+        plugin_id = force_str(obj.pk)
         # salt is different for every user
         signer = signing.Signer(salt=request.session.session_key)
         return signer.sign(plugin_id)

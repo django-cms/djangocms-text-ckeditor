@@ -1,4 +1,3 @@
-
 from cms.api import add_plugin, create_page
 
 from djangocms_text_ckeditor import html, settings

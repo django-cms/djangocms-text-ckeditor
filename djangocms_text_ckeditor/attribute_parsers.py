@@ -1,4 +1,3 @@
-
 from .sanitizer import AllowTokenParser
 
 

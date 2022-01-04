@@ -1,4 +1,3 @@
-
 import os
 import sys
 from tempfile import mkdtemp
@@ -23,6 +22,7 @@ class DisableMigrations(dict):
 
 
 HELPER_SETTINGS = {
+    'SECRET_KEY': 'djangocms-text-ckeditor-test-suite',
     'INSTALLED_APPS': [
         'easy_thumbnails',
         'filer',
@@ -106,6 +106,7 @@ HELPER_SETTINGS = {
         'Bootstrap3ButtonCMSPlugin': {'text_field_child_label': 'label'},
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
+    'DEFAULT_AUTO_FIELD': 'django.db.models.AutoField',
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()

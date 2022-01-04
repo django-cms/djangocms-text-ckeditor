@@ -1,13 +1,10 @@
-
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin
-
-from six import python_2_unicode_compatible
 
 from . import settings
 from .html import clean_html, extract_images
@@ -24,7 +21,6 @@ except ImportError:
         return t
 
 
-@python_2_unicode_compatible
 class AbstractText(CMSPlugin):
     """Abstract Text Plugin Class"""
 
@@ -53,7 +49,7 @@ class AbstractText(CMSPlugin):
 
     def __init__(self, *args, **kwargs):
         super(AbstractText, self).__init__(*args, **kwargs)
-        self.body = force_text(self.body)
+        self.body = force_str(self.body)
 
     def clean(self):
         self.body = plugin_tags_to_db(self.body)

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils.encoding import force_text
 from django.utils.html import strip_tags

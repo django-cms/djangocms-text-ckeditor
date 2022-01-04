@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from django.test import TestCase
 
 from djangocms_text_ckeditor import html, settings

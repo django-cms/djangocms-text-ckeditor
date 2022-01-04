@@ -1,16 +1,14 @@
-# requirements from setup.py
-django-filer>=1.4.0
-djangocms-picture>=2.1.0
-djangocms-link>=2.2.1
-django-polymorphic>=2.0.3
-Pillow
-html5lib>=0.999999999
-# other requirements
-djangocms-helper
-tox
 coverage
+django-app-helper
+django-filer>=1.4.0
+django-polymorphic>=2.0.3
+djangocms-link>=2.2.1
+djangocms-picture>=2.1.0
+html5lib>=0.999999999
+Pillow
+tox
 
-https://github.com/divio/django-cms/archive/release/4.0.x.zip
+https://github.com/django-cms/django-cms/tarball/develop-4#egg=django-cms
 
 # In order to run skipped tests uncomment the next lines:
 # -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer

@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 import json
 from copy import deepcopy
 
 from django import forms
 from django.conf import settings
-from django.contrib.admin.templatetags.admin_static import static
 from django.core.serializers.json import DjangoJSONEncoder
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language
 

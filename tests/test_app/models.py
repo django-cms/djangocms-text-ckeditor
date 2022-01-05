@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from cms.models import CMSPlugin
 
@@ -12,7 +10,6 @@ class SimpleText(models.Model):
     text = HTMLField(blank=True)
 
 
-@python_2_unicode_compatible
 class DummyLink(CMSPlugin):
     label = models.TextField()
 
@@ -23,7 +20,6 @@ class DummyLink(CMSPlugin):
         return 'dummy link object'
 
 
-@python_2_unicode_compatible
 class DummySpacer(CMSPlugin):
     class Meta:
         abstract = False

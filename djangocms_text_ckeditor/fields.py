@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.contrib.admin import widgets as admin_widgets
 from django.db import models
 from django.forms.fields import CharField
@@ -43,7 +42,7 @@ class HTMLField(models.TextField):
         self.configuration = kwargs.pop('configuration', None)
         super(HTMLField, self).__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection, context=None):
         if value is None:
             return value
         return mark_safe(value)

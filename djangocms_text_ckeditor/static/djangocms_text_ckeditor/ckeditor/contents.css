@@ -241,6 +241,10 @@ a > img {
 	margin:0 auto;
 }
 
-textarea.cke_source {
-    max-height: inherit;
+.cke_panel_listItem.cke_selected a,
+.cke_panel_listItem a:hover,
+.cke_panel_listItem a:focus,
+.cke_panel_listItem a:active {
+    background-color: rgba(128,128,128, 0.5) !important;
 }
+

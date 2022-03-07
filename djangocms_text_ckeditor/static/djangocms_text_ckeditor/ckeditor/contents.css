@@ -3,6 +3,40 @@ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
 
+:root {
+    --dca-white: #FFFFFF;
+    --dca-black: #000000;
+    --dca-shadow: 0, 0, 0;
+    --dca-primary: #00bbff;
+    --dca-gray: #666;
+    --dca-gray-lightest: #f2f2f2;
+    --dca-gray-lighter: #ddd;
+    --dca-gray-light: #999;
+    --dca-gray-darker: #454545;
+    --dca-gray-darkest: #333;
+    --dca-gray-super-lightest: #f7f7f7;
+}
+
+html {
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+   :root {
+       --dca-white: #2A2C2E;
+       --dca-black: #FFF;
+       --dca-primary: #58D1FC;
+       --dca-gray: #999;
+       --dca-gray-lightest: #444;
+       --dca-gray-lighter: #666;
+       --dca-gray-light: #888;
+       --dca-gray-darker: #aaa;
+       --dca-gray-darkest: #eee;
+       --dca-gray-super-lightest: #333;
+    }
+}
+
+
 body
 {
 	/* Font */
@@ -11,10 +45,10 @@ body
 	font-size: 12px;
 
 	/* Text color */
-	color: #333;
+	color: var(--dca-black, #333);
 
 	/* Remove the background color to make it transparent. */
-	background-color: #fff;
+	background-color: var(--dca-white,  #fff);
 
 	margin: 20px;
 }
@@ -34,7 +68,7 @@ blockquote
 	font-family: Georgia, Times, "Times New Roman", serif;
 	padding: 2px 0;
 	border-style: solid;
-	border-color: #ccc;
+	border-color: var(--dca-gray-lighter, #ccc);
 	border-width: 0;
 }
 
@@ -74,12 +108,12 @@ h1,h2,h3,h4,h5,h6
 hr
 {
 	border: 0px;
-	border-top: 1px solid #ccc;
+	border-top: 1px solid var(--dca-gray-lighter, #ccc);
 }
 
 img.right
 {
-	border: 1px solid #ccc;
+	border: 1px solid var(--dca-gray-lighter, #ccc);
 	float: right;
 	margin-left: 15px;
 	padding: 5px;
@@ -87,7 +121,7 @@ img.right
 
 img.left
 {
-	border: 1px solid #ccc;
+	border: 1px solid var(--dca-gray-lighter, #ccc);
 	float: left;
 	margin-right: 15px;
 	padding: 5px;
@@ -114,7 +148,7 @@ span[lang]
 figure
 {
 	text-align: center;
-	outline: solid 1px #ccc;
+	outline: solid 1px var(--dca-gray-lighter, #ccc);
 	background: rgba(0,0,0,0.05);
 	padding: 10px;
 	margin: 10px 20px;
@@ -163,8 +197,8 @@ a > img {
 
 .image-grayscale
 {
-	background-color: white;
-	color: #666;
+	background-color: var(--dca-white, #fff);
+	color: var(--dca-gray, #666);
 }
 
 .image-grayscale img, img.image-grayscale
@@ -206,3 +240,11 @@ a > img {
 	max-height: 1080px;
 	margin:0 auto;
 }
+
+.cke_panel_listItem.cke_selected a,
+.cke_panel_listItem a:hover,
+.cke_panel_listItem a:focus,
+.cke_panel_listItem a:active {
+    background-color: rgba(128,128,128, 0.5) !important;
+}
+

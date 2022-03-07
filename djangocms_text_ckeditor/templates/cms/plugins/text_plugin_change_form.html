@@ -1,5 +1,5 @@
 {% extends change_form_template|default:"admin/cms/page/plugin/change_form.html" %}
-{% load cms_static %}
+{% load static cms_static %}
 
 {% block extrahead %}
 {{ block.super }}
@@ -12,4 +12,9 @@ $(document).ready(function () {
 });
 })(CMS.$);
 </script>
+<style>
+    textarea.cke_source {
+        max-height: inherit;
+    }
+</style>
 {% endblock %}

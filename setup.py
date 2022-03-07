@@ -7,7 +7,7 @@ from djangocms_text_ckeditor import __version__
 
 REQUIREMENTS = [
     'django-cms',
-    'html5lib>=0.999999999',
+    'html5lib>=1',
     'Pillow',
 ]
 
@@ -25,7 +25,6 @@ CLASSIFIERS = [
     'Framework :: Django :: 3.2',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',

@@ -926,8 +926,8 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         plugin = self._export_page()[0]['plugins'][0]
         result, children_included_in_this_content = TextPlugin.get_translation_export_content('body', plugin['data'])
 
-        self.assertEquals(result, raw_content)
-        self.assertEquals(children_included_in_this_content, [])
+        self.assertEqual(result, raw_content)
+        self.assertEqual(children_included_in_this_content, [])
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {})
@@ -949,8 +949,8 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
             parent_body
             .replace('></cms-plugin>', '>CLICK ON LINK1</cms-plugin>', 1)
         )
-        self.assertEquals(result, expected)
-        self.assertEquals(children_included_in_this_content, [child1.pk])
+        self.assertEqual(result, expected)
+        self.assertEqual(children_included_in_this_content, [child1.pk])
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1'})
@@ -976,8 +976,8 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
             .replace('></cms-plugin>', '>CLICK ON LINK1</cms-plugin>', 1)
             .replace('></cms-plugin>', '>CLICK ON LINK2</cms-plugin>', 1)
         )
-        self.assertEquals(result, expected)
-        self.assertEquals(children_included_in_this_content, [child1.pk, child2.pk])
+        self.assertEqual(result, expected)
+        self.assertEqual(children_included_in_this_content, [child1.pk, child2.pk])
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: 'CLICK ON LINK1', child2.pk: 'CLICK ON LINK2'})
@@ -1006,8 +1006,8 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
             'or <cms-plugin alt="Dummy Link Plugin - dummy link object "'
             'title="Dummy Link Plugin - dummy link object" id="{}">CLICK ON LINK2</cms-plugin> to go to link2.</p>'
         ).format(child2.pk)
-        self.assertEquals(result, expected)
-        self.assertEquals(children_included_in_this_content, [child2.pk])
+        self.assertEqual(result, expected)
+        self.assertEqual(children_included_in_this_content, [child2.pk])
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child2.pk: 'CLICK ON LINK2'})
@@ -1028,8 +1028,8 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
         expected = (
             parent_body
         )
-        self.assertEquals(result, expected)
-        self.assertEquals(children_included_in_this_content, [child1.pk])
+        self.assertEqual(result, expected)
+        self.assertEqual(children_included_in_this_content, [child1.pk])
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: ''})

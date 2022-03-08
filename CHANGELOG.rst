@@ -6,11 +6,9 @@ Unreleased
 ==========
 
 * Add dark mode feature and dark mode patch for skin moono-lisa
-
-4.0.1 (unreleased)
-==================
-
 * Added support for Django 3.2
+* Drop support for python 3.5, 3.6 and django 3.0
+* Added pre-commit hooks for developer workflow to ensure code quality
 
 
 4.0.0 (2020-09-15)

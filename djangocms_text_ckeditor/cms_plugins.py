@@ -7,10 +7,7 @@ from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.forms.fields import CharField
-from django.http import (
-    Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
-    HttpResponseRedirect,
-)
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.urls import re_path, reverse
@@ -28,15 +25,11 @@ from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 
 from . import settings
-from .forms import (
-    ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm,
-)
+from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html,
-    plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt,
-    replace_plugin_tags,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html, plugin_tags_to_id_list,
+    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
 )
 from .widgets import TextEditorWidget
 
@@ -193,11 +186,11 @@ class TextPlugin(CMSPluginBase):
         _has_do_post_copy = True
 
     @classmethod
-    def do_post_copy(self, instance, source_map):
+    def do_post_copy(cls, instance, source_map):
         ids = plugin_tags_to_id_list(instance.body)
         ids_map = {pk: source_map[pk].pk for pk in ids if pk in source_map}
         new_text = replace_plugin_tags(instance.body, ids_map)
-        self.model.objects.filter(pk=instance.pk).update(body=new_text)
+        cls.model.objects.filter(pk=instance.pk).update(body=new_text)
 
     @staticmethod
     def get_translation_export_content(field, plugin_data):
@@ -329,7 +322,7 @@ class TextPlugin(CMSPluginBase):
             # The instance is a record that points to the Text plugin
             # but is not a real text plugin instance.
             return super().add_view(
-                request, form_url, extra_context
+                request, form_url, extra_context,
             )
 
         if not self.has_add_permission(request):
@@ -395,7 +388,7 @@ class TextPlugin(CMSPluginBase):
 
     def get_admin_url_name(self, name):
         plugin_type = self.__class__.__name__.lower()
-        url_name = '%s_%s_%s' % (self.model._meta.app_label, plugin_type, name)
+        url_name = f'{self.model._meta.app_label}_{plugin_type}_{name}'
         return url_name
 
     def _get_text_plugin_from_request(self, request, data):
@@ -513,7 +506,7 @@ class TextPlugin(CMSPluginBase):
                 context,
             ),
             'placeholder': placeholder,
-            'object': instance
+            'object': instance,
         })
         return context
 

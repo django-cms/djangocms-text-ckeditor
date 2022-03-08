@@ -15,15 +15,13 @@ from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
 from cms.utils.urlutils import admin_reverse
 
-from tests.test_app.cms_plugins import DummyChildPlugin, DummyParentPlugin
-
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from djangocms_text_ckeditor.compat import get_page_placeholders
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
-    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html,
-    plugin_tags_to_id_list, plugin_to_tag,
+    _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list, plugin_to_tag,
 )
+from tests.test_app.cms_plugins import DummyChildPlugin, DummyParentPlugin
 
 from .base import BaseTestCase
 
@@ -45,14 +43,14 @@ class PluginActionsTestCase(BaseTestCase):
 
     def get_custom_admin_url(self, plugin_class, name):
         plugin_type = plugin_class.__name__.lower()
-        url_name = '%s_%s_%s' % (plugin_class.model._meta.app_label, plugin_type, name)
+        url_name = f'{plugin_class.model._meta.app_label}_{plugin_type}_{name}'
         return admin_reverse(url_name)
 
     def _add_child_plugin(self, text_plugin, plugin_type='PicturePlugin', data_suffix=None):
-        name = '{} record'.format(plugin_type)
+        name = f'{plugin_type} record'
 
         if data_suffix is not None:
-            name = '{} {}'.format(name, data_suffix)
+            name = f'{name} {data_suffix}'
 
         basic_plugins = {
             'LinkPlugin': {
@@ -73,7 +71,7 @@ class PluginActionsTestCase(BaseTestCase):
             plugin_type,
             'en',
             target=text_plugin,
-            **data
+            **data,
         )
         return plugin
 
@@ -92,7 +90,7 @@ class PluginActionsTestCase(BaseTestCase):
         return _plugin_tags_to_html(text, output_func=_do_replace)
 
     def add_plugin_to_text(self, text_plugin, plugin):
-        text_plugin.body = '%s %s' % (text_plugin.body, plugin_to_tag(plugin))
+        text_plugin.body = f'{text_plugin.body} {plugin_to_tag(plugin)}'
         text_plugin.save()
         return text_plugin
 
@@ -236,7 +234,7 @@ class PluginActionsTestCase(BaseTestCase):
                 simple_placeholder,
                 'TextPlugin',
                 'en',
-                body='Text plugin we copy child plugins to'
+                body='Text plugin we copy child plugins to',
             )
             _add_child_plugins_to_text_plugin(text_plugin)
             return text_plugin
@@ -550,7 +548,7 @@ class PluginActionsTestCase(BaseTestCase):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 200)
@@ -573,7 +571,7 @@ class PluginActionsTestCase(BaseTestCase):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 200)
@@ -608,7 +606,7 @@ class PluginActionsTestCase(BaseTestCase):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 200)
@@ -645,7 +643,7 @@ class PluginActionsTestCase(BaseTestCase):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertContains(response, '<h1>403 Forbidden</h1>', status_code=403, html=True)
@@ -678,7 +676,7 @@ class PluginActionsTestCase(BaseTestCase):
         with self.login_user_context(self.get_superuser()):
             action_token = text_plugin_class.get_action_token(request, text_plugin)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 400)
@@ -698,7 +696,7 @@ class PluginActionsTestCase(BaseTestCase):
             request = self.get_request()
             action_token = text_plugin_class.get_action_token(request, text_plugin_2)
             endpoint = self.get_custom_admin_url(TextPlugin, 'render_plugin')
-            endpoint += '?token={}&plugin={}'.format(action_token, child_plugin.pk)
+            endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
             self.assertEqual(response.status_code, 400)
@@ -724,7 +722,7 @@ class PluginActionsTestCase(BaseTestCase):
             simple_placeholder,
             'TextPlugin',
             'en',
-            body="Content",
+            body='Content',
             target=child_plugin,
         )
 
@@ -743,7 +741,7 @@ class PluginActionsTestCase(BaseTestCase):
             plugin = self._add_child_plugin(
                 text_plugin,
                 plugin_type='LinkPlugin',
-                data_suffix=i
+                data_suffix=i,
             )
 
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
@@ -766,7 +764,7 @@ class PluginActionsTestCase(BaseTestCase):
             plugin = self._add_child_plugin(
                 text_plugin,
                 plugin_type='LinkPlugin',
-                data_suffix=i
+                data_suffix=i,
             )
 
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
@@ -808,7 +806,7 @@ class PluginActionsTestCase(BaseTestCase):
             'fr',
             'test-page-fr',
             simple_page,
-            slug='test-page-fr'
+            slug='test-page-fr',
         )
 
         self.assertEqual(CMSPlugin.objects.filter(language='en').count(), 3)
@@ -899,7 +897,7 @@ class PluginActionsTestCase(BaseTestCase):
             data = {
                 'body': (
                     '<div onload="do_evil_stuff();">divcontent</div><a href="javascript:do_evil_stuff();">acontent</a>'
-                )
+                ),
             }
             response = self.client.post(endpoint, data)
             self.assertEqual(response.status_code, 200)
@@ -908,7 +906,7 @@ class PluginActionsTestCase(BaseTestCase):
 
 @unittest.skipUnless(
     HAS_DJANGOCMS_TRANSLATIONS and HAS_DJANGOCMS_TRANSFER,
-    'Optional dependencies for tests are not installed.'
+    'Optional dependencies for tests are not installed.',
 )
 class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
     def setUp(self):

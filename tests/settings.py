@@ -89,7 +89,7 @@ HELPER_SETTINGS = {
             },
             'plugin_labels': {
                 'LinkPlugin': 'Add a link',
-            }
+            },
         },
     },
     'FILE_UPLOAD_TEMP_DIR': mkdtemp(),

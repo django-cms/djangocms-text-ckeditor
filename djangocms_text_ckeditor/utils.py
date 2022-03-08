@@ -64,14 +64,14 @@ def plugin_to_tag(obj, content='', admin=False):
         plugin_class = obj.get_plugin_class()
         preview = getattr(plugin_class, 'text_editor_preview', True)
         plugin_tag = (
-            u'<cms-plugin render-plugin=%(preview)s alt="%(icon_alt)s "'
-            u'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
+            '<cms-plugin render-plugin=%(preview)s alt="%(icon_alt)s "'
+            'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
         )
         plugin_attrs['preview'] = 'true' if preview else 'false'
     else:
         plugin_tag = (
-            u'<cms-plugin alt="%(icon_alt)s "'
-            u'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
+            '<cms-plugin alt="%(icon_alt)s "'
+            'title="%(icon_alt)s" id="%(id)d">%(content)s</cms-plugin>'
         )
     return plugin_tag % plugin_attrs
 
@@ -83,7 +83,7 @@ def plugin_tags_to_id_list(text, regex=OBJ_ADMIN_RE):
 
             if plugin_id:
                 yield plugin_id
-    return [int(id) for id in _find_plugins()]
+    return [int(_id) for _id in _find_plugins()]
 
 
 def _plugin_tags_to_html(text, output_func):
@@ -101,7 +101,7 @@ def _plugin_tags_to_html(text, output_func):
         except KeyError:
             # Object must have been deleted.  It cannot be rendered to
             # end user so just remove it from the HTML altogether
-            return u''
+            return ''
         else:
             obj._render_meta.text_enabled = True
             return output_func(obj, m)
@@ -139,7 +139,7 @@ def replace_plugin_tags(text, id_dict, regex=OBJ_ADMIN_RE):
             # Object must have been deleted.  It cannot be rendered to
             # end user, or edited, so just remove it from the HTML
             # altogether
-            return u''
+            return ''
         return plugin_to_tag(plugin)
     return regex.sub(_replace_tag, text)
 
@@ -150,7 +150,7 @@ def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
     plugin_ids = plugin_tags_to_id_list(text, regex)
     plugins = CMSPlugin.objects.filter(pk__in=plugin_ids).select_related('placeholder')
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
-    return dict((plugin.pk, plugin) for plugin in plugin_list)
+    return {plugin.pk: plugin for plugin in plugin_list}
 
 
 """
@@ -171,9 +171,9 @@ configured_storage = ConfiguredStorage()
 
 
 def static_url(path):
-    '''
+    """
     Helper that prefixes a URL with STATIC_URL and cms
-    '''
+    """
     if not path:
         return ''
     return configured_storage.url(os.path.join('', path))

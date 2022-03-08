@@ -22,7 +22,7 @@ class WidgetTestCase(BaseTestCase):
     def test_sub_plugin_config(self):
         page = create_page(title='home', template='page.html', language='en')
         plugin = add_plugin(
-            get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en', body='some text'
+            get_page_placeholders(page, 'en').get(slot='content'), 'TextPlugin', 'en', body='some text',
         )
         endpoint = self.get_change_plugin_uri(plugin)
 
@@ -47,9 +47,9 @@ class WidgetTestCase(BaseTestCase):
         plugin = add_plugin(placeholder, 'TextPlugin', 'en', body='Lorem ipsum')
         test_image = self.create_filer_image_object()
         pic_plugin = add_plugin(
-            placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image
+            placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image,
         )
-        plugin.body = '%s %s' % (plugin.body, plugin_to_tag(pic_plugin))
+        plugin.body = f'{plugin.body} {plugin_to_tag(pic_plugin)}'
         plugin.save()
         page.publish('en')
         response = self.client.get(page.get_absolute_url('en'))
@@ -71,7 +71,7 @@ class WidgetTestCase(BaseTestCase):
         placeholder = get_page_placeholders(page, 'en').get(slot='content')
         add_plugin(
             placeholder, 'TextPlugin', 'en',
-            body='<span data-one="1" data-two="2">some text</span>'
+            body='<span data-one="1" data-two="2">some text</span>',
         )
         language = 'en'
         page.publish(language)
@@ -87,7 +87,7 @@ class WidgetTestCase(BaseTestCase):
         placeholder = get_page_placeholders(page, 'en').get(slot='content')
         add_plugin(
             placeholder, 'TextPlugin', 'en',
-            body='<span data-one="1" data-two="2">some text</span>'
+            body='<span data-one="1" data-two="2">some text</span>',
         )
         language = 'en'
         page.publish(language)

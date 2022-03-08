@@ -78,7 +78,7 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
         self.assertEqual('<source src="rtmp://testurl.com/">', text)
 
     def test_clean_html_with_sanitize_enabled(self):
-        old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
+        old_text_html_sanitize = settings.TEXT_HTML_SANITIZE
         settings.TEXT_HTML_SANITIZE = True
         parser = html._get_default_parser()
 
@@ -91,10 +91,10 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
         try:
             self.assertHTMLEqual('<span>foo</span>', cleaned)
         finally:
-            settings.TEXT_HTML_SANITIZE = old_TEXT_HTML_SANITIZE
+            settings.TEXT_HTML_SANITIZE = old_text_html_sanitize
 
     def test_clean_html_with_sanitize_disabled(self):
-        old_TEXT_HTML_SANITIZE = settings.TEXT_HTML_SANITIZE
+        old_text_html_sanitize = settings.TEXT_HTML_SANITIZE
         settings.TEXT_HTML_SANITIZE = False
         parser = html._get_default_parser()
 
@@ -107,4 +107,4 @@ class HtmlSanitizerAdditionalProtocolsTests(TestCase):
         try:
             self.assertHTMLEqual(original, cleaned)
         finally:
-            settings.TEXT_HTML_SANITIZE = old_TEXT_HTML_SANITIZE
+            settings.TEXT_HTML_SANITIZE = old_text_html_sanitize

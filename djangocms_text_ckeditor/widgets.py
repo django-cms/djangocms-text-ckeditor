@@ -35,10 +35,10 @@ class TextEditorWidget(forms.Textarea):
         if self.ckeditor_class not in attrs.get('class', '').join(' '):
             new_class = attrs.get('class', '') + ' %s' % self.ckeditor_class
             attrs.update({
-                'class': new_class.strip()
+                'class': new_class.strip(),
             })
         attrs.update({
-            'data-ckeditor-basepath': text_settings.TEXT_CKEDITOR_BASE_PATH
+            'data-ckeditor-basepath': text_settings.TEXT_CKEDITOR_BASE_PATH,
         })
         super().__init__(attrs)
         self.installed_plugins = installed_plugins
@@ -61,12 +61,12 @@ class TextEditorWidget(forms.Textarea):
     def media(self):
         return forms.Media(
             css={
-                'all': ('djangocms_text_ckeditor/css/cms.ckeditor.css',)
+                'all': ('djangocms_text_ckeditor/css/cms.ckeditor.css',),
             },
             js=(
                 static_with_version('cms/js/dist/bundle.admin.base.min.js'),
                 static(PATH_TO_JS),
-            )
+            ),
         )
 
     def render_textarea(self, name, value, attrs=None, renderer=None):

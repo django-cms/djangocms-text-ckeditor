@@ -2,6 +2,10 @@
 Changelog
 =========
 
+Unreleased
+==========
+
+* Add dark mode feature and dark mode patch for skin moono-lisa
 
 4.0.0 (2020-09-15)
 ==================

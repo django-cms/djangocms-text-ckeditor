@@ -8,13 +8,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ 3.7, 3.8, 3.9, ]  # latest release minus two
+        python-version: [ 3.7, 3.8, 3.9, '3.10']  # latest release minus two
         requirements-file: [
           dj22_cms37.txt,
           dj22_cms38.txt,
-          dj30_cms37.txt,
-          dj30_cms38.txt,
           dj31_cms38.txt,
+          dj32_cms39.txt
         ]
         os: [
           ubuntu-20.04,

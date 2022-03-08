@@ -24,6 +24,7 @@ class DisableMigrations(dict):
 
 
 HELPER_SETTINGS = {
+    'SECRET_KEY': 'djangocms-text-ckeditor-test-suite',
     'INSTALLED_APPS': [
         'easy_thumbnails',
         'filer',
@@ -120,7 +121,7 @@ def _helper_patch(*args, **kwargs):
 
 def test():
     from app_helper import runner
-    runner.cms('djangocms_text_ckeditor')
+    runner.cms('djangocms_text_ckeditor', extra_args=[])
 
 
 def run():

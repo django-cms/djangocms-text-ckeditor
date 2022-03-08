@@ -11,7 +11,6 @@ coverage
 django-treebeard<4.5
 django-app-helper
 tox
-wheel
 
 # IMPORTANT: latest easy-thumbnails causes error since it returns with floating point, but the tests are not prepared for this and even the lib
 easy-thumbnails==2.7.1

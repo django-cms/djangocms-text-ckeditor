@@ -1,4 +1,3 @@
-import os
 import glob
 
 src_folder = "./moono-lisa"
@@ -11,7 +10,17 @@ def replace(contents, orig, new):
     if not orig[1:].isdigit():
         contents = contents.replace(orig.upper(), var_str)
     if len(orig) == 4:
-        contents = replace(contents, "#"+contents[1]+contents[1]+contents[2]+contents[2]+contents[3]+contents[3], new)
+        contents = replace(
+            contents,
+            "#"
+            + contents[1]
+            + contents[1]
+            + contents[2]
+            + contents[2]
+            + contents[3]
+            + contents[3],
+            new,
+        )
     return contents
 
 
@@ -37,13 +46,16 @@ def update_contents(contents):
     contents = replace(contents, "#139ff7", "--dca-primary")
     return contents
 
+
 for css in glob.glob(f"{src_folder}/*.css"):
     with open(css, "r") as rd:
         with open(f"{dst_folder}/{css}", "w") as wt:
             print("Patching", css)
             contents = update_contents(rd.read())
             if "editor" in css:
-                contents += "@media(prefers-color-scheme: dark){.cke_button_icon" \
-                            "{filter:brightness(3);}}"
+                contents += (
+                    "@media(prefers-color-scheme: dark){.cke_button_icon"
+                    "{filter:brightness(3);}}"
+                )
             contents += "\n/* Patched for djangocms-text-ckeditor */\n"
             wt.write(contents)

@@ -462,8 +462,7 @@ This command also updates the file name loaded based on the file contents.
 Updating the CKEditor
 ---------------------
 
-Make sure to use the url in `build config
-<https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>_`.
+Make sure to use the url in `build config <https://github.com/divio/djangocms-text-ckeditor/blob/master/djangocms_text_ckeditor/static/djangocms_text_ckeditor/ckeditor/build-config.js#L16>`_.
 
 
 Running Tests

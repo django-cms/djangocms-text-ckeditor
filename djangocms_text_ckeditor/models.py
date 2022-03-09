@@ -9,10 +9,7 @@ from cms.utils.copy_plugins import copy_plugins_to
 
 from . import settings
 from .html import clean_html, extract_images
-from .utils import (
-    plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag,
-    replace_plugin_tags,
-)
+from .utils import plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
 
 try:
@@ -48,7 +45,7 @@ class AbstractText(CMSPlugin):
         abstract = True
 
     def __str__(self):
-        return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
+        return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate='...')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -89,7 +86,7 @@ class AbstractText(CMSPlugin):
                 referenced_plugins,
                 self.placeholder,
                 to_language=self.language,
-                parent_plugin_id=self.id
+                parent_plugin_id=self.id,
             ))
             self.add_existing_child_plugins_to_pairs(plugins_pairs)
             self.post_copy(self, plugins_pairs)
@@ -126,7 +123,7 @@ class AbstractText(CMSPlugin):
         we must replace some strings with child tag for the CKEDITOR.
         Strings are "%(_tag_child_<order>)s" with the inserted order of chidren
         """
-        replacements = dict()
+        replacements = {}
         order = 1
         for child in children:
             replacements['_tag_child_' + str(order)] = plugin_to_tag(child)

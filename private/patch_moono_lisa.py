@@ -48,7 +48,7 @@ def update_contents(contents):
 
 
 for css in glob.glob(f"{src_folder}/*.css"):
-    with open(css, "r") as rd:
+    with open(css) as rd:
         with open(f"{dst_folder}/{css}", "w") as wt:
             print("Patching", css)
             contents = update_contents(rd.read())

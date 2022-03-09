@@ -28,11 +28,11 @@ TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
 # This would make sure correct urls are created for
 # when static files are hosted on django and on a CDN. Old code was working fine for Django but not for CDNs.
 TEXT_CKEDITOR_BASE_PATH = getattr(
-    settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/')
+    settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/'),
 )
 TEXT_AUTO_HYPHENATE = getattr(settings, 'TEXT_AUTO_HYPHENATE', True)
-TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _("Text"))
-TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _("Generic"))
+TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _('Text'))
+TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _('Generic'))
 
 ALLOW_TOKEN_PARSERS = (
     'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',

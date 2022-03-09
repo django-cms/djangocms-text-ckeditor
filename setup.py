@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
 from djangocms_text_ckeditor import __version__
@@ -19,13 +21,12 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Framework :: Django',
     'Framework :: Django :: 2.2',
-    'Framework :: Django :: 3.0',
     'Framework :: Django :: 3.1',
     'Framework :: Django :: 3.2',
     'Framework :: Django CMS',
@@ -39,6 +40,8 @@ CLASSIFIERS = [
     'Topic :: Software Development :: Libraries',
 ]
 
+this_directory = Path(__file__).parent
+long_description = (this_directory / 'README.rst').read_text()
 
 setup(
     name='djangocms-text-ckeditor',
@@ -50,11 +53,13 @@ setup(
     url='https://github.com/django-cms/djangocms-text-ckeditor',
     license='BSD-3-Clause',
     description='Text Plugin for django CMS with CKEditor support',
-    long_description=open('README.rst').read(),
-    packages=find_packages(),
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
+    packages=find_packages(exclude=['tests']),
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
     classifiers=CLASSIFIERS,
+    python_requires='>=3.7',
     test_suite='tests.settings.test',
 )

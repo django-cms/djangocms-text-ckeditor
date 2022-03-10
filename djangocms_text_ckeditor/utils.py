@@ -123,7 +123,7 @@ def plugin_tags_to_admin_html(text, context):
 
 def plugin_tags_to_db(text):
     def _strip_plugin_content(obj, match):
-        return plugin_to_tag(obj)
+        return plugin_to_tag(obj).strip()
     return _plugin_tags_to_html(text, output_func=_strip_plugin_content)
 
 

@@ -2,14 +2,31 @@
 Changelog
 =========
 
-Unreleased
-==========
+5.0.0 (2022-03-22)
+==================
 
-* Add dark mode feature and dark mode patch for skin moono-lisa
-* Added support for Django 3.2
-* Drop support for python 3.5, 3.6 and django 3.0
-* Added pre-commit hooks for developer workflow to ensure code quality
+* Drop support for Python 3.5 and 3.6
+* Drop support for django 3.0
+* Added support for Python 3.9 and 3.10
+* Added support for django 3.2
+* Added support for django-cms 3.9 and 3.10
 
+New features
+------------
+* Upgrade ckeditor to 4.17.2 in `595 <https://github.com/django-cms/djangocms-text-ckeditor/pull/595>`_
+* Dark mode support for standard editor UI (a.k.a. "skin") moono-lisa in `592 <https://github.com/django-cms/djangocms-text-ckeditor/pull/592>`_
+* Basic dark mode compatibility and fix for source edit bug in `590 <https://github.com/django-cms/djangocms-text-ckeditor/pull/590>`_
+
+Fixes and other changes
+-----------------------
+* Copying plugins inside ckeditor creates a child plugin copy in `569 <https://github.com/django-cms/djangocms-text-ckeditor/pull/569>`_
+* 504 copy paste plugins inside ckeditor refer to same instance in `572 <https://github.com/django-cms/djangocms-text-ckeditor/pull/572>`_
+* Use assertEqual instead of assertEquals for Python 3.11 compatibility in `580 <https://github.com/django-cms/djangocms-text-ckeditor/pull/580>`_
+* fix breaking tests in `585 <https://github.com/django-cms/djangocms-text-ckeditor/pull/585>`_
+* Update Node.js to version 16 LTS and Gulpfile upgrade as well in `593 <https://github.com/django-cms/djangocms-text-ckeditor/pull/593>`_
+* Replace ``force_text`` with ``force_str`` in `546 <https://github.com/django-cms/djangocms-text-ckeditor/pull/546>`_
+* Fix django 3.2 tests, pypi release actions and pre-commit in `594 <https://github.com/django-cms/djangocms-text-ckeditor/pull/594>`_
+* Remove excessive spaces (`#531 <https://github.com/django-cms/djangocms-text-ckeditor/issues/531>`_) in `597 <https://github.com/django-cms/djangocms-text-ckeditor/pull/597>`_
 
 4.0.0 (2020-09-15)
 ==================

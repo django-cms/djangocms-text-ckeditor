@@ -2,7 +2,12 @@
 Changelog
 =========
 
-5.0.0 (2022-03-22)
+5.0.1 (2022-03-24)
+==================
+
+* Generated new static bundle.
+
+5.0.0 (2022-03-24)
 ==================
 
 * Drop support for Python 3.5 and 3.6

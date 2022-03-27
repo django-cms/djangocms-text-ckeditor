@@ -1,4 +1,4 @@
-from cms.cms_toolbars import BasicToolbar, CMSToolbar
+from cms.cms_toolbars import CMSToolbar
 from cms.toolbar_pool import toolbar_pool
 
 

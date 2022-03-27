@@ -2,9 +2,15 @@
 django CMS Text CKEditor
 ========================
 
-|pypi| |build| |coverage|
+|pypi| |coverage| |python| |django| |djangocms|
 
-CKEditor is a ready-for-use HTML text editor designed to simplify web content
+
+.. note::
+
+        Version 5 of this package does not include a move to CKEditor version 5
+
+
+CKEditor (v4) is a ready-for-use HTML text editor designed to simplify web content
 creation. It's a WYSIWYG editor that brings common word processor features
 directly to your web pages. Enhance your website experience with our community
 maintained editor. This package aims to integrate CKEditor into django CMS as
@@ -52,11 +58,9 @@ Documentation
 =============
 
 See ``REQUIREMENTS`` in the `setup.py <https://github.com/divio/djangocms-text-ckeditor/blob/master/setup.py>`_
-file for additional dependencies:
+file for additional dependencies listed in the
 
-|python| |django| |djangocms|
-
-The current integrated Version of CKEditor is: **4.7.3**
+The current integrated Version of CKEditor is: **4.17.2**
 
 For a full documentation visit: http://ckeditor.com/
 
@@ -480,12 +484,12 @@ You can run tests by executing::
     :target: http://badge.fury.io/py/djangocms-text-ckeditor
 .. |build| image:: https://travis-ci.org/divio/djangocms-text-ckeditor.svg?branch=master
     :target: https://travis-ci.org/divio/djangocms-text-ckeditor
-.. |coverage| image:: https://codecov.io/gh/divio/djangocms-text-ckeditor/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/divio/djangocms-text-ckeditor
+.. |coverage| image:: https://codecov.io/gh/django-cms/djangocms-text-ckeditor/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/django-cms/djangocms-text-ckeditor
 
-.. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
+.. |python| image:: https://img.shields.io/badge/python-3.7+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/
-.. |django| image:: https://img.shields.io/badge/django-2.2,%203.0,%203.1-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-2.2,%203.1,%203.2-blue.svg
     :target: https://www.djangoproject.com/
 .. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
     :target: https://www.django-cms.org/

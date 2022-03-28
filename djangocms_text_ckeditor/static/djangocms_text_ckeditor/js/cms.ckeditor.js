@@ -65,6 +65,9 @@
                 this.options.extraPlugins = this.options.extraPlugins +=
                     ',cmsplugins,cmswidget,cmsdialog,cmsresize,widget';
 
+                CMS.CKEditor = CMS.CKEditor || {};
+                CMS.CKEditor.static_url = this.options.settings.static_url;
+
                 document.createElement('cms-plugin');
                 CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
                 CKEDITOR.dtd.$inline['cms-plugin'] = 1;
@@ -91,7 +94,7 @@
             var that = this;
             var win = window.parent || window;
             // 70px is hardcoded to make it more performant. 20px + 20px - paddings, 30px label height
-            var TOOLBAR_HEIGHT_WITH_PADDINGS = 70;
+                var TOOLBAR_HEIGHT_WITH_PADDINGS = 63;
 
             if (this._isAloneInModal()) {
                 that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - TOOLBAR_HEIGHT_WITH_PADDINGS);
@@ -191,6 +194,9 @@
         _initAll: function () {
             var dynamics = [];
 
+            if (!window._cmsCKEditors) {
+                return;
+            }
             window._cmsCKEditors.forEach(function (editorConfig) {
                 var selector = editorConfig[0];
 

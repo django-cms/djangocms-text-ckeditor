@@ -1,44 +1,53 @@
 {% load i18n l10n static cms_static sekizai_tags %}
 
-<script>
-    window._cmsCKEditors = window._cmsCKEditors || [];
-    window._cmsCKEditors.push([
-        '{{ ckeditor_selector }}',
-        {{ settings|safe }},
-        {
-            'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
-            'add_plugin_url': '{{ placeholder.get_add_url }}',
-            {% if widget.action_token %}
-            'action_token': '{{ widget.action_token }}',
-            {% endif %}
-            {% if widget.render_plugin_url %}
-            'render_plugin_url': '{{ widget.render_plugin_url }}',
-            {% endif %}
-            {% if widget.cancel_url and widget.action_token %}
-            'cancel_plugin_url': '{{ widget.cancel_url }}',
-            {% endif %}
-            'delete_on_cancel': {{ widget.delete_on_cancel|yesno:"true,false" }},
-            'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
-            'plugin_id': {{ plugin_pk|default:"''"|unlocalize }},
-            'plugin_language': '{{ plugin_language }}',
-            'lang': {
-                'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-                'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
-                'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
-                'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
-            },
-            'plugins': [
+<script class="ck-settings"
+        data-static_url="{{ STATIC_URL }}djangocms_text_ckeditor"
+        data-add_plugin_url="{{ placeholder.get_add_url }}"
+    {% if widget.action_token %}
+        data-action_token="{{ widget.action_token }}"
+    {% endif %}
+    {% if widget.render_plugin_url %}
+        data-render_plugin_url="{{ widget.render_plugin_url }}"
+    {% endif %}
+    {% if widget.cancel_url and widget.action_token %}
+        data-cancel_plugin_url="{{ widget.cancel_url }}"
+    {% endif %}
+        data-delete_on_cancel="{{ widget.delete_on_cancel|yesno:"true,false" }}"
+        data-placeholder_id="{{ placeholder.pk|default:"''"|unlocalize }}"
+        data-plugin_id="{{ plugin_pk|default:"''"|unlocalize }}"
+        data-plugin_language="{{ plugin_language }}"
+        data-lang='{
+                "toolbar": "{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}",
+                "add": "{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}",
+                "edit": "{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}",
+                "aria": "{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}"
+            }'
+        data-plugins='[
                 {% regroup installed_plugins by module as module_list %}
                 {% for module in module_list %}
-                    { group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
+                    { "group": "{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}",
+                    "items": [
                         {% for plugin in module.list %}
-                            { 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.last %},{% endif %}
+                            { "title": "{% filter escapejs %}{{ plugin.name }}{% endfilter %}",
+                              "type": "{% filter escapejs %}{{ plugin.value }}{% endfilter %}" }{% if not forloop.last %},{% endif %}
                         {% endfor %}
                     ]}{% if not forloop.last %},{% endif %}
                 {% endfor %}
-            ]{% if not placeholder %},
-            'toolbar': 'HTMLField'
-            {% endif %}
+            ]'>
+    (function () {
+        window._cmsCKEditors = window._cmsCKEditors || [];
+        var settings = {};
+        for (var attr in document.currentScript.dataset) {
+            settings[attr] = document.currentScript.dataset[attr];
+            if (attr === "lang" || attr === "plugins") {
+                settings[attr] = JSON.parse(settings[attr])
+            }
         }
-    ]);
+        settings.toolbar = "HTMLField";
+        window._cmsCKEditors.push([
+            '{{ ckeditor_selector }}',
+            {{ settings|safe }},
+            settings,
+        ]);
+    })();
 </script>

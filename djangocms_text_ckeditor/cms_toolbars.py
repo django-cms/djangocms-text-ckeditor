@@ -1,6 +1,8 @@
 from cms.cms_toolbars import CMSToolbar
 from cms.toolbar_pool import toolbar_pool
 from django import forms
+from .widgets import PATH_TO_JS
+
 
 @toolbar_pool.register
 class InlineEditingToolbar(CMSToolbar):
@@ -8,11 +10,7 @@ class InlineEditingToolbar(CMSToolbar):
     def media(self):
         if self.toolbar.edit_mode_active:
             return forms.Media(
-                js = (
-                    "djangocms_text_ckeditor/ckeditor/ckeditor.js",
-                    "djangocms_text_ckeditor/js/cms.inline-editor.js",
-                )
+                js=(PATH_TO_JS,)
             )
         return forms.Media()
-
 

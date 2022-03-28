@@ -1,6 +1,6 @@
 (function ($) {
     window.CKEDITOR_BASEPATH = $('[data-ckeditor-basepath]').attr('data-ckeditor-basepath') ||
-        "../ckeditor_plugins/";
+     "/static/djangocms_text_ckeditor/ckeditor/";
 
     // CMS.$ will be passed for $
     /**
@@ -14,7 +14,7 @@
             // ckeditor default settings, will be overwritten by CKEDITOR_SETTINGS
             language: 'en',
             skin: 'moono-lisa',
-            toolbar: [
+            toolbar_CMS: [
                 ['Undo', 'Redo'],
                 ['cmsplugins', 'cmswidget', '-', 'ShowBlocks'],
                 ['Format', 'Styles'],
@@ -29,7 +29,7 @@
                 ['Outdent', 'Indent', '-', 'Blockquote', '-', 'Link', 'Unlink', '-', 'Table'],
                 ['Source']
             ],
-
+            toolbar: "CMS",
             allowedContent: true,
             toolbarCanCollapse: false,
             removePlugins: 'resize',
@@ -45,10 +45,12 @@
                 this.options = $.extend(false, {
                     settings: settings
                 }, this.options, {});
-
                 // add extra plugins that we absolutely must have
                 // this.options.extraPlugins = this.options.extraPlugins +=
-                //     ',cmsplugins,cmswidget,cmsdialog,widget';
+                //   ',cmsplugins,cmswidget,cmsdialog,widget';
+
+                CMS.CKEditor = CMS.CKEditor || {};
+                CMS.CKEditor.static_url = this.options.settings.static_url;
 
                 document.createElement('cms-plugin');
                 CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
@@ -76,10 +78,10 @@
                     id: id,
                     editor: editor,
                 };
-                wrapper.on('dblclick', (event) => {
+                wrapper.on('dblclick', function (event) {
                     event.stopPropagation();
                 });
-                wrapper.on('pointerover', (event) => {
+                wrapper.on('pointerover', function (event) {
                     event.stopPropagation();
                 });
                 wrapper.on("blur", function click_outside(event) {
@@ -117,7 +119,6 @@
                 body: data,
                 _save: "Save"
             }, function (response) {
-                console.log("saved", id);
                 if (action !== undefined) {
                     action();
                 }
@@ -177,7 +178,6 @@
         _initAll: function () {
             CMS._plugins.forEach(function (plugin) {
                 if (plugin[1].plugin_type === "TextPlugin") {
-                    console.log("Load editor for", plugin[1].plugin_id);
                     var url = plugin[1].urls.edit_plugin,
                         id = plugin[1].plugin_id,
                         container_id = "_ck_inline-" + plugin[1].plugin_id;
@@ -185,20 +185,29 @@
                     if (elements.length > 0) {
                         $.get(url, {}, function (response) {
                             // get form incl. csrf token
-                            var csrfmiddlewaretoken = $(response).find('input[name="csrfmiddlewaretoken"]');
+                            var responseDOM = $(response);
+                            var csrfmiddlewaretoken = responseDOM.find('input[name="csrfmiddlewaretoken"]');
+                            var content = responseDOM.find('textarea[name="body"]');
+                            window.CKEDITOR_BASEPATH = responseDOM.find('[data-ckeditor-basepath]').attr('data-ckeditor-basepath');
                             if (csrfmiddlewaretoken) {  // success <=> middlewaretoken
                                 elements = elements
                                         .removeClass('cms-plugin')
                                         .removeClass("cms-plugin-" + id);
                                 var wrapper = elements.wrapAll("<div class='cms-ckeditor-wrapper' contenteditable='true'></div>").parent();
                                 wrapper.addClass('cms-plugin').addClass("cms-plugin-" + id);
-                                CMS.CKInlineEditor.init(wrapper,
+                                wrapper.html(content.val());
+                                var settings = {},
+                                    settings_script_tag = responseDOM.find(".ck-settings")[0];
+                                for (var attr in settings_script_tag.dataset) {
+                                    settings[attr] = settings_script_tag.dataset[attr];
+                                    if (attr === "lang" || attr === "plugins") {
+                                        settings[attr] = JSON.parse(settings[attr])
+                                    }
+        }                       CMS.CKInlineEditor.init(wrapper,
                                     id,
                                     url,
                                     csrfmiddlewaretoken.val(),
-                                    {
-                                        static_url: '/static'
-                                    });
+                                    settings);
                             }
                         });
                     }

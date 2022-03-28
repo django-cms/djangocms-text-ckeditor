@@ -1,6 +1,8 @@
+from django import forms
+
 from cms.cms_toolbars import CMSToolbar
 from cms.toolbar_pool import toolbar_pool
-from django import forms
+
 from .widgets import PATH_TO_JS
 
 
@@ -13,4 +15,3 @@ class InlineEditingToolbar(CMSToolbar):
                 js=(PATH_TO_JS,)
             )
         return forms.Media()
-

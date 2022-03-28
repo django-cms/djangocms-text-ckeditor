@@ -1,6 +1,6 @@
 (function ($) {
     window.CKEDITOR_BASEPATH = $('[data-ckeditor-basepath]').attr('data-ckeditor-basepath') ||
-        "/djangocms_text_ckeditor/ckeditor_plugins/";
+        "../ckeditor_plugins/";
 
     // CMS.$ will be passed for $
     /**
@@ -37,56 +37,58 @@
         },
 
         init: function (wrapper, id, url, csrfmiddlewaretoken, settings) {
-            this.container = wrapper;
-            this.container.data('ckeditor-initialized', true);
-            // add additional settings to options
-            // this.options.toolbar = {}.toolbar;
-            this.options = $.extend(false, {
-                settings: settings
-            }, this.options, {});
+            if(wrapper !== undefined ) {
+                this.container = wrapper;
+                this.container.data('ckeditor-initialized', true);
+                // add additional settings to options
+                // this.options.toolbar = {}.toolbar;
+                this.options = $.extend(false, {
+                    settings: settings
+                }, this.options, {});
 
-            // add extra plugins that we absolutely must have
-            // this.options.extraPlugins = this.options.extraPlugins +=
-            //     ',cmsplugins,cmswidget,cmsdialog,widget';
+                // add extra plugins that we absolutely must have
+                // this.options.extraPlugins = this.options.extraPlugins +=
+                //     ',cmsplugins,cmswidget,cmsdialog,widget';
 
-            document.createElement('cms-plugin');
-            CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
-            CKEDITOR.dtd.$inline['cms-plugin'] = 1;
-            // has to be here, otherwise extra <p> tags appear
-            CKEDITOR.dtd.$nonEditable['cms-plugin'] = 1;
-            CKEDITOR.dtd.$transparent['cms-plugin'] = 1;
-            CKEDITOR.dtd.body['cms-plugin'] = 1;
+                document.createElement('cms-plugin');
+                CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
+                CKEDITOR.dtd.$inline['cms-plugin'] = 1;
+                // has to be here, otherwise extra <p> tags appear
+                CKEDITOR.dtd.$nonEditable['cms-plugin'] = 1;
+                CKEDITOR.dtd.$transparent['cms-plugin'] = 1;
+                CKEDITOR.dtd.body['cms-plugin'] = 1;
 
-            // add additional plugins (autoloads plugins.js)
-            CKEDITOR.skin.addIcon('cmsplugins', settings.static_url +
-                '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg');
+                // add additional plugins (autoloads plugins.js)
+                CKEDITOR.skin.addIcon('cmsplugins', settings.static_url +
+                    '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg');
 
-            // create ckeditor
-            CKEDITOR.disableAutoInline = true;
-            var editor = CKEDITOR.inline(wrapper[0], this.options);
-            this.editor = editor;
-            if(id in CMS.CKInlineEditors) {
-                CMS.CKInlineEditors[id].editor.destroy(false);
+                // create ckeditor
+                CKEDITOR.disableAutoInline = true;
+                var editor = CKEDITOR.inline(wrapper[0], this.options);
+                this.editor = editor;
+                if (id in CMS.CKInlineEditors) {
+                    CMS.CKInlineEditors[id].editor.destroy(false);
+                }
+                CMS.CKInlineEditors[id] = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    url: url,
+                    wrapper: wrapper,
+                    id: id,
+                    editor: editor,
+                };
+                wrapper.on('dblclick', (event) => {
+                    event.stopPropagation();
+                });
+                wrapper.on('pointerover', (event) => {
+                    event.stopPropagation();
+                });
+                wrapper.on("blur", function click_outside(event) {
+                    CMS.CKInlineEditor.save_data(id, editor.getData());
+                });
+
+                // add additional styling
+                CKEDITOR.on('instanceReady', $.proxy(CMS.CKInlineEditor, 'setup'));
             }
-            CMS.CKInlineEditors[id] = {
-                csrfmiddlewaretoken: csrfmiddlewaretoken,
-                url: url,
-                wrapper: wrapper,
-                id: id,
-                editor: editor,
-            };
-            wrapper.on('dblclick', (event) => {
-                    event.stopPropagation();
-                });
-            wrapper.on('pointerover', (event) => {
-                    event.stopPropagation();
-                });
-            wrapper.on("blur", function click_outside(event) {
-                CMS.CKInlineEditor.save_data(id, editor.getData());
-            });
-
-            // add additional styling
-            CKEDITOR.on('instanceReady', $.proxy(CMS.CKInlineEditor, 'setup'));
         },
 
         // setup is called after ckeditor has been initialized
@@ -179,25 +181,27 @@
                     var url = plugin[1].urls.edit_plugin,
                         id = plugin[1].plugin_id,
                         container_id = "_ck_inline-" + plugin[1].plugin_id;
-
-                    $.get(url, {}, function (response) {
-                        // get form incl. csrf token
-                        var csrfmiddlewaretoken = $(response).find('input[name="csrfmiddlewaretoken"]');
-                        if (csrfmiddlewaretoken) {  // success <=> middlewaretoken
-                            var elements = $(".cms-plugin.cms-plugin-" + id)
-                                    .removeClass('cms-plugin')
-                                    .removeClass("cms-plugin-" + id),
-                                wrapper = elements.wrapAll("<div class='cms-ckeditor-wrapper' contenteditable='true'></div>").parent();
-                            wrapper.addClass('cms-plugin').addClass("cms-plugin-" + id);
-                            CMS.CKInlineEditor.init(wrapper,
-                                id,
-                                url,
-                                csrfmiddlewaretoken.val(),
-                                {
-                                    static_url: '/static'
-                            });
-                        }
-                    });
+                    var elements = $(".cms-plugin.cms-plugin-" + id);
+                    if (elements.length > 0) {
+                        $.get(url, {}, function (response) {
+                            // get form incl. csrf token
+                            var csrfmiddlewaretoken = $(response).find('input[name="csrfmiddlewaretoken"]');
+                            if (csrfmiddlewaretoken) {  // success <=> middlewaretoken
+                                elements = elements
+                                        .removeClass('cms-plugin')
+                                        .removeClass("cms-plugin-" + id);
+                                var wrapper = elements.wrapAll("<div class='cms-ckeditor-wrapper' contenteditable='true'></div>").parent();
+                                wrapper.addClass('cms-plugin').addClass("cms-plugin-" + id);
+                                CMS.CKInlineEditor.init(wrapper,
+                                    id,
+                                    url,
+                                    csrfmiddlewaretoken.val(),
+                                    {
+                                        static_url: '/static'
+                                    });
+                            }
+                        });
+                    }
                 }
             });
         },

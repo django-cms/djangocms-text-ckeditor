@@ -46,8 +46,8 @@
                     settings: settings
                 }, this.options, {});
                 // add extra plugins that we absolutely must have
-                // this.options.extraPlugins = this.options.extraPlugins +=
-                //   ',cmsplugins,cmswidget,cmsdialog,widget';
+                this.options.extraPlugins = this.options.extraPlugins +=
+                   ',cmsplugins,cmswidget,cmsdialog,widget';
 
                 CMS.CKEditor = CMS.CKEditor || {};
                 CMS.CKEditor.static_url = this.options.settings.static_url;

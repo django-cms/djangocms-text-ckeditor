@@ -50,7 +50,6 @@ const PROJECT_PATTERNS = {
 const JS_BUNDLE = [
     PROJECT_PATH.js + '/pre.js',
     PROJECT_PATH.js + '/cms.ckeditor.js',
-    PROJECT_PATH.js + '/cms.inline.js',
     PROJECT_PATH.js + '/../ckeditor/ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmswidget/plugin.js',
     PROJECT_PATH.js + '/../ckeditor_plugins/cmsdialog/plugin.js',

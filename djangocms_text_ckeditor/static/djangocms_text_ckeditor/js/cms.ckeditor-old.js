@@ -50,14 +50,13 @@
             removePlugins: 'resize',
             extraPlugins: ''
         },
-
         static_url: '/static/djangocms-text-ckeditor/',
         ckeditor_basepath: '/static/djangocms-text-ckeditor/ckeditor/',
-        CSS: [],
+        CSS: null,
         editors: {},
 
 
-        init: function (container, mode, options, settings) {
+        init: function (container, options, settings) {
             this.container = $(container);
             this.container.data('ckeditor-initialized', true);
             // add additional settings to options
@@ -69,6 +68,9 @@
             // add extra plugins that we absolutely must have
             this.options.extraPlugins = this.options.extraPlugins +=
                 ',cmsplugins,cmswidget,cmsdialog,cmsresize,widget';
+
+            CMS.CKEditor = CMS.CKEditor || {};
+            CMS.CKEditor.static_url = this.options.settings.static_url;
 
             document.createElement('cms-plugin');
             CKEDITOR.dtd['cms-plugin'] = CKEDITOR.dtd.div;
@@ -82,25 +84,11 @@
             CKEDITOR.skin.addIcon('cmsplugins', settings.static_url +
                 '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg');
 
-            if (mode === 'admin') {
-                // render ckeditor
-                this.editor = CKEDITOR.replace(container, this.options);
+            // render ckeditor
+            this.editor = CKEDITOR.replace(container, this.options);
 
-                // add additional styling
-                CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setupAdmin'));
-            } else {
-                this.editor = CKEDITOR.inline(container, this.options);
-                CKEDITOR.on('instanceReady', settings.callback);
-                CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setupInline'));
-            }
-            CMS.CKEditor.editors[settings.plugin_id] = {
-                editor: this.editor,
-                options: options,
-                settings: settings,
-                container: container,
-                changed: false
-            };
-
+            // add additional styling
+            CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setup'));
         },
 
         initInlineEditors: function () {
@@ -125,7 +113,6 @@
                                 var wrapper = elements
                                     .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
                                     .parent(),
-                                    settings = {},
                                     options = {},
                                     settings_script_tag = responseDOM.find('.ck-settings')[0];
 
@@ -135,45 +122,35 @@
                                 wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                                 wrapper.html(content.val());
                                 for (var attr in settings_script_tag.dataset) {
-                                    settings[attr] = settings_script_tag.dataset[attr];
-                                    if (attr === 'lang' || attr === 'plugins') {
-                                        settings[attr] = JSON.parse(settings[attr]);
-                                    } else if (attr === 'options') {
-                                        options = JSON.parse(settings[attr]);
-                                        delete settings[attr];
+                                    options[attr] = settings_script_tag.dataset[attr];
+                                    if (attr === 'lang' || attr === 'plugins' || attr === "settings") {
+                                        options[attr] = JSON.parse(options[attr]);
                                     }
                                 }
-                                settings.callback = function () {
-                                    var styles = $('style[data-cke="true"]');
-
-                                    CMS.CKEditor.editors[id].editor.on('change', function () {
-                                        CMS.CKEditor.editors[id].changed = true;
-                                        console.log(id, "changed");
-                                    });
-                                    if (styles.length > 0) {
-                                        CMS.CKEditor5.CSS = styles.clone();
-                                    }
-                                    wrapper.on('dblclick', function (event) {
-                                        event.stopPropagation();
-                                    });
-                                    wrapper.on('pointerover', function (event) {
-                                        event.stopPropagation();
-                                    });
-                                    wrapper.on('blur', function click_outside() {
-                                        CMS.CKEditor.save_data(id);
-                                    });
-                                };
-                                settings.csrfmiddlewaretoken = csrfmiddlewaretoken.val();
-                                settings.url = url;
-                                if (options.title === undefined) {
-                                    options.title = "Click to edit";
-                                };
-
                                 CMS.CKEditor.init(
                                     wrapper[0],
-                                    'inline',
                                     options,
-                                    settings
+                                    {
+                                        editor: CKEDITOR.InlineEditor,
+                                        url: url,
+                                        csrfmiddlewaretoken: csrfmiddlewaretoken.val(),
+                                        callback: function () {
+                                            var styles = $('style[data-cke="true"]');
+
+                                            if (styles.length > 0) {
+                                                CMS.CKEditor5.CSS = styles.clone();
+                                            }
+                                            wrapper.on('dblclick', function (event) {
+                                                event.stopPropagation();
+                                            });
+                                            wrapper.on('pointerover', function (event) {
+                                                event.stopPropagation();
+                                            });
+                                            wrapper.on('blur', function click_outside() {
+                                                CMS.CKEditor5.save_data(id);
+                                            });
+                                         }
+                                    }
                                 );
                             }
                         });
@@ -188,10 +165,9 @@
             if (instance.changed) {
                 var data = instance.editor.getData();
 
-                console.log("Saving", id);
-                CMS.CKEditor.editors[id].changed = false;
-               $.post(instance.settings.url, {  // send changes
-                    csrfmiddlewaretoken: instance.settings.csrfmiddlewaretoken,
+                console.log('save called', id, instance.setup);
+                $.post(instance.setup.url, {  // send changes
+                    csrfmiddlewaretoken: instance.setup.csrfmiddlewaretoken,
                     body: data,
                     _save: 'Save'
                 }, function (response) {
@@ -201,15 +177,16 @@
                     // var scripts = $(response).find("script").addClass("cms-ckeditor5-result");
                     // $("body").append(scripts);
                 }).fail(function (error) {
-                    CMS.CKEditor.editors[id].changed = true;
-                    console.error(error);
-                    alert("Error saving data" + error);
+                    console.log(error);
+                    alert("Error saving data" + error)
                 });
             }
+            CMS.CKEditor5.editors[id].changed = false;
         },
 
+
         // setup is called after ckeditor has been initialized
-        setupAdmin: function () {
+        setup: function () {
             // auto maximize modal if alone in a modal
             var that = this;
             var win = window.parent || window;
@@ -246,16 +223,6 @@
             this._resizing();
         },
 
-        setupInline: function () {
-            $("link[rel='stylesheet'][type='text/css'][href*='ckeditor'").each(
-                function (index, element) {
-                    if (!CMS.CKEditor.CSS.includes(element.href)) {
-                        CMS.CKEditor.CSS.push(element.href);
-                    }
-                }
-            );
-        },
-
         styles: function () {
             // add styling to source and fullscreen view
             $('.cke_button__maximize, .cke_button__source').parent()
@@ -280,7 +247,8 @@
             var body = this.container.closest('body');
 
             // return true if the ckeditor is alone in a modal popup
-            return body.is('.app-djangocms_text_ckeditor.model-text');
+            return body.is('.app-djangocms_text_ckeditor.model-text') || // Django >= 1.7
+                body.is('.djangocms_text_ckeditor-text'); // Django < 1.7
         },
 
         /**
@@ -320,20 +288,19 @@
             }
         },
 
-        initAdminEditors: function () {
-            window._cmsCKEditors = window._cmsCKEditors || [];
+        _initAll: function () {
             var dynamics = [];
 
+            if (!window._cmsCKEditors) {
+                return;
+            }
             window._cmsCKEditors.forEach(function (editorConfig) {
-                if (editorConfig[0].match(/__prefix__/)) {
+                var selector = editorConfig[0];
+
+                if (selector.match(/__prefix__/)) {
                     dynamics.push(editorConfig);
                 } else {
-                    CMS.CKEditor.init(
-                        document.getElementById(editorConfig[0]),
-                        'admin',
-                        editorConfig[1],
-                        editorConfig[2]
-                    );
+                    CMS.CKEditor.init(editorConfig[0], editorConfig[1], editorConfig[2]);
                 }
             });
 
@@ -350,39 +317,19 @@
                     // in case there are multiple different inlines we need to check
                     // newly added one against all of them
                     dynamics.forEach(function (config) {
-                        var selector = config[0].id;
+                        var selector = config[0];
                         var regex = new RegExp(selector.replace('__prefix__', '\\d+'));
 
                         if (containerId.match(regex)) {
-                            CMS.CKEditor5.init(
-                                document.getElementById(containerId),
-                                config[1],
-                                config[2]
-                            );
+                            CMS.CKEditor.init(containerId, config[1], config[2]);
                         }
                     });
                 });
             });
-        },
-
-
-        _initAll: function () {
-            CMS.CKEditor.initInlineEditors();
-            CMS.CKEditor.initAdminEditors();
-        },
-
-        _resetInlineEditors: function () {
-            CMS.CKEditor.CSS.forEach(function (stylefile) {
-                if($("link[href='"+stylefile+"']").length === 0) {
-                    $("head").append($("<link rel='stylesheet' type='text/css' href='"+stylefile+"'>"))
-                }
-            });
-            CMS.CKEditor._initAll();
         }
     };
 
     setTimeout(function init() {
         CMS.CKEditor._initAll();
     }, 0);
-    $(window).on('cms-content-refresh', CMS.CKEditor._resetInlineEditors);
 })(CMS.$);

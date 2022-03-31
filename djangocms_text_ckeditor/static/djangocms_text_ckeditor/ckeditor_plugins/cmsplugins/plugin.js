@@ -145,11 +145,11 @@
             };
 
             this.editor.on('doubleclick', handleEdit);
-            this.editor.on('instanceReady', function () {
+/*            this.editor.on('instanceReady', function () {
                 CMS.$('cms-plugin', CMS.$('iframe.cke_wysiwyg_frame')[0]
                     .contentWindow.document.documentElement).on('click touchend', handleEdit);
             });
-
+*/
             this.setupDataProcessor();
         },
 

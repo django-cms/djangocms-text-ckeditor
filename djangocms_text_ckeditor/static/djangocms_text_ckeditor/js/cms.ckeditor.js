@@ -148,7 +148,6 @@
 
                                     CMS.CKEditor.editors[id].editor.on('change', function () {
                                         CMS.CKEditor.editors[id].changed = true;
-                                        console.log(id, "changed");
                                     });
                                     if (styles.length > 0) {
                                         CMS.CKEditor5.CSS = styles.clone();
@@ -160,7 +159,17 @@
                                         event.stopPropagation();
                                     });
                                     wrapper.on('blur', function click_outside() {
-                                        CMS.CKEditor.save_data(id);
+                                        setTimeout(function () {
+                                            // avoid save when clicking on editor dialogs or toolbar
+                                            if (!document.activeElement.classList.contains('cke_panel_frame') &&
+                                                !document.activeElement.classList.contains('cke_dialog_ui_button')) {
+                                                CMS.CKEditor.save_data(id);
+                                            }
+                                        }, 0);
+
+                                    });
+                                    wrapper.on('focus', function click_outside() {
+                                        CMS.CKEditor._highlight_Textplugin(id);
                                     });
                                 };
                                 settings.csrfmiddlewaretoken = csrfmiddlewaretoken.val();
@@ -185,12 +194,13 @@
         save_data: function (id, action) {
             var instance = CMS.CKEditor.editors[id];
 
+            console.log("saving", id, "in editor", instance);
             if (instance.changed) {
                 var data = instance.editor.getData();
 
                 console.log("Saving", id);
                 CMS.CKEditor.editors[id].changed = false;
-               $.post(instance.settings.url, {  // send changes
+                $.post(instance.settings.url, {  // send changes
                     csrfmiddlewaretoken: instance.settings.csrfmiddlewaretoken,
                     body: data,
                     _save: 'Save'
@@ -198,12 +208,16 @@
                     if (action !== undefined) {
                         action(instance, response);
                     }
-                    // var scripts = $(response).find("script").addClass("cms-ckeditor5-result");
-                    // $("body").append(scripts);
+                    var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor5-result');
+                    scripts.each(function (item, element) {
+                        if (element.innerHTML.includes('Helpers.dataBridge')) {
+                            $('body').append(element);
+                        }
+                    });
                 }).fail(function (error) {
                     CMS.CKEditor.editors[id].changed = true;
                     console.error(error);
-                    alert("Error saving data" + error);
+                    alert('Error saving data' + error);
                 });
             }
         },
@@ -365,6 +379,33 @@
             });
         },
 
+        _highlight_Textplugin: function (pluginId) {
+            var HIGHLIGHT_TIMEOUT = 10;
+            var DRAGGABLE_HEIGHT = 50; // it's not precisely 50, but it fits
+
+            var draggable = $('.cms-draggable-' + pluginId);
+            var doc = $(document);
+            var currentExpandmode = doc.data('expandmode');
+
+
+            // expand necessary parents
+            doc.data('expandmode', false);
+            draggable
+                .parents('.cms-draggable')
+                .find('> .cms-dragitem-collapsable:not(".cms-dragitem-expanded") > .cms-dragitem-text')
+                .each(function (i, el) { $(el).triggerHandler(CMS.Plugin.click); });
+
+            setTimeout(function () { doc.data('expandmode', currentExpandmode); });
+            setTimeout(function () {
+                var offsetParent = draggable.offsetParent();
+                var position = draggable.position().top + offsetParent.scrollTop();
+
+                draggable.offsetParent().scrollTop(position - window.innerHeight / 2 + DRAGGABLE_HEIGHT);
+
+                CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
+                    { successTimeout: 200, delay: 1500, seeThrough: true });
+            }, HIGHLIGHT_TIMEOUT);
+       },
 
         _initAll: function () {
             CMS.CKEditor.initInlineEditors();
@@ -374,9 +415,15 @@
         _resetInlineEditors: function () {
             CMS.CKEditor.CSS.forEach(function (stylefile) {
                 if($("link[href='"+stylefile+"']").length === 0) {
-                    $("head").append($("<link rel='stylesheet' type='text/css' href='"+stylefile+"'>"))
+                    $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"))
                 }
             });
+            for (var id in CMS.CKEditor.editors) {
+                if (CMS.CKEditor.editors.hasOwnProperty(id)) {
+                    CMS.CKEditor.editors[id].editor.destroy();
+                    delete CMS.CKEditor.editors[id];
+                }
+            }
             CMS.CKEditor._initAll();
         }
     };

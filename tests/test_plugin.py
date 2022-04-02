@@ -9,7 +9,8 @@ from django.contrib.auth.models import Permission
 from django.template import RequestContext
 from django.utils.encoding import force_str
 from django.utils.html import escape
-from django.utils.http import urlencode, urlunquote
+from urllib.parse import unquote
+from django.utils.http import urlencode
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
@@ -111,7 +112,7 @@ class PluginActionsTestCase(BaseTestCase):
         return self.get_request(post_data=data)
 
     def get_plugin_id_from_response(self, response):
-        url = urlunquote(response.url)
+        url = unquote(response.url)
         # Ideal case, this looks like:
         # /en/admin/cms/page/edit-plugin/1/
         return re.findall(r'\d+', url)[0]

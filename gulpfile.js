@@ -16,6 +16,7 @@ const del = require('del');
 const integrationTests = require('djangocms-casper-helpers/gulp');
 const path = require('path');
 const child_process = require('child_process');
+const execSync = child_process.execSync;
 const browserSync = require('browser-sync').create();
 
 
@@ -93,6 +94,7 @@ gulp.task('bundle', function (done) {
     runSequence('bundle:cleanup:before', 'bundle:js', 'bundle:template', 'bundle:cleanup', done);
 });
 
+
 // gulp.task('bundle:cleanup:before', function () {
 const bundleCleanUpBefore = () => {
     return (
@@ -149,6 +151,10 @@ const bundleTemplate = () => {
         );
 };
 
+const patchForDarkmode = async function(){
+   console.log( execSync('cd private && python3 ./patch_moono_lisa.py').toString());
+};
+
 
 const bundleCleanup = () => {
     return (
@@ -168,5 +174,6 @@ gulp.task('ci', lint);
 
 gulp.task("lint", lint);
 gulp.task("watch", watchFiles);
-gulp.task("bundle", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, bundleCleanup))
-gulp.task("build", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, bundleCleanup))
+gulp.task("darkmode", patchForDarkmode);
+gulp.task("bundle", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup))
+gulp.task("build", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup))

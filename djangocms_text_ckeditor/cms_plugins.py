@@ -173,7 +173,7 @@ class TextPlugin(CMSPluginBase):
     change_form_template = 'cms/plugins/text_plugin_change_form.html'
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
-    fieldsets= ((None, {"fields": ("body", )}),)
+    fieldsets = ((None, {"fields": ("body", )}),)
 
     # These are executed by the djangocms-history app
     # We use them to inject inline plugin data

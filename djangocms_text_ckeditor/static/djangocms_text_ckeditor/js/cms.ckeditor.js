@@ -119,7 +119,7 @@
                             // get form incl. csrf token
                             var responseDOM = $(response);
                             var csrfmiddlewaretoken = responseDOM.find('input[name="csrfmiddlewaretoken"]');
-                            var content = responseDOM.find('textarea[name="body"]');
+//                            var content = responseDOM.find('textarea[name="body"]');
 
                             if (csrfmiddlewaretoken) {  // success <=> middleware token
                                 var wrapper = elements
@@ -133,7 +133,7 @@
                                         .removeClass('cms-plugin')
                                         .removeClass('cms-plugin-' + id);
                                 wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
-                                wrapper.html(content.val());
+//                                wrapper.html(content.val());
                                 for (var attr in settings_script_tag.dataset) {
                                     settings[attr] = settings_script_tag.dataset[attr];
                                     if (attr === 'lang' || attr === 'plugins') {

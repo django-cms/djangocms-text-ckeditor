@@ -500,14 +500,24 @@ class TextPlugin(CMSPluginBase):
         return super().get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
-        context.update({
-            'body': plugin_tags_to_user_html(
-                instance.body,
-                context,
-            ),
-            'placeholder': placeholder,
-            'object': instance,
-        })
+        if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
+            context.update({
+                'body': plugin_tags_to_admin_html(
+                    instance.body,
+                    context,
+                ),
+                'placeholder': placeholder,
+                'object': instance
+            })
+        else:
+            context.update({
+                'body': plugin_tags_to_user_html(
+                    instance.body,
+                    context,
+                ),
+                'placeholder': placeholder,
+                'object': instance
+            })
         return context
 
     def save_model(self, request, obj, form, change):

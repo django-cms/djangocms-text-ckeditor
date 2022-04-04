@@ -14,6 +14,7 @@ from django.urls import re_path, reverse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_str
 from django.utils.translation import gettext
+from django.utils.translation.trans_real import get_language
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
@@ -172,6 +173,7 @@ class TextPlugin(CMSPluginBase):
     change_form_template = 'cms/plugins/text_plugin_change_form.html'
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
+    fieldsets= ((None, {"fields": ("body", )}),)
 
     # These are executed by the djangocms-history app
     # We use them to inject inline plugin data
@@ -501,13 +503,18 @@ class TextPlugin(CMSPluginBase):
 
     def render(self, context, instance, placeholder):
         if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
+            form = self.get_form(context["request"], obj=instance)  # get edit form for ckeditor settings
+            ckeditor_settings = form().fields["body"].widget.get_ckeditor_settings(get_language().split('-')[0])
+
             context.update({
                 'body': plugin_tags_to_admin_html(
                     instance.body,
                     context,
                 ),
                 'placeholder': placeholder,
-                'object': instance
+                'object': instance,
+                'ckeditor_settings': ckeditor_settings,
+                'ckeditor_settings_id': 'ck-text-config-' + str(instance.pk),
             })
         else:
             context.update({

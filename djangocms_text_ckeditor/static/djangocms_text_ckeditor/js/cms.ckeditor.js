@@ -51,7 +51,7 @@
             extraPlugins: ''
         },
 
-        static_url: '/static/djangocms-text-ckeditor/',
+        static_url: '/static/djangocms-text-ckeditor',
         ckeditor_basepath: '/static/djangocms-text-ckeditor/ckeditor/',
         CSS: [],
         editors: {},
@@ -91,14 +91,14 @@
             } else {
                 this.editor = CKEDITOR.inline(container, this.options);
                 CKEDITOR.on('instanceReady', settings.callback);
-                CKEDITOR.on('instanceReady', $.proxy(CMS.CKEditor, 'setupInline'));
             }
             CMS.CKEditor.editors[settings.plugin_id] = {
                 editor: this.editor,
                 options: options,
                 settings: settings,
                 container: container,
-                changed: false
+                changed: false,
+                child_changed: false
             };
 
         },
@@ -108,84 +108,70 @@
                 // no plugins -> no inline editors
                 return;
             }
+
             CMS._plugins.forEach(function (plugin) {
                 if (plugin[1].plugin_type === 'TextPlugin') {
-                    var url = plugin[1].urls.edit_plugin,
-                        id = plugin[1].plugin_id,
-                        elements = $('.cms-plugin.cms-plugin-' + id);
+                    var url = plugin[1].urls.edit_plugin;
+                    var id = plugin[1].plugin_id;
+                    var elements = $('.cms-plugin.cms-plugin-' + id);
 
                     if (elements.length > 0) {
-                        $.get(url, {}, function (response) {
-                            // get form incl. csrf token
-                            var responseDOM = $(response);
-                            var csrfmiddlewaretoken = responseDOM.find('input[name="csrfmiddlewaretoken"]');
-//                            var content = responseDOM.find('textarea[name="body"]');
+                        var settings = {};
+                        var options = {};
 
-                            if (csrfmiddlewaretoken) {  // success <=> middleware token
-                                var wrapper = elements
-                                    .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
-                                    .parent(),
-                                    settings = {},
-                                    options = {},
-                                    settings_script_tag = responseDOM.find('.ck-settings')[0];
+                        settings = JSON.parse(document.getElementById('ck-text-config-' + id).textContent);
+                        if (settings) {
+                            options = settings.options;
+                            delete settings.options;
+                        }
+                        console.log(options, settings);
+                        var wrapper = elements
+                            .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
+                            .parent();
 
-                                elements = elements
-                                        .removeClass('cms-plugin')
-                                        .removeClass('cms-plugin-' + id);
-                                wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
-//                                wrapper.html(content.val());
-                                for (var attr in settings_script_tag.dataset) {
-                                    settings[attr] = settings_script_tag.dataset[attr];
-                                    if (attr === 'lang' || attr === 'plugins') {
-                                        settings[attr] = JSON.parse(settings[attr]);
-                                    } else if (attr === 'options') {
-                                        options = JSON.parse(settings[attr]);
-                                        delete settings[attr];
-                                    }
-                                }
-                                settings.callback = function () {
-                                    var styles = $('style[data-cke="true"]');
+                        elements = elements
+                                .removeClass('cms-plugin')
+                                .removeClass('cms-plugin-' + id);
+                        wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
+                        settings.plugin_id = id;
+                        settings.callback = function () {
+                            var styles = $('style[data-cke="true"]');
 
-                                    CMS.CKEditor.editors[id].editor.on('change', function () {
-                                        CMS.CKEditor.editors[id].changed = true;
-                                    });
-                                    if (styles.length > 0) {
-                                        CMS.CKEditor5.CSS = styles.clone();
-                                    }
-                                    wrapper.on('dblclick', function (event) {
-                                        event.stopPropagation();
-                                    });
-                                    wrapper.on('pointerover', function (event) {
-                                        event.stopPropagation();
-                                    });
-                                    wrapper.on('blur', function click_outside() {
-                                        setTimeout(function () {
-                                            // avoid save when clicking on editor dialogs or toolbar
-                                            if (!document.activeElement.classList.contains('cke_panel_frame') &&
-                                                !document.activeElement.classList.contains('cke_dialog_ui_button')) {
-                                                CMS.CKEditor.save_data(id);
-                                            }
-                                        }, 0);
-
-                                    });
-                                    wrapper.on('focus', function click_outside() {
-                                        CMS.CKEditor._highlight_Textplugin(id);
-                                    });
-                                };
-                                settings.csrfmiddlewaretoken = csrfmiddlewaretoken.val();
-                                settings.url = url;
-                                if (options.title === undefined) {
-                                    options.title = "Click to edit";
-                                };
-
-                                CMS.CKEditor.init(
-                                    wrapper[0],
-                                    'inline',
-                                    options,
-                                    settings
-                                );
+                            CMS.CKEditor.editors[id].editor.on('change', function () {
+                                CMS.CKEditor.editors[id].changed = true;
+                            });
+                            if (styles.length > 0) {
+                                CMS.CKEditor5.CSS = styles.clone();
                             }
-                        });
+                            wrapper.on('dblclick', function (event) {
+                                event.stopPropagation();
+                            });
+                            wrapper.on('pointerover', function (event) {
+                                event.stopPropagation();
+                            });
+                            wrapper.on('blur', function click_outside() {
+                                setTimeout(function () {
+                                    // avoid save when clicking on editor dialogs or toolbar
+                                    if (!document.activeElement.classList.contains('cke_panel_frame') &&
+                                        !document.activeElement.classList.contains('cke_dialog_ui_button')) {
+                                        CMS.CKEditor.save_data(id);
+                                    }
+                                }, 0);
+
+                            });
+                            wrapper.on('focus', function click_outside() {
+                                CMS.CKEditor._highlight_Textplugin(id);
+                            });
+                        };
+                        // settings.csrfmiddlewaretoken = csrfmiddlewaretoken.val();
+                        settings.url = url;
+
+                        CMS.CKEditor.init(
+                            wrapper[0],
+                            'inline',
+                            options,
+                            settings
+                        );
                     }
                 }
             });
@@ -194,33 +180,45 @@
         save_data: function (id, action) {
             var instance = CMS.CKEditor.editors[id];
 
-            console.log("saving", id, "in editor", instance);
             if (instance.changed) {
                 var data = instance.editor.getData();
 
-                console.log("Saving", id);
+                this.storeCSSlinks();
+                console.log("Saving", id, CMS.config.csrf);
                 CMS.CKEditor.editors[id].changed = false;
                 $.post(instance.settings.url, {  // send changes
-                    csrfmiddlewaretoken: instance.settings.csrfmiddlewaretoken,
+                    csrfmiddlewaretoken: CMS.config.csrf,
                     body: data,
                     _save: 'Save'
                 }, function (response) {
                     if (action !== undefined) {
                         action(instance, response);
                     }
-                    var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor5-result');
-                    scripts.each(function (item, element) {
-                        if (element.innerHTML.includes('Helpers.dataBridge')) {
+                    if (CMS.CKEditor.editors[id].child_changed) {
+                        var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor-result');
+
+                        CMS.CKEditor._destroyAll();
+                        scripts.each(function (item, element) {
                             $('body').append(element);
-                        }
-                    });
+                        });
+                    }
                 }).fail(function (error) {
                     CMS.CKEditor.editors[id].changed = true;
-                    console.error(error);
-                    alert('Error saving data' + error);
+                    CMS.API.Messages.open(error);
                 });
             }
         },
+
+        storeCSSlinks: function () {
+            $("link[rel='stylesheet'][type='text/css'][href*='ckeditor']").each(
+                function (index, element) {
+                    if (!CMS.CKEditor.CSS.includes(element.href)) {
+                        CMS.CKEditor.CSS.push(element.href);
+                    }
+                }
+            );
+        },
+
 
         // setup is called after ckeditor has been initialized
         setupAdmin: function () {
@@ -258,16 +256,6 @@
             // add css tweks to the editor
             this.styles();
             this._resizing();
-        },
-
-        setupInline: function () {
-            $("link[rel='stylesheet'][type='text/css'][href*='ckeditor'").each(
-                function (index, element) {
-                    if (!CMS.CKEditor.CSS.includes(element.href)) {
-                        CMS.CKEditor.CSS.push(element.href);
-                    }
-                }
-            );
         },
 
         styles: function () {
@@ -337,16 +325,21 @@
         initAdminEditors: function () {
             window._cmsCKEditors = window._cmsCKEditors || [];
             var dynamics = [];
+            var settings, options;
 
             window._cmsCKEditors.forEach(function (editorConfig) {
+                settings = JSON.parse(document.getElementById('ck-text-config-' + editorConfig[1]).textContent);
+                options = settings.options;
+                delete settings.options;
+
                 if (editorConfig[0].match(/__prefix__/)) {
                     dynamics.push(editorConfig);
                 } else {
                     CMS.CKEditor.init(
                         document.getElementById(editorConfig[0]),
                         'admin',
-                        editorConfig[1],
-                        editorConfig[2]
+                        options,
+                        settings
                     );
                 }
             });
@@ -368,10 +361,10 @@
                         var regex = new RegExp(selector.replace('__prefix__', '\\d+'));
 
                         if (containerId.match(regex)) {
-                            CMS.CKEditor5.init(
+                            CMS.CKEditor.init(
                                 document.getElementById(containerId),
-                                config[1],
-                                config[2]
+                                options,
+                                settings
                             );
                         }
                     });
@@ -394,22 +387,32 @@
                 .parents('.cms-draggable')
                 .find('> .cms-dragitem-collapsable:not(".cms-dragitem-expanded") > .cms-dragitem-text')
                 .each(function (i, el) { $(el).triggerHandler(CMS.Plugin.click); });
+            if (draggable.length > 0) {  // Expanded elements available
+                setTimeout(function () { doc.data('expandmode', currentExpandmode); });
+                setTimeout(function () {
+                    var offsetParent = draggable.offsetParent();
+                    var position = draggable.position().top + offsetParent.scrollTop();
 
-            setTimeout(function () { doc.data('expandmode', currentExpandmode); });
-            setTimeout(function () {
-                var offsetParent = draggable.offsetParent();
-                var position = draggable.position().top + offsetParent.scrollTop();
+                    draggable.offsetParent().scrollTop(position - window.innerHeight / 2 + DRAGGABLE_HEIGHT);
 
-                draggable.offsetParent().scrollTop(position - window.innerHeight / 2 + DRAGGABLE_HEIGHT);
-
-                CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
-                    { successTimeout: 200, delay: 1500, seeThrough: true });
-            }, HIGHLIGHT_TIMEOUT);
+                    CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
+                        { successTimeout: 200, delay: 1500, seeThrough: true });
+                }, HIGHLIGHT_TIMEOUT);
+            }
        },
 
         _initAll: function () {
             CMS.CKEditor.initInlineEditors();
             CMS.CKEditor.initAdminEditors();
+        },
+
+        _destroyAll: function () {
+            for (var id in CMS.CKEditor.editors) {
+                if (CMS.CKEditor.editors.hasOwnProperty(id)) {
+                    CMS.CKEditor.editors[id].editor.destroy();
+                    delete CMS.CKEditor.editors[id];
+                }
+            }
         },
 
         _resetInlineEditors: function () {
@@ -418,12 +421,7 @@
                     $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"))
                 }
             });
-            for (var id in CMS.CKEditor.editors) {
-                if (CMS.CKEditor.editors.hasOwnProperty(id)) {
-                    CMS.CKEditor.editors[id].editor.destroy();
-                    delete CMS.CKEditor.editors[id];
-                }
-            }
+            CMS.CKEditor._destroyAll();
             CMS.CKEditor._initAll();
         }
     };

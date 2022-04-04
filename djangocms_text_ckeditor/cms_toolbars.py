@@ -13,7 +13,7 @@ class InlineEditingItem(BaseItem):
     """Make ckeditor config available for inline editing"""
     def render(self):
         return mark_safe(
-            f'<script class="ckeditor5config" '
+            f'<script class="ckeditorconfig" '
             f'data-ckeditor-basepath="{settings.TEXT_CKEDITOR_BASE_PATH}"></script>')
 
 

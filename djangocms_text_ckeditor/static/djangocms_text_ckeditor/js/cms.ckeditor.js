@@ -1,4 +1,4 @@
-(function ($, CMS, CKEDITOR) {
+(function ($, CMS) {
     'use strict';
     window.CKEDITOR_BASEPATH = $('[data-ckeditor-basepath]').attr('data-ckeditor-basepath');
 
@@ -430,4 +430,4 @@
         CMS.CKEditor._initAll();
     }, 0);
     $(window).on('cms-content-refresh', CMS.CKEditor._resetInlineEditors);
-})(window.CMS.$, window.CMS, window.CKEDITOR);
+})(window.CMS.$, window.CMS);

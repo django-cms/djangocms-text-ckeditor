@@ -196,6 +196,12 @@
                         scripts.each(function (item, element) {
                             $('body').append(element);
                         });
+                    } else {
+                        CMS.API.StructureBoard._loadToolbar()
+                            .done(function (newToolbar) {
+                                CMS.API.Toolbar._refreshMarkup($(newToolbar).find('.cms-toolbar'));
+                            })
+                            .fail(CMS.API.Helpers.reloadBrowser);
                     }
                 }).fail(function (error) {
                     CMS.CKEditor.editors[id].changed = true;

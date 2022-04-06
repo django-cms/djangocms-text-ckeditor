@@ -186,7 +186,7 @@
                 this.storeCSSlinks();
                 console.log("Saving", id, CMS.config.csrf);
                 CMS.CKEditor.editors[id].changed = false;
-                $.post(instance.settings.url, {  // send changes
+                $.post(CMS.API.Helpers.updateUrlWithPath(instance.settings.url), {  // send changes
                     csrfmiddlewaretoken: CMS.config.csrf,
                     body: data,
                     _save: 'Save'

@@ -91,9 +91,13 @@ class TextEditorWidget(forms.Textarea):
         config = json.dumps(configuration, cls=DjangoJSONEncoder)
 
         # Group plugins by module
-        plugins = groupby(sorted(self.installed_plugins, key=lambda x: x.get('module')), key=lambda x: x.get('module'))
-        plugins = [{'group': group, 'items':
-            [{'title': item.get('name'), 'type': item.get('value')} for item in items]} for group, items in plugins]
+        if self.installed_plugins:
+            plugins = groupby(sorted(self.installed_plugins, key=lambda x: x.get('module')), key=lambda x: x.get('module'))
+            plugins = [{'group': group, 'items':
+                [{'title': item.get('name'), 'type': item.get('value')} for item in items]} for group, items in plugins]
+        else:
+            plugins = []
+
         return dict(
             language=language,
             installed_plugins=self.installed_plugins,

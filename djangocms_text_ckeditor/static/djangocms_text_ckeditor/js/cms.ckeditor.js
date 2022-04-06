@@ -1,4 +1,5 @@
-(function ($) {
+(function ($, CMS, CKEDITOR) {
+    'use strict';
     window.CKEDITOR_BASEPATH = $('[data-ckeditor-basepath]').attr('data-ckeditor-basepath');
 
     // CMS.$ will be passed for $
@@ -116,7 +117,7 @@
                     var elements = $('.cms-plugin.cms-plugin-' + id);
 
                     if (elements.length > 0) {
-                        var settings = {};
+                        var settings;
                         var options = {};
 
                         settings = JSON.parse(document.getElementById('ck-text-config-' + id).textContent);
@@ -124,32 +125,26 @@
                             options = settings.options;
                             delete settings.options;
                         }
-                        console.log(options, settings);
                         var wrapper = elements
                             .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
                             .parent();
 
-                        elements = elements
+                        elements
                                 .removeClass('cms-plugin')
                                 .removeClass('cms-plugin-' + id);
                         wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                         settings.plugin_id = id;
                         settings.callback = function () {
-                            var styles = $('style[data-cke="true"]');
-
                             CMS.CKEditor.editors[id].editor.on('change', function () {
                                 CMS.CKEditor.editors[id].changed = true;
                             });
-                            if (styles.length > 0) {
-                                CMS.CKEditor5.CSS = styles.clone();
-                            }
                             wrapper.on('dblclick', function (event) {
                                 event.stopPropagation();
                             });
                             wrapper.on('pointerover', function (event) {
                                 event.stopPropagation();
                             });
-                            wrapper.on('blur', function click_outside() {
+                            wrapper.on('blur', function () {
                                 setTimeout(function () {
                                     // avoid save when clicking on editor dialogs or toolbar
                                     if (!document.activeElement.classList.contains('cke_panel_frame') &&
@@ -159,11 +154,10 @@
                                 }, 0);
 
                             });
-                            wrapper.on('focus', function click_outside() {
-                                CMS.CKEditor._highlight_Textplugin(id);
+                            wrapper.on('focus', function () {
+                                CMS.CKEditor._highlight_Textplugin(id);  // Highlight plugin in structure board
                             });
                         };
-                        // settings.csrfmiddlewaretoken = csrfmiddlewaretoken.val();
                         settings.url = url;
 
                         CMS.CKEditor.init(
@@ -183,8 +177,7 @@
             if (instance.changed) {
                 var data = instance.editor.getData();
 
-                this.storeCSSlinks();
-                console.log("Saving", id, CMS.config.csrf);
+                this.storeCSSlinks();  // store css that ckeditor loaded before save
                 CMS.CKEditor.editors[id].changed = false;
                 CMS.API.Toolbar.showLoader();
                 $.post(CMS.API.Helpers.updateUrlWithPath(instance.settings.url), {  // send changes
@@ -228,7 +221,7 @@
             var that = this;
             var win = window.parent || window;
             // 70px is hardcoded to make it more performant. 20px + 20px - paddings, 30px label height
-                var TOOLBAR_HEIGHT_WITH_PADDINGS = 63;
+            var TOOLBAR_HEIGHT_WITH_PADDINGS = 70;
 
             if (this._isAloneInModal()) {
                 that.editor.resize('100%', win.CMS.$('.cms-modal-frame').height() - TOOLBAR_HEIGHT_WITH_PADDINGS);
@@ -327,7 +320,8 @@
         initAdminEditors: function () {
             window._cmsCKEditors = window._cmsCKEditors || [];
             var dynamics = [];
-            var settings, options;
+            var settings;
+            var options;
 
             window._cmsCKEditors.forEach(function (editorConfig) {
                 settings = JSON.parse(document.getElementById('ck-text-config-' + editorConfig[1]).textContent);
@@ -388,9 +382,13 @@
             draggable
                 .parents('.cms-draggable')
                 .find('> .cms-dragitem-collapsable:not(".cms-dragitem-expanded") > .cms-dragitem-text')
-                .each(function (i, el) { $(el).triggerHandler(CMS.Plugin.click); });
+                .each(function (i, el) {
+                    $(el).triggerHandler(CMS.Plugin.click);
+                });
             if (draggable.length > 0) {  // Expanded elements available
-                setTimeout(function () { doc.data('expandmode', currentExpandmode); });
+                setTimeout(function () {
+                    doc.data('expandmode', currentExpandmode);
+                });
                 setTimeout(function () {
                     var offsetParent = draggable.offsetParent();
                     var position = draggable.position().top + offsetParent.scrollTop();
@@ -401,7 +399,7 @@
                         { successTimeout: 200, delay: 1500, seeThrough: true });
                 }, HIGHLIGHT_TIMEOUT);
             }
-       },
+        },
 
         _initAll: function () {
             CMS.CKEditor.initInlineEditors();
@@ -419,8 +417,8 @@
 
         _resetInlineEditors: function () {
             CMS.CKEditor.CSS.forEach(function (stylefile) {
-                if($("link[href='"+stylefile+"']").length === 0) {
-                    $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"))
+                if ($("link[href='" + stylefile + "']").length === 0) {
+                    $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"));
                 }
             });
             CMS.CKEditor._destroyAll();
@@ -432,4 +430,4 @@
         CMS.CKEditor._initAll();
     }, 0);
     $(window).on('cms-content-refresh', CMS.CKEditor._resetInlineEditors);
-})(CMS.$);
+})(window.CMS.$, window.CMS, window.CKEDITOR);

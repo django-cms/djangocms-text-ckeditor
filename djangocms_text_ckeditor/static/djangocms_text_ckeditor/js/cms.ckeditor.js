@@ -197,17 +197,24 @@
                             $('body').append(element);
                         });
                     } else {
-                        CMS.API.StructureBoard._loadToolbar()
-                            .done(function (newToolbar) {
-                                CMS.API.Toolbar._refreshMarkup($(newToolbar).find('.cms-toolbar'));
-                            })
-                            .fail(CMS.API.Helpers.reloadBrowser);
+                        CMS.CKEditor.loadToolbar();
                     }
                 }).fail(function (error) {
                     CMS.CKEditor.editors[id].changed = true;
-                    CMS.API.Messages.open(error);
+                    CMS.API.Messages.open({
+                        message: error.message,
+                        error: true
+                    });
                 });
             }
+        },
+
+        loadToolbar: function () {
+            CMS.API.StructureBoard._loadToolbar()
+                .done(function (newToolbar) {
+                    CMS.API.Toolbar._refreshMarkup($(newToolbar).find('.cms-toolbar'));
+                })
+                .fail(CMS.API.Helpers.reloadBrowser);
         },
 
         storeCSSlinks: function () {

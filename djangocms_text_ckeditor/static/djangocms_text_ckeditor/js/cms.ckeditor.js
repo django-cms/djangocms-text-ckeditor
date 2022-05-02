@@ -339,7 +339,9 @@
 
             window._cmsCKEditors.forEach(function (editorConfig) {
                 console.log("Admin editor", editorConfig);
-                settings = JSON.parse(document.getElementById('ck-cfg-' + editorConfig[1]).textContent);
+
+                var elementId = 'ck-cfg-' + (editorConfig[1] ? editorConfig[1] : editorConfig[0]);
+                settings = JSON.parse(document.getElementById(elementId).textContent);
                 options = settings.options;
                 delete settings.options;
 

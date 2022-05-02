@@ -190,7 +190,6 @@
                         action(instance, response);
                     }
                     if (CMS.CKEditor.editors[id].child_changed) {
-                        console.log("Child changed");
                         var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor-result');
 
                         CMS.CKEditor._destroyAll();
@@ -338,8 +337,6 @@
             var options;
 
             window._cmsCKEditors.forEach(function (editorConfig) {
-                console.log("Admin editor", editorConfig);
-
                 var elementId = 'ck-cfg-' + (editorConfig[1] ? editorConfig[1] : editorConfig[0]);
                 settings = JSON.parse(document.getElementById(elementId).textContent);
                 options = settings.options;
@@ -436,10 +433,8 @@
         },
 
         _resetInlineEditors: function () {
-            console.log("Editor reset");
             CMS.CKEditor.CSS.forEach(function (stylefile) {
                 if ($("link[href='" + stylefile + "']").length === 0) {
-                    console.log('Recover css', stylefile);
                     $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"));
                 }
             });

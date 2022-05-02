@@ -92,7 +92,6 @@
 
                 // this is called when creating the dropdown list
                 onBlock: function (panel, block) {
-					console.log("onBlock", panel, block, editor);
                     block.element.setHtml(editor.plugins.cmsplugins.setupDropdown(editor));
 
                     var anchors = $(block.element.$).find('.cke_panel_listItem a');
@@ -114,7 +113,6 @@
                 exec: function () {
                     var element = that.getElementFromSelection(editor);
                     var plugin = that.getPluginWidget(element);
-					console.log("cmspluginsEdit", element, plugin);
                     if (plugin) {
                         that.editPlugin(plugin, editor);
                     }
@@ -132,7 +130,6 @@
 
                     // pick cke_widget span
                     // eslint-disable-next-line new-cap
-					console.log ("plugin edit", cmsPluginNode, cmsPluginNode.parentElement);
                     element = new CKEDITOR.dom.element(cmsPluginNode).getParent();
 
                     event.data = event.data || {};
@@ -177,8 +174,6 @@
         },
 
         setupDialog: function (editor) {
-			console.log("setupDialog", editor);
-
             var that = this;
             var definition = function () {
                 return {
@@ -215,7 +210,6 @@
                             if (!editor.config.settings.delete_on_cancel && addedChildPlugin) {
                                 that.child_plugins.push(data.plugin_id);
                             }
-							console.log("about to insertPlugin", dialog);
                             that.insertPlugin(data, dialog.sender._.editor);
 
                             CMS.API.Helpers.onPluginSave = onSave;
@@ -322,7 +316,6 @@
                 cms_path: window.parent.location.pathname,
                 cms_history: 0
             };
-			console.log("Add for editior", editor);
             this.addPluginDialog(item, data, editor);
         },
 
@@ -372,7 +365,6 @@
             }).done(function (res) {
 				CMS.CKEditor.editors[editor.config.settings.plugin_id].changed = true;
 				CMS.CKEditor.editors[editor.config.settings.plugin_id].child_changed = true;
-				console.log("instert into Editor", editor);
                 editor.insertHtml(res, 'unfiltered_html');
                 editor.fire('updateSnapshot');
             });

@@ -157,6 +157,7 @@
                             wrapper.on('focus', function () {
                                 CMS.CKEditor._highlight_Textplugin(id);  // Highlight plugin in structure board
                             });
+                            CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                         };
                         settings.url = url;
 
@@ -177,7 +178,6 @@
             if (instance.changed) {
                 var data = instance.editor.getData();
 
-                this.storeCSSlinks();  // store css that ckeditor loaded before save
                 CMS.CKEditor.editors[id].changed = false;
                 CMS.API.Toolbar.showLoader();
                 $.post(CMS.API.Helpers.updateUrlWithPath(instance.settings.url), {  // send changes
@@ -190,6 +190,7 @@
                         action(instance, response);
                     }
                     if (CMS.CKEditor.editors[id].child_changed) {
+                        console.log("Child changed");
                         var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor-result');
 
                         CMS.CKEditor._destroyAll();
@@ -337,7 +338,8 @@
             var options;
 
             window._cmsCKEditors.forEach(function (editorConfig) {
-                settings = JSON.parse(document.getElementById('ck-text-config-' + editorConfig[1]).textContent);
+                console.log("Admin editor", editorConfig);
+                settings = JSON.parse(document.getElementById('ck-cfg-' + editorConfig[1]).textContent);
                 options = settings.options;
                 delete settings.options;
 
@@ -415,7 +417,10 @@
         },
 
         _initAll: function () {
-            CMS.CKEditor.initInlineEditors();
+            CMS.CKEditor.touchdevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;  // on touch device?
+            if (!CMS.CKEditor.touchdevice) {  // no inline editing on touch devices to not interfere with scrolling
+                CMS.CKEditor.initInlineEditors();
+            }
             CMS.CKEditor.initAdminEditors();
         },
 
@@ -429,8 +434,10 @@
         },
 
         _resetInlineEditors: function () {
+            console.log("Editor reset");
             CMS.CKEditor.CSS.forEach(function (stylefile) {
                 if ($("link[href='" + stylefile + "']").length === 0) {
+                    console.log('Recover css', stylefile);
                     $('head').append($("<link rel='stylesheet' type='text/css' href='" + stylefile + "'>"));
                 }
             });

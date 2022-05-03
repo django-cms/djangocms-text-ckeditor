@@ -93,7 +93,8 @@
                 this.editor = CKEDITOR.inline(container, this.options);
                 CKEDITOR.on('instanceReady', settings.callback);
             }
-            CMS.CKEditor.editors[settings.plugin_id] = {
+
+            CMS.CKEditor.editors[this.editor.id] = {
                 editor: this.editor,
                 options: options,
                 settings: settings,
@@ -101,7 +102,6 @@
                 changed: false,
                 child_changed: false
             };
-
         },
 
         initInlineEditors: function () {
@@ -120,7 +120,7 @@
                         var settings;
                         var options = {};
 
-                        settings = JSON.parse(document.getElementById('ck-text-config-' + id).textContent);
+                        settings = JSON.parse(document.getElementById('ck-cfg-' + id).textContent);
                         if (settings) {
                             options = settings.options;
                             delete settings.options;
@@ -134,9 +134,10 @@
                                 .removeClass('cms-plugin-' + id);
                         wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                         settings.plugin_id = id;
-                        settings.callback = function () {
-                            CMS.CKEditor.editors[id].editor.on('change', function () {
-                                CMS.CKEditor.editors[id].changed = true;
+                        settings.callback = function (callback) {
+                            var editor = callback.editor;
+                            editor.on('change', function () {
+                                CMS.CKEditor.editors[editor.id].changed = true;
                             });
                             wrapper.on('dblclick', function (event) {
                                 event.stopPropagation();
@@ -149,13 +150,13 @@
                                     // avoid save when clicking on editor dialogs or toolbar
                                     if (!document.activeElement.classList.contains('cke_panel_frame') &&
                                         !document.activeElement.classList.contains('cke_dialog_ui_button')) {
-                                        CMS.CKEditor.save_data(id);
+                                        CMS.CKEditor.save_data(editor.id);
                                     }
                                 }, 0);
 
                             });
                             wrapper.on('focus', function () {
-                                CMS.CKEditor._highlight_Textplugin(id);  // Highlight plugin in structure board
+                                CMS.CKEditor._highlight_Textplugin(editor.id);  // Highlight plugin in structure board
                             });
                             CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                         };
@@ -175,6 +176,7 @@
         save_data: function (id, action) {
             var instance = CMS.CKEditor.editors[id];
 
+            CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
             if (instance.changed) {
                 var data = instance.editor.getData();
 
@@ -189,7 +191,7 @@
                     if (action !== undefined) {
                         action(instance, response);
                     }
-                    if (CMS.CKEditor.editors[id].child_changed) {
+                    if (instance.child_changed) {
                         var scripts = $(response).find('script:not([src])').addClass('cms-ckeditor-result');
 
                         CMS.CKEditor._destroyAll();
@@ -200,7 +202,7 @@
                         CMS.CKEditor.loadToolbar();
                     }
                 }).fail(function (error) {
-                    CMS.CKEditor.editors[id].changed = true;
+                    instance.changed = true;
                     CMS.API.Messages.open({
                         message: error.message,
                         error: true
@@ -382,7 +384,8 @@
             });
         },
 
-        _highlight_Textplugin: function (pluginId) {
+        _highlight_Textplugin: function (editorId) {
+            var pluginId = CMS.CKEditor.editors[editorId].settings.plugin_id;
             var HIGHLIGHT_TIMEOUT = 10;
             var DRAGGABLE_HEIGHT = 50; // it's not precisely 50, but it fits
 

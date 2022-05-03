@@ -67,10 +67,11 @@
              * populated with _fresh_ child plugins
              */
             this.child_plugins = [];
-            this.setupCancelCleanupCallback(editor.config.settings);
+			var settings  = CMS.CKEditor.editors[editor.id].settings;
+            this.setupCancelCleanupCallback(settings);
 
             // don't do anything if there are no plugins defined
-            if (editor.config.settings === undefined || editor.config.settings.plugins === undefined) {
+            if (settings === undefined || settings.plugins === undefined) {
                 return false;
             }
 
@@ -79,15 +80,15 @@
             // add the button
             editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
                 toolbar: 'cms,0',
-                label: editor.config.settings.lang.toolbar,
-                title: editor.config.settings.lang.toolbar,
+                label: settings.lang.toolbar,
+                title: settings.lang.toolbar,
                 className: 'cke_panelbutton__cmsplugins',
                 modes: { wysiwyg: 1 },
                 editorFocus: 0,
 
                 panel: {
                     css: [CKEDITOR.skin.getPath('editor')].concat(editor.config.contentsCss),
-                    attributes: { 'role': 'cmsplugins', 'aria-label': editor.config.settings.lang.aria }
+                    attributes: { 'role': 'cmsplugins', 'aria-label': settings.lang.aria }
                 },
 
                 // this is called when creating the dropdown list
@@ -268,7 +269,8 @@
         },
 
         editPlugin: function (element, editor) {
-            var id = element.getAttribute('id');
+            var id = element.getAttribute('id'),
+				settings = CMS.CKEditor.editors[editor.id].settings;
 
             editor.openDialog('cmspluginsDialog');
             var body = CMS.$(window);
@@ -278,15 +280,13 @@
 
             dialog.resize(body.width() * 0.8, body.height() * 0.6); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
-            $(dialog.parts.title.$).text(editor.config.settings.lang.edit);
-            var textPluginUrl = editor.config.settings.url || window.location.href;
+            $(dialog.parts.title.$).text(settings.lang.edit);
+            var textPluginUrl = settings.url || window.location.href;
             var path = encodeURIComponent(window.parent.location.pathname + window.parent.location.search);
             var childPluginUrl = textPluginUrl.replace(
                 /(add-plugin|edit-plugin).*$/,
                 'edit-plugin/' + id + '/?_popup=1&no_preview&cms_history=0&cms_path=' + path
             );
-			CMS.CKEditor.editors[editor.config.settings.plugin_id].changed = true;
-			CMS.CKEditor.editors[editor.config.settings.plugin_id].child_changed = true;
 			$(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
                 .bind('load', function () {
                     var contents = $(this).contents();
@@ -301,6 +301,7 @@
         },
 
         addPlugin: function (item, panel, editor) {
+			var settings = CMS.CKEditor.editors[editor.id].settings;
             // hide the panel
             panel.hide();
 
@@ -309,10 +310,10 @@
 
             // gather data
             var data = {
-                placeholder_id: editor.config.settings.placeholder_id,
+                placeholder_id: settings.placeholder_id,
                 plugin_type: item.attr('rel'),
-                plugin_parent: editor.config.settings.plugin_id,
-                plugin_language: editor.config.settings.plugin_language,
+                plugin_parent: settings.plugin_id,
+                plugin_language: settings.plugin_language,
                 cms_path: window.parent.location.pathname,
                 cms_history: 0
             };
@@ -320,7 +321,8 @@
         },
 
         addPluginDialog: function (item, data, editor) {
-            var body = $(window);
+            var body = $(window)
+				settings = CMS.CKEditor.editors[editor.id].settings;
             // open the dialog
             var selected_text = editor.getSelection().getSelectedText();
 
@@ -331,8 +333,9 @@
 
             dialog.resize(body.width() * 0.8, body.height() * 0.6); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
-            $(dialog.parts.title.$).text(editor.config.settings.lang.add);
-            $(dialog.parts.contents.$).find('iframe').attr('src', editor.config.settings.add_plugin_url + '?' + $.param(data))
+            $(dialog.parts.title.$).text(settings.lang.add);
+            $(dialog.parts.contents.$).find('iframe')
+				.attr('src', settings.add_plugin_url + '?' + $.param(data))
                 .on('load.addplugin', function () {
                     var iframe = $(this);
                     var contents = iframe.contents();
@@ -355,16 +358,18 @@
         },
 
         insertPlugin: function (data, editor) {
+			var settings = CMS.CKEditor.editors[editor.id].settings;
+
             $.ajax({
                 method: 'GET',
-                url: editor.config.settings.render_plugin_url,
+                url: settings.render_plugin_url,
                 data: {
-                    token: editor.config.settings.action_token,
+                    token: settings.action_token,
                     plugin: data.plugin_id
                 }
             }).done(function (res) {
-				CMS.CKEditor.editors[editor.config.settings.plugin_id].changed = true;
-				CMS.CKEditor.editors[editor.config.settings.plugin_id].child_changed = true;
+				CMS.CKEditor.editors[editor.id].changed = true;
+				CMS.CKEditor.editors[editor.id].child_changed = true;
                 editor.insertHtml(res, 'unfiltered_html');
                 editor.fire('updateSnapshot');
             });

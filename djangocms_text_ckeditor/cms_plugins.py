@@ -514,7 +514,7 @@ class TextPlugin(CMSPluginBase):
                 'placeholder': placeholder,
                 'object': instance,
                 'ckeditor_settings': ckeditor_settings,
-                'ckeditor_settings_id': 'ck-text-config-' + str(instance.pk),
+                'ckeditor_settings_id': 'ck-cfg-' + str(instance.pk),
             })
         else:
             context.update({

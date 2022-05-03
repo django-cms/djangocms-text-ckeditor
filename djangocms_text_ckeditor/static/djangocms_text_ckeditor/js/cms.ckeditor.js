@@ -139,6 +139,9 @@
                             editor.on('change', function () {
                                 CMS.CKEditor.editors[editor.id].changed = true;
                             });
+                            wrapper.on('click', function (event) {
+                                event.stopPropagation();
+                            });
                             wrapper.on('dblclick', function (event) {
                                 event.stopPropagation();
                             });

@@ -139,7 +139,7 @@
                             editor.on('change', function () {
                                 CMS.CKEditor.editors[editor.id].changed = true;
                             });
-                            wrapper.on('click', function (event) {
+                            wrapper.on('clickx', function (event) {
                                 event.stopPropagation();
                             });
                             wrapper.on('dblclick', function (event) {
@@ -158,8 +158,8 @@
                                 }, 0);
 
                             });
-                            wrapper.on('focus', function () {
-                                CMS.CKEditor._highlight_Textplugin(editor.id);  // Highlight plugin in structure board
+                            wrapper.on('click', function () {
+                                CMS.CKEditor._highlight_Textplugin(id);  // Highlight plugin in structure board
                             });
                             CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                         };
@@ -387,8 +387,7 @@
             });
         },
 
-        _highlight_Textplugin: function (editorId) {
-            var pluginId = CMS.CKEditor.editors[editorId].settings.plugin_id;
+        _highlight_Textplugin: function (pluginId) {
             var HIGHLIGHT_TIMEOUT = 10;
             var DRAGGABLE_HEIGHT = 50; // it's not precisely 50, but it fits
 
@@ -416,7 +415,7 @@
                     draggable.offsetParent().scrollTop(position - window.innerHeight / 2 + DRAGGABLE_HEIGHT);
 
                     CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
-                        { successTimeout: 200, delay: 1500, seeThrough: true });
+                        { successTimeout: 200, delay: 2000, seeThrough: true });
                 }, HIGHLIGHT_TIMEOUT);
             }
         },

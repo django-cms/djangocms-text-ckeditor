@@ -17,7 +17,6 @@ class InlineEditingItem(BaseItem):
             f'data-ckeditor-basepath="{settings.TEXT_CKEDITOR_BASE_PATH}"></script>')
 
 
-@toolbar_pool.register
 class InlineEditingToolbar(CMSToolbar):
     @property
     def media(self):
@@ -30,3 +29,7 @@ class InlineEditingToolbar(CMSToolbar):
 
     def populate(self):
         self.toolbar.add_item(InlineEditingItem(), position=None)
+
+
+if getattr(settings, "CKEDITOR_INLINE_EDITING", False):
+    toolbar_pool.register(InlineEditingToolbar)

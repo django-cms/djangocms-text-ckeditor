@@ -16,7 +16,7 @@ from . import settings as text_settings
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-2d07b85002.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-aa246ead07.cms.ckeditor.min.js'
 
 
 class TextEditorWidget(forms.Textarea):
@@ -98,27 +98,27 @@ class TextEditorWidget(forms.Textarea):
         else:
             plugins = []
 
-        return dict(
-            language=language,
-            installed_plugins=self.installed_plugins,
-            static_url=settings.STATIC_URL + "djangocms_text_ckeditor",
-            plugin_id=self.pk,
-            plugin_language=self.plugin_language,
-            placeholder_id=self.placeholder.pk if self.placeholder else None,
-            render_plugin_url=self.render_plugin_url or '',
-            add_plugin_url=self.placeholder.get_add_url() or '' if self.placeholder else '',
-            clancel_plugin_url=self.cancel_url or '',
-            delete_on_cancel=self.delete_on_cancel or False,
-            action_token=self.action_token or '',
-            lang=dict(
-                toolbar=gettext("CMS Plugins"),
-                add=gettext("Add CMS Plugin"),
-                edit=gettext("Edit CMS Plugin"),
-                aria=gettext("CMS Plugins"),
-            ),
-            plugins=plugins,
-            options=json.loads(config.replace('{{ language }}', language)),
-        )
+        return {
+            'language': language,
+            'installed_plugins': self.installed_plugins,
+            'static_url': settings.STATIC_URL + 'djangocms_text_ckeditor',
+            'plugin_id': self.pk,
+            'plugin_language': self.plugin_language,
+            'placeholder_id': self.placeholder.pk if self.placeholder else None,
+            'render_plugin_url': self.render_plugin_url or '',
+            'add_plugin_url': self.placeholder.get_add_url() or '' if self.placeholder else '',
+            'clancel_plugin_url': self.cancel_url or '',
+            'delete_on_cancel': self.delete_on_cancel or False,
+            'action_token': self.action_token or '',
+            'lang': {
+                'toolbar': gettext('CMS Plugins'),
+                'add': gettext('Add CMS Plugin'),
+                'edit': gettext('Edit CMS Plugin'),
+                'aria': gettext('CMS Plugins')
+            },
+            'plugins': plugins,
+            'options': json.loads(config.replace('{{ language }}', language)),
+        }
 
     def render_additions(self, name, value, attrs=None, renderer=None):
         # id attribute is always present when rendering a widget

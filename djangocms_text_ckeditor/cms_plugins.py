@@ -173,7 +173,7 @@ class TextPlugin(CMSPluginBase):
     change_form_template = 'cms/plugins/text_plugin_change_form.html'
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
-    fieldsets = ((None, {"fields": ("body", )}),)
+    fieldsets = ((None, {'fields': ('body', )}),)
 
     # These are executed by the djangocms-history app
     # We use them to inject inline plugin data
@@ -502,9 +502,9 @@ class TextPlugin(CMSPluginBase):
         return super().get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
-        if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
-            form = self.get_form(context["request"], obj=instance)  # get edit form for ckeditor settings
-            ckeditor_settings = form().fields["body"].widget.get_ckeditor_settings(get_language().split('-')[0])
+        if hasattr(context['request'], 'toolbar') and context['request'].toolbar.edit_mode_active:
+            form = self.get_form(context['request'], obj=instance)  # get edit form for ckeditor settings
+            ckeditor_settings = form().fields['body'].widget.get_ckeditor_settings(get_language().split('-')[0])
 
             context.update({
                 'body': plugin_tags_to_admin_html(
@@ -523,7 +523,7 @@ class TextPlugin(CMSPluginBase):
                     context,
                 ),
                 'placeholder': placeholder,
-                'object': instance
+                'object': instance,
             })
         return context
 

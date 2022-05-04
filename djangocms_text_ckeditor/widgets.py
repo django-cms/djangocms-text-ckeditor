@@ -114,7 +114,7 @@ class TextEditorWidget(forms.Textarea):
                 'toolbar': gettext('CMS Plugins'),
                 'add': gettext('Add CMS Plugin'),
                 'edit': gettext('Edit CMS Plugin'),
-                'aria': gettext('CMS Plugins')
+                'aria': gettext('CMS Plugins'),
             },
             'plugins': plugins,
             'options': json.loads(config.replace('{{ language }}', language)),

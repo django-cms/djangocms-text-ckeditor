@@ -31,5 +31,5 @@ class InlineEditingToolbar(CMSToolbar):
         self.toolbar.add_item(InlineEditingItem(), position=None)
 
 
-if getattr(settings, "CKEDITOR_INLINE_EDITING", False):
+if settings.TEXT_INLINE_EDITING:
     toolbar_pool.register(InlineEditingToolbar)

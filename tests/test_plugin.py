@@ -2,6 +2,7 @@ import copy
 import json
 import re
 import unittest
+from urllib.parse import unquote
 
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
@@ -9,7 +10,6 @@ from django.contrib.auth.models import Permission
 from django.template import RequestContext
 from django.utils.encoding import force_str
 from django.utils.html import escape
-from urllib.parse import unquote
 from django.utils.http import urlencode
 
 from cms.api import add_plugin, create_page, create_title

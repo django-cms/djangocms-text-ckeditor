@@ -321,7 +321,7 @@
         },
 
         addPluginDialog: function (item, data, editor) {
-            var body = $(window)
+            var body = $(window),
 				settings = CMS.CKEditor.editors[editor.id].settings;
             // open the dialog
             var selected_text = editor.getSelection().getSelectedText();

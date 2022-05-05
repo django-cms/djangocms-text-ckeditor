@@ -88,6 +88,24 @@ Upgrading from ``cms.plugins.text``
 Configuration
 -------------
 
+Inline editing feature
+**********************
+
+Inline editing allows editors to directly click on a text plugin and change
+the contents in django CMS' edit mode. The CKEditor appears directly around
+the text field and can be used normally. Changes are saved as soon as the
+text field leaves focus.
+
+Inline editing requires to encapsulate the HTML text in a ``<div>`` in
+edit mode. This might cause some side effects with a site's CSS.
+
+To activate inline editing add the following line in your project's
+``settings.py``::
+
+    TEXT_INLINE_EDITING = True
+
+
+
 Default content in Placeholder
 ******************************
 

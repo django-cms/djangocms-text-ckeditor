@@ -19,8 +19,7 @@ jobs:
         uses: liskin/gh-problem-matcher-wrap@v1
         with:
           linters: flake8
-          run: |
-            flake8 --exit-zero
+          run: flake8
 
   isort:
     runs-on: ubuntu-latest

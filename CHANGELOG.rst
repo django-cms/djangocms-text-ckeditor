@@ -6,6 +6,7 @@ Unreleased
 
 * feat: Pre commit configuration added
 
+
 3.6.0 (2018-04-11)
 ------------------
 

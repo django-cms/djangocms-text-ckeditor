@@ -151,7 +151,7 @@ def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
     plugin_ids = plugin_tags_to_id_list(text, regex)
     plugins = CMSPlugin.objects.filter(pk__in=plugin_ids).select_related('placeholder')
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
-    return dict((plugin.pk, plugin) for plugin in plugin_list)
+    return {plugin.pk: plugin for plugin in plugin_list}
 
 
 """

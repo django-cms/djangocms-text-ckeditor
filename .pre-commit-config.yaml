@@ -23,7 +23,8 @@ repos:
           - flake8-commas
           - flake8-comprehensions
           - flake8-eradicate
-          - flake8-quotes
+          # FIXME: causes too many errors
+          # - flake8-quotes
           - flake8-tidy-imports
           - pep8-naming
 

@@ -41,6 +41,8 @@ from .utils import (
 from .widgets import TextEditorWidget
 
 
+
+
 CMS_34 = LooseVersion(cms.__version__) >= LooseVersion('3.4')
 
 

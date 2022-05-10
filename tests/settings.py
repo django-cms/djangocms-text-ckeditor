@@ -2,6 +2,7 @@ import os
 import sys
 from tempfile import mkdtemp
 
+
 port = 8000
 
 for arg in sys.argv:
@@ -123,8 +124,7 @@ def test():
 
 
 def run():
-    from djangocms_helper import runner
-    from djangocms_helper import utils
+    from djangocms_helper import runner, utils
 
     os.environ.setdefault('DATABASE_URL', 'sqlite://localhost/testdb.sqlite')
 

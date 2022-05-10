@@ -46,7 +46,7 @@ class WidgetTestCase(BaseTestCase):
         pic_plugin = add_plugin(
             placeholder, 'PicturePlugin', 'en', target=plugin, picture=test_image
         )
-        plugin.body = '%s %s' % (plugin.body, plugin_to_tag(pic_plugin))
+        plugin.body = f'{plugin.body} {plugin_to_tag(pic_plugin)}'
         plugin.save()
         response = self.client.get(page.get_absolute_url('en'))
         self.assertContains(response, 'Lorem ipsum')

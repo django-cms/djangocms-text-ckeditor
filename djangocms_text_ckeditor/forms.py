@@ -34,7 +34,7 @@ class RenderPluginForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.text_plugin = kwargs.pop('text_plugin')
-        super(RenderPluginForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['plugin'].queryset = self.get_child_plugins()
 
     def get_child_plugins(self):
@@ -56,7 +56,7 @@ class DeleteOnCancelForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.text_plugin = kwargs.pop('text_plugin')
-        super(DeleteOnCancelForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['child_plugins'].queryset = self.get_child_plugins()
 
     def clean(self):

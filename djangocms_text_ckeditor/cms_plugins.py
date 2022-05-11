@@ -525,10 +525,7 @@ class TextPlugin(CMSPluginBase):
         return super().get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
-        if (
-            hasattr(context["request"], "toolbar")
-            and context["request"].toolbar.edit_mode_active
-        ):
+        if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
             ckeditor_settings = (
                 self.get_form(context["request"], instance)
                 .declared_fields["body"].widget

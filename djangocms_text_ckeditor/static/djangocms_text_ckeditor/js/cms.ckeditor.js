@@ -110,6 +110,22 @@
                 return;
             }
 
+            CMS.CKEditor.observer = CMS.CKEditor.observer || new IntersectionObserver(function (entries, opts) {
+                entries.forEach(function (entry ){
+                    if (entry.isIntersecting) {
+                        var plugin_id = entry.target.dataset.plugin_id;
+                        var url = entry.target.dataset.edit_url;
+
+                        if (CMS.CKEditor.editors[plugin_id] === undefined) {
+                            CMS.CKEditor.startInlineEditor(plugin_id, url);
+                        }
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.5
+            });
+
             CMS._plugins.forEach(function (plugin) {
                 if (plugin[1].plugin_type === 'TextPlugin') {
                     var url = plugin[1].urls.edit_plugin;
@@ -117,73 +133,86 @@
                     var elements = $('.cms-plugin.cms-plugin-' + id);
 
                     if (elements.length > 0) {
-                        var settings;
-                        var options = {};
-
-                        settings = JSON.parse(document.getElementById('ck-cfg-' + id).textContent);
-                        if (settings) {
-                            options = settings.options;
-                            delete settings.options;
-                        }
-                        var wrapper = elements
+                         var wrapper = elements
                             .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
                             .parent();
-
                         elements
                                 .removeClass('cms-plugin')
                                 .removeClass('cms-plugin-' + id);
                         wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
-                        settings.plugin_id = id;
-                        settings.callback = function (callback) {
-                            var editor = callback.editor;
-                            editor.on('change', function () {
-                                CMS.CKEditor.editors[editor.id].changed = true;
-                            });
-                            wrapper.on('clickx', function (event) {
-                                event.stopPropagation();
-                            });
-                            wrapper.on('dblclick', function (event) {
-                                event.stopPropagation();
-                            });
-                            wrapper.on('pointerover', function (event) {
-                                event.stopPropagation();
-                            });
-                            wrapper.on('blur', function () {
-                                setTimeout(function () {
-                                    // avoid save when clicking on editor dialogs or toolbar
-                                    if (!document.activeElement.classList.contains('cke_panel_frame') &&
-                                        !document.activeElement.classList.contains('cke_dialog_ui_button')) {
-                                        CMS.CKEditor.save_data(editor.id);
-                                    }
-                                }, 0);
-
-                            });
-                            wrapper.on('click', function () {
-                                CMS.CKEditor._highlight_Textplugin(id);  // Highlight plugin in structure board
-                            });
-                            CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
-                        };
-                        settings.url = url;
-
-                        CMS.CKEditor.init(
-                            wrapper[0],
-                            'inline',
-                            options,
-                            settings
-                        );
+                        wrapper.attr('data-edit_url', url);
+                        wrapper.attr('data-plugin_id', id);
+                        CMS.CKEditor.observer.observe(wrapper[0]);
                     }
                 }
             });
         },
 
-        save_data: function (id, action) {
-            var instance = CMS.CKEditor.editors[id];
+        startInlineEditor: function (plugin_id, url) {
+             var options = {},
+                settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent),
+                wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
 
-            CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
-            if (instance.changed) {
+            if (wrapper[0].dataset.editor) {
+                // Already contains editor
+                return;
+            }
+
+            if (settings) {
+                options = settings.options;
+                delete settings.options;
+            }
+            settings.plugin_id = plugin_id;
+            settings.callback = function (callback) {
+                var editor = callback.editor;
+
+                editor.element.removeAttribute('title');
+                wrapper[0].dataset.editor = true;
+                editor.on('change', function () {
+                    CMS.CKEditor.editors[editor.id].changed = true;
+                });
+                wrapper.on('clickx', function (event) {
+                    event.stopPropagation();
+                });
+                wrapper.on('dblclick', function (event) {
+                    event.stopPropagation();
+                });
+                wrapper.on('pointerover', function (event) {
+                    event.stopPropagation();
+                });
+                wrapper.on('blur', function () {
+                    setTimeout(function () {
+                        // avoid save when clicking on editor dialogs or toolbar
+                        if (!document.activeElement.classList.contains('cke_panel_frame') &&
+                            !document.activeElement.classList.contains('cke_dialog_ui_button')) {
+                            CMS.CKEditor.save_data(editor.id);
+                        }
+                    }, 0);
+
+                });
+                wrapper.on('click', function () {
+                    CMS.CKEditor._highlight_Textplugin(plugin_id);  // Highlight plugin in structure board
+                });
+                CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
+            };
+            settings.url = url;
+
+            CMS.CKEditor.init(
+                wrapper[0],
+                'inline',
+                options,
+                settings
+            );
+        },
+
+        save_data: function (editor_id, action) {
+            var instance = CMS.CKEditor.editors[editor_id];
+
+            if (instance && instance.changed) {
+                CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                 var data = instance.editor.getData();
 
-                CMS.CKEditor.editors[id].changed = false;
+                instance.changed = false;
                 CMS.API.Toolbar.showLoader();
                 $.post(CMS.API.Helpers.updateUrlWithPath(instance.settings.url), {  // send changes
                     csrfmiddlewaretoken: CMS.config.csrf,

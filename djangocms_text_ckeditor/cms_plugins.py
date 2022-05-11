@@ -503,8 +503,7 @@ class TextPlugin(CMSPluginBase):
 
     def render(self, context, instance, placeholder):
         if hasattr(context['request'], 'toolbar') and context['request'].toolbar.edit_mode_active:
-            form = self.get_form(context['request'], obj=instance)  # get edit form for ckeditor settings
-            ckeditor_settings = form().fields['body'].widget.get_ckeditor_settings(get_language().split('-')[0])
+            ckeditor_settings = TextEditorWidget().get_ckeditor_settings(get_language().split('-')[0])
 
             context.update({
                 'body': plugin_tags_to_admin_html(

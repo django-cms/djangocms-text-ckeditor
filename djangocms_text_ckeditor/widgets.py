@@ -40,7 +40,7 @@ class TextEditorWidget(forms.Textarea):
         attrs.update({
             'data-ckeditor-basepath': text_settings.TEXT_CKEDITOR_BASE_PATH
         })
-        super(TextEditorWidget, self).__init__(attrs)
+        super().__init__(attrs)
         self.installed_plugins = installed_plugins
         self.pk = pk
         self.placeholder = placeholder
@@ -70,7 +70,7 @@ class TextEditorWidget(forms.Textarea):
         )
 
     def render_textarea(self, name, value, attrs=None, renderer=None):
-        return super(TextEditorWidget, self).render(name, value, attrs, renderer)
+        return super().render(name, value, attrs, renderer)
 
     def render_additions(self, name, value, attrs=None, renderer=None):
         # id attribute is always present when rendering a widget

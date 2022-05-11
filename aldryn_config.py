@@ -12,7 +12,7 @@ class Form(forms.BaseForm):
     )
 
     def clean(self):
-        data = super(Form, self).clean()
+        data = super().clean()
 
         if data.get('content_css'):
             files = data['content_css'].split(',')
@@ -37,7 +37,7 @@ class Form(forms.BaseForm):
         if data.get('style_set'):
             style_set = data['style_set']
 
-        CKEDITOR_SETTINGS['stylesSet'] = 'default:{}'.format(style_set)
+        CKEDITOR_SETTINGS['stylesSet'] = f'default:{style_set}'
 
         settings['CKEDITOR_SETTINGS'] = CKEDITOR_SETTINGS
         return settings

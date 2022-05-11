@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+Unreleased
+----------
+
 
 4.0.1.dev1 (2022-05-10)
 -----------------------
@@ -10,6 +13,7 @@ CHANGELOG
 * Python 3.5 and 3.6 support removed
 * Django 1.11 support removed
 * fix: Repair broken installation for divio addon
+* feat: Pre commit configuration added
 
 
 3.6.0 (2018-04-11)

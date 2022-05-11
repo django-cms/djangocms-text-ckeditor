@@ -2,7 +2,7 @@
 branch = True
 source = djangocms_text_ckeditor
 omit =
-    migrations/*
+    djangocms_text_ckeditor/migrations/*
     tests/*
 
 [report]

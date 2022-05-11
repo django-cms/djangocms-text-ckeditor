@@ -48,14 +48,14 @@ class AbstractText(CMSPlugin):
         return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
 
     def __init__(self, *args, **kwargs):
-        super(AbstractText, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.body = force_str(self.body)
 
     def clean(self):
         self.body = plugin_tags_to_db(self.body)
 
     def save(self, *args, **kwargs):
-        super(AbstractText, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         body = self.body
         body = extract_images(body, self)
         body = clean_html(body, full=False)
@@ -69,7 +69,7 @@ class AbstractText(CMSPlugin):
         # this 2nd save() call is internal and should be
         # fully managed by us.
         # think of it as an update() vs save()
-        super(AbstractText, self).save(update_fields=('body',))
+        super().save(update_fields=('body',))
 
     def clean_plugins(self):
         ids = self._get_inline_plugin_ids()

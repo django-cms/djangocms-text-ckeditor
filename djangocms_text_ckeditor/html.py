@@ -123,7 +123,7 @@ def extract_images(data, plugin):
             im.save(new_image, "JPEG")
             new_image.seek(0)
             image = new_image
-        filename = "%s.%s" % (uuid.uuid4(), file_ending)
+        filename = f"{uuid.uuid4()}.{file_ending}"
         # transform image into a cms plugin
         image_plugin = img_data_to_plugin(
             filename, image, parent_plugin=plugin, width=width, height=height

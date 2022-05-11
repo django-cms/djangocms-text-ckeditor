@@ -133,7 +133,8 @@
                     var elements = $('.cms-plugin.cms-plugin-' + id);
 
                     if (elements.length > 0) {
-                         var wrapper = elements
+                        console.log("Observe", id);
+                        var wrapper = elements
                             .wrapAll("<div class='cms-ckeditor-inline-wrapper' contenteditable='true'></div>")
                             .parent();
                         elements
@@ -142,6 +143,15 @@
                         wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                         wrapper.attr('data-edit_url', url);
                         wrapper.attr('data-plugin_id', id);
+                        wrapper.on('clickx', function (event) {
+                            event.stopPropagation();
+                        });
+                        wrapper.on('dblclick', function (event) {
+                            event.stopPropagation();
+                        });
+                        wrapper.on('pointerover', function (event) {
+                            event.stopPropagation();
+                        });
                         CMS.CKEditor.observer.observe(wrapper[0]);
                     }
                 }
@@ -149,15 +159,16 @@
         },
 
         startInlineEditor: function (plugin_id, url) {
-             var options = {},
+            console.log("startInlineEditor", plugin_id, url);
+            var options = {},
                 settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent),
                 wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
 
             if (wrapper[0].dataset.editor) {
-                // Already contains editor
+                console.log("Already contains editor");
                 return;
             }
-
+            console.log(wrapper);
             if (settings) {
                 options = settings.options;
                 delete settings.options;
@@ -167,18 +178,11 @@
                 var editor = callback.editor;
 
                 editor.element.removeAttribute('title');
-                wrapper[0].dataset.editor = true;
+                console.log(editor.element, editor.element.dataset);
+                editor.element.$.dataset.editor = true;
+                console.log("Element", editor.element);
                 editor.on('change', function () {
                     CMS.CKEditor.editors[editor.id].changed = true;
-                });
-                wrapper.on('clickx', function (event) {
-                    event.stopPropagation();
-                });
-                wrapper.on('dblclick', function (event) {
-                    event.stopPropagation();
-                });
-                wrapper.on('pointerover', function (event) {
-                    event.stopPropagation();
                 });
                 wrapper.on('blur', function () {
                     setTimeout(function () {
@@ -481,4 +485,10 @@
         CMS.CKEditor._initAll();
     }, 0);
     $(window).on('cms-content-refresh', CMS.CKEditor._resetInlineEditors);
+    window._scrl = window.scrollTo;
+    window.scrollTo = function (options) {
+        debugger;
+        console.log("ScrollTo", options);
+        window._scrl(options);
+    };
 })(window.CMS.$, window.CMS);

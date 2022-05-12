@@ -112,8 +112,9 @@
             CMS.CKEditor.observer = CMS.CKEditor.observer || new IntersectionObserver(function (entries, opts) {
                 entries.forEach(function (entry ){
                     if (entry.isIntersecting) {
-                        var plugin_id = entry.target.dataset.plugin_id;
-                        var url = entry.target.dataset.edit_url;
+                        var target = $(entry.target);
+                        var plugin_id = target.data('plugin_id');
+                        var url = target.data('edit_url');
                         CMS.CKEditor.startInlineEditor(plugin_id, url);
                     }
                 });
@@ -127,17 +128,23 @@
                     var url = plugin[1].urls.edit_plugin;
                     var id = plugin[1].plugin_id;
                     var elements = $('.cms-plugin.cms-plugin-' + id);
+                    var wrapper;
 
                     if (elements.length > 0) {
-                        var wrapper = elements
-                            .wrapAll("<div class='cms-ckeditor-inline-wrapper'></div>")
-                            .parent();
-                        elements
+                        if (elements.length === 1 && elements.prop('tagName') === 'DIV') {  // already wrapped?
+                            wrapper = elements.addClass('cms-ckeditor-inline-wrapper');
+                        } else {  // no, wrap now!
+                            wrapper = elements
+                                .wrapAll('<div class="cms-ckeditor-inline-wrapper wrapped"></div>')
+                                .parent();
+                            elements
                                 .removeClass('cms-plugin')
                                 .removeClass('cms-plugin-' + id);
-                        wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
-                        wrapper.attr('data-edit_url', url);
-                        wrapper.attr('data-plugin_id', id);
+                            wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
+                        }
+                        wrapper.data('edit_url', url);
+                        wrapper.data('plugin_id', id);
+                        wrapper.data('placeholder_id', plugin[1].placeholder_id);
                         wrapper.on('dblclick', function (event) {
                             event.stopPropagation();
                         });
@@ -187,6 +194,11 @@
                     });
                     wrapper.on('click', function () {
                         CMS.CKEditor._highlight_Textplugin(plugin_id);  // Highlight plugin in structure board
+                    });
+                    $(window).on('beforeunload', function () {
+                       if (CMS.CKEditor.editors[callback.editor.id].changed) {
+                           return 'Do you really want to leave this page?';
+                       }
                     });
                     CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                 }

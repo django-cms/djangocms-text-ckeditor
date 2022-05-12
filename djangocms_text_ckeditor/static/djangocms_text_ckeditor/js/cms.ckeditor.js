@@ -138,9 +138,6 @@
                         wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                         wrapper.attr('data-edit_url', url);
                         wrapper.attr('data-plugin_id', id);
-                        wrapper.on('clickx', function (event) {
-                            event.stopPropagation();
-                        });
                         wrapper.on('dblclick', function (event) {
                             event.stopPropagation();
                         });
@@ -432,13 +429,8 @@
                     doc.data('expandmode', currentExpandmode);
                 });
                 setTimeout(function () {
-                    var offsetParent = draggable.offsetParent();
-                    var position = draggable.position().top + offsetParent.scrollTop();
-
-                    draggable.offsetParent().scrollTop(position - window.innerHeight / 2 + DRAGGABLE_HEIGHT);
-
                     CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
-                        { successTimeout: 200, delay: 2000, seeThrough: true });
+                        {successTimeout: 200, delay: 2000, seeThrough: true});
                 }, HIGHLIGHT_TIMEOUT);
             }
         },

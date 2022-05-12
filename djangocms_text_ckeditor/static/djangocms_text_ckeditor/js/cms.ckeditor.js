@@ -409,7 +409,6 @@
 
         _highlight_Textplugin: function (pluginId) {
             var HIGHLIGHT_TIMEOUT = 10;
-            var DRAGGABLE_HEIGHT = 50; // it's not precisely 50, but it fits
 
             var draggable = $('.cms-draggable-' + pluginId);
             var doc = $(document);

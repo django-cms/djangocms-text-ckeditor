@@ -7,7 +7,13 @@ from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.forms.fields import CharField
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseRedirect,
+)
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.urls import re_path, reverse
@@ -26,11 +32,22 @@ from cms.utils.placeholder import get_toolbar_plugin_struct
 from cms.utils.urlutils import admin_reverse
 
 from . import settings
-from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
+from .forms import (
+    ActionTokenValidationForm,
+    DeleteOnCancelForm,
+    RenderPluginForm,
+    TextForm,
+)
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN,
+    _plugin_tags_to_html,
+    plugin_tags_to_admin_html,
+    plugin_tags_to_id_list,
+    plugin_tags_to_user_html,
+    plugin_to_tag,
+    random_comment_exempt,
+    replace_plugin_tags,
 )
 from .widgets import TextEditorWidget
 
@@ -503,7 +520,7 @@ class TextPlugin(CMSPluginBase):
         )
         return text_enabled_plugins
 
-    def get_form(self, request, obj=None, **kwargs):
+    def get_plugins(self, obj=None):
         plugin = getattr(self, "cms_plugin_instance", None) or obj
         get_plugin = plugin_pool.get_plugin
         child_plugin_types = self.get_child_classes(
@@ -511,11 +528,15 @@ class TextPlugin(CMSPluginBase):
             page=self.page,
         )
         child_plugins = (get_plugin(name) for name in child_plugin_types)
-        plugins = get_toolbar_plugin_struct(
+        return get_toolbar_plugin_struct(
             child_plugins,
             plugin.placeholder.slot,
             self.page,
         )
+
+    def get_form(self, request, obj=None, **kwargs):
+        plugin = getattr(self, "cms_plugin_instance", None) or obj
+        plugins = self.get_plugins(obj)
         form = self.get_form_class(
             request=request,
             plugins=plugins,
@@ -526,11 +547,9 @@ class TextPlugin(CMSPluginBase):
 
     def render(self, context, instance, placeholder):
         if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
-            ckeditor_settings = (
-                self.get_form(context["request"], instance)
-                .declared_fields["body"].widget
-                .get_ckeditor_settings(get_language().split("-")[0])
-            )
+            ckeditor_settings = self.get_editor_widget(
+                context["request"], self.get_plugins(instance), instance
+            ).get_ckeditor_settings(get_language().split("-")[0])
 
             context.update(
                 {

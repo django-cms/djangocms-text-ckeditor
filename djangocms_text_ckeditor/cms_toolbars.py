@@ -25,10 +25,10 @@ class InlineEditingToolbar(CMSToolbar):
     @property
     def media(self):
         if self.toolbar.edit_mode_active and self.inline_editing:
-                return forms.Media(
-                    css={'screen': ('djangocms_text_ckeditor/css/cms.inline-ckeditor.css',)},
-                    js=(PATH_TO_JS,),
-                )
+            return forms.Media(
+                css={'screen': ('djangocms_text_ckeditor/css/cms.inline-ckeditor.css',)},
+                js=(PATH_TO_JS,),
+            )
         return forms.Media()
 
     @property

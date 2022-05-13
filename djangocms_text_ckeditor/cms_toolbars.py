@@ -5,7 +5,7 @@ from django.http import QueryDict
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from cms.cms_toolbars import CMSToolbar, ADMIN_MENU_IDENTIFIER
+from cms.cms_toolbars import ADMIN_MENU_IDENTIFIER, CMSToolbar
 from cms.toolbar.items import BaseItem
 from cms.toolbar_pool import toolbar_pool
 

@@ -2,15 +2,20 @@ from urllib.parse import urlparse, urlunparse
 
 from django import forms
 from django.http import QueryDict
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from cms.cms_toolbars import ADMIN_MENU_IDENTIFIER, CMSToolbar
-from cms.toolbar.items import BaseItem
+from cms.toolbar.items import BaseItem, Button, ButtonList
 from cms.toolbar_pool import toolbar_pool
 
 from . import settings
 from .widgets import PATH_TO_JS
+
+
+class IconButton(Button):
+    template = "cms/toolbar/icon-button.html"
 
 
 class InlineEditingItem(BaseItem):
@@ -31,7 +36,7 @@ class InlineEditingToolbar(CMSToolbar):
             )
         return forms.Media()
 
-    @property
+    @cached_property
     def inline_editing(self):
         inline_editing = getattr(self.request.session, "inline_editing", True)
         change = self.request.GET.get("inline_editing", None)
@@ -42,14 +47,16 @@ class InlineEditingToolbar(CMSToolbar):
 
     def populate(self):
         if self.toolbar.edit_mode_active:
-            admin_menu = self.toolbar.get_menu(ADMIN_MENU_IDENTIFIER)
-            admin_menu.add_break(position=-2)
-            admin_menu.add_link_item(
-                name=_("Inline editing (on)") if self.inline_editing else _("Inline editing (off)"),
-                url=self.get_full_path_with_param("inline_editing", int(not self.inline_editing)),
-                active=self.inline_editing,
-                position=-2,
+            item = ButtonList(side = self.toolbar.RIGHT)
+            item.add_item(
+                IconButton(
+                    name="",
+                    url=self.get_full_path_with_param("inline_editing", int(not self.inline_editing)),
+                    active=self.inline_editing,
+                    extra_classes=["cms-icon cms-icon-pencil"],
+                ),
             )
+            self.toolbar.add_item(item)
             if self.inline_editing:
                 self.toolbar.add_item(InlineEditingItem(), position=None)
 

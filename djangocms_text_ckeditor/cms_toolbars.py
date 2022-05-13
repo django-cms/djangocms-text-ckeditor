@@ -4,9 +4,8 @@ from django import forms
 from django.http import QueryDict
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
 
-from cms.cms_toolbars import ADMIN_MENU_IDENTIFIER, CMSToolbar
+from cms.cms_toolbars import CMSToolbar
 from cms.toolbar.items import BaseItem, Button, ButtonList
 from cms.toolbar_pool import toolbar_pool
 

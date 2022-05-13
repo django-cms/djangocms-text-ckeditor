@@ -173,6 +173,7 @@ class TextPlugin(CMSPluginBase):
     module = settings.TEXT_PLUGIN_MODULE_NAME
     form = TextForm
     render_template = "cms/plugins/text.html"
+    inline_editing_template = "cms/plugins/inline.html"
     change_form_template = "cms/plugins/text_plugin_change_form.html"
     ckeditor_configuration = settings.TEXT_CKEDITOR_CONFIGURATION
     disable_child_plugins = True
@@ -527,6 +528,12 @@ class TextPlugin(CMSPluginBase):
         )
         kwargs["form"] = form  # override standard form
         return super().get_form(request, obj, **kwargs)
+
+    def get_render_template(self, context, instance, placeholder):
+        if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
+            return self.inline_editing_template
+        else:
+            return self.render_template
 
     def render(self, context, instance, placeholder):
         if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:

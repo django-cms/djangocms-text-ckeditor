@@ -478,5 +478,4 @@
         CMS.CKEditor._initAll();
     }, 0);
     $(window).on('cms-content-refresh', CMS.CKEditor._resetInlineEditors);
-    window._scrl = window.scrollTo;
 })(window.CMS.$, window.CMS);

@@ -16,7 +16,7 @@ from . import settings as text_settings
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-90d009505f.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-4a84820ae7.cms.ckeditor.min.js'
 
 
 class TextEditorWidget(forms.Textarea):

@@ -536,12 +536,12 @@ class TextPlugin(CMSPluginBase):
             return self.render_template
 
     def inline_editing_active(self, request):
-        return all((
-            settings.TEXT_INLINE_EDITING,
-            hasattr(request, "toolbar"),
-            request.toolbar.edit_mode_active,
-            request.session.get("inline_editing", True),
-        ))
+        return (
+            settings.TEXT_INLINE_EDITING
+            and hasattr(request, "toolbar")
+            and request.toolbar.edit_mode_active
+            and request.session.get("inline_editing", True)
+        )
 
     def render(self, context, instance, placeholder):
         if self.inline_editing_active(context["request"]):

@@ -124,10 +124,11 @@
             // if event is a jQuery event (touchend), than we mutate
             // event a bit so we make the payload similar to what ckeditor.event produces
             var handleEdit = function (event) {
-                var element;
+				event.stop();
 
                 if (event.type === 'touchend' || event.type === 'click') {
                     var cmsPluginNode = $(event.currentTarget).closest('cms-plugin')[0];
+					var element;
 
                     // pick cke_widget span
                     // eslint-disable-next-line new-cap

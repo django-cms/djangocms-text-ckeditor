@@ -535,8 +535,16 @@ class TextPlugin(CMSPluginBase):
         else:
             return self.render_template
 
+    def inline_editing_active(self, request):
+        return (
+            settings.TEXT_INLINE_EDITING and
+            hasattr(request, "toolbar") and
+            request.toolbar.edit_mode_active and
+            request.session.get("inline_editing", True)
+        )
+
     def render(self, context, instance, placeholder):
-        if hasattr(context["request"], "toolbar") and context["request"].toolbar.edit_mode_active:
+        if self.inline_editing_active(context["request"]):
             ckeditor_settings = self.get_editor_widget(
                 context["request"], self.get_plugins(instance), instance
             ).get_ckeditor_settings(get_language().split("-")[0])

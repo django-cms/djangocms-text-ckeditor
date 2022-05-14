@@ -537,10 +537,10 @@ class TextPlugin(CMSPluginBase):
 
     def inline_editing_active(self, request):
         return (
-            settings.TEXT_INLINE_EDITING and
-            hasattr(request, "toolbar") and
-            request.toolbar.edit_mode_active and
-            request.session.get("inline_editing", True)
+            settings.TEXT_INLINE_EDITING
+            and hasattr(request, "toolbar")
+            and request.toolbar.edit_mode_active
+            and request.session.get("inline_editing", True)
         )
 
     def render(self, context, instance, placeholder):

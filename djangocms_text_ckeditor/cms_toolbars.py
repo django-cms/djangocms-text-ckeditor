@@ -4,6 +4,7 @@ from django import forms
 from django.http import QueryDict
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 from cms.cms_toolbars import CMSToolbar
 from cms.toolbar.items import BaseItem, Button, ButtonList
@@ -49,7 +50,7 @@ class InlineEditingToolbar(CMSToolbar):
             item = ButtonList(side = self.toolbar.RIGHT)
             item.add_item(
                 IconButton(
-                    name="",
+                    name=_("Toggle inline editing mode for text plugins"),
                     url=self.get_full_path_with_param("inline_editing", int(not self.inline_editing)),
                     active=self.inline_editing,
                     extra_classes=["cms-icon cms-icon-pencil"],

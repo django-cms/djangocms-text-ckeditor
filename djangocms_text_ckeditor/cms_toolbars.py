@@ -61,7 +61,7 @@ class InlineEditingToolbar(CMSToolbar):
                 self.toolbar.add_item(InlineEditingItem(), position=None)
 
     def get_full_path_with_param(self, key, value):
-        url = urlparse(self.request.get_full_path())
+        url = urlparse(self.toolbar.request_path)
         query_dict = QueryDict(url.query).copy()
         query_dict[key] = value
         url = url._replace(query=query_dict.urlencode())

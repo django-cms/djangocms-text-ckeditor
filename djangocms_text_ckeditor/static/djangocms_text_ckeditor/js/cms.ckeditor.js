@@ -212,13 +212,13 @@
                 CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
                 var data = instance.editor.getData();
 
-                instance.changed = false;
                 CMS.API.Toolbar.showLoader();
                 $.post(CMS.API.Helpers.updateUrlWithPath(instance.settings.url), {  // send changes
                     csrfmiddlewaretoken: CMS.config.csrf,
                     body: data,
                     _save: 'Save'
                 }, function (response) {
+                    instance.changed = false;
                     CMS.API.Toolbar.hideLoader();
                     if (action !== undefined) {
                         action(instance, response);

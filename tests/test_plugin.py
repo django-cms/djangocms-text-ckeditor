@@ -496,9 +496,6 @@ class PluginActionsTestCase(BaseTestCase):
     @override_settings(TEXT_INLINE_EDITING=True)
     def test_only_inline_editing_has_rendered_plugin_content(self):
         """
-        When the text form is rendered in the admin,
-        the child plugins are rendered as their contents passed
-        as initial data to the text field.
         """
         simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
@@ -510,13 +507,7 @@ class PluginActionsTestCase(BaseTestCase):
             body="<p>I'm the first</p>",
         )
 
-        child_plugins = [
-            self._add_child_plugin(text_plugin),
-            self._add_child_plugin(text_plugin),
-        ]
-
-        for plugin in child_plugins:
-            text_plugin = self.add_plugin_to_text(text_plugin, plugin)
+        self.add_plugin_to_text(text_plugin, self._add_child_plugin(text_plugin))
 
         with self.login_user_context(self.get_superuser()):
             response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=1")
@@ -528,8 +519,7 @@ class PluginActionsTestCase(BaseTestCase):
             response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=0")
             print(response.content.decode("utf-8"))
             self.assertEqual(response.status_code, 200)
-            self.SimpleTestCase.assertNotContains(response, "<cms-plugin")
-
+            self.assertNotContains(response, "<cms-plugin")
 
     def test_user_cant_edit_child_plugins_directly(self):
         """

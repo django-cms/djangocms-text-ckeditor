@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.http import urlencode
+from django.test import override_settings
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title
@@ -491,6 +492,42 @@ class PluginActionsTestCase(BaseTestCase):
                 escape(text_with_rendered_plugins),
                 html=False,
             )
+
+    @override_settings(TEXT_INLINE_EDITING=True)
+    def test_only_inline_editing_has_rendered_plugin_content(self):
+        """
+        When the text form is rendered in the admin,
+        the child plugins are rendered as their contents passed
+        as initial data to the text field.
+        """
+        simple_page = create_page('test page', 'page.html', 'en')
+        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+
+        text_plugin = add_plugin(
+            simple_placeholder,
+            'TextPlugin',
+            'en',
+            body="<p>I'm the first</p>",
+        )
+
+        child_plugins = [
+            self._add_child_plugin(text_plugin),
+            self._add_child_plugin(text_plugin),
+        ]
+
+        for plugin in child_plugins:
+            text_plugin = self.add_plugin_to_text(text_plugin, plugin)
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(simple_page.get_absolute_url())
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, "<cms-plugin")
+
+        with self.login_user_context(self.get_superuser() + "?inline_editing=0"):
+            response = self.client.get(simple_page.get_absolute_url())
+            self.assertEqual(response.status_code, 200)
+            self.SimpleTestCase.assertNotContains(response, "<cms-plugin")
+
 
     def test_user_cant_edit_child_plugins_directly(self):
         """

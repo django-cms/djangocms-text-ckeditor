@@ -38,7 +38,7 @@ class InlineEditingToolbar(CMSToolbar):
 
     @cached_property
     def inline_editing(self):
-        inline_editing = getattr(self.request.session, "inline_editing", True)
+        inline_editing = self.request.session.get("inline_editing", True)
         change = self.request.GET.get("inline_editing", None)
         if change is not None:
             inline_editing = change == "1"

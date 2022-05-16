@@ -519,12 +519,14 @@ class PluginActionsTestCase(BaseTestCase):
             text_plugin = self.add_plugin_to_text(text_plugin, plugin)
 
         with self.login_user_context(self.get_superuser()):
-            response = self.client.get(simple_page.get_absolute_url())
+            response = self.client.get(simple_page.get_absolute_url() + "?inline_editing=1")
+            print(response.content.decode("utf-8"))
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "<cms-plugin")
 
-        with self.login_user_context(self.get_superuser() + "?inline_editing=0"):
-            response = self.client.get(simple_page.get_absolute_url())
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(simple_page.get_absolute_url() + "?inline_editing=0")
+            print(response.content.decode("utf-8"))
             self.assertEqual(response.status_code, 200)
             self.SimpleTestCase.assertNotContains(response, "<cms-plugin")
 

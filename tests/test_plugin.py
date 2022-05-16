@@ -11,7 +11,6 @@ from django.template import RequestContext
 from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.http import urlencode
-from django.test import override_settings
 
 from cms.api import add_plugin, create_page, create_title
 from cms.models import CMSPlugin, Page, Title

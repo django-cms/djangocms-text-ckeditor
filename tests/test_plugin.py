@@ -493,9 +493,9 @@ class PluginActionsTestCase(BaseTestCase):
                 html=False,
             )
 
-    @override_settings(TEXT_INLINE_EDITING=True)
     def test_only_inline_editing_has_rendered_plugin_content(self):
         """
+        Tests of child plugins of a TextPlugin are rednered correctly in edit mode
         """
         simple_page = create_page('test page', 'page.html', 'en')
         simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
@@ -511,13 +511,11 @@ class PluginActionsTestCase(BaseTestCase):
 
         with self.login_user_context(self.get_superuser()):
             response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=1")
-            print(response.content.decode("utf-8"))
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "<cms-plugin")
 
         with self.login_user_context(self.get_superuser()):
             response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=0")
-            print(response.content.decode("utf-8"))
             self.assertEqual(response.status_code, 200)
             self.assertNotContains(response, "<cms-plugin")
 

@@ -19,7 +19,7 @@ class IconButton(Button):
 
 
 class InlineEditingItem(BaseItem):
-    """Make ckeditor config available for inline editing"""
+    """Make ckeditor base path available for inline editing"""
     def render(self):
         return mark_safe(
             f'<script class="ckeditorconfig" '
@@ -38,11 +38,11 @@ class InlineEditingToolbar(CMSToolbar):
 
     @cached_property
     def inline_editing(self):
-        inline_editing = self.request.session.get("inline_editing", True)
-        change = self.request.GET.get("inline_editing", None)
+        inline_editing = self.request.session.get("inline_editing", True)  # Activated by default
+        change = self.request.GET.get("inline_editing", None)  # can be changed by query param
         if change is not None:
             inline_editing = change == "1"
-            self.request.session["inline_editing"] = inline_editing
+            self.request.session["inline_editing"] = inline_editing  # store in session
         return inline_editing
 
     def populate(self):
@@ -58,9 +58,12 @@ class InlineEditingToolbar(CMSToolbar):
             )
             self.toolbar.add_item(item)
             if self.inline_editing:
-                self.toolbar.add_item(InlineEditingItem(), position=None)
+                self.toolbar.add_item(InlineEditingItem(), position=None)  # Loads js and css for inline editing
 
     def get_full_path_with_param(self, key, value):
+        """
+        Adds key=value to the query parameters, replacing an existing key if necessary
+        """
         url = urlparse(self.toolbar.request_path)
         query_dict = QueryDict(url.query).copy()
         query_dict[key] = value
@@ -68,5 +71,5 @@ class InlineEditingToolbar(CMSToolbar):
         return urlunparse(url)
 
 
-if settings.TEXT_INLINE_EDITING:
+if settings.TEXT_INLINE_EDITING:  # Only register if explicitly required from settings
     toolbar_pool.register(InlineEditingToolbar)

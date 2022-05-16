@@ -35,6 +35,6 @@ class MigrationTestCase(TestCase):
         with self.login_user_context(admin):
             response = self.client.get(simple_page.get_absolute_url() + "?inline_editing=0")
         self.assertEqual(response.status_code, 200)
-        self.assert(response, '<p>I'm the first</p>")
+        self.assertContains(response, "<p>I'm the first</p>")
 
 

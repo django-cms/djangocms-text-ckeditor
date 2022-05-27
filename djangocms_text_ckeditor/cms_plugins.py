@@ -1,4 +1,5 @@
 import json
+import operator
 import re
 from distutils.version import LooseVersion
 
@@ -22,7 +23,7 @@ import cms
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
-from cms.utils.placeholder import get_toolbar_plugin_struct
+from cms.utils.placeholder import get_toolbar_plugin_struct, get_placeholder_conf
 from cms.utils.urlutils import admin_reverse
 
 from . import settings
@@ -512,11 +513,20 @@ class TextPlugin(CMSPluginBase):
             page=self.page,
         )
         child_plugins = (get_plugin(name) for name in child_plugin_types)
-        return get_toolbar_plugin_struct(
-            child_plugins,
-            plugin.placeholder.slot,
-            self.page,
-        )
+        template = getattr(self.page, "template", None)
+
+        modules = get_placeholder_conf("plugin_modules", plugin.placeholder.slot, template, default={})
+        names = get_placeholder_conf("plugin_labels", plugin.placeholder.slot, template, default={})
+        main_list = []
+
+        # plugin.value points to the class name of the plugin
+        # It's added on registration. TIL.
+        for plugin in child_plugins:
+            main_list.append({'value': plugin.value,
+                              'name': names.get(plugin.value, plugin.name),
+                              'icon': getattr(plugin, "text_icon", None),
+                              'module': modules.get(plugin.value, plugin.module)})
+        return sorted(main_list, key=operator.itemgetter("module"))
 
     def get_form(self, request, obj=None, **kwargs):
         plugin = getattr(self, "cms_plugin_instance", None) or obj

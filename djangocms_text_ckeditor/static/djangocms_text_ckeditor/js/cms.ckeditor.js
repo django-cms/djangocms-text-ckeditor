@@ -166,10 +166,6 @@
                 return;
             }
 
-            if (settings) {
-                options = settings.options;
-                delete settings.options;
-            }
             settings.plugin_id = plugin_id;
             settings.url = url;
 

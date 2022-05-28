@@ -23,7 +23,7 @@ import cms
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
-from cms.utils.placeholder import get_toolbar_plugin_struct, get_placeholder_conf
+from cms.utils.placeholder import get_placeholder_conf
 from cms.utils.urlutils import admin_reverse
 
 from . import settings

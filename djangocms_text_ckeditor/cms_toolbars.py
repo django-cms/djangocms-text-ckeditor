@@ -1,9 +1,9 @@
 from django import forms
-from cms.toolbar.items import BaseItem
+from django.utils.safestring import mark_safe
 
 from cms.cms_toolbars import CMSToolbar
+from cms.toolbar.items import BaseItem
 from cms.toolbar_pool import toolbar_pool
-from django.utils.safestring import mark_safe
 
 from . import settings
 from .widgets import PATH_TO_JS

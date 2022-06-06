@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Unreleased
+==========
+
+* fix: Update skin patch to avoid @media query
+
 5.0.1 (2022-03-24)
 ==================
 

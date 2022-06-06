@@ -28,10 +28,10 @@ class WidgetTestCase(BaseTestCase):
 
         with self.login_user_context(self.user):
             response = self.client.get(endpoint)
-            self.assertContains(response, "group: 'Extra'")
-            self.assertContains(response, "'title': 'Add a link'")
-            self.assertContains(response, "group: 'Generic'")
-            self.assertContains(response, "'title': 'Image'")
+            self.assertContains(response, '"group": "Extra"')
+            self.assertContains(response, '"title": "Add a link"')
+            self.assertContains(response, '"group": "Generic"')
+            self.assertContains(response, '"title": "Image"')
 
     def test_plugin_edit(self):
         page = create_page(title='pagina', template='page.html', language='en')

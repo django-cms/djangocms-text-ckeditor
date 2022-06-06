@@ -1,0 +1,7 @@
+.cke_reset_all div.cke_dialog_page_contents {
+    height: 100%;
+}
+
+.cke_reset_all div.cke_dialog_page_contents > table {
+    height: 100%;
+}

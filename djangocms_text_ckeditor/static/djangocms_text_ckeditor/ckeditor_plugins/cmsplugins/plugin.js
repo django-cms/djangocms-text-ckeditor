@@ -116,7 +116,7 @@
                 exec: function () {
                     var element = that.getElementFromSelection();
                     var plugin = that.getPluginWidget(element);
-
+					console.log("cmspluginsEdit", element, plugin);
                     if (plugin) {
                         that.editPlugin(plugin);
                     }
@@ -134,6 +134,7 @@
 
                     // pick cke_widget span
                     // eslint-disable-next-line new-cap
+					console.log ("plugin edit", cmsPluginNode, cmsPluginNode.parentElement);
                     element = new CKEDITOR.dom.element(cmsPluginNode).getParent();
 
                     event.data = event.data || {};
@@ -146,8 +147,16 @@
 
             this.editor.on('doubleclick', handleEdit);
             this.editor.on('instanceReady', function () {
+/*
+				var context = CMS.$('iframe.cke_wysiwyg_frame');
+				if (context.length > 0) {
+					context = context.contentWindow.document.documentElement;
+				} else {
+					context = null;
+				}
                 CMS.$('cms-plugin', CMS.$('iframe.cke_wysiwyg_frame')[0]
                     .contentWindow.document.documentElement).on('click touchend', handleEdit);
+*/
             });
 
             this.setupDataProcessor();
@@ -267,7 +276,7 @@
             var id = element.getAttribute('id');
 
             this.editor.openDialog('cmspluginsDialog');
-            var body = CMS.$(document);
+            var body = CMS.$(window);
 
             // now tweak in dynamic stuff
             var dialog = CKEDITOR.dialog.getCurrent();
@@ -275,14 +284,16 @@
             dialog.resize(body.width() * 0.8, body.height() * 0.7); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
             $(dialog.parts.title.$).text(this.options.lang.edit);
-
-            var textPluginUrl = window.location.href;
+			console.log("id", id);
+			console.log("this", this);
+            var textPluginUrl = this.options.url || window.location.href;
             var path = encodeURIComponent(window.parent.location.pathname + window.parent.location.search);
             var childPluginUrl = textPluginUrl.replace(
                 /(add-plugin|edit-plugin).*$/,
                 'edit-plugin/' + id + '/?_popup=1&no_preview&cms_history=0&cms_path=' + path
             );
-
+			console.log("path", path, "textPluginUrl", textPluginUrl, "childPluginUrl", childPluginUrl);
+			console.log(this.editor);
             $(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
                 .bind('load', function () {
                     var contents = $(this).contents();
@@ -298,7 +309,7 @@
 
         addPlugin: function (item, panel) {
             var that = this;
-
+			console.log("this", this);
             // hide the panel
             panel.hide();
 
@@ -319,7 +330,7 @@
         },
 
         addPluginDialog: function (item, data) {
-            var body = $(document);
+            var body = $(window);
             // open the dialog
             var selected_text = this.editor.getSelection().getSelectedText();
 

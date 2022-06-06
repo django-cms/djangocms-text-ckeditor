@@ -54,8 +54,8 @@ for css in glob.glob(f"{src_folder}/*.css"):
             contents = update_contents(rd.read())
             if "editor" in css:
                 contents += (
-                    "@media(prefers-color-scheme: dark){.cke_button_icon"
-                    "{filter:brightness(3);}}"
+                    ".cke_button_icon{filter:"
+                    "brightness(calc(1.15 * var(--active-brightness, 0.9)));}"
                 )
             contents += "\n/* Patched for djangocms-text-ckeditor */\n"
             wt.write(contents)

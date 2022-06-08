@@ -147,7 +147,6 @@
                         }
                         wrapper.data('cms_edit_url', url);
                         wrapper.data('cms_plugin_id', id);
-                        // wrapper.data('cms_placeholder_id', plugin[1].placeholder_id);
                         wrapper.on('dblclick.cms-ckeditor', function (event) {
                             // Double-click is needed by CKEditor
                             event.stopPropagation();
@@ -174,7 +173,7 @@
         },
 
         startInlineEditor: function (plugin_id, url) {
-            var options = {};
+            var options;
             var settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent);
             var wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
 
@@ -184,6 +183,8 @@
 
             settings.plugin_id = plugin_id;
             settings.url = url;
+            options = settings.options;
+            delete settings.options;
 
             CMS.CKEditor.init(
                 wrapper[0],

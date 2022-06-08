@@ -162,7 +162,7 @@
 
                 init: function () {
                     var contents = $(this.element.$).children();
-                    var displayProp = contents.css('display');
+                    var displayProp = contents.css('display') || '';
 
                     if (!displayProp.includes('inline')) {
                         this.wrapper.addClass('cke_widget_wrapper_force_block');

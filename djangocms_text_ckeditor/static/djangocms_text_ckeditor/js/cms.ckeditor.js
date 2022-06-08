@@ -52,14 +52,16 @@
             extraPlugins: ''
         },
 
+        // Meaningful default, overwritten by the backend
         static_url: '/static/djangocms-text-ckeditor',
-        ckeditor_basepath: '/static/djangocms-text-ckeditor/ckeditor/',
+
         CSS: [],
         editors: {},
 
 
-        init: function (container, mode, options, settings, callback) {
-            var container = $(container);
+        init: function (element, mode, options, settings, callback) {
+            var container = $(element);
+
             container.data('ckeditor-initialized', true);
             container.attr('contenteditable', true);
             // add additional settings to options
@@ -110,11 +112,12 @@
             }
 
             CMS.CKEditor.observer = CMS.CKEditor.observer || new IntersectionObserver(function (entries, opts) {
-                entries.forEach(function (entry ){
+                entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
                         var target = $(entry.target);
-                        var plugin_id = target.data('plugin_id');
-                        var url = target.data('edit_url');
+                        var plugin_id = target.data('cms_plugin_id');
+                        var url = target.data('cms_edit_url');
+
                         CMS.CKEditor.startInlineEditor(plugin_id, url);
                     }
                 });
@@ -142,25 +145,38 @@
                                 .removeClass('cms-plugin-' + id);
                             wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
                         }
-                        wrapper.data('edit_url', url);
-                        wrapper.data('plugin_id', id);
-                        wrapper.data('placeholder_id', plugin[1].placeholder_id);
-                        wrapper.on('dblclick', function (event) {
+                        wrapper.data('cms_edit_url', url);
+                        wrapper.data('cms_plugin_id', id);
+                        // wrapper.data('cms_placeholder_id', plugin[1].placeholder_id);
+                        wrapper.on('dblclick.cms-ckeditor', function (event) {
+                            // Double-click is needed by CKEditor
                             event.stopPropagation();
                         });
-                        wrapper.on('pointerover', function (event) {
-                            event.stopPropagation();
+                        wrapper.on('pointerover.cms-ckeditor', function (event) {
+                            // use time out to let other event handlers (CMS' !) run first.
+                            setTimeout(function () {
+                                // do not show tooltip on inline editing text fields.
+                                CMS.API.Tooltip.displayToggle(false, event.target, '', id);
+                            }, 0);
                         });
                         CMS.CKEditor.observer.observe(wrapper[0]);
+                    }
+                }
+            });
+            $(window).on('beforeunload.cms-ckeditor', function () {
+                for (var editor_id in CMS.CKEditor.editors) {
+                    if (CMS.CKEditor.editors.hasOwnProperty(editor_id) &&
+                        CMS.CKEditor.editors[editor_id].changed) {
+                        return 'Do you really want to leave this page?';
                     }
                 }
             });
         },
 
         startInlineEditor: function (plugin_id, url) {
-            var options = {},
-                settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent),
-                wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
+            var options = {};
+            var settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent);
+            var wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
 
             if (wrapper.data('ckeditor-initialized')) {
                 return;
@@ -179,7 +195,7 @@
                     callback.editor.on('change', function () {
                         CMS.CKEditor.editors[callback.editor.id].changed = true;
                     });
-                    wrapper.on('blur', function () {
+                    wrapper.on('blur.cms-ckeditor', function () {
                         setTimeout(function () {
                             // avoid save when clicking on editor dialogs or toolbar
                             if (!document.activeElement.classList.contains('cke_panel_frame') &&
@@ -188,15 +204,14 @@
                             }
                         }, 0);
                     });
-                    wrapper.on('click', function () {
-                        CMS.CKEditor._highlight_Textplugin(plugin_id);  // Highlight plugin in structure board
+                    wrapper.on('click.cms-ckeditor', function () {
+                        // Highlight plugin in structure board
+                        // Needs to be done manually, since the tooltip is suppressed and django CMS
+                        // only automatically highlights the plugin if the tooltip is visible
+                        CMS.CKEditor._highlight_Textplugin(plugin_id);
                     });
-                    $(window).on('beforeunload', function () {
-                       if (CMS.CKEditor.editors[callback.editor.id].changed) {
-                           return 'Do you really want to leave this page?';
-                       }
-                    });
-                    CMS.CKEditor.storeCSSlinks();  // store css that ckeditor loaded before save
+                    // store css that ckeditor loaded before save
+                    CMS.CKEditor.storeCSSlinks();
                 }
             );
         },
@@ -368,6 +383,7 @@
 
             window._cmsCKEditors.forEach(function (editorConfig) {
                 var elementId = 'ck-cfg-' + (editorConfig[1] ? editorConfig[1] : editorConfig[0]);
+
                 settings = JSON.parse(document.getElementById(elementId).textContent);
                 options = settings.options;
                 delete settings.options;
@@ -454,9 +470,11 @@
             for (var id in CMS.CKEditor.editors) {
                 if (CMS.CKEditor.editors.hasOwnProperty(id)) {
                     CMS.CKEditor.editors[id].editor.destroy();
+                    $(CMS.CKEditor.editors[id].container).off('.cms-ckeditor');
                     delete CMS.CKEditor.editors[id];
                 }
             }
+            $(window).off('.cms-ckeditor');
         },
 
         _resetInlineEditors: function () {

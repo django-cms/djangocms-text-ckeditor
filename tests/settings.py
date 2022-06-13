@@ -109,6 +109,7 @@ HELPER_SETTINGS = {
         'Bootstrap3ButtonCMSPlugin': {'text_field_child_label': 'label'},
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
+    'TEXT_INLINE_EDITING': True,
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()

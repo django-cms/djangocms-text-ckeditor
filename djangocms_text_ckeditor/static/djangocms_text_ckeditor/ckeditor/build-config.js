@@ -71,7 +71,7 @@ var CKBUILDER_CONFIG = {
 		'entities' : 1,
 		'filebrowser' : 1,
 		'find' : 1,
-		'flash' : 1,
+//		'flash' : 1,
 		'floatingspace' : 1,
 		'font' : 1,
 		'format' : 1,

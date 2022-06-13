@@ -57,7 +57,7 @@ One of the easiest contributions you can make is helping to translate this addon
 Documentation
 =============
 
-See ``REQUIREMENTS`` in the `setup.py <https://github.com/divio/djangocms-text-ckeditor/blob/master/setup.py>`_
+See ``REQUIREMENTS`` in the `setup.py <https://github.com/django-cms/djangocms-text-ckeditor/blob/master/setup.py>`_
 file for additional dependencies listed in the
 
 The current integrated Version of CKEditor is: **4.17.2**
@@ -88,6 +88,32 @@ Upgrading from ``cms.plugins.text``
 Configuration
 -------------
 
+Inline editing feature
+**********************
+
+Inline editing allows editors to directly click on a text plugin and change
+the contents in django CMS' edit mode. The CKEditor appears directly around
+the text field and can be used normally. Changes are saved as soon as the
+text field leaves focus.
+
+Inline editing requires to encapsulate the HTML text in a ``<div>`` in
+edit mode. This might cause some side effects with a site's CSS, e.g. direct
+child rules.
+
+To activate inline editing add the following line in your project's
+``settings.py``::
+
+    TEXT_INLINE_EDITING = True
+
+This will add a toggle button to the toolbar to allow to switch inline editing
+on and off for the current session.
+
+When inline editing is active the editor will save the plugin's content each time it loses
+focus. If only text has changed the user can immediately continue to edit. If
+a text-enabled plugin was changed, added, or removed he page will refresh to
+update the page tree and get the correctly rendered version of the changed
+plugin.
+
 Default content in Placeholder
 ******************************
 
@@ -97,7 +123,7 @@ If you use Django-CMS >= 3.0, you can use ``TextPlugin`` in "default_plugins"
 HTML content. If you want to add some "default children" to your
 automagically added plugin (i.e. a ``LinkPlugin``), you have to put children
 references in the body. References are ``"%(_tag_child_<order>)s"`` with the
-inserted order of chidren. For example::
+inserted order of children. For example::
 
     CMS_PLACEHOLDER_CONF = {
         'content': {
@@ -212,7 +238,7 @@ configuration parameter in your settings::
 #. Add `configuration='MYSETTING'` to the `HTMLField` usage(s) you want to
    customize;
 #. Define a setting parameter named as the string used in the `configuration`
-   argument of the `HTMLField` instance with the desidered configuration;
+   argument of the `HTMLField` instance with the desired configuration;
 
 Values not specified in your custom configuration will be taken from the global
 ``CKEDITOR_SETTINGS``.
@@ -252,7 +278,7 @@ to note:
 .. _add styles and js configuration: https://github.com/divio/django-cms-demo/blob/7a104acaa749c52a8ed4870a74898e38daf20e46/src/settings.py#L318-L324
 .. _stop CKEditor from removing empty spans: https://github.com/divio/django-cms-explorer/blob/908a88afa4e1d1176e267e77eb5c61e31ef0f9e5/static/js/addons/ckeditor.wysiwyg.js#L73
 .. _allowedContent: http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
-.. _to contain: https://github.com/divio/djangocms-text-ckeditor/issues/405#issuecomment-276814197
+.. _to contain: https://github.com/django-cms/djangocms-text-ckeditor/issues/405#issuecomment-276814197
 
 
 Drag & Drop Images
@@ -262,7 +288,7 @@ In IE and Firefox based browsers it is possible to drag and drop a picture into 
 This image is base64 encoded and lives in the 'src' attribute as a 'data' tag.
 
 We detect this images, encode them and convert them to picture plugins.
-If you want to overwirite this behavior for your own picture plugin:
+If you want to overwrite this behavior for your own picture plugin:
 
 There is a setting called::
 

@@ -492,6 +492,32 @@ class PluginActionsTestCase(BaseTestCase):
                 html=False,
             )
 
+    def test_only_inline_editing_has_rendered_plugin_content(self):
+        """
+        Tests of child plugins of a TextPlugin are rednered correctly in edit mode
+        """
+        simple_page = create_page('test page', 'page.html', 'en')
+        simple_placeholder = get_page_placeholders(simple_page, 'en').get(slot='content')
+
+        text_plugin = add_plugin(
+            simple_placeholder,
+            'TextPlugin',
+            'en',
+            body="<p>I'm the first</p>",
+        )
+
+        self.add_plugin_to_text(text_plugin, self._add_child_plugin(text_plugin))
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=1")
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, "<cms-plugin")
+
+        with self.login_user_context(self.get_superuser()):
+            response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=0")
+            self.assertEqual(response.status_code, 200)
+            self.assertNotContains(response, "<cms-plugin")
+
     def test_user_cant_edit_child_plugins_directly(self):
         """
         No user regardless of permissions can modify the contents

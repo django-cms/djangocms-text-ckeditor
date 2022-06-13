@@ -6,12 +6,14 @@ from django.utils.translation import gettext_lazy as _
 # See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 # for all settings
 
-CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
+CKEDITOR_SETTINGS = {
     'language': '{{ language }}',
     'toolbar': 'CMS',
     'skin': 'moono-lisa',
+    'baseFloatZIndex': 10000000,
     'toolbarCanCollapse': False,
-})
+    **getattr(settings, 'CKEDITOR_SETTINGS', {}),
+}
 
 INSTALLED_APPS = getattr(settings, 'INSTALLED_APPS', [])
 if 'cms.plugins.picture' in INSTALLED_APPS or 'djangocms_picture' in INSTALLED_APPS:
@@ -37,3 +39,4 @@ TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _('Generi
 ALLOW_TOKEN_PARSERS = (
     'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',
 )
+TEXT_INLINE_EDITING = getattr(settings, 'TEXT_INLINE_EDITING', False)

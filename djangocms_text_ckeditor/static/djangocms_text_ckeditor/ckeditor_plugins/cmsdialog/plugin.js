@@ -876,7 +876,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
 			var element = this._.element,
 				definition = this.definition,
 				documentBody = CKEDITOR.document.getBody(),
-				baseFloatZIndex = this._.editor.config.baseFloatZIndex;
+				baseFloatZIndex = this._.editor.config.baseFloatZIndex + 10000000;
 
 			if ( !( element.getParent() && element.getParent().equals( documentBody ) ) ) {
 				element.appendTo( documentBody );
@@ -902,7 +902,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
 			if ( CKEDITOR.dialog._.currentZIndex === null ) {
 				CKEDITOR.dialog._.currentZIndex = baseFloatZIndex;
 			}
-			this._.element.getFirst().setStyle( 'z-index', CKEDITOR.dialog._.currentZIndex += 10 );
+			this._.element.getFirst().setStyle( 'z-index', CKEDITOR.dialog._.currentZIndex += 10 );  // to cover CMS' structure board
 			this.getElement().setStyle( 'z-index', CKEDITOR.dialog._.currentZIndex );
 
 			// Maintain the dialog ordering and dialog cover.
@@ -2306,7 +2306,7 @@ CKEDITOR.DIALOG_STATE_BUSY = 2;
 			skinName = ( CKEDITOR.skinName || editor.config.skin ),
 			backgroundColorStyle = config.dialog_backgroundCoverColor || ( skinName == 'moono-lisa' ? 'black' : 'white' ),
 			backgroundCoverOpacity = config.dialog_backgroundCoverOpacity,
-			baseFloatZIndex = config.baseFloatZIndex,
+			baseFloatZIndex = config.baseFloatZIndex + 10000000,
 			coverKey = CKEDITOR.tools.genKey( backgroundColorStyle, backgroundCoverOpacity, baseFloatZIndex ),
 			coverElement = covers[ coverKey ];
 

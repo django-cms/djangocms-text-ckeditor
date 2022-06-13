@@ -5,7 +5,12 @@ Changelog
 Unreleased
 ==========
 
-* fix: Update skin patch to avoid @media query
+
+5.1.0 (2022-03-24)
+==================
+
+* Added inline editing in `#606 <https://github.com/django-cms/djangocms-text-ckeditor/pull/606>`_
+* fix: Update skin patch to avoid @media query in `#614 <https://github.com/django-cms/djangocms-text-ckeditor/pull/614>`_
 
 5.0.1 (2022-03-24)
 ==================

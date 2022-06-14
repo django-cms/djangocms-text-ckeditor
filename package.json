@@ -5,6 +5,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx npm-force-resolutions"
   },
+  "resolutions": {
+     "graceful-fs": "4.2.4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/divio/djangocms-text-ckeditor.git"
@@ -16,7 +19,6 @@
   },
   "homepage": "https://github.com/divio/djangocms-text-ckeditor#readme",
   "devDependencies": {
-    "graceful-fs": "4.2.4",
     "del": "^2.2.2",
     "djangocms-casper-helpers": "^3.0.0",
     "browser-sync": "^2.26.12",

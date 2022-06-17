@@ -463,6 +463,9 @@
             CMS.CKEditor.touchdevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;  // on touch device?
             if (!CMS.CKEditor.touchdevice) {  // no inline editing on touch devices to not interfere with scrolling
                 CMS.CKEditor.initInlineEditors();
+                $('div.cms a.cms-btn.cms-edit-toggle').show();
+            } else {
+                $('div.cms a.cms-btn.cms-edit-toggle').hide();
             }
             CMS.CKEditor.initAdminEditors();
         },

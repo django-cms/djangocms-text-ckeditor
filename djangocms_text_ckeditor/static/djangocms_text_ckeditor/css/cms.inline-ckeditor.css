@@ -5,3 +5,7 @@
 .cke_reset_all div.cke_dialog_page_contents > table {
     height: 100%;
 }
+
+div.cms .cms-more-buttons a.cms-btn.cms-edit-toggle {
+    display: none;
+}

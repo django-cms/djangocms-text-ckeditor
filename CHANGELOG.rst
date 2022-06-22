@@ -6,7 +6,7 @@ Unreleased
 ==========
 
 * Removed inline editing toggle button from touch devices (where it is inactive anyways) and collapsed menus
-
+* Add workaround for toolbar bug in django CMS < 3.10: Reload page after change in inline editor
 
 5.1.0 (2022-03-24)
 ==================

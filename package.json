@@ -6,7 +6,7 @@
     "preinstall": "npx npm-force-resolutions"
   },
   "resolutions": {
-    "graceful-fs": "^4.2.4"
+     "graceful-fs": "4.2.4"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,8 @@
   "devDependencies": {
     "del": "^2.2.2",
     "djangocms-casper-helpers": "^3.0.0",
-    "gulp": "^3.9.0",
+    "browser-sync": "^2.26.12",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^2.1.0",
     "gulp-filter": "^4.0.0",
@@ -30,7 +31,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-rev": "^7.1.2",
     "gulp-rev-replace": "^0.4.3",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "2.4.1",
     "gulp-uglify": "^2.0.0",
     "minimist": "^1.2.0",
     "run-sequence": "^1.2.2"

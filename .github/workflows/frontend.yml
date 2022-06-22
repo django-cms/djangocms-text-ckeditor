@@ -7,16 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [6.x]
+        node-version: [16.x, 17.x]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install gulp
-      run: npm install -g gulp@3.9.1
+      run: npm install -g gulp@4.0.2
+    - name: Install npm
+      run: npm install --location=global npm@latest
     - name: Install dependencies
       run: npm install
-    - name: Run gulp
-      run: gulp ci
+    # - name: Run gulp
+    #   run: gulp ci

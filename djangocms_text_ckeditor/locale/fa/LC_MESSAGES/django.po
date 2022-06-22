@@ -2,66 +2,65 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Angelo Dini <angelo.dini@divio.ch>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-24 10:13+0100\n"
+"POT-Creation-Date: 2022-05-14 17:00+0200\n"
 "PO-Revision-Date: 2019-01-23 16:28+0000\n"
 "Last-Translator: Angelo Dini <angelo.dini@divio.ch>, 2019\n"
 "Language-Team: Persian (https://www.transifex.com/divio/teams/58664/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: cms_plugins.py:314 cms_plugins.py:333
+#: cms_plugins.py:356 cms_plugins.py:375
 msgid "You do not have permission to add a plugin."
 msgstr ""
 
-#: cms_plugins.py:386
+#: cms_plugins.py:428
 msgid "Unable to process your request. Invalid token."
 msgstr ""
 
-#: cms_plugins.py:400 cms_plugins.py:432
+#: cms_plugins.py:442 cms_plugins.py:476
 msgid "Unable to process your request."
 msgstr ""
 
-#: forms.py:70
+#: cms_toolbars.py:53
+msgid "Toggle inline editing mode for text plugins"
+msgstr ""
+
+#: forms.py:69
 msgid "Can't delete a saved plugin."
 msgstr ""
 
-#: models.py:43
+#: models.py:37
 msgid "body"
 msgstr "بدنه"
 
-#: settings.py:38
+#: settings.py:36
 msgid "Text"
 msgstr "متن"
 
-#: settings.py:39
+#: settings.py:37
 msgid "Generic"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:25
-#: templates/cms/plugins/widgets/ckeditor.html:28
+#: widgets.py:114 widgets.py:117
 msgid "CMS Plugins"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:26
+#: widgets.py:115
 msgid "Add CMS Plugin"
 msgstr ""
 
-#: templates/cms/plugins/widgets/ckeditor.html:27
+#: widgets.py:116
 msgid "Edit CMS Plugin"
-msgstr ""
-
-#: templates/cms/plugins/widgets/ckeditor.html:33
-msgid "Standard Plugins"
 msgstr ""

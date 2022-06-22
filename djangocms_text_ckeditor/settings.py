@@ -6,12 +6,14 @@ from django.utils.translation import gettext_lazy as _
 # See http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 # for all settings
 
-CKEDITOR_SETTINGS = getattr(settings, 'CKEDITOR_SETTINGS', {
+CKEDITOR_SETTINGS = {
     'language': '{{ language }}',
     'toolbar': 'CMS',
     'skin': 'moono-lisa',
+    'baseFloatZIndex': 10000000,
     'toolbarCanCollapse': False,
-})
+    **getattr(settings, 'CKEDITOR_SETTINGS', {}),
+}
 
 INSTALLED_APPS = getattr(settings, 'INSTALLED_APPS', [])
 if 'cms.plugins.picture' in INSTALLED_APPS or 'djangocms_picture' in INSTALLED_APPS:
@@ -28,12 +30,13 @@ TEXT_HTML_SANITIZE = getattr(settings, 'TEXT_HTML_SANITIZE', True)
 # This would make sure correct urls are created for
 # when static files are hosted on django and on a CDN. Old code was working fine for Django but not for CDNs.
 TEXT_CKEDITOR_BASE_PATH = getattr(
-    settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/')
+    settings, 'TEXT_CKEDITOR_BASE_PATH', static('djangocms_text_ckeditor/ckeditor/'),
 )
 TEXT_AUTO_HYPHENATE = getattr(settings, 'TEXT_AUTO_HYPHENATE', True)
-TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _("Text"))
-TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _("Generic"))
+TEXT_PLUGIN_NAME = getattr(settings, 'TEXT_PLUGIN_NAME', _('Text'))
+TEXT_PLUGIN_MODULE_NAME = getattr(settings, 'TEXT_PLUGIN_MODULE_NAME', _('Generic'))
 
 ALLOW_TOKEN_PARSERS = (
     'djangocms_text_ckeditor.attribute_parsers.DataAttributeParser',
 )
+TEXT_INLINE_EDITING = getattr(settings, 'TEXT_INLINE_EDITING', False)

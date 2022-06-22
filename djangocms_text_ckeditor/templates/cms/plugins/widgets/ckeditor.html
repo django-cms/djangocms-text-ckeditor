@@ -1,44 +1,10 @@
-{% load i18n l10n static cms_static sekizai_tags %}
-
+{% load i18n l10n static cms_static sekizai_tags %}{{ ckeditor_settings|json_script:ckeditor_settings_id }}
 <script>
-    window._cmsCKEditors = window._cmsCKEditors || [];
-    window._cmsCKEditors.push([
-        '{{ ckeditor_selector }}',
-        {{ settings|safe }},
-        {
-            'static_url': '{{ STATIC_URL }}djangocms_text_ckeditor',
-            'add_plugin_url': '{{ placeholder.get_add_url }}',
-            {% if widget.action_token %}
-            'action_token': '{{ widget.action_token }}',
-            {% endif %}
-            {% if widget.render_plugin_url %}
-            'render_plugin_url': '{{ widget.render_plugin_url }}',
-            {% endif %}
-            {% if widget.cancel_url and widget.action_token %}
-            'cancel_plugin_url': '{{ widget.cancel_url }}',
-            {% endif %}
-            'delete_on_cancel': {{ widget.delete_on_cancel|yesno:"true,false" }},
-            'placeholder_id': {{ placeholder.pk|default:"''"|unlocalize }},
-            'plugin_id': {{ plugin_pk|default:"''"|unlocalize }},
-            'plugin_language': '{{ plugin_language }}',
-            'lang': {
-                'toolbar': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}',
-                'add': '{% filter escapejs %}{% trans "Add CMS Plugin" %}{% endfilter %}',
-                'edit': '{% filter escapejs %}{% trans "Edit CMS Plugin" %}{% endfilter %}',
-                'aria': '{% filter escapejs %}{% trans "CMS Plugins" %}{% endfilter %}'
-            },
-            'plugins': [
-                {% regroup installed_plugins by module as module_list %}
-                {% for module in module_list %}
-                    { group: '{% filter escapejs %}{% if module.grouper %}{{ module.grouper|capfirst }}{% else %}{% trans "Standard Plugins" %}{% endif %}{% endfilter %}', items: [
-                        {% for plugin in module.list %}
-                            { 'title': '{% filter escapejs %}{{ plugin.name }}{% endfilter %}', 'type': '{% filter escapejs %}{{ plugin.value }}{% endfilter %}' }{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    ]}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            ]{% if not placeholder %},
-            'toolbar': 'HTMLField'
-            {% endif %}
-        }
-    ]);
+    (function () {
+        window._cmsCKEditors = window._cmsCKEditors || [];
+        window._cmsCKEditors.push([
+            '{{ ckeditor_selector }}',
+            {{ plugin_pk|default:"''"|unlocalize }}
+        ]);
+    })();
 </script>

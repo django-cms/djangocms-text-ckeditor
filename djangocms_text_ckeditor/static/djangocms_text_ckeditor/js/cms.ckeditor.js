@@ -272,7 +272,7 @@
         _toolbar_bug_version: function (version) {
             var parts = version.split('.');
 
-            return parts[0] <= '3' && parts[1].length < 2;
+            return parts[0] === '3' && parts[1].length < 2;
         },
 
         storeCSSlinks: function () {

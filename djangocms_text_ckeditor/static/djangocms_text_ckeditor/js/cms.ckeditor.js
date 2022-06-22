@@ -256,11 +256,23 @@
         },
 
         loadToolbar: function () {
-            CMS.API.StructureBoard._loadToolbar()
-                .done(function (newToolbar) {
-                    CMS.API.Toolbar._refreshMarkup($(newToolbar).find('.cms-toolbar'));
-                })
-                .fail(CMS.API.Helpers.reloadBrowser);
+            if (CMS.settings && CMS.settings.version && this._toolbar_bug_version(CMS.settings.version)) {
+                // Before django CMS 3.10 a bug prevents the toolbar to be loaded correctly
+                // Refresh whole page instead
+                CMS.API.Helpers.reloadBrowser();
+            } else {
+                CMS.API.StructureBoard._loadToolbar()
+                    .done(function (newToolbar) {
+                        CMS.API.Toolbar._refreshMarkup($(newToolbar).find('.cms-toolbar'));
+                    })
+                    .fail(CMS.API.Helpers.reloadBrowser);
+            }
+        },
+
+        _toolbar_bug_version: function (version) {
+            var parts = version.split('.');
+
+            return parts[0] <= '3' && parts[0].length < 2;
         },
 
         storeCSSlinks: function () {

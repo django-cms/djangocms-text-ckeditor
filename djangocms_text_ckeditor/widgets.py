@@ -51,12 +51,12 @@ class TextEditorWidget(forms.Textarea):
             conf.update(getattr(settings, configuration))
             self.configuration = conf  # specific
         else:
-            self.configuration = text_settings.CKEDITOR_SETTINGS  # general
-        self.cancel_url = cancel_url  # specific
-        self.render_plugin_url = render_plugin_url  # specific
-        self.action_token = action_token  # specific
-        self.delete_on_cancel = delete_on_cancel  # specific
-        self.body_css_classes = body_css_classes  # specific
+            self.configuration = text_settings.CKEDITOR_SETTINGS
+        self.cancel_url = cancel_url
+        self.render_plugin_url = render_plugin_url
+        self.action_token = action_token
+        self.delete_on_cancel = delete_on_cancel
+        self.body_css_classes = body_css_classes if body_css_classes else self.configuration.get('bodyClass', '')
 
     @property
     def media(self):

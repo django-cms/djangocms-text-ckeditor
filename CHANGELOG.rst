@@ -5,9 +5,12 @@ Changelog
 Unreleased
 ==========
 
+5.1.1 (2022-06-22)
+==================
+
 * Removed inline editing toggle button from touch devices (where it is inactive anyways) and collapsed menus
 * Add workaround for toolbar bug in django CMS < 3.10: Reload page after change in inline editor
-* Fix #578: If parent plugins to not set body css class the default from CKEDITOR_SETTINGS is used
+* Fix `578 <https://github.com/django-cms/djangocms-text-ckeditor/pull/578>`_: If parent plugins to not set body css class the default from CKEDITOR_SETTINGS is used
 
 5.1.0 (2022-03-24)
 ==================

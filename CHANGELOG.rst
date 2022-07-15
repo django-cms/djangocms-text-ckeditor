@@ -1,5 +1,6 @@
 CHANGELOG
 =========
+* fix: Added default for ALDRYN_BOILERPLATE_NAME setting
 
 3.6.0 (2018-04-11)
 ------------------

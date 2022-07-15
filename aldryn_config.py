@@ -30,7 +30,7 @@ class Form(forms.BaseForm):
         }
 
         # This could fail if aldryn-django-cms has not been configured yet.
-        boilerplate_name = settings['ALDRYN_BOILERPLATE_NAME']
+        boilerplate_name = settings.get('ALDRYN_BOILERPLATE_NAME', 'legacy')
 
         if data.get('content_css'):
             CKEDITOR_SETTINGS['contentsCss'] = data['content_css']

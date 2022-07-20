@@ -3,6 +3,9 @@ CHANGELOG
 
 Unreleased
 ----------
+
+4.0.0.dev6 (2022-07-20)
+-----------------------
 * fix: Removed legacy aldryn setting
 * fix: Pinned easy-thumbnails to 2.7.1 to prevent floating point image
   size test failures

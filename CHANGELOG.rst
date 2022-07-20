@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+Unreleased
+----------
+* fix: Removed legacy aldryn setting
+* fix: Pinned easy-thumbnails to 2.7.1 to prevent floating point image
+  size test failures
+
 3.6.0 (2018-04-11)
 ------------------
 

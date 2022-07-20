@@ -3,7 +3,7 @@ CHANGELOG
 
 Unreleased
 ----------
-* fix: Removed legacy aldryn settings
+* fix: Removed legacy aldryn setting
 * fix: Pinned easy-thumbnails to 2.7.1 to prevent floating point image
   size test failures
 

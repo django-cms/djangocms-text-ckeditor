@@ -29,20 +29,14 @@ class Form(forms.BaseForm):
             'skin': 'moono-lisa',
         }
 
-        # This could fail if aldryn-django-cms has not been configured yet.
-        boilerplate_name = settings['ALDRYN_BOILERPLATE_NAME']
-
         if data.get('content_css'):
             CKEDITOR_SETTINGS['contentsCss'] = data['content_css']
         else:
             CKEDITOR_SETTINGS['contentsCss'] = ['/static/css/base.css']
 
+        style_set = ''
         if data.get('style_set'):
             style_set = data['style_set']
-        elif boilerplate_name == 'bootstrap3':
-            style_set = '/static/js/addons/ckeditor.wysiwyg.js'
-        else:
-            style_set = ''
 
         CKEDITOR_SETTINGS['stylesSet'] = 'default:{}'.format(style_set)
 

@@ -34,7 +34,9 @@ class Form(forms.BaseForm):
         else:
             CKEDITOR_SETTINGS['contentsCss'] = ['/static/css/base.css']
 
-        style_set = data.get('style_set', '')
+        style_set = ''
+        if data.get('style_set'):
+            style_set = data['style_set']
 
         CKEDITOR_SETTINGS['stylesSet'] = 'default:{}'.format(style_set)
 

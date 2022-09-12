@@ -16,3 +16,6 @@
 .cke_dialog_body {
 	position: relative;
 }
+.cke_combo_text {
+	width: 100px;
+}

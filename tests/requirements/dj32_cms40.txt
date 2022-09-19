@@ -2,3 +2,4 @@
 
 Django>=3.2,<3.3
 git+https://github.com/django-cms/django-cms@develop-4#egg=django-cms
+git+https://github.com/django-cms/djangocms-versioning@master#egg=djangocms-versioning

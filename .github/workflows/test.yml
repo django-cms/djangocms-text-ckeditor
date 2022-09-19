@@ -16,7 +16,8 @@ jobs:
           dj32_cms39.txt,
           dj32_cms310.txt,
           dj32_cms311.txt,
-          dj32_cms40.txt
+          dj32_cms40.txt,
+          dj40_cms311.txt
         ]
         os: [
           ubuntu-20.04,

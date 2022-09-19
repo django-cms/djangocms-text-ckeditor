@@ -2,7 +2,7 @@
 django CMS Text CKEditor
 ========================
 
-|pypi| |coverage| |python| |django| |djangocms|
+|pypi| |coverage| |python| |django| |djangocms| |djangocms4|
 
 
 .. note::
@@ -518,4 +518,7 @@ You can run tests by executing::
 .. |django| image:: https://img.shields.io/badge/django-2.2,%203.1,%203.2-blue.svg
     :target: https://www.djangoproject.com/
 .. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
+    :target: https://www.django-cms.org/
+
+.. |djangocms4| image:: https://img.shields.io/badge/django%20CMS-4-blue.svg
     :target: https://www.django-cms.org/

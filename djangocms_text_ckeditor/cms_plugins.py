@@ -331,6 +331,13 @@ class TextPlugin(CMSPluginBase):
 
         return TextPluginForm
 
+    def _create_ghost_plugin(placeholder, plugin):
+        """CMS version-save function to add a plugin to a placeholder"""
+        if hasattr(placeholder, "add_plugin"):  # available as of CMS v4
+            placeholder.add_plugin(plugin)
+        else:  # CMS < v4
+            plugin.save()
+
     @xframe_options_sameorigin
     def add_view(self, request, form_url="", extra_context=None):
         if "plugin" in request.GET:
@@ -381,13 +388,14 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        plugin = CMSPlugin.objects.create(
+        plugin = CMSPlugin(
             language=data["plugin_language"],
             plugin_type=data["plugin_type"],
-            position=data["position"],
             placeholder=data["placeholder_id"],
+            position=data["position"],
             parent=data.get("plugin_parent"),
         )
+        self._create_ghost_plugin(data["placeholder_id"], plugin)
 
         query = request.GET.copy()
         query["plugin"] = str(plugin.pk)

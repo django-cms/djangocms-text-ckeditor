@@ -5,6 +5,8 @@ Changelog
 Unreleased
 ==========
 
+* Add suport for django CMS 4
+
 5.1.1 (2022-06-22)
 ==================
 

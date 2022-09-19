@@ -331,6 +331,7 @@ class TextPlugin(CMSPluginBase):
 
         return TextPluginForm
 
+    @staticmethod
     def _create_ghost_plugin(placeholder, plugin):
         """CMS version-save function to add a plugin to a placeholder"""
         if hasattr(placeholder, "add_plugin"):  # available as of CMS v4

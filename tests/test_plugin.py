@@ -568,7 +568,7 @@ class PluginActionsTestCase(BaseTestCase):
             body="I'm the first",
         )
         text_plugin_class = text_plugin.get_plugin_class_instance()
-        child_plugin = self._add_child_plugin(text_plugin)
+        child_plugin = self._add_child_plugin(text_plugin, 'LinkPlugin')
         text_plugin = self.add_plugin_to_text(text_plugin, child_plugin)
 
         with self.login_user_context(self.get_superuser()):
@@ -588,7 +588,7 @@ class PluginActionsTestCase(BaseTestCase):
                 content=rendered_content,
                 admin=True,
             )
-
+            self.maxDiff = None
             self.assertEqual(force_str(response.content), rendered_child_plugin)
 
         child_plugin = self._add_child_plugin(text_plugin, plugin_type='PreviewDisabledPlugin')

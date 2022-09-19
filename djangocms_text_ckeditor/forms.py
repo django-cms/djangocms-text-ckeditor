@@ -88,6 +88,7 @@ class DeleteOnCancelForm(forms.Form):
             queryset = queryset.exclude(pk__in=excluded_plugins)
         return queryset
 
+    @staticmethod
     def _delete_plugin(plugin):
         """Version-safe plugin delete method"""
         placeholder = plugin.placeholder

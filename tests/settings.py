@@ -108,6 +108,7 @@ HELPER_SETTINGS = {
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
     'DEFAULT_AUTO_FIELD': 'django.db.models.AutoField',
+    'CMS_CONFIRM_VERSION4': True,
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()

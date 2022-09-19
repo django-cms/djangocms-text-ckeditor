@@ -13,6 +13,13 @@ class TestFixture:
         self.superuser = self.get_superuser()
         return super().setUp()
 
+    def tearDown(self):
+        if DJANGO_CMS4:
+            from djangocms_versioning.models import Version
+
+            Version.objects.all().delete()
+        return super().tearDown()
+
     if DJANGO_CMS4:  # CMS V4
 
         def _get_version(self, grouper, version_state, language=None):
@@ -44,13 +51,12 @@ class TestFixture:
             if version is not None:
                 version.unpublish(self.superuser)
 
-        def create_page(self, title, **kwargs):
+        def create_page(self, title, template, **kwargs):
             kwargs.setdefault("language", self.language)
             kwargs.setdefault("created_by", self.superuser)
-            kwargs.setdefault("in_navigation", True)
-            kwargs.setdefault("limit_visibility_in_menu", None)
-            kwargs.setdefault("menu_title", title)
-            return create_page(title=title, **kwargs)
+            page = create_page(title=title, template=template, **kwargs)
+            page.save()
+            return page
 
         def create_title(self, title, page, **kwargs):
             kwargs.setdefault("language", self.language)
@@ -114,10 +120,10 @@ class TestFixture:
         def unpublish(self, page, language=None):
             page.unpublish(language)
 
-        def create_page(self, title, **kwargs):
+        def create_page(self, title, template, **kwargs):
             kwargs.setdefault("language", self.language)
             kwargs.setdefault("menu_title", title)
-            return create_page(title=title, **kwargs)
+            return create_page(title=title, template=template, **kwargs)
 
         def create_title(self, title, page, **kwargs):
             kwargs.setdefault("language", self.language)

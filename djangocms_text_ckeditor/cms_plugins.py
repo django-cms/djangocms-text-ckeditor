@@ -31,7 +31,7 @@ from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginFo
 from .models import Text
 from .utils import (
     OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
+    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags, cms_placeholder_add_plugin,
 )
 from .widgets import TextEditorWidget
 
@@ -401,7 +401,7 @@ class TextPlugin(CMSPluginBase):
         query = request.GET.copy()
         query["plugin"] = str(plugin.pk)
 
-        success_url = admin_reverse("cms_page_add_plugin")
+        success_url = admin_reverse(cms_placeholder_add_plugin)  # Version dependent
         # Because we've created the cmsplugin record
         # we need to delete the plugin when a user cancels.
         success_url += "?delete-on-cancel&" + query.urlencode()

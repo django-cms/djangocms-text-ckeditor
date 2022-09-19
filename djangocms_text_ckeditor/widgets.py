@@ -10,13 +10,17 @@ from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language, gettext
 
-from cms.utils.urlutils import static_with_version
+from cms.utils.urlutils import static_with_version, admin_reverse
 
 from . import settings as text_settings
-
+from .utils import is_cms_v4, cms_placeholder_add_plugin
 
 # this path is changed automatically whenever you run `gulp bundle`
 PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-5f73f48756.cms.ckeditor.min.js'
+
+
+def reverse_admin(cms_placeholder_add_plugin):
+    pass
 
 
 class TextEditorWidget(forms.Textarea):
@@ -106,7 +110,7 @@ class TextEditorWidget(forms.Textarea):
             'plugin_language': self.plugin_language,
             'placeholder_id': self.placeholder.pk if self.placeholder else None,
             'render_plugin_url': self.render_plugin_url or '',
-            'add_plugin_url': self.placeholder.get_add_url() or '' if self.placeholder else '',
+            'add_plugin_url': admin_reverse(cms_placeholder_add_plugin) if self.placeholder else '',
             'clancel_plugin_url': self.cancel_url or '',
             'delete_on_cancel': self.delete_on_cancel or False,
             'action_token': self.action_token or '',

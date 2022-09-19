@@ -91,7 +91,7 @@ class AbstractText(CMSPlugin):
                 new_plugin.id = None
                 new_plugin._state.adding = True
                 new_plugin.parent = self
-                if hasattr(self.placeholder, "add_plugin"):
+                if hasattr(self.placeholder, "add_plugin"):  # CMS v4
                     new_plugin.position = self.position + 1
                     new_plugin = self.placeholder.add_plugin(new_plugin)
                 else:

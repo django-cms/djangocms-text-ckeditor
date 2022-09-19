@@ -2,20 +2,28 @@ import os
 import re
 from collections import OrderedDict
 from functools import WRAPPER_ASSIGNMENTS, wraps
+from packaging.version import Version
 
 from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
 from django.utils.functional import LazyObject
 
+from cms import __version__
 from cms.models import CMSPlugin
 
 from classytags.utils import flatten_context
 
-
 OBJ_ADMIN_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>.*?</cms-plugin>'
 OBJ_ADMIN_WITH_CONTENT_RE_PATTERN = r'<cms-plugin .*?\bid="(?P<pk>\d+)".*?>(?P<content>.*?)</cms-plugin>'
 OBJ_ADMIN_RE = re.compile(OBJ_ADMIN_RE_PATTERN, flags=re.DOTALL)
+
+
+is_cms_v4 = (Version(__version__) >= Version("3.9999"))
+if is_cms_v4:
+    cms_placeholder_add_plugin = "cms_placeholder_add_plugin"
+else:
+    cms_placeholder_add_plugin = "cms_page_add_plugin"
 
 
 def _render_cms_plugin(plugin, context):

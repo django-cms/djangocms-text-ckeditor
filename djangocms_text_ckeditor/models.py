@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.db import models
 from django.utils.encoding import force_str
 from django.utils.html import strip_tags
@@ -5,7 +7,7 @@ from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
 
 from cms.models import CMSPlugin
-from cms.utils.copy_plugins import copy_plugins_to
+from cms.utils.plugins import copy_plugins_to_placeholder, get_plugin_model
 
 from . import settings
 from .html import clean_html, extract_images
@@ -82,14 +84,22 @@ class AbstractText(CMSPlugin):
     def copy_referenced_plugins(self):
         referenced_plugins = self.get_referenced_plugins()
         if referenced_plugins:
-            plugins_pairs = list(copy_plugins_to(
-                referenced_plugins,
-                self.placeholder,
-                to_language=self.language,
-                parent_plugin_id=self.id,
-            ))
-            self.add_existing_child_plugins_to_pairs(plugins_pairs)
-            self.post_copy(self, plugins_pairs)
+            plugin_pairs = []
+            for source_plugin in referenced_plugins:
+                new_plugin = deepcopy(source_plugin)
+                new_plugin.pk = None
+                new_plugin.id = None
+                new_plugin._state.adding = True
+                new_plugin.parent = self
+                if hasattr(self.placeholder, "add_plugin"):
+                    new_plugin.position = self.position + 1
+                    new_plugin = self.placeholder.add_plugin(new_plugin)
+                else:
+                    new_plugin = self.add_child(instance=new_plugin)
+                new_plugin.copy_relations(source_plugin)
+                plugin_pairs.append((new_plugin, source_plugin))
+            self.add_existing_child_plugins_to_pairs(plugin_pairs)
+            self.post_copy(self, plugin_pairs)
 
     def get_referenced_plugins(self):
         ids_in_body = set(plugin_tags_to_id_list(self.body))

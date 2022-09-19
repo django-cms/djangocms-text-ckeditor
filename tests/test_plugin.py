@@ -13,7 +13,7 @@ from django.utils.html import escape
 from django.utils.http import urlencode
 
 from cms.api import add_plugin, create_page, create_title
-from cms.models import CMSPlugin, Page, Title
+from cms.models import CMSPlugin, Page
 from cms.utils.urlutils import admin_reverse
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
@@ -101,7 +101,7 @@ class PluginActionsTestCase(BaseTestCase):
 
     def _give_cms_permissions(self, user):
         for perm_type in ['add', 'change', 'delete']:
-            for model in [Page, Title]:
+            for model in [Page]:
                 self._give_permission(user, model, perm_type)
 
     def get_page_admin(self):

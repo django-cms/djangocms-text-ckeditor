@@ -110,6 +110,7 @@ HELPER_SETTINGS = {
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
     'TEXT_INLINE_EDITING': True,
+    'CMS_CONFIRM_VERSION4': True,
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()

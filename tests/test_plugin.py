@@ -491,7 +491,6 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
                 html=False,
             )
 
-
     def test_only_inline_editing_has_rendered_plugin_content(self):
         """
         Tests of child plugins of a TextPlugin are rendered correctly in edit mode

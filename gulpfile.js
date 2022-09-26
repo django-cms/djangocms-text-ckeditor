@@ -139,7 +139,7 @@ const bundleTemplate = () => {
         gulp
             .src([PROJECT_ROOT + '/../../widgets.py'])
             .pipe(replace(
-                /bundle.*.cms.ckeditor.min.js/,
+                /bundle\-*.cms.ckeditor.min.js/,
                 'bundle.cms.ckeditor.min.js'
             ))
             .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
@@ -175,5 +175,5 @@ gulp.task('ci', lint);
 gulp.task("lint", lint);
 gulp.task("watch", watchFiles);
 gulp.task("darkmode", patchForDarkmode);
-gulp.task("bundle", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup))
-gulp.task("build", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup))
+gulp.task("bundle", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, bundleCleanup));
+gulp.task("build", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup));

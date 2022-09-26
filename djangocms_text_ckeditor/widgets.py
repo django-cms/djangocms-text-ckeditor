@@ -17,7 +17,7 @@ from .utils import cms_placeholder_add_plugin
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-f6dd5b62e4.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-ab7ff62c5a.cms.ckeditor.min.js'
 
 
 def reverse_admin(cms_placeholder_add_plugin):

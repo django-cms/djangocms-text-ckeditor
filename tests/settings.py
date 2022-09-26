@@ -115,9 +115,7 @@ HELPER_SETTINGS = {
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
 
-if __version__ > "3":  # V4 test?
-    import djangocms_versioning  # noqa
-
+if not (__version__ < "4"):  # V4 test?
     HELPER_SETTINGS['INSTALLED_APPS'] += [
         # "djangocms_versioning",  # TODO: Enable tests for versioning
     ]

@@ -2,7 +2,7 @@ from cms import __version__
 from cms.api import create_page, create_title
 from django.apps import apps
 
-DJANGO_CMS4 = __version__ > "3"
+DJANGO_CMS4 = not (__version__ < "4")
 DJANGOCMS_VERSIONING = apps.is_installed("djangocms_verisoning")
 
 
@@ -89,4 +89,4 @@ class TestFixture:
             return create_title(title=title, page=page, **kwargs)
 
         def get_placeholders(self, page, language=None):
-            return page.get_placeholders(language)
+            return page.get_placeholders()

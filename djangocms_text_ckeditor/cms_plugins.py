@@ -36,15 +36,6 @@ from .utils import (
 from .widgets import TextEditorWidget
 
 
-CMS_34 = LooseVersion(cms.__version__) >= LooseVersion("3.4")
-
-
-def _user_can_change_placeholder(request, placeholder):
-    if CMS_34:
-        return placeholder.has_change_permission(request.user)
-    return placeholder.has_change_permission(request)
-
-
 def post_add_plugin(operation, **kwargs):
     from djangocms_history.actions import ADD_PLUGIN
     from djangocms_history.helpers import get_bound_plugins, get_plugin_data
@@ -187,10 +178,9 @@ class TextPlugin(CMSPluginBase):
         "pre_change_plugin": pre_change_plugin,
     }
 
-    if CMS_34:
-        # On django CMS 3.5 this attribute is set automatically
-        # when do_post_copy is defined in the plugin class.
-        _has_do_post_copy = True
+    # On django CMS 3.5 this attribute is set automatically
+    # when do_post_copy is defined in the plugin class.
+    _has_do_post_copy = True
 
     @classmethod
     def do_post_copy(cls, instance, source_map):
@@ -251,6 +241,7 @@ class TextPlugin(CMSPluginBase):
             pk=plugin.pk,
             placeholder=plugin.placeholder,
             plugin_language=plugin.language,
+            plugin_position=plugin.position,
             configuration=self.ckeditor_configuration,
             render_plugin_url=render_plugin_url,
             cancel_url=cancel_url,
@@ -458,7 +449,7 @@ class TextPlugin(CMSPluginBase):
 
         if not (
             plugin_class.has_change_permission(request, obj=text_plugin)
-            and _user_can_change_placeholder(request, text_plugin.placeholder)  # noqa
+            and text_plugin.placeholder.has_change_permission(request.user)  # noqa
         ):
             raise PermissionDenied
         return HttpResponse(form.render_plugin(request))
@@ -495,7 +486,7 @@ class TextPlugin(CMSPluginBase):
         # and the ckeditor plugin itself.
         if not (
             plugin_class.has_add_permission(request)
-            and _user_can_change_placeholder(request, text_plugin.placeholder)  # noqa
+            and text_plugin.placeholder.has_change_permission(request.user)  # noqa
         ):
             raise PermissionDenied
         # Token is validated after checking permissions

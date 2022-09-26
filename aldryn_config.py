@@ -32,10 +32,9 @@ class Form(forms.BaseForm):
         else:
             ckeditor_settings['contentsCss'] = ['/static/css/base.css']
 
+        style_set = ''
         if data.get('style_set'):
             style_set = data['style_set']
-        else:
-            style_set = ''
 
         ckeditor_settings['stylesSet'] = f'default:{style_set}'
 

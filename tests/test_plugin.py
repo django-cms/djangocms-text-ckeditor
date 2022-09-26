@@ -13,11 +13,10 @@ from django.utils.html import escape
 from django.utils.http import urlencode
 
 from cms.api import add_plugin, create_page, create_title
-from cms.models import CMSPlugin, Page
+from cms.models import CMSPlugin, Page, Placeholder
 from cms.utils.urlutils import admin_reverse
 
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
-from djangocms_text_ckeditor.compat import get_page_placeholders
 from djangocms_text_ckeditor.models import Text
 from djangocms_text_ckeditor.utils import (
     _plugin_tags_to_html, _render_cms_plugin, plugin_tags_to_admin_html, plugin_tags_to_id_list, plugin_to_tag,
@@ -25,7 +24,7 @@ from djangocms_text_ckeditor.utils import (
 from tests.test_app.cms_plugins import DummyChildPlugin, DummyParentPlugin
 
 from .base import BaseTestCase
-from .fixtures import TestFixture
+from .fixtures import TestFixture, DJANGO_CMS4, DJANGOCMS_VERSIONING
 
 try:
     from djangocms_transfer.exporter import export_page
@@ -492,13 +491,14 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
                 html=False,
             )
 
+
     def test_only_inline_editing_has_rendered_plugin_content(self):
         """
-        Tests of child plugins of a TextPlugin are rednered correctly in edit mode
+        Tests of child plugins of a TextPlugin are rendered correctly in edit mode
         """
         simple_page = self.create_page('test page', template='page.html', language='en')
         simple_placeholder = self.get_placeholders(simple_page, 'en').get(slot='content')
-
+        # import pdb; pdb.set_trace()
         text_plugin = add_plugin(
             simple_placeholder,
             'TextPlugin',
@@ -507,14 +507,27 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
         )
 
         self.add_plugin_to_text(text_plugin, self._add_child_plugin(text_plugin))
+        if DJANGO_CMS4:
+            from cms.models.titlemodels import PageContent
+            from cms.toolbar.utils import get_object_edit_url
 
+            if DJANGOCMS_VERSIONING:
+                edit_endpoint = get_object_edit_url(
+                    PageContent._original_manager.filter(
+                        page=simple_page, language='en', version__state=DRAFT
+                    ).first()
+                )
+            else:
+                edit_endpoint = get_object_edit_url(simple_page.get_title_obj(language='en'))
+        else:
+            edit_endpoint = simple_page.get_absolute_url()
         with self.login_user_context(self.get_superuser()):
-            response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=1")
+            response = self.client.get(edit_endpoint + "?edit&inline_editing=1")
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "<cms-plugin")
 
         with self.login_user_context(self.get_superuser()):
-            response = self.client.get(simple_page.get_absolute_url() + "?edit&inline_editing=0")
+            response = self.client.get(edit_endpoint + "?edit&inline_editing=0")
             self.assertEqual(response.status_code, 200)
             self.assertNotContains(response, "<cms-plugin")
 
@@ -846,7 +859,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
             'source_language': 'en',
         }
 
-        endpoint = self.get_admin_url(Page, 'copy_plugins')
+        endpoint = self.get_admin_url(Placeholder if DJANGO_CMS4 else Page,'copy_plugins')
         endpoint += '?' + urlencode({'cms_path': '/en/'})
 
         with self.login_user_context(self.user):
@@ -855,7 +868,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
             self.assertEqual(CMSPlugin.objects.filter(language='en').count(), 3)
             self.assertEqual(CMSPlugin.objects.filter(language=translation.language).count(), 3)
 
-            plugins = list(CMSPlugin.objects.all())
+            plugins = list(CMSPlugin.objects.order_by("id"))  # Look at the order of creation
             new_plugin = plugins[3].get_plugin_instance()[0]
             idlist = sorted(plugin_tags_to_id_list(new_plugin.body))
             expected = sorted([plugins[4].pk, plugins[5].pk])

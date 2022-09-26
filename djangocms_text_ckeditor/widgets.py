@@ -16,7 +16,7 @@ from . import settings as text_settings
 from .utils import is_cms_v4, cms_placeholder_add_plugin
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-5f73f48756.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-ab7ff62c5a.cms.ckeditor.min.js'
 
 
 def reverse_admin(cms_placeholder_add_plugin):
@@ -25,8 +25,8 @@ def reverse_admin(cms_placeholder_add_plugin):
 
 class TextEditorWidget(forms.Textarea):
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
-                 placeholder=None, plugin_language=None, configuration=None,
-                 cancel_url=None, render_plugin_url=None, action_token=None,
+                 placeholder=None, plugin_language=None, plugin_position=None,
+                 configuration=None, cancel_url=None, render_plugin_url=None, action_token=None,
                  delete_on_cancel=False, body_css_classes=''):
         """
         Create a widget for editing text + plugins.
@@ -50,6 +50,7 @@ class TextEditorWidget(forms.Textarea):
         self.pk = pk  # specific
         self.placeholder = placeholder  # specific
         self.plugin_language = plugin_language
+        self.plugin_position = plugin_position
         if configuration and getattr(settings, configuration, False):
             conf = deepcopy(text_settings.CKEDITOR_SETTINGS)
             conf.update(getattr(settings, configuration))
@@ -108,6 +109,7 @@ class TextEditorWidget(forms.Textarea):
             'static_url': settings.STATIC_URL + 'djangocms_text_ckeditor',
             'plugin_id': self.pk,
             'plugin_language': self.plugin_language,
+            'plugin_position': self.plugin_position,
             'placeholder_id': self.placeholder.pk if self.placeholder else None,
             'render_plugin_url': self.render_plugin_url or '',
             'add_plugin_url': admin_reverse(cms_placeholder_add_plugin) if self.placeholder else '',
@@ -140,6 +142,7 @@ class TextEditorWidget(forms.Textarea):
             'installed_plugins': self.installed_plugins,
             'plugin_pk': self.pk,
             'plugin_language': self.plugin_language,
+            'plugin_position': self.plugin_position,
             'placeholder': self.placeholder,
             'widget': self,
             'renderer': renderer,

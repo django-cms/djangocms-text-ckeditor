@@ -7,7 +7,6 @@ from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
 
 from cms.models import CMSPlugin
-from cms.utils.plugins import copy_plugins_to_placeholder, get_plugin_model
 
 from . import settings
 from .html import clean_html, extract_images

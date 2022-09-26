@@ -1,10 +1,10 @@
 from cms import __version__
 from cms.api import create_page, create_title
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType
 
 DJANGO_CMS4 = __version__ > "3"
 DJANGOCMS_VERSIONING = apps.is_installed("djangocms_verisoning")
+
 
 class TestFixture:
     """Sets up generic setUp and tearDown methods for tests."""
@@ -70,7 +70,7 @@ class TestFixture:
         def get_placeholders(self, page, language=None):
             return page.get_placeholders(language or self.language)
 
-    else: # CMS V3
+    else:  # CMS V3
 
         def publish(self, page, language=None):
             page.publish(language)

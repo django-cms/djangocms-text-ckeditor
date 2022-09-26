@@ -12,7 +12,7 @@ from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.http import urlencode
 
-from cms.api import add_plugin, create_page, create_title
+from cms.api import add_plugin, create_title
 from cms.models import CMSPlugin, Page, Placeholder
 from cms.utils.urlutils import admin_reverse
 
@@ -512,6 +512,8 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
             from cms.toolbar.utils import get_object_edit_url
 
             if DJANGOCMS_VERSIONING:
+                from djangocms_versioning.constants import DRAFT
+
                 edit_endpoint = get_object_edit_url(
                     PageContent._original_manager.filter(
                         page=simple_page, language='en', version__state=DRAFT
@@ -859,7 +861,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
             'source_language': 'en',
         }
 
-        endpoint = self.get_admin_url(Placeholder if DJANGO_CMS4 else Page,'copy_plugins')
+        endpoint = self.get_admin_url(Placeholder if DJANGO_CMS4 else Page, 'copy_plugins')
         endpoint += '?' + urlencode({'cms_path': '/en/'})
 
         with self.login_user_context(self.user):

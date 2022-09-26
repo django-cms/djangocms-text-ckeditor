@@ -1,7 +1,6 @@
 from cms.api import add_plugin
 
 from djangocms_text_ckeditor import html, settings
-from djangocms_text_ckeditor.compat import get_page_placeholders
 from djangocms_text_ckeditor.utils import plugin_to_tag
 
 from .base import BaseTestCase

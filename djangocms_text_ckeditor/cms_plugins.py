@@ -1,7 +1,6 @@
 import json
 import operator
 import re
-from distutils.version import LooseVersion
 
 from django.contrib.admin.utils import unquote
 from django.core import signing
@@ -19,7 +18,6 @@ from django.utils.translation.trans_real import get_language
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
-import cms
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
@@ -30,8 +28,8 @@ from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags, cms_placeholder_add_plugin,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, cms_placeholder_add_plugin, plugin_tags_to_admin_html,
+    plugin_tags_to_id_list, plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
 )
 from .widgets import TextEditorWidget
 

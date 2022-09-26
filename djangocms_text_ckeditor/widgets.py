@@ -10,13 +10,14 @@ from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.translation.trans_real import get_language, gettext
 
-from cms.utils.urlutils import static_with_version, admin_reverse
+from cms.utils.urlutils import admin_reverse, static_with_version
 
 from . import settings as text_settings
-from .utils import is_cms_v4, cms_placeholder_add_plugin
+from .utils import cms_placeholder_add_plugin
+
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-ab7ff62c5a.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-f6dd5b62e4.cms.ckeditor.min.js'
 
 
 def reverse_admin(cms_placeholder_add_plugin):

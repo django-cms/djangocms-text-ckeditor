@@ -20,10 +20,6 @@ from .utils import cms_placeholder_add_plugin
 PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-ab7ff62c5a.cms.ckeditor.min.js'
 
 
-def reverse_admin(cms_placeholder_add_plugin):
-    pass
-
-
 class TextEditorWidget(forms.Textarea):
     def __init__(self, attrs=None, installed_plugins=None, pk=None,
                  placeholder=None, plugin_language=None, plugin_position=None,

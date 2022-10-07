@@ -10,6 +10,7 @@ REQUIREMENTS = [
     'django-cms>=3.6',
     'html5lib>=1',
     'Pillow',
+    'packaging',
 ]
 
 

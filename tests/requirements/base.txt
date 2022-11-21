@@ -1,5 +1,5 @@
 # requirements from setup.py
-django-filer>=1.4.0,<2.1
+django-filer>=1.4.0
 djangocms-picture>=2.1.0
 djangocms-link>=2.2.1
 django-polymorphic>=2.0.3

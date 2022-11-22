@@ -1,6 +1,8 @@
+from django.apps import apps
+
 from cms import __version__
 from cms.api import create_page, create_title
-from django.apps import apps
+
 
 DJANGO_CMS4 = not (__version__ < "4")
 DJANGOCMS_VERSIONING = apps.is_installed("djangocms_verisoning")

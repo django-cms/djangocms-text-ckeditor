@@ -24,7 +24,8 @@ from djangocms_text_ckeditor.utils import (
 from tests.test_app.cms_plugins import DummyChildPlugin, DummyParentPlugin
 
 from .base import BaseTestCase
-from .fixtures import TestFixture, DJANGO_CMS4, DJANGOCMS_VERSIONING
+from .fixtures import DJANGO_CMS4, DJANGOCMS_VERSIONING, TestFixture
+
 
 try:
     from djangocms_transfer.exporter import export_page

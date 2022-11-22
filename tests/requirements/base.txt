@@ -8,7 +8,6 @@ html5lib>=0.999999999
 
 # other requirements
 coverage
-django-treebeard<4.5
 django-app-helper
 tox
 

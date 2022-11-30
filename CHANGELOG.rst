@@ -5,6 +5,9 @@ Changelog
 Unreleased
 ==========
 
+* Fix `468 <https://github.com/django-cms/djangocms-text-ckeditor/issues/468>`_ via `637 <https://github.com/django-cms/djangocms-text-ckeditor/pull/637>`_: Delay importing models.CMSPlugin in utils to allow adding an HTMLField to a custom user model.
+
+
 5.1.1 (2022-06-22)
 ==================
 

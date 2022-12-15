@@ -40,7 +40,7 @@ class TestFixture:
                 ):
                     return version
             return None
-        
+
         def publish(self, grouper, language=None):
             if DJANGOCMS_VERSIONING:
                 from djangocms_versioning.constants import DRAFT

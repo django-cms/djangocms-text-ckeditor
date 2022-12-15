@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 from django.utils.functional import LazyObject
 
 from cms import __version__
-from cms.models import CMSPlugin
 
 from classytags.utils import flatten_context
 from packaging.version import Version

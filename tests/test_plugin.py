@@ -508,7 +508,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
 
         self.add_plugin_to_text(text_plugin, self._add_child_plugin(text_plugin))
         if DJANGO_CMS4:
-            from cms.models.titlemodels import PageContent
+            from cms.models.contentmodels import PageContent
             from cms.toolbar.utils import get_object_edit_url
 
             if DJANGOCMS_VERSIONING:
@@ -520,7 +520,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
                     ).first()
                 )
             else:
-                edit_endpoint = get_object_edit_url(simple_page.get_title_obj(language='en'))
+                edit_endpoint = get_object_edit_url(simple_page.get_content_obj(language='en'))
         else:
             edit_endpoint = simple_page.get_absolute_url()
         with self.login_user_context(self.get_superuser()):

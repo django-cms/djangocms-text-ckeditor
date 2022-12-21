@@ -1,7 +1,6 @@
 import json
 import operator
 import re
-from distutils.version import LooseVersion
 
 from django.contrib.admin.utils import unquote
 from django.core import signing
@@ -19,7 +18,6 @@ from django.utils.translation.trans_real import get_language
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 
-import cms
 from cms.models import CMSPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
@@ -30,19 +28,10 @@ from . import settings
 from .forms import ActionTokenValidationForm, DeleteOnCancelForm, RenderPluginForm, TextForm
 from .models import Text
 from .utils import (
-    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, plugin_tags_to_admin_html, plugin_tags_to_id_list,
-    plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
+    OBJ_ADMIN_WITH_CONTENT_RE_PATTERN, _plugin_tags_to_html, cms_placeholder_add_plugin, plugin_tags_to_admin_html,
+    plugin_tags_to_id_list, plugin_tags_to_user_html, plugin_to_tag, random_comment_exempt, replace_plugin_tags,
 )
 from .widgets import TextEditorWidget
-
-
-CMS_34 = LooseVersion(cms.__version__) >= LooseVersion("3.4")
-
-
-def _user_can_change_placeholder(request, placeholder):
-    if CMS_34:
-        return placeholder.has_change_permission(request.user)
-    return placeholder.has_change_permission(request)
 
 
 def post_add_plugin(operation, **kwargs):
@@ -187,10 +176,9 @@ class TextPlugin(CMSPluginBase):
         "pre_change_plugin": pre_change_plugin,
     }
 
-    if CMS_34:
-        # On django CMS 3.5 this attribute is set automatically
-        # when do_post_copy is defined in the plugin class.
-        _has_do_post_copy = True
+    # On django CMS 3.5 this attribute is set automatically
+    # when do_post_copy is defined in the plugin class.
+    _has_do_post_copy = True
 
     @classmethod
     def do_post_copy(cls, instance, source_map):
@@ -251,6 +239,7 @@ class TextPlugin(CMSPluginBase):
             pk=plugin.pk,
             placeholder=plugin.placeholder,
             plugin_language=plugin.language,
+            plugin_position=plugin.position,
             configuration=self.ckeditor_configuration,
             render_plugin_url=render_plugin_url,
             cancel_url=cancel_url,
@@ -331,6 +320,14 @@ class TextPlugin(CMSPluginBase):
 
         return TextPluginForm
 
+    @staticmethod
+    def _create_ghost_plugin(placeholder, plugin):
+        """CMS version-save function to add a plugin to a placeholder"""
+        if hasattr(placeholder, "add_plugin"):  # available as of CMS v4
+            placeholder.add_plugin(plugin)
+        else:  # CMS < v4
+            plugin.save()
+
     @xframe_options_sameorigin
     def add_view(self, request, form_url="", extra_context=None):
         if "plugin" in request.GET:
@@ -381,18 +378,19 @@ class TextPlugin(CMSPluginBase):
         # Sadly we have to create the CMSPlugin record on add GET request
         # because we need this record in order to allow the user to add
         # child plugins to the text (image, link, etc..)
-        plugin = CMSPlugin.objects.create(
+        plugin = CMSPlugin(
             language=data["plugin_language"],
             plugin_type=data["plugin_type"],
-            position=data["position"],
             placeholder=data["placeholder_id"],
+            position=data["position"],
             parent=data.get("plugin_parent"),
         )
+        self._create_ghost_plugin(data["placeholder_id"], plugin)
 
         query = request.GET.copy()
         query["plugin"] = str(plugin.pk)
 
-        success_url = admin_reverse("cms_page_add_plugin")
+        success_url = admin_reverse(cms_placeholder_add_plugin)  # Version dependent
         # Because we've created the cmsplugin record
         # we need to delete the plugin when a user cancels.
         success_url += "?delete-on-cancel&" + query.urlencode()
@@ -449,7 +447,7 @@ class TextPlugin(CMSPluginBase):
 
         if not (
             plugin_class.has_change_permission(request, obj=text_plugin)
-            and _user_can_change_placeholder(request, text_plugin.placeholder)  # noqa
+            and text_plugin.placeholder.has_change_permission(request.user)  # noqa
         ):
             raise PermissionDenied
         return HttpResponse(form.render_plugin(request))
@@ -486,7 +484,7 @@ class TextPlugin(CMSPluginBase):
         # and the ckeditor plugin itself.
         if not (
             plugin_class.has_add_permission(request)
-            and _user_can_change_placeholder(request, text_plugin.placeholder)  # noqa
+            and text_plugin.placeholder.has_change_permission(request.user)  # noqa
         ):
             raise PermissionDenied
         # Token is validated after checking permissions

@@ -88,13 +88,23 @@ class DeleteOnCancelForm(forms.Form):
             queryset = queryset.exclude(pk__in=excluded_plugins)
         return queryset
 
+    @staticmethod
+    def _delete_plugin(plugin):
+        """Version-safe plugin delete method"""
+        placeholder = plugin.placeholder
+        if hasattr(placeholder, 'delete_plugin'):  # since CMS v4
+            return placeholder.delete_plugin(plugin)
+        else:
+            return plugin.delete()
+
     def delete(self):
         child_plugins = self.cleaned_data.get('child_plugins')
 
         if child_plugins:
-            child_plugins.delete()
+            for child in child_plugins:
+                self._delete_plugin(child)
         else:
-            self.text_plugin.delete()
+            self._delete_plugin(self.text_plugin)
 
 
 class TextForm(ModelForm):

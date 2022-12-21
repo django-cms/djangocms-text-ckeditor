@@ -3,6 +3,8 @@ import os
 import sys
 from tempfile import mkdtemp
 
+from cms import __version__
+
 
 port = 8000
 
@@ -113,6 +115,12 @@ HELPER_SETTINGS = {
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
+
+if not (__version__ < "4"):  # V4 test?
+    HELPER_SETTINGS['INSTALLED_APPS'] += [
+        # "djangocms_versioning",  # TODO: Enable tests for versioning
+    ]
+    HELPER_SETTINGS['CMS_CONFIRM_VERSION4'] = True
 
 
 def _helper_patch(*args, **kwargs):

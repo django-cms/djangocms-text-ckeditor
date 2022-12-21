@@ -1,5 +1,5 @@
 # requirements from setup.py
-django-filer>=1.4.0,<2.1
+django-filer>=1.4.0
 djangocms-picture>=2.1.0
 djangocms-link>=2.2.1
 django-polymorphic>=2.0.3
@@ -8,12 +8,12 @@ html5lib>=0.999999999
 
 # other requirements
 coverage
-django-treebeard<4.5
 django-app-helper
 tox
 
-# IMPORTANT: latest easy-thumbnails causes error since it returns with floating point, but the tests are not prepared for this and even the lib
-easy-thumbnails==2.7.1
+# IMPORTANT: latest easy-thumbnails causes error since it returns with
+# floating point, but the tests are not prepared for this and even the lib
+easy-thumbnails
 
 # In order to run skipped tests uncomment the next lines:
 # -e git+ssh://git@github.com/divio/djangocms-transfer.git@master#egg=djangocms-transfer

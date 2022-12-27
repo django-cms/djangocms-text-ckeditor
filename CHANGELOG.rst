@@ -2,10 +2,10 @@
 Changelog
 =========
 
-Unreleased
-==========
+5.1.2 (2022-12-27)
+==================
 
-* Add suport for django CMS 4
+* Add suport for django CMS 4.1
 * Fix `468 <https://github.com/django-cms/djangocms-text-ckeditor/issues/468>`_ via `637 <https://github.com/django-cms/djangocms-text-ckeditor/pull/637>`_: Delay importing models.CMSPlugin in utils to allow adding an HTMLField to a custom user model.
 
 

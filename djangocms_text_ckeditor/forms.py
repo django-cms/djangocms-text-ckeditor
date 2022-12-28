@@ -92,9 +92,10 @@ class DeleteOnCancelForm(forms.Form):
         child_plugins = self.cleaned_data.get('child_plugins')
 
         if child_plugins:
-            child_plugins.delete()
+            for child in child_plugins:
+                child.placeholder.delete_plugin(child)
         else:
-            self.text_plugin.delete()
+            self.text_plugin.placeholder.delete_plugin(self.text_plugin)
 
 
 class TextForm(ModelForm):

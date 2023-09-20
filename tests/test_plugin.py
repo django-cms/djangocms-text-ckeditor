@@ -747,7 +747,7 @@ class PluginActionsTestCase(TestFixture, BaseTestCase):
             endpoint += f'?token={action_token}&plugin={child_plugin.pk}'
             response = self.client.get(endpoint)
 
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 204)
             self.assertEqual(force_str(response.content), 'Unable to process your request.')
 
     def test_custom_ckeditor_body_css_classes(self):

@@ -17,7 +17,7 @@ from .utils import cms_placeholder_add_plugin
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-13948e6025.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-9f0bbac8ec.cms.ckeditor.min.js'
 
 
 class TextEditorWidget(forms.Textarea):

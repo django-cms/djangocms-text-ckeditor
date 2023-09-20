@@ -18,5 +18,5 @@ jobs:
       run: npm install -g gulp@4.0.2
     - name: Install dependencies
       run: npm install
-    # - name: Run gulp
-    #   run: gulp ci
+    - name: Run gulp
+      run: gulp ci

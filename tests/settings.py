@@ -4,7 +4,6 @@ import sys
 from tempfile import mkdtemp
 
 from cms import __version__
-from filer import __version__ as filer_version
 
 
 port = 8000

@@ -4,6 +4,7 @@ import sys
 from tempfile import mkdtemp
 
 from cms import __version__
+from filer import __version__ as filer_version
 
 
 port = 8000
@@ -30,7 +31,6 @@ HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'easy_thumbnails',
         'filer',
-        'mptt',
         'djangocms_picture',
         'djangocms_link',
         'djangocms_text_ckeditor',

@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.db import models
 from django.utils.encoding import force_str
 from django.utils.html import strip_tags
@@ -8,10 +10,7 @@ from cms.models import CMSPlugin
 
 from . import settings
 from .html import clean_html, extract_images
-from .utils import (
-    plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag,
-    replace_plugin_tags,
-)
+from .utils import plugin_tags_to_db, plugin_tags_to_id_list, plugin_to_tag, replace_plugin_tags
 
 
 try:
@@ -47,7 +46,7 @@ class AbstractText(CMSPlugin):
         abstract = True
 
     def __str__(self):
-        return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate="...")
+        return Truncator(strip_tags(self.body).replace('&shy;', '')).words(3, truncate='...')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,6 +80,36 @@ class AbstractText(CMSPlugin):
             # delete plugins that are not referenced in the text anymore
             plugin.delete()
 
+    def copy_referenced_plugins(self):
+        referenced_plugins = self.get_referenced_plugins()
+        if referenced_plugins:
+            plugin_pairs = []
+            for source_plugin in referenced_plugins:
+                new_plugin = deepcopy(source_plugin)
+                new_plugin.pk = None
+                new_plugin.id = None
+                new_plugin._state.adding = True
+                new_plugin.parent = self
+                if hasattr(self.placeholder, "add_plugin"):  # CMS v4
+                    new_plugin.position = self.position + 1
+                    new_plugin = self.placeholder.add_plugin(new_plugin)
+                else:
+                    new_plugin = self.add_child(instance=new_plugin)
+                new_plugin.copy_relations(source_plugin)
+                plugin_pairs.append((new_plugin, source_plugin))
+            self.add_existing_child_plugins_to_pairs(plugin_pairs)
+            self.post_copy(self, plugin_pairs)
+
+    def get_referenced_plugins(self):
+        ids_in_body = set(plugin_tags_to_id_list(self.body))
+        child_plugins_ids = set(self.cmsplugin_set.all().values_list('id', flat=True))
+        referenced_plugins_ids = ids_in_body - child_plugins_ids
+        return CMSPlugin.objects.filter(id__in=referenced_plugins_ids)
+
+    def add_existing_child_plugins_to_pairs(self, plugins_pairs):
+        for plugin in self.cmsplugin_set.all():
+            plugins_pairs.append((plugin, plugin))
+
     def _get_inline_plugin_ids(self):
         return plugin_tags_to_id_list(self.body)
 
@@ -103,7 +132,7 @@ class AbstractText(CMSPlugin):
         we must replace some strings with child tag for the CKEDITOR.
         Strings are "%(_tag_child_<order>)s" with the inserted order of chidren
         """
-        replacements = dict()
+        replacements = {}
         order = 1
         for child in children:
             replacements['_tag_child_' + str(order)] = plugin_to_tag(child)

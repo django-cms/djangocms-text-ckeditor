@@ -1,38 +1,40 @@
 'use strict';
 
-var gulp = require('gulp');
-var gulpif = require('gulp-if');
-var sourcemaps = require('gulp-sourcemaps');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var eslint = require('gulp-eslint');
-var plumber = require('gulp-plumber');
-var replace = require('gulp-replace');
-var revReplace = require('gulp-rev-replace');
-var rev = require('gulp-rev');
-var runSequence = require('run-sequence');
-var filter = require('gulp-filter');
-var del = require('del');
-var integrationTests = require('djangocms-casper-helpers/gulp');
-var path = require('path');
-var child_process = require('child_process');
+const gulp = require('gulp');
+const gulpif = require('gulp-if');
+const sourcemaps = require('gulp-sourcemaps');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const eslint = require('gulp-eslint');
+const plumber = require('gulp-plumber');
+const replace = require('gulp-replace');
+const revReplace = require('gulp-rev-replace');
+const rev = require('gulp-rev');
+const runSequence = require('run-sequence');
+const filter = require('gulp-filter');
+const del = require('del');
+const integrationTests = require('djangocms-casper-helpers/gulp');
+const path = require('path');
+const child_process = require('child_process');
+const execSync = child_process.execSync;
+const browserSync = require('browser-sync').create();
 
-var argv = require('minimist')(process.argv.slice(2));
 
-var options = {
+const argv = require('minimist')(process.argv.slice(2));
+
+const options = {
     debug: argv.debug
 };
-var PROJECT_ROOT = __dirname + '/djangocms_text_ckeditor/static/djangocms_text_ckeditor';
-var PROJECT_PATH = {
+const PROJECT_ROOT = __dirname + '/djangocms_text_ckeditor/static/djangocms_text_ckeditor';
+const PROJECT_PATH = {
     js: PROJECT_ROOT + '/js',
     tests: __dirname + '/djangocms_text_ckeditor/tests/frontend'
 };
 
-var PROJECT_PATTERNS = {
+const PROJECT_PATTERNS = {
     js: [
         PROJECT_PATH.js + '/**/*.js',
         PROJECT_PATH.js + '/../ckeditor_plugins/**/*.js',
-        PROJECT_PATH.js + '/gulpfile.js',
         '!' + PROJECT_PATH.js + '/pre.js',
         '!' + PROJECT_PATH.js + '/post.js',
         '!' + PROJECT_PATH.js + '/../ckeditor_plugins/cmsresize/*.js',
@@ -46,7 +48,7 @@ var PROJECT_PATTERNS = {
  * Object keys are filenames of bundles that will be compiled
  * from array of paths that are the value.
  */
-var JS_BUNDLE = [
+const JS_BUNDLE = [
     PROJECT_PATH.js + '/pre.js',
     PROJECT_PATH.js + '/cms.ckeditor.js',
     PROJECT_PATH.js + '/../ckeditor/ckeditor.js',
@@ -57,24 +59,25 @@ var JS_BUNDLE = [
     PROJECT_PATH.js + '/post.js'
 ];
 
-gulp.task('lint', ['lint:javascript']);
-gulp.task('lint:javascript', function () {
-    // DOCS: http://eslint.org
-    return gulp.src(PROJECT_PATTERNS.js)
-        .pipe(gulpif(!process.env.CI, plumber()))
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError())
-        .pipe(gulpif(!process.env.CI, plumber.stop()));
-});
+const lint = () => {
+  return (
+    gulp
+      .src(PROJECT_PATTERNS.js)
+      .pipe(gulpif(!process.env.CI, plumber()))
+      .pipe(eslint())
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError())
+      .pipe(gulpif(!process.env.CI, plumber.stop()))
+  );
+};
 
-var INTEGRATION_TESTS = [
+const INTEGRATION_TESTS = [
     ['smoke']
 ];
 
 // gulp tests:integration [--clean] [--screenshots] [--tests=loginAdmin,toolbar]
-var pathToBin = child_process.execSync('npm bin').toString().trim();
-var pathToCasper = path.join(pathToBin, 'casperjs');
+const pathToBin = child_process.execSync('npm bin').toString().trim();
+const pathToCasper = path.join(pathToBin, 'casperjs');
 
 gulp.task('tests:integration', integrationTests({
     tests: INTEGRATION_TESTS,
@@ -91,61 +94,86 @@ gulp.task('bundle', function (done) {
     runSequence('bundle:cleanup:before', 'bundle:js', 'bundle:template', 'bundle:cleanup', done);
 });
 
-gulp.task('bundle:cleanup:before', function () {
-    return del([PROJECT_PATH.js + '/dist/']);
-});
 
-gulp.task('bundle:js', function () {
-    var f = filter([
-        '**',
-        '!**/ckeditor/ckeditor.js',
-        '!**/pre.js',
-        '!**/post.js'
-    ], { restore: true });
+// gulp.task('bundle:cleanup:before', function () {
+const bundleCleanUpBefore = () => {
+    return (
+        del([PROJECT_PATH.js + '/dist/'])
+    );
+};
 
-    return gulp.src(JS_BUNDLE)
-        .pipe(gulpif(options.debug, sourcemaps.init()))
-        .pipe(f)
-        .pipe(gulpif(!options.debug, uglify({
-            preserveComments: 'some'
-        })))
-        .pipe(f.restore)
-        .pipe(concat('bundle.cms.ckeditor.min.js', {
-            newLine: '\n'
-        }))
-        .pipe(rev())
-        .pipe(gulpif(options.debug, sourcemaps.write()))
-        .pipe(gulp.dest(PROJECT_PATH.js + '/dist/'))
-        .pipe(rev.manifest())
-        .pipe(gulp.dest(PROJECT_PATH.js + '/dist/'));
-});
+const bundleJS = () => {
+        const f = filter([
+            '**',
+            '!**/ckeditor/ckeditor.js',
+            '!**/pre.js',
+            '!**/post.js'
+        ], { restore: true });
 
-gulp.task('bundle:template', function () {
-    var manifest = gulp.src(PROJECT_PATH.js + '/dist/rev-manifest.json');
+        return (
+            gulp
+                .src(JS_BUNDLE)
+                .pipe(gulpif(options.debug, sourcemaps.init()))
+                .pipe(f)
+                .pipe(gulpif(!options.debug, uglify({
+                    preserveComments: 'some'
+                })))
+                .pipe(f.restore)
+                .pipe(concat('bundle.cms.ckeditor.min.js', {
+                    newLine: '\n'
+                }))
+                .pipe(rev())
+                .pipe(gulpif(options.debug, sourcemaps.write()))
+                .pipe(gulp.dest(PROJECT_PATH.js + '/dist/'))
+                .pipe(rev.manifest())
+                .pipe(gulp.dest(PROJECT_PATH.js + '/dist/'))
+            );
+};
 
-    return gulp.src([PROJECT_ROOT + '/../../widgets.py'])
-        .pipe(replace(
-            /bundle.*.cms.ckeditor.min.js/,
-            'bundle.cms.ckeditor.min.js'
-        ))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
-        .pipe(revReplace({
-            manifest: manifest,
-            replaceInExtensions: ['.py']
-        }))
-        .pipe(gulp.dest(PROJECT_ROOT + '/../../'));
-});
 
-gulp.task('bundle:cleanup', function () {
-    return del([PROJECT_PATH.js + '/dist/rev-manifest.json']);
-});
+const bundleTemplate = () => {
 
-gulp.task('build', ['bundle']);
+    const manifest = gulp.src(PROJECT_PATH.js + '/dist/rev-manifest.json');
 
-gulp.task('watch', function () {
-    gulp.watch(PROJECT_PATTERNS.js, ['lint']);
-    gulp.watch(JS_BUNDLE, ['bundle']);
-});
+    return (
+        gulp
+            .src([PROJECT_ROOT + '/../../widgets.py'])
+            .pipe(replace(
+                /bundle\-*.cms.ckeditor.min.js/,
+                'bundle.cms.ckeditor.min.js'
+            ))
+            .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
+            .pipe(revReplace({
+                manifest: manifest,
+                replaceInExtensions: ['.py']
+            }))
+            .pipe(gulp.dest(PROJECT_ROOT + '/../../'))
+        );
+};
 
-gulp.task('ci', ['lint'/* , 'tests:integration' */]);
-gulp.task('default', ['lint', 'bundle', 'watch']);
+const patchForDarkmode = async function(){
+   console.log( execSync('cd private && python3 ./patch_moono_lisa.py').toString());
+};
+
+
+const bundleCleanup = () => {
+    return (
+        del([PROJECT_PATH.js + '/dist/rev-manifest.json'])
+    );
+
+};
+
+const watchFiles = () => {
+    browserSync.init();
+    gulp.watch(PROJECT_PATTERNS.js, lint);
+    gulp.watch(JS_BUNDLE, gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, bundleCleanup));
+};
+
+gulp.task('ci', lint);
+// gulp.task('default', ['lint', 'bundle', 'watch']);
+
+gulp.task("lint", lint);
+gulp.task("watch", watchFiles);
+gulp.task("darkmode", patchForDarkmode);
+gulp.task("bundle", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, bundleCleanup));
+gulp.task("build", gulp.series(bundleCleanUpBefore, bundleJS, bundleTemplate, patchForDarkmode, bundleCleanup));

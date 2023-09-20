@@ -63,62 +63,72 @@
         init: function (editor) {
             var that = this;
 
-            this.options = CMS.CKEditor.options.settings;
-            this.editor = editor;
+			CKEDITOR.on('instanceReady', function () {
+                var widgetInstances = [];
 
+                for (var key in editor.widgets.instances) {
+                    if (editor.widgets.instances.hasOwnProperty(key)) {
+                        widgetInstances.push(editor.widgets.instances[key]);
+                    }
+                }
+
+                that.numberOfChildren = CKEDITOR.tools.array.filter(widgetInstances, function (i) {
+                    return i.name === 'cms-widget';
+                }).length;
+            });
             /**
              * populated with _fresh_ child plugins
              */
-            this.child_plugins = [];
-            this.setupCancelCleanupCallback(this.options);
+            this.unsaved_child_plugins = [];
+			var settings  = CMS.CKEditor.editors[editor.id].settings;
+            this.setupCancelCleanupCallback(settings);
 
             // don't do anything if there are no plugins defined
-            if (this.options === undefined || this.options.plugins === undefined) {
+            if (settings === undefined || settings.plugins === undefined) {
                 return false;
             }
 
-            this.setupDialog();
+            this.setupDialog(editor);
 
             // add the button
-            this.editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
+            editor.ui.add('cmsplugins', CKEDITOR.UI_PANELBUTTON, {
                 toolbar: 'cms,0',
-                label: this.options.lang.toolbar,
-                title: this.options.lang.toolbar,
+                label: settings.lang.toolbar,
+                title: settings.lang.toolbar,
                 className: 'cke_panelbutton__cmsplugins',
                 modes: { wysiwyg: 1 },
                 editorFocus: 0,
 
                 panel: {
-                    css: [CKEDITOR.skin.getPath('editor')].concat(that.editor.config.contentsCss),
-                    attributes: { 'role': 'cmsplugins', 'aria-label': this.options.lang.aria }
+                    css: [CKEDITOR.skin.getPath('editor')].concat(editor.config.contentsCss),
+                    attributes: { 'role': 'cmsplugins', 'aria-label': settings.lang.aria }
                 },
 
                 // this is called when creating the dropdown list
                 onBlock: function (panel, block) {
-                    block.element.setHtml(that.editor.plugins.cmsplugins.setupDropdown());
+                    block.element.setHtml(editor.plugins.cmsplugins.setupDropdown(editor));
 
                     var anchors = $(block.element.$).find('.cke_panel_listItem a');
 
                     anchors.bind('click', function (e) {
                         e.preventDefault();
 
-                        that.addPlugin($(this), panel);
+                        that.addPlugin($(this), panel, editor);
                     });
                 }
             });
 
             // handle edit event via context menu
-            if (this.editor.contextMenu) {
-                this.setupContextMenu();
+            if (editor.contextMenu) {
+                this.setupContextMenu(editor);
             }
 
-            this.editor.addCommand('cmspluginsEdit', {
+            editor.addCommand('cmspluginsEdit', {
                 exec: function () {
-                    var element = that.getElementFromSelection();
+                    var element = that.getElementFromSelection(editor);
                     var plugin = that.getPluginWidget(element);
-
                     if (plugin) {
-                        that.editPlugin(plugin);
+                        that.editPlugin(plugin, editor);
                     }
                 }
             });
@@ -127,10 +137,11 @@
             // if event is a jQuery event (touchend), than we mutate
             // event a bit so we make the payload similar to what ckeditor.event produces
             var handleEdit = function (event) {
-                var element;
+                event.stop();
 
                 if (event.type === 'touchend' || event.type === 'click') {
                     var cmsPluginNode = $(event.currentTarget).closest('cms-plugin')[0];
+					var element;
 
                     // pick cke_widget span
                     // eslint-disable-next-line new-cap
@@ -138,23 +149,32 @@
 
                     event.data = event.data || {};
                     // have to fake selection to be able to replace markup after editing
-                    that.editor.getSelection().fake(element);
+                    editor.getSelection().fake(element);
                 }
 
-                that.editor.execCommand('cmspluginsEdit');
+                editor.execCommand('cmspluginsEdit');
             };
 
-            this.editor.on('doubleclick', handleEdit);
-            this.editor.on('instanceReady', function () {
+            editor.on('doubleclick', handleEdit);
+
+            editor.on('instanceReady', function () {
+/*
+				var context = CMS.$('iframe.cke_wysiwyg_frame');
+				if (context.length > 0) {
+					context = context.contentWindow.document.documentElement;
+				} else {
+					context = null;
+				}
                 CMS.$('cms-plugin', CMS.$('iframe.cke_wysiwyg_frame')[0]
                     .contentWindow.document.documentElement).on('click touchend', handleEdit);
+*/
             });
 
-            this.setupDataProcessor();
+            this.setupDataProcessor(editor);
         },
 
-        getElementFromSelection: function () {
-            var selection = this.editor.getSelection();
+        getElementFromSelection: function (editor) {
+            var selection = editor.getSelection();
             var element = selection.getSelectedElement() ||
                 selection.getCommonAncestor().getAscendant('cms-plugin', true);
 
@@ -168,7 +188,7 @@
             return element.getAscendant('cms-plugin', true) || element.findOne('cms-plugin');
         },
 
-        setupDialog: function () {
+        setupDialog: function (editor) {
             var that = this;
             var definition = function () {
                 return {
@@ -183,7 +203,7 @@
                             }
                         ]
                     }],
-                    onOk: function () {
+                    onOk: function (dialog) {
                         var iframe = $(CKEDITOR.dialog.getCurrent().parts.contents.$).find('iframe').contents();
                         var iframeUrl = iframe[0].URL;
 
@@ -202,11 +222,11 @@
                             }
                             // in case it's a fresh text plugin children don't have to be
                             // deleted separately
-                            if (!that.options.delete_on_cancel && addedChildPlugin) {
-                                that.child_plugins.push(data.plugin_id);
+                            if (!editor.config.settings.delete_on_cancel && addedChildPlugin) {
+                                that.unsaved_child_plugins.push(data.plugin_id);
                             }
-
-                            that.insertPlugin(data);
+                            that.insertPlugin(data, dialog.sender._.editor);
+							that.numberOfChildren += 1
 
                             CMS.API.Helpers.onPluginSave = onSave;
                             return false;
@@ -220,11 +240,11 @@
             CKEDITOR.dialog.add('cmspluginsDialog', definition);
         },
 
-        setupDropdown: function () {
+        setupDropdown: function (editor) {
             var tpl = '<div class="cke_panel_block">';
 
             // loop through the groups
-            $.each(this.options.plugins, function (i, group) {
+            $.each(editor.config.settings.plugins, function (i, group) {
                 // add template
                 tpl += '<h1 class="cke_panel_grouptitle">' + group.group + '</h1>';
                 tpl += '<ul role="presentation" class="cke_panel_list">';
@@ -241,20 +261,20 @@
             return tpl;
         },
 
-        setupContextMenu: function () {
+        setupContextMenu: function (editor) {
             var that = this;
 
-            this.editor.addMenuGroup('cmspluginsGroup');
-            this.editor.addMenuItem('cmspluginsItem', {
-                label: this.options.lang.edit,
-                icon: CMS.CKEditor.options.settings.static_url + '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg',
+            editor.addMenuGroup('cmspluginsGroup');
+            editor.addMenuItem('cmspluginsItem', {
+                label: editor.config.settings.lang.edit,
+                icon: editor.config.settings.static_url + '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg',
                 command: 'cmspluginsEdit',
                 group: 'cmspluginsGroup'
             });
 
-            this.editor.removeMenuItem('image');
+            editor.removeMenuItem('image');
 
-            this.editor.contextMenu.addListener(function (element) {
+            editor.contextMenu.addListener(function (element) {
                 var plugin = that.getPluginWidget(element);
 
                 if (plugin) {
@@ -263,27 +283,26 @@
             });
         },
 
-        editPlugin: function (element) {
-            var id = element.getAttribute('id');
+        editPlugin: function (element, editor) {
+            var id = element.getAttribute('id'),
+				settings = CMS.CKEditor.editors[editor.id].settings;
 
-            this.editor.openDialog('cmspluginsDialog');
-            var body = CMS.$(document);
+            editor.openDialog('cmspluginsDialog');
+            var body = CMS.$(window);
 
             // now tweak in dynamic stuff
             var dialog = CKEDITOR.dialog.getCurrent();
 
-            dialog.resize(body.width() * 0.8, body.height() * 0.7); // eslint-disable-line no-magic-numbers
+            dialog.resize(body.width() * 0.8, body.height() * 0.6); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
-            $(dialog.parts.title.$).text(this.options.lang.edit);
-
-            var textPluginUrl = window.location.href;
+            $(dialog.parts.title.$).text(settings.lang.edit);
+            var textPluginUrl = settings.url || window.location.href;
             var path = encodeURIComponent(window.parent.location.pathname + window.parent.location.search);
             var childPluginUrl = textPluginUrl.replace(
                 /(add-plugin|edit-plugin).*$/,
                 'edit-plugin/' + id + '/?_popup=1&no_preview&cms_history=0&cms_path=' + path
             );
-
-            $(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
+			$(dialog.parts.contents.$).find('iframe').attr('src', childPluginUrl)
                 .bind('load', function () {
                     var contents = $(this).contents();
 
@@ -296,42 +315,43 @@
                 });
         },
 
-        addPlugin: function (item, panel) {
-            var that = this;
-
+        addPlugin: function (item, panel, editor) {
+			var settings = CMS.CKEditor.editors[editor.id].settings;
             // hide the panel
             panel.hide();
 
-            this.editor.focus();
-            this.editor.fire('saveSnapshot');
+            editor.focus();
+            editor.fire('saveSnapshot');
 
             // gather data
             var data = {
-                placeholder_id: this.options.placeholder_id,
+                placeholder_id: settings.placeholder_id,
                 plugin_type: item.attr('rel'),
-                plugin_parent: this.options.plugin_id,
-                plugin_language: this.options.plugin_language,
+                plugin_parent: settings.plugin_id,
+                plugin_language: settings.plugin_language,
+                plugin_position: settings.plugin_position + 1 + this.numberOfChildren,
                 cms_path: window.parent.location.pathname,
                 cms_history: 0
             };
-
-            that.addPluginDialog(item, data);
+            this.addPluginDialog(item, data, editor);
         },
 
-        addPluginDialog: function (item, data) {
-            var body = $(document);
+        addPluginDialog: function (item, data, editor) {
+            var body = $(window),
+				settings = CMS.CKEditor.editors[editor.id].settings;
             // open the dialog
-            var selected_text = this.editor.getSelection().getSelectedText();
+            var selected_text = editor.getSelection().getSelectedText();
 
-            this.editor.openDialog('cmspluginsDialog');
+            editor.openDialog('cmspluginsDialog');
 
             // now tweak in dynamic stuff
             var dialog = CKEDITOR.dialog.getCurrent();
 
-            dialog.resize(body.width() * 0.8, body.height() * 0.7); // eslint-disable-line no-magic-numbers
+            dialog.resize(body.width() * 0.8, body.height() * 0.6); // eslint-disable-line no-magic-numbers
             $(dialog.getElement().$).addClass('cms-ckeditor-dialog');
-            $(dialog.parts.title.$).text(this.options.lang.add);
-            $(dialog.parts.contents.$).find('iframe').attr('src', this.options.add_plugin_url + '?' + $.param(data))
+            $(dialog.parts.title.$).text(settings.lang.add);
+            $(dialog.parts.contents.$).find('iframe')
+				.attr('src', settings.add_plugin_url + '?' + $.param(data))
                 .on('load.addplugin', function () {
                     var iframe = $(this);
                     var contents = iframe.contents();
@@ -353,19 +373,21 @@
                 });
         },
 
-        insertPlugin: function (data) {
-            var that = this;
+        insertPlugin: function (data, editor) {
+			var settings = CMS.CKEditor.editors[editor.id].settings;
 
             $.ajax({
                 method: 'GET',
-                url: that.options.render_plugin_url,
+                url: settings.render_plugin_url,
                 data: {
-                    token: that.options.action_token,
+                    token: settings.action_token,
                     plugin: data.plugin_id
                 }
             }).done(function (res) {
-                that.editor.insertHtml(res, 'unfiltered_html');
-                that.editor.fire('updateSnapshot');
+				CMS.CKEditor.editors[editor.id].changed = true;
+				CMS.CKEditor.editors[editor.id].child_changed = true;
+                editor.insertHtml(res, 'unfiltered_html');
+                editor.fire('updateSnapshot');
             });
         },
 
@@ -375,38 +397,38 @@
          *
          * @method setupCancelCleanupCallback
          * @public
-         * @param {Object} data plugin data
+         * @param {Object} settings editor settings
          */
-        setupCancelCleanupCallback: function setupCancelCleanupCallback() {
+        setupCancelCleanupCallback: function setupCancelCleanupCallback(settings) {
             if (!window.parent || !window.parent.CMS || !window.parent.CMS.API || !window.parent.CMS.API.Helpers) {
                 return;
             }
             var that = this;
             var CMS = window.parent.CMS;
             var cancelModalCallback = function cancelModalCallback(e, opts) {
-                if (!that.options.delete_on_cancel && !that.child_plugins.length) {
+                if (!settings.delete_on_cancel && !that.unsaved_child_plugins.length) {
                     return;
                 }
-                if (that.child_plugins.length) {
+                if (that.unsaved_child_plugins.length) {
                     e.preventDefault();
                     CMS.API.Toolbar.showLoader();
                     var data = {
-                        token: that.options.action_token
+                        token: settings.action_token
                     };
 
-                    if (!that.options.delete_on_cancel) {
-                        data.child_plugins = that.child_plugins;
+                    if (!settings.delete_on_cancel) {
+                        data.child_plugins = that.unsaved_child_plugins;
                     }
 
                     $.ajax({
                         method: 'POST',
-                        url: that.options.cancel_plugin_url,
+                        url: settings.cancel_plugin_url,
                         data: data,
                         // use 'child_plugins' instead of default 'child_plugins[]'
                         traditional: true
                     }).done(function () {
                         CMS.API.Helpers.removeEventListener(
-                            'modal-close.text-plugin.text-plugin-' + that.options.plugin_id
+                            'modal-close.text-plugin.text-plugin-' + settings.plugin_id
                         );
                         opts.instance.close();
                     }).fail(function (res) {
@@ -420,14 +442,12 @@
             };
 
             CMS.API.Helpers.addEventListener(
-                'modal-close.text-plugin.text-plugin-' + that.options.plugin_id,
+                'modal-close.text-plugin.text-plugin-' + settings.plugin_id,
                 cancelModalCallback
             );
         },
 
-        setupDataProcessor: function () {
-            var that = this;
-
+        setupDataProcessor: function (editor) {
             // priorities of callback execution, see http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-toHtml
             var BEFORE_PROCESSING_STARTED = 1;
             var BEFORE_MARKUP_IS_PARSED = 4;
@@ -459,7 +479,7 @@
                 return element.attributes && element.attributes['data-cke-real-element-type'] === 'div';
             }
 
-            this.editor.dataProcessor.dataFilter.addRules(
+            editor.dataProcessor.dataFilter.addRules(
                 {
                     elements: {
                         span: function (element) {
@@ -473,7 +493,7 @@
                                         $.extend({}, element.attributes)
                                     );
 
-                                    that.editor.widgets.registered.cmswidget.inline = false;
+                                    editor.widgets.registered.cmswidget.inline = false;
                                     newWrapper.children = element.children;
                                     newWrapper.removeClass('cke_widget_inline');
                                     newWrapper.removeClass('cke_widget_force_block');
@@ -483,7 +503,7 @@
                                     return newWrapper;
                                 }
 
-                                that.editor.widgets.registered.cmswidget.inline = true;
+                                editor.widgets.registered.cmswidget.inline = true;
                                 cmsPluginNode.attributes['data-cke-real-element-type'] = 'span';
                             }
                             return element;
@@ -499,7 +519,7 @@
             // need to update cms-plugin-nodes with fake "real type" so
             // ckeditor treats them as flow / phrasing elements correctly
             // + we check if plugin markup should be rendered or not
-            this.editor.on('toHtml', function (e) {
+            editor.on('toHtml', function (e) {
                 // now i have two problems
                 var newMarkup = e.data.dataValue.replace(
                     /<cms-plugin(.*?)>([\s\S]*?)<\/cms-plugin>/gi,
@@ -541,10 +561,10 @@
                 e.data.dataValue = newMarkup;
             }, null, null, BEFORE_MARKUP_IS_PARSED);
 
-            this.editor.on('toHtml', function () {
+            editor.on('toHtml', function () {
                 // reset widgets to inline again to avoid creating block-level inline widget
-                if (that.editor.widgets && that.editor.widgets.registered && that.editor.widgets.registered.cmswidget) {
-                    that.editor.widgets.registered.cmswidget.inline = true;
+                if (editor.widgets && editor.widgets.registered && editor.widgets.registered.cmswidget) {
+                    editor.widgets.registered.cmswidget.inline = true;
                 }
             }, null, null, BEFORE_PROCESSING_STARTED);
         }

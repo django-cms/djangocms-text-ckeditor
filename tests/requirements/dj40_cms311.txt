@@ -1,0 +1,4 @@
+-r base.txt
+
+Django>=4.0,<4.1
+django-cms>=3.11,<3.12

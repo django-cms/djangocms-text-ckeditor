@@ -3,6 +3,8 @@ import os
 import sys
 from tempfile import mkdtemp
 
+from cms import __version__
+
 
 port = 8000
 
@@ -24,6 +26,7 @@ class DisableMigrations(dict):
 
 
 HELPER_SETTINGS = {
+    'SECRET_KEY': 'djangocms-text-ckeditor-test-suite',
     'INSTALLED_APPS': [
         'easy_thumbnails',
         'filer',
@@ -89,7 +92,7 @@ HELPER_SETTINGS = {
             },
             'plugin_labels': {
                 'LinkPlugin': 'Add a link',
-            }
+            },
         },
     },
     'FILE_UPLOAD_TEMP_DIR': mkdtemp(),
@@ -108,9 +111,16 @@ HELPER_SETTINGS = {
         'Bootstrap3ButtonCMSPlugin': {'text_field_child_label': 'label'},
         'DummyLinkPlugin': {'text_field_child_label': 'label'},
     },
+    'TEXT_INLINE_EDITING': True,
 }
 
 HELPER_SETTINGS['MIGRATION_MODULES'] = DisableMigrations()
+
+if not (__version__ < "4"):  # V4 test?
+    HELPER_SETTINGS['INSTALLED_APPS'] += [
+        # "djangocms_versioning",  # TODO: Enable tests for versioning
+    ]
+    HELPER_SETTINGS['CMS_CONFIRM_VERSION4'] = True
 
 
 def _helper_patch(*args, **kwargs):
@@ -120,7 +130,7 @@ def _helper_patch(*args, **kwargs):
 
 def test():
     from app_helper import runner
-    runner.cms('djangocms_text_ckeditor')
+    runner.cms('djangocms_text_ckeditor', extra_args=[])
 
 
 def run():

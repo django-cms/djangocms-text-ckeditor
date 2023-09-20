@@ -19,7 +19,7 @@ class MigrationTestCase(TestCase):
         }
 
         try:
-            call_command('makemigrations', **options)
+            call_command('makemigrations', 'djangocms_text_ckeditor', **options)
         except SystemExit as e:
             status_code = str(e)
         else:
@@ -27,4 +27,4 @@ class MigrationTestCase(TestCase):
             status_code = '0'
 
         if status_code == '1':
-            self.fail('There are missing migrations:\n {}'.format(output.getvalue()))
+            self.fail(f'There are missing migrations:\n {output.getvalue()}')

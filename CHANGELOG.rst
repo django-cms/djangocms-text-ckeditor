@@ -2,6 +2,62 @@
 Changelog
 =========
 
+5.1.3 (2022-06-21)
+==================
+
+* Upgrade Ckeditor to 4.21.0 via `640 https://github.com/django-cms/djangocms-text-ckeditor/pull/640`_
+
+
+5.1.2 (2022-12-27)
+==================
+
+* Add suport for django CMS 4.1
+* Fix `468 <https://github.com/django-cms/djangocms-text-ckeditor/issues/468>`_ via `637 <https://github.com/django-cms/djangocms-text-ckeditor/pull/637>`_: Delay importing models.CMSPlugin in utils to allow adding an HTMLField to a custom user model.
+
+
+5.1.1 (2022-06-22)
+==================
+
+* Removed inline editing toggle button from touch devices (where it is inactive anyways) and collapsed menus
+* Add workaround for toolbar bug in django CMS < 3.10: Reload page after change in inline editor
+* Fix `578 <https://github.com/django-cms/djangocms-text-ckeditor/pull/578>`_: If parent plugins to not set body css class the default from CKEDITOR_SETTINGS is used
+
+5.1.0 (2022-03-24)
+==================
+
+* Added inline editing in `#606 <https://github.com/django-cms/djangocms-text-ckeditor/pull/606>`_
+* fix: Update skin patch to avoid @media query in `#614 <https://github.com/django-cms/djangocms-text-ckeditor/pull/614>`_
+
+5.0.1 (2022-03-24)
+==================
+
+* Generated new static bundle.
+
+5.0.0 (2022-03-24)
+==================
+
+* Drop support for Python 3.5 and 3.6
+* Drop support for django 3.0
+* Added support for Python 3.9 and 3.10
+* Added support for django 3.2
+* Added support for django-cms 3.9 and 3.10
+
+New features
+------------
+* Upgrade ckeditor to 4.17.2 in `595 <https://github.com/django-cms/djangocms-text-ckeditor/pull/595>`_
+* Dark mode support for standard editor UI (a.k.a. "skin") moono-lisa in `592 <https://github.com/django-cms/djangocms-text-ckeditor/pull/592>`_
+* Basic dark mode compatibility and fix for source edit bug in `590 <https://github.com/django-cms/djangocms-text-ckeditor/pull/590>`_
+
+Fixes and other changes
+-----------------------
+* Copying plugins inside ckeditor creates a child plugin copy in `569 <https://github.com/django-cms/djangocms-text-ckeditor/pull/569>`_
+* 504 copy paste plugins inside ckeditor refer to same instance in `572 <https://github.com/django-cms/djangocms-text-ckeditor/pull/572>`_
+* Use assertEqual instead of assertEquals for Python 3.11 compatibility in `580 <https://github.com/django-cms/djangocms-text-ckeditor/pull/580>`_
+* fix breaking tests in `585 <https://github.com/django-cms/djangocms-text-ckeditor/pull/585>`_
+* Update Node.js to version 16 LTS and Gulpfile upgrade as well in `593 <https://github.com/django-cms/djangocms-text-ckeditor/pull/593>`_
+* Replace ``force_text`` with ``force_str`` in `546 <https://github.com/django-cms/djangocms-text-ckeditor/pull/546>`_
+* Fix django 3.2 tests, pypi release actions and pre-commit in `594 <https://github.com/django-cms/djangocms-text-ckeditor/pull/594>`_
+* Remove excessive spaces (`#531 <https://github.com/django-cms/djangocms-text-ckeditor/issues/531>`_) in `597 <https://github.com/django-cms/djangocms-text-ckeditor/pull/597>`_
 
 4.0.0 (2020-09-15)
 ==================
@@ -11,7 +67,7 @@ Changelog
 * Dropped support for Django < 2.2
 * Ensure that correct urls are generated when static files are hosted on a CDN
 * Allow to style WYSIWYG content based on parent plugins, by adding
-``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
+  ``CMSPluginBase.child_ckeditor_body_css_class`` to a parent (#520)
 * Upgrade to CKeditor version to 4.14.1
 
 

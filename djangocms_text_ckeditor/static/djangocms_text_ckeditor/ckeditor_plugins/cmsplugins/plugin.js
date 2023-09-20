@@ -383,10 +383,14 @@
                     token: settings.action_token,
                     plugin: data.plugin_id
                 }
-            }).done(function (res) {
-				CMS.CKEditor.editors[editor.id].changed = true;
-				CMS.CKEditor.editors[editor.id].child_changed = true;
-                editor.insertHtml(res, 'unfiltered_html');
+            }).done(function (res, textStatus, jqXHR) {
+                CMS.CKEditor.editors[editor.id].changed = true;
+                CMS.CKEditor.editors[editor.id].child_changed = true;
+                if (jqXHR.status === 200) {
+                    editor.insertHtml(res, 'unfiltered_html');
+                } else if (jqXHR.status === 204) {
+                    editor.insertHtml(editor.getSelectedHtml().$.textContent);
+                }
                 editor.fire('updateSnapshot');
             });
         },

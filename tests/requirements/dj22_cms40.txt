@@ -1,4 +1,6 @@
 -r base.txt
+django-mptt
+django-treebeard<4.5
 
 Django>=2.2,<2.3
 git+https://github.com/django-cms/django-cms@release/4.0.x#egg=django-cms

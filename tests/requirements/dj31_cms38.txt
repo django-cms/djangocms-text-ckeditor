@@ -1,4 +1,5 @@
 -r base.txt
+django-mptt
 
 Django>=3.1,<3.2
 django-cms>=3.8,<3.9

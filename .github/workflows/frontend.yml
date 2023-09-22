@@ -17,7 +17,7 @@ jobs:
     - name: Install gulp
       run: npm install -g gulp@4.0.2
     - name: Install npm
-      run: npm install --location=global npm@latest
+      run: npm install --location=global npm
     - name: Install dependencies
       run: npm install
     # - name: Run gulp

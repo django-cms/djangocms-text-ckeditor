@@ -1,4 +1,6 @@
 -r base.txt
+django-mptt
+django-treebeard<4.5
 
 Django>=2.2,<3.0
 django-cms>=3.8,<3.9

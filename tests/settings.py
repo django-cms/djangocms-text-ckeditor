@@ -30,7 +30,6 @@ HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'easy_thumbnails',
         'filer',
-        'mptt',
         'djangocms_picture',
         'djangocms_link',
         'djangocms_text_ckeditor',

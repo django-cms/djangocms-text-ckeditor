@@ -2,6 +2,12 @@
 Changelog
 =========
 
+5.1.3 (2022-06-21)
+==================
+
+* Upgrade Ckeditor to 4.21.0 via `640 https://github.com/django-cms/djangocms-text-ckeditor/pull/640`_
+
+
 5.1.2 (2022-12-27)
 ==================
 

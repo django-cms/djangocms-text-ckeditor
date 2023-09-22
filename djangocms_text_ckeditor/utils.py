@@ -1,12 +1,9 @@
-import os
 import re
 from collections import OrderedDict
 from functools import WRAPPER_ASSIGNMENTS, wraps
 
-from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
-from django.utils.functional import LazyObject
 
 from cms import __version__
 

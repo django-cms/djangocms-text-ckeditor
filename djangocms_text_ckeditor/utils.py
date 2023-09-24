@@ -1,12 +1,9 @@
-import os
 import re
 from collections import OrderedDict
 from functools import WRAPPER_ASSIGNMENTS, wraps
 
-from django.core.files.storage import get_storage_class
 from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
-from django.utils.functional import LazyObject
 
 from cms import __version__
 
@@ -171,31 +168,3 @@ def get_plugins_from_text(text, regex=OBJ_ADMIN_RE):
     plugins = CMSPlugin.objects.filter(pk__in=plugin_ids).select_related("placeholder")
     plugin_list = downcast_plugins(plugins, select_placeholder=True)
     return {plugin.pk: plugin for plugin in plugin_list}
-
-
-"""
-The following class is taken from https://github.com/jezdez/django/compare/feature/staticfiles-templatetag
-and should be removed and replaced by the django-core version in 1.4
-"""
-default_storage = "django.contrib.staticfiles.storage.StaticFilesStorage"
-
-
-class ConfiguredStorage(LazyObject):
-    def _setup(self):
-        from django.conf import settings
-
-        self._wrapped = get_storage_class(
-            getattr(settings, "STATICFILES_STORAGE", default_storage)
-        )()
-
-
-configured_storage = ConfiguredStorage()
-
-
-def static_url(path):
-    """
-    Helper that prefixes a URL with STATIC_URL and cms
-    """
-    if not path:
-        return ""
-    return configured_storage.url(os.path.join("", path))

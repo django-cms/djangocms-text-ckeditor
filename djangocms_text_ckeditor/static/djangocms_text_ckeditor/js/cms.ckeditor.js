@@ -42,7 +42,7 @@
                 ['HorizontalRule'],
                 ['Link', 'Unlink'],
                 ['NumberedList', 'BulletedList'],
-                ['Outdent', 'Indent', '-', 'Blockqote', '-', 'Link', 'Unlink', '-', 'Table'],
+                ['Outdent', 'Indent', '-', 'Blockquote', '-', 'Link', 'Unlink', '-', 'Table'],
                 ['Source']
             ],
 

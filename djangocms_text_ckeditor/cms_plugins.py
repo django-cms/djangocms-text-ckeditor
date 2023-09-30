@@ -417,13 +417,13 @@ class TextPlugin(CMSPluginBase):
             raise PermissionDenied
 
         form = ActionTokenValidationForm(data)
-
         if form.is_valid():
             session_key = request.session.session_key
             text_plugin_id = form.get_id_from_token(session_key)
 
             if text_plugin_id:
                 return self._get_plugin_or_404(text_plugin_id)
+
         message = gettext("Unable to process your request. Invalid token.")
         raise ValidationError(message=force_str(message))
 
@@ -436,10 +436,9 @@ class TextPlugin(CMSPluginBase):
             return HttpResponseBadRequest(error.message)
 
         form = RenderPluginForm(request.GET, text_plugin=text_plugin)
-
         if not form.is_valid():
-            message = gettext("Unable to process your request.")
-            return HttpResponseBadRequest(message)
+            # plugin not found, inform CKEDITOR.plugins.insertPlugin to remove it
+            return HttpResponse(status=204)
 
         plugin_class = text_plugin.get_plugin_class_instance()
         # The following is needed for permission checking

@@ -4,7 +4,7 @@
         window._cmsCKEditors = window._cmsCKEditors || [];
         window._cmsCKEditors.push([
             '{{ ckeditor_selector }}',
-            {{ plugin_pk|default:"''"|unlocalize }}
+            '{{ plugin_pk|default:""|unlocalize }}'
         ]);
     })();
 </script>

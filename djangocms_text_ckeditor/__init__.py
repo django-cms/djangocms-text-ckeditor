@@ -16,6 +16,6 @@ Release logic:
 10. Publish the release when ready
 11. Github actions will publish the new package to pypi
 """
-__version__ = '5.1.3'
+__version__ = '5.1.4'
 
 default_app_config = 'djangocms_text_ckeditor.apps.TextCkeditorConfig'

@@ -2,6 +2,14 @@
 Changelog
 =========
 
+5.1.4 (2023-10-03)
+==================
+
+* fix: Issue #641 which lead to disappearing content after adding child plugins and cancelling the edit by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/652
+* Feature/issue 648 unable to unlink by @jrief in https://github.com/django-cms/djangocms-text-ckeditor/pull/649
+* fix: Remove legacy code from Django pre 1.4 by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/651
+* fix: test suite for Django 2.2 by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/650
+
 5.1.3 (2022-06-21)
 ==================
 

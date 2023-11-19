@@ -551,7 +551,7 @@ class TextPlugin(CMSPluginBase):
         )
 
     def render(self, context, instance, placeholder):
-        if self.inline_editing_active(context["request"]):
+        if self.inline_editing_active(context.get("request")):
             ckeditor_settings = self.get_editor_widget(
                 context["request"], self.get_plugins(instance), instance
             ).get_ckeditor_settings(get_language().split("-")[0])

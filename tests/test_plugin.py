@@ -40,6 +40,13 @@ except ImportError:
     HAS_DJANGOCMS_TRANSLATIONS = False
 
 
+try:
+    import djangocms_picture  # noqa
+    HAS_DJANGOCMS_PICTURE = True
+except ImportError:
+    HAS_DJANGOCMS_PICTURE = False
+
+
 class PluginActionsTestCase(TestFixture, BaseTestCase):
 
     def get_custom_admin_url(self, plugin_class, name):
@@ -1079,3 +1086,32 @@ class DjangoCMSTranslationsIntegrationTestCase(BaseTestCase):
 
         result = TextPlugin.set_translation_import_content(result, plugin)
         self.assertDictEqual(result, {child1.pk: ''})
+
+
+@unittest.skipUnless(
+    HAS_DJANGOCMS_PICTURE,
+    'Optional dependency djangocms-picture for tests is not installed.',
+)
+class DjangoCMSPictureIntegrationTestCase(TestFixture, BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.page = self.create_page('test page', template='page.html', language='en')
+        self.placeholder = self.get_placeholders(self.page, 'en').get(slot='content')
+
+    def test_extract_images(self):
+        text_plugin = add_plugin(
+            self.placeholder,
+            'TextPlugin',
+            'en',
+            body='<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==">',
+        )
+
+        from djangocms_picture.models import Picture
+        picture_plugin = Picture.objects.order_by('-id')[0]
+        self.assertEqual(picture_plugin.parent.id, text_plugin.id)
+        self.assertEqual(
+            text_plugin.body,
+            '<cms-plugin alt="Image - unnamed file " title="Image - unnamed file" id="{}"></cms-plugin>'.format(
+                picture_plugin.id,
+            ),
+        )

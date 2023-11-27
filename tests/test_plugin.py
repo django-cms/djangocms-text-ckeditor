@@ -1109,7 +1109,7 @@ class DjangoCMSPictureIntegrationTestCase(TestFixture, BaseTestCase):
         from djangocms_picture.models import Picture
         picture_plugin = Picture.objects.order_by('-id')[0]
         self.assertEqual(picture_plugin.parent.id, text_plugin.id)
-        self.assertEqual(
+        self.assertHTMLEqual(
             text_plugin.body,
             '<cms-plugin alt="Image - unnamed file " title="Image - unnamed file" id="{}"></cms-plugin>'.format(
                 picture_plugin.id,

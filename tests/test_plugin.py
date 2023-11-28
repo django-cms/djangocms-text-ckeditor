@@ -4,6 +4,7 @@ import re
 import unittest
 from urllib.parse import unquote
 
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.models import Permission
@@ -40,11 +41,7 @@ except ImportError:
     HAS_DJANGOCMS_TRANSLATIONS = False
 
 
-try:
-    import djangocms_picture  # noqa
-    HAS_DJANGOCMS_PICTURE = True
-except ImportError:
-    HAS_DJANGOCMS_PICTURE = False
+HAS_DJANGOCMS_PICTURE = "djangocms_picture" in settings.INSTALLED_APPS
 
 
 class PluginActionsTestCase(TestFixture, BaseTestCase):

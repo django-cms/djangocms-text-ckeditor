@@ -26,6 +26,8 @@ jobs:
         ]
         exclude:
           - python-version: 3.7
+            requirements-file: dj32_cms41.txt
+          - python-version: 3.7
             requirements-file: dj40_cms311.txt
           - python-version: 3.7
             requirements-file: dj40_cms41.txt

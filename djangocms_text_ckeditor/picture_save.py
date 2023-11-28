@@ -1,15 +1,10 @@
-import os
-
-from django.conf import settings
+from django.core.files.base import ContentFile
 
 from cms.models.pluginmodel import CMSPlugin
 
 
 def create_picture_plugin(filename, file, parent_plugin, **kwargs):
-    try:
-        from djangocms_picture.models import Picture
-    except ImportError:
-        from cms.plugins.picture.models import Picture
+    from djangocms_picture.models import Picture
 
     pic = Picture()
     pic.placeholder = parent_plugin.placeholder
@@ -17,13 +12,14 @@ def create_picture_plugin(filename, file, parent_plugin, **kwargs):
     pic.position = CMSPlugin.objects.filter(parent=parent_plugin).count()
     pic.language = parent_plugin.language
     pic.plugin_type = 'PicturePlugin'
-    path = pic.get_media_path(filename)
-    full_path = os.path.join(settings.MEDIA_ROOT, path)
-    if not os.path.exists(os.path.dirname(full_path)):
-        os.makedirs(os.path.dirname(full_path))
-    pic.image = path
-    f = open(full_path, 'wb')
-    f.write(file.read())
-    f.close()
+
+    # Set the FilerImageField value.
+    from filer.settings import FILER_IMAGE_MODEL
+    from filer.utils.loader import load_model
+    image_class = load_model(FILER_IMAGE_MODEL)
+    image_obj = image_class(file=ContentFile(file.read(), name=filename))
+    image_obj.save()
+    pic.picture = image_obj
+
     pic.save()
     return pic

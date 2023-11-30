@@ -2,6 +2,16 @@
 Changelog
 =========
 
+5.1.5 (2023-11-30)
+==================
+
+* fix(settings): Extend ALLOW_TOKEN_PARSERS if custom one is provided by @DmytroLitvinov in https://github.com/django-cms/djangocms-text-ckeditor/pull/654
+* Remove Flash plugin in the default settings by @MacLake in https://github.com/django-cms/djangocms-text-ckeditor/pull/656
+* fix: Allow for request-free context objects for testing purposes by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/659
+* Support djangocms-picture 2.0.0 and higher in create_picture_plugin by @leture in https://github.com/django-cms/djangocms-text-ckeditor/pull/660
+* Update test matrix to include Django 5 by @protoroto in https://github.com/django-cms/djangocms-text-ckeditor/pull/662
+
+
 5.1.4 (2023-10-03)
 ==================
 

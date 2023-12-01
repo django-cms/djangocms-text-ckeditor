@@ -2,25 +2,35 @@
 Changelog
 =========
 
+5.1.5 (2023-11-30)
+==================
+
+* fix(settings): Extend ALLOW_TOKEN_PARSERS if custom one is provided by @DmytroLitvinov in `#654 <https://github.com/django-cms/djangocms-text-ckeditor/pull/654>`_
+* fix: Support djangocms-picture 2.0.0 and higher in create_picture_plugin by @leture in `#660 <https://github.com/django-cms/djangocms-text-ckeditor/pull/660>`_ 
+* Remove Flash plugin in the default settings by @MacLake in `#656 <https://github.com/django-cms/djangocms-text-ckeditor/pull/656>`_
+* fix: Allow for request-free context objects for testing purposes by @fsbraun in `#659 <https://github.com/django-cms/djangocms-text-ckeditor/pull/659>`_
+* Update test matrix to include Django 5 by @protoroto in `#662 <https://github.com/django-cms/djangocms-text-ckeditor/pull/662>`_
+
+
 5.1.4 (2023-10-03)
 ==================
 
-* fix: Issue #641 which lead to disappearing content after adding child plugins and cancelling the edit by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/652
-* Feature/issue 648 unable to unlink by @jrief in https://github.com/django-cms/djangocms-text-ckeditor/pull/649
-* fix: Remove legacy code from Django pre 1.4 by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/651
-* fix: test suite for Django 2.2 by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/650
+* fix: Issue #641 which lead to disappearing content after adding child plugins and cancelling the edit by @fsbraun in `#652 <https://github.com/django-cms/djangocms-text-ckeditor/pull/652>`_
+* Feature/issue 648 unable to unlink by @jrief in `#649 <https://github.com/django-cms/djangocms-text-ckeditor/pull/649>`_
+* fix: Remove legacy code from Django pre 1.4 by @fsbraun in `#651 <https://github.com/django-cms/djangocms-text-ckeditor/pull/651>`_
+* fix: test suite for Django 2.2 by @fsbraun in `#650 <https://github.com/django-cms/djangocms-text-ckeditor/pull/650>`_
 
 5.1.3 (2022-06-21)
 ==================
 
-* Upgrade Ckeditor to 4.21.0 via `640 https://github.com/django-cms/djangocms-text-ckeditor/pull/640`_
+* Upgrade Ckeditor to 4.21.0 via `#640 <https://github.com/django-cms/djangocms-text-ckeditor/pull/640>`_
 
 
 5.1.2 (2022-12-27)
 ==================
 
 * Add suport for django CMS 4.1
-* Fix `468 <https://github.com/django-cms/djangocms-text-ckeditor/issues/468>`_ via `637 <https://github.com/django-cms/djangocms-text-ckeditor/pull/637>`_: Delay importing models.CMSPlugin in utils to allow adding an HTMLField to a custom user model.
+* Fix `#468 <https://github.com/django-cms/djangocms-text-ckeditor/issues/468>`_ via `#637 <https://github.com/django-cms/djangocms-text-ckeditor/pull/637>`_: Delay importing models.CMSPlugin in utils to allow adding an HTMLField to a custom user model.
 
 
 5.1.1 (2022-06-22)

@@ -514,7 +514,7 @@ You can run tests by executing::
     :target: https://codecov.io/gh/django-cms/djangocms-text-ckeditor
 .. |python| image:: https://img.shields.io/badge/python-3.7+-blue.svg
     :target: https://pypi.org/project/djangocms-text-ckeditor/
-.. |django| image:: https://img.shields.io/badge/django-2.2--4.0-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-2.2--5.0-blue.svg
     :target: https://www.djangoproject.com/
 .. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
     :target: https://www.django-cms.org/

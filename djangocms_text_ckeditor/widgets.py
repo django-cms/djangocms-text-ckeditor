@@ -17,7 +17,7 @@ from .utils import cms_placeholder_add_plugin
 
 
 # this path is changed automatically whenever you run `gulp bundle`
-PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-9f0bbac8ec.cms.ckeditor.min.js'
+PATH_TO_JS = 'djangocms_text_ckeditor/js/dist/bundle-5fcbc3b810.cms.ckeditor.min.js'
 
 
 class TextEditorWidget(forms.Textarea):
@@ -94,7 +94,7 @@ class TextEditorWidget(forms.Textarea):
 
         # Group plugins by module
         if self.installed_plugins:
-            plugins = groupby(sorted(self.installed_plugins, key=lambda x: x.get("module")), key=lambda x: x.get("module"))
+            plugins = groupby(sorted(self.installed_plugins, key=lambda x: x.get('module')), key=lambda x: x.get('module'))
             plugins = [{'group': group, 'items':
                 [{'title': item.get('name'), 'type': item.get('value')} for item in items]} for group, items in plugins]
         else:

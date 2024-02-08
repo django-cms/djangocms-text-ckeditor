@@ -500,9 +500,9 @@ Running Tests
 
 You can run tests by executing::
 
-    virtualenv env
-    source env/bin/activate
-    pip install -r tests/requirements.txt
+    python -m venv .venv
+    source .venv/bin/activate
+    python -m pip install -r tests/requirements/base.txt
     python setup.py test
 
 

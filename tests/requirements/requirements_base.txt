@@ -8,7 +8,7 @@ html5lib>=0.999999999
 Pillow
 tox
 
-https://github.com/django-cms/django-cms/tarball/develop-4#egg=django-cms
+https://github.com/django-cms/django-cms/tarball/release/4.0.1.x#egg=django-cms
 
 # IMPORTANT: latest easy-thumbnails causes error since it returns with floating point, but the tests are not prepared for this and even the lib
 easy-thumbnails

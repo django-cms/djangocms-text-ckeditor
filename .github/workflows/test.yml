@@ -22,6 +22,7 @@ jobs:
           dj41_cms311.txt,
           dj41_cms41.txt,
           dj42_cms311.txt,
+          dj42_cms40.txt
           dj42_cms41.txt,
           dj50_cms41.txt
         ]
@@ -47,6 +48,10 @@ jobs:
             requirements-file: dj50_cms41.txt
           - python-version: 3.8
             requirements-file: dj50_cms41.txt
+          - python-version: 3.8
+            requirements-file: dj32_cms41.txt
+          - python-version: 3.8
+            requirements-file: dj40_cms41.txt
           - python-version: 3.8
             requirements-file: dj42_cms41.txt
           - python-version: 3.9

@@ -12,7 +12,6 @@ jobs:
         requirements-file: [
           dj22_cms37.txt,
           dj22_cms38.txt,
-          dj22_cms40.txt,
           dj31_cms38.txt,
           dj32_cms39.txt,
           dj32_cms310.txt,

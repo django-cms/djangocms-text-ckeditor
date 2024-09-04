@@ -22,9 +22,9 @@ jobs:
           dj41_cms311.txt,
           dj41_cms41.txt,
           dj42_cms311.txt,
-          dj42_cms40.txt
+          dj42_cms40.txt,
           dj42_cms41.txt,
-          dj50_cms41.txt
+          dj50_cms41.txt,
         ]
         os: [
           ubuntu-20.04,

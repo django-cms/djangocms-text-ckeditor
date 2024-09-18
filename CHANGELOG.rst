@@ -5,6 +5,7 @@ Changelog
 5.1.6 (2024-07-18)
 ==================
 
+* Fix duplication of "Link" and "Unlink" options for HTMLField. by @DmytroLitvinov in https://github.com/django-cms/djangocms-text-ckeditor/pull/679
 * fix: Allow double-clicks to propagate to CKEditor, e.g., to open the link dialog by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/676
 * fix: Let CKEditor decide on size of its panels by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/674
 

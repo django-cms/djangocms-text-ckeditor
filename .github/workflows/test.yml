@@ -27,7 +27,7 @@ jobs:
           dj50_cms41.txt,
         ]
         os: [
-          ubuntu-20.04,
+          ubuntu-latest,
         ]
         exclude:
           - python-version: 3.7

@@ -5,6 +5,13 @@ django CMS Text CKEditor
 |pypi| |coverage| |python| |django| |djangocms| |djangocms4|
 
 
+.. warning::
+
+    This package will be deprecated on March 31, 2025 and not receive any updates thereafter. 
+    See the `deprecation announcement <https://www.django-cms.org/en/blog/2024/12/13/deprecation-announcement-djangocms-text-ckeditor-to-be-replaced-by-djangocms-text-in-q1-2025/>`_. 
+    Use `djangocms CMS Text <https://github.com/django-cms/djangocms-text>`_ as an alternative.
+
+
 .. note::
 
         Version 5 of this package does not include a move to CKEditor version 5

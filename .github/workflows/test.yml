@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ 3.7, 3.8, 3.9, "3.10", "3.11"]
+        python-version: [ 3.8, 3.9, "3.10", "3.11"]
         requirements-file: [
           dj22_cms37.txt,
           dj22_cms38.txt,
@@ -30,24 +30,6 @@ jobs:
           ubuntu-latest,
         ]
         exclude:
-          - python-version: 3.7
-            requirements-file: dj32_cms41.txt
-          - python-version: 3.7
-            requirements-file: dj40_cms311.txt
-          - python-version: 3.7
-            requirements-file: dj40_cms41.txt
-          - python-version: 3.7
-            requirements-file: dj41_cms311.txt
-          - python-version: 3.7
-            requirements-file: dj41_cms41.txt
-          - python-version: 3.7
-            requirements-file: dj42_cms311.txt
-          - python-version: 3.7
-            requirements-file: dj42_cms40.txt
-          - python-version: 3.7
-            requirements-file: dj42_cms41.txt
-          - python-version: 3.7
-            requirements-file: dj50_cms41.txt
           - python-version: 3.8
             requirements-file: dj50_cms41.txt
           - python-version: 3.8

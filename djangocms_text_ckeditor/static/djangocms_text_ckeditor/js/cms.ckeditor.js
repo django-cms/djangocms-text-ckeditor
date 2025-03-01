@@ -58,7 +58,7 @@
         editors: {},
 
 
-        init: function (element, mode, options, settings, callback) {
+        init: function (element, mode, options, settings, callback) {  // eslint-disable-line max-params
             var container = $(element);
 
             container.data('ckeditor-initialized', true);
@@ -86,6 +86,7 @@
                 '/ckeditor_plugins/cmsplugins/icons/cmsplugins.svg');
 
             var editor;
+
             if (mode === 'admin') {
                 // render ckeditor
                 editor = CKEDITOR.replace(container[0], this.options);
@@ -110,7 +111,7 @@
                 return;
             }
 
-            CMS.CKEditor.observer = CMS.CKEditor.observer || new IntersectionObserver(function (entries, opts) {
+            CMS.CKEditor.observer = CMS.CKEditor.observer || new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
                         var target = $(entry.target);
@@ -118,12 +119,16 @@
                         var url = target.data('cms_edit_url');
 
                         CMS.CKEditor.startInlineEditor(plugin_id, url);
+                        CMS.CKEditor.observer.unobserve(entry.target);  // initialized; no more events needed
                     }
                 });
             }, {
                 root: null,
                 threshold: 0.05
             });
+
+            // disconnect first -- each visible element needs to trigger an event
+            CMS.CKEditor.observer.disconnect();
 
             CMS._plugins.forEach(function (plugin) {
                 if (plugin[1].plugin_type === 'TextPlugin') {
@@ -142,7 +147,8 @@
                             elements
                                 .removeClass('cms-plugin')
                                 .removeClass('cms-plugin-' + id);
-                            wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id);
+                            wrapper.addClass('cms-plugin').addClass('cms-plugin-' + id)
+                                .addClass('cms-plugin-start').addClass('cms-plugin-end');
                         }
                         wrapper.data('cms_edit_url', url);
                         wrapper.data('cms_plugin_id', id);
@@ -175,10 +181,6 @@
             var options;
             var settings = JSON.parse(document.getElementById('ck-cfg-' + plugin_id).textContent);
             var wrapper = $('.cms-plugin.cms-plugin-' + plugin_id);
-
-            if (wrapper.data('ckeditor-initialized')) {
-                return;
-            }
 
             settings.plugin_id = plugin_id;
             settings.url = url;
@@ -465,18 +467,18 @@
                 });
                 setTimeout(function () {
                     CMS.Plugin._highlightPluginStructure(draggable.find('.cms-dragitem:first'),
-                        {successTimeout: 200, delay: 2000, seeThrough: true});
+                        { successTimeout: 200, delay: 2000, seeThrough: true });
                 }, HIGHLIGHT_TIMEOUT);
             }
         },
 
         _initAll: function () {
             CMS.CKEditor.touchdevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;  // on touch device?
-            if (!CMS.CKEditor.touchdevice) {  // no inline editing on touch devices to not interfere with scrolling
+            if (CMS.CKEditor.touchdevice) {  // no inline editing on touch devices to not interfere with scrolling
+                $('div.cms a.cms-btn.cms-edit-toggle').hide();
+            } else {
                 CMS.CKEditor.initInlineEditors();
                 $('div.cms a.cms-btn.cms-edit-toggle').show();
-            } else {
-                $('div.cms a.cms-btn.cms-edit-toggle').hide();
             }
             CMS.CKEditor.initAdminEditors();
         },

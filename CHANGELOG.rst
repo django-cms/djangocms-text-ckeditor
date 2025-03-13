@@ -2,6 +2,12 @@
 Changelog
 =========
 
+5.1.7 (2025-03-31)
+==================
+
+* feat: django CMS 5-compatible inline editing by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/682
+* docs: Add link to deprecation announcement to readme by @fsbraun in https://github.com/django-cms/djangocms-text-ckeditor/pull/681
+
 5.1.6 (2024-07-18)
 ==================
 

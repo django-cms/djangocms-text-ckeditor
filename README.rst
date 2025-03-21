@@ -7,8 +7,8 @@ django CMS Text CKEditor
 
 .. warning::
 
-    This package will be deprecated on March 31, 2025 and not receive any updates thereafter. 
-    See the `deprecation announcement <https://www.django-cms.org/en/blog/2024/12/13/deprecation-announcement-djangocms-text-ckeditor-to-be-replaced-by-djangocms-text-in-q1-2025/>`_. 
+    This package is deprecated and does not receive any updates.
+    See the `deprecation announcement <https://www.django-cms.org/en/blog/2024/12/13/deprecation-announcement-djangocms-text-ckeditor-to-be-replaced-by-djangocms-text-in-q1-2025/>`_.
     Use `djangocms CMS Text <https://github.com/django-cms/djangocms-text>`_ as an alternative.
 
 
@@ -525,5 +525,5 @@ You can run tests by executing::
     :target: https://www.djangoproject.com/
 .. |djangocms| image:: https://img.shields.io/badge/django%20CMS-3.7%2B-blue.svg
     :target: https://www.django-cms.org/
-.. |djangocms4| image:: https://img.shields.io/badge/django%20CMS-4-blue.svg
+.. |djangocms4| image:: https://img.shields.io/badge/django%20CMS-4%2B-blue.svg
     :target: https://www.django-cms.org/
